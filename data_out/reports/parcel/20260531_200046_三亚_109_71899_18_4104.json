@@ -1,0 +1,4103 @@
+{
+  "meta": {
+    "generated_at": "2026-05-31T20:00:46",
+    "version": "parcel-report-mvp-1",
+    "data_scope": "Vault/2026年 本地四城样本",
+    "target_year": "2026"
+  },
+  "input": {
+    "city": "三亚",
+    "district": "海棠区",
+    "address": null,
+    "lng": 109.71899,
+    "lat": 18.4104,
+    "radius_km": 5.0,
+    "expected_price": null,
+    "price_band": 0.15,
+    "year": "2026"
+  },
+  "location": {
+    "lng": 109.71899,
+    "lat": 18.4104,
+    "source": "coordinates",
+    "formatted_addr": "109.718990,18.410400",
+    "level": null,
+    "adcode": null
+  },
+  "nearby_fallback_used": false,
+  "nearby_competitors": [
+    {
+      "loupan_id": 520193,
+      "project_name": "东方宇亿·海棠壹号院",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 28000.0,
+      "total_price_wan": null,
+      "area_range": "109-119㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "nan",
+      "green_ratio": "45%",
+      "developer": "海南山海颐园投资有限公司",
+      "address": "三亚海棠区海棠湾南田农场东风分场G5-1号",
+      "distance_km": 1.18,
+      "lng": 109.720744,
+      "lat": 18.399925,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"高绿化率\", \"装修交付\", \"配套纯熟\"]",
+      "open_date": "2022年1月1日",
+      "delivery_date": "2023年3月30日",
+      "cert_dates": "[\"2021-11-09\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/05330dede421a1dfafeb982a66319e37/275x206n.jpg",
+      "land_area_sqm": "358000m²",
+      "building_area_sqm": "56000m²",
+      "planned_units": "318",
+      "parking_spaces": "375",
+      "parking_ratio": "1:1",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "带装修",
+      "building_type": "{}",
+      "tenure_years": "nan",
+      "presale_permit": "[\"三房预许字〔2021〕96号\", \"[2023]三房预许字(46)号\", \"[2023]三房预许字(36)号\"]",
+      "developer_brand": "nan",
+      "investor": "nan",
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 109.0,
+          "area_str": "109㎡"
+        },
+        {
+          "name": "三室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.0,
+          "area_str": "119㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/520193",
+      "url_amap": "https://uri.amap.com/marker?position=109.720744,18.399925&name=东方宇亿·海棠壹号院"
+    },
+    {
+      "loupan_id": 410271,
+      "project_name": "长基听棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 33000.0,
+      "total_price_wan": null,
+      "area_range": "52-203㎡",
+      "room_types": "1室户型,2室户型,3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "三亚新海裕实业有限公司",
+      "address": "三亚海棠区海棠湾南田温泉度假区",
+      "distance_km": 1.3,
+      "lng": 109.73049404453,
+      "lat": 18.414578754314,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"大阳台\", \"高绿化率\", \"低容积\"]",
+      "open_date": "2019年2月1日",
+      "delivery_date": "2021年3月31日",
+      "cert_dates": "[\"2023-02-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/946061552a3896a1873d5cbbdebc501a/275x206n.jpg",
+      "land_area_sqm": "住宅：32606m² 别墅：32606m²",
+      "building_area_sqm": "住宅：51312m² 别墅：51312m²",
+      "planned_units": "住宅：418 别墅：418",
+      "parking_spaces": "住宅：356 别墅：356",
+      "parking_ratio": "住宅：1:0.8 别墅：1:0.8",
+      "property_company": null,
+      "property_fee": "住宅：5.9元/㎡/月 别墅：8.8元/㎡/月",
+      "decoration": "住宅：简装修 别墅：简装修",
+      "building_type": "{小高层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字（展期）〔2019〕12号\"]",
+      "developer_brand": null,
+      "investor": "河南长基置业有限公司",
+      "construction_progress": "已竣工，竣工时间：2021-03-30",
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 51.8,
+          "area_str": "51.8㎡"
+        },
+        {
+          "name": "二室",
+          "area": 79.25,
+          "area_str": "79.25㎡"
+        },
+        {
+          "name": "二室",
+          "area": 87.13,
+          "area_str": "87.13㎡"
+        },
+        {
+          "name": "二室",
+          "area": 88.79,
+          "area_str": "88.79㎡"
+        },
+        {
+          "name": "三室",
+          "area": 95.08,
+          "area_str": "95.08㎡"
+        },
+        {
+          "name": "三室",
+          "area": 127.8,
+          "area_str": "127.8㎡"
+        },
+        {
+          "name": "三室",
+          "area": 128.5,
+          "area_str": "128.5㎡"
+        },
+        {
+          "name": "三室",
+          "area": 152.9,
+          "area_str": "152.9㎡"
+        },
+        {
+          "name": "四室",
+          "area": 201.0,
+          "area_str": "201㎡"
+        },
+        {
+          "name": "四室",
+          "area": 203.0,
+          "area_str": "203㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/410271",
+      "url_amap": "https://uri.amap.com/marker?position=109.73049404453,18.414578754314&name=长基听棠"
+    },
+    {
+      "loupan_id": 430333,
+      "project_name": "海棠湾8号温泉公馆",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 33000.0,
+      "total_price_wan": null,
+      "area_range": "83-155㎡",
+      "room_types": "2室户型,3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "三亚天宝盛投资有限公司",
+      "address": "三亚海棠区海棠湾龙海路",
+      "distance_km": 1.38,
+      "lng": 109.73040712376,
+      "lat": 18.40426304685,
+      "property_type": "住宅",
+      "tags": "[\"大阳台\", \"车位充足\", \"高绿化率\", \"低容积\", \"厨卫全明\"]",
+      "open_date": "2021年7月9日",
+      "delivery_date": "2024年12月",
+      "cert_dates": "[\"2021-08-12\", \"2021-07-09\", \"2018-11-05\", \"2018-12-28\", \"2017-12-19\", \"2017-11-30\", \"2017-09-18\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/7dc37c4991c1703eabc289d2df7ddb76/275x206n.jpg",
+      "land_area_sqm": "住宅：153333m² 别墅：153333m²",
+      "building_area_sqm": "住宅：240000m² 别墅：240000m²",
+      "planned_units": "住宅：1290 别墅：1290",
+      "parking_spaces": "住宅：1869 别墅：1869",
+      "parking_ratio": "住宅：1:1.4 别墅：1:1.4",
+      "property_company": "nan",
+      "property_fee": "住宅：5.8元/㎡/月 别墅：9.8元/㎡/月",
+      "decoration": "住宅：毛坯 别墅：毛坯",
+      "building_type": "{双拼别墅,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字［2021］70号\", \"三房预许字［2021］61号\", \"三房预许字〔2018〕39 号\", \"三房预许字［2018］64号\", \"三房预许字［2017］78号\", \"三房预许字[2017]66号\", \"三房预许字[2017]46号\"]",
+      "developer_brand": "nan",
+      "investor": "阳柳集团",
+      "construction_progress": "nan",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 83.0,
+          "area_str": "83㎡"
+        },
+        {
+          "name": "二室",
+          "area": 88.0,
+          "area_str": "88㎡"
+        },
+        {
+          "name": "二室",
+          "area": 89.0,
+          "area_str": "89㎡"
+        },
+        {
+          "name": "二室",
+          "area": 90.0,
+          "area_str": "90㎡"
+        },
+        {
+          "name": "二室",
+          "area": 92.0,
+          "area_str": "92㎡"
+        },
+        {
+          "name": "三室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "三室",
+          "area": 102.0,
+          "area_str": "102㎡"
+        },
+        {
+          "name": "三室",
+          "area": 108.0,
+          "area_str": "108㎡"
+        },
+        {
+          "name": "三室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        },
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        },
+        {
+          "name": "三室",
+          "area": 129.0,
+          "area_str": "129㎡"
+        },
+        {
+          "name": "三室",
+          "area": 137.0,
+          "area_str": "137㎡"
+        },
+        {
+          "name": "四室",
+          "area": 154.0,
+          "area_str": "154㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/430333",
+      "url_amap": "https://uri.amap.com/marker?position=109.73040712376,18.40426304685&name=海棠湾8号温泉公馆"
+    },
+    {
+      "loupan_id": 488831,
+      "project_name": "开创·白玉海棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 33000.0,
+      "total_price_wan": null,
+      "area_range": "108-180㎡",
+      "room_types": "3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2",
+      "green_ratio": "住宅：40%",
+      "developer": "三亚绵阳开创房地产开发有限公司",
+      "address": "三亚海棠区海棠湾南田温泉度假区神泉大道",
+      "distance_km": 1.39,
+      "lng": 109.72407585344,
+      "lat": 18.398893423719,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2020年12月18日",
+      "delivery_date": "2023年12月30日",
+      "cert_dates": "[\"2020-12-18\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/2b62a78a9b6a38b2aa0126111593b6a0/275x206n.jpg",
+      "land_area_sqm": "住宅：23968.74m²",
+      "building_area_sqm": "住宅：48416.3m²",
+      "planned_units": "住宅：258",
+      "parking_spaces": "住宅：303",
+      "parking_ratio": "nan",
+      "property_company": "nan",
+      "property_fee": "住宅：4.8~7.8元/㎡/月",
+      "decoration": "住宅：带装修 别墅：毛坯",
+      "building_type": "{低层,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字［2020］74号\"]",
+      "developer_brand": "nan",
+      "investor": "绵阳开创集团",
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 107.77,
+          "area_str": "107.77㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.52,
+          "area_str": "119.52㎡"
+        },
+        {
+          "name": "四室",
+          "area": 122.36,
+          "area_str": "122.36㎡"
+        },
+        {
+          "name": "三室",
+          "area": 141.56,
+          "area_str": "141.56㎡"
+        },
+        {
+          "name": "三室",
+          "area": 153.69,
+          "area_str": "153.69㎡"
+        },
+        {
+          "name": "五室",
+          "area": 179.93,
+          "area_str": "179.93㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/488831",
+      "url_amap": "https://uri.amap.com/marker?position=109.72407585344,18.398893423719&name=开创·白玉海棠"
+    },
+    {
+      "loupan_id": 468808,
+      "project_name": "双大海棠香居",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 38000.0,
+      "total_price_wan": null,
+      "area_range": "123-190㎡",
+      "room_types": "3室户型,6室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "40%",
+      "developer": "海口宝峰实业有限公司",
+      "address": "三亚海棠区海棠湾南田温泉度假区",
+      "distance_km": 1.4,
+      "lng": 109.73112212277,
+      "lat": 18.415553578508,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2021年7月28日",
+      "delivery_date": "2022年12月30日",
+      "cert_dates": "[\"2021-07-28\", \"2020-01-14\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/acd4d67621bad961253f7b72d9bd4389/275x206n.jpg",
+      "land_area_sqm": "54666.67m²",
+      "building_area_sqm": "110000m²",
+      "planned_units": "304",
+      "parking_spaces": "568",
+      "parking_ratio": "1:1.87",
+      "property_company": "海南绿城天和物业服务有限公司",
+      "property_fee": "8.8元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2021】67号\", \"三房预许字【2020】4号\"]",
+      "developer_brand": null,
+      "investor": "海南双大集团有限公司",
+      "construction_progress": "已封顶，竣工时间：2022-12-30",
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 123.0,
+          "area_str": "123㎡"
+        },
+        {
+          "name": "三室",
+          "area": 145.0,
+          "area_str": "145㎡"
+        },
+        {
+          "name": "三室",
+          "area": 149.0,
+          "area_str": "149㎡"
+        },
+        {
+          "name": "六室",
+          "area": 190.0,
+          "area_str": "190㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/468808",
+      "url_amap": "https://uri.amap.com/marker?position=109.73112212277,18.415553578508&name=双大海棠香居"
+    },
+    {
+      "loupan_id": 529577,
+      "project_name": "盛海棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 26800.0,
+      "total_price_wan": null,
+      "area_range": "99-160㎡",
+      "room_types": "3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "海南益胜实业开发有限公司",
+      "address": "三亚海棠区海棠湾经三路8号",
+      "distance_km": 1.43,
+      "lng": 109.72162,
+      "lat": 18.397784,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2025年12月15日",
+      "delivery_date": "2026年9月",
+      "cert_dates": "[\"2026-01-20\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f25b6eb91066a99f0810d65c84e9afe8/275x206n.jpg",
+      "land_area_sqm": "住宅：94044.84m²",
+      "building_area_sqm": "住宅：192734.45m²",
+      "planned_units": "住宅：903",
+      "parking_spaces": "住宅：1181",
+      "parking_ratio": null,
+      "property_company": null,
+      "property_fee": null,
+      "decoration": "别墅：带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"XSSY202612000009\"]",
+      "developer_brand": "海南盛达房地产开发有限公司",
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 99.0,
+          "area_str": "99㎡"
+        },
+        {
+          "name": "三室",
+          "area": 105.0,
+          "area_str": "105㎡"
+        },
+        {
+          "name": "三室",
+          "area": 117.0,
+          "area_str": "117㎡"
+        },
+        {
+          "name": "三室",
+          "area": 122.0,
+          "area_str": "122㎡"
+        },
+        {
+          "name": "四室",
+          "area": 152.0,
+          "area_str": "152㎡"
+        },
+        {
+          "name": "三室",
+          "area": 160.0,
+          "area_str": "160㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/529577",
+      "url_amap": "https://uri.amap.com/marker?position=109.72162,18.397784&name=盛海棠"
+    },
+    {
+      "loupan_id": 416173,
+      "project_name": "海棠月色",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 29000.0,
+      "total_price_wan": null,
+      "area_range": "57-143㎡",
+      "room_types": "2室户型,3室户型,5室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "43%",
+      "developer": "海南红山房地产开发有限公司",
+      "address": "三亚海棠区海棠湾龙海路",
+      "distance_km": 2.2,
+      "lng": 109.735151,
+      "lat": 18.397944,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\"]",
+      "open_date": "2017年11月20日",
+      "delivery_date": "2019年5月31日",
+      "cert_dates": "[\"2017-11-20\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/d666e0dfcf83b4be078cba855e24f234/275x206n.jpg",
+      "land_area_sqm": "33745.89m²",
+      "building_area_sqm": "44500m²",
+      "planned_units": "708",
+      "parking_spaces": "410",
+      "parking_ratio": null,
+      "property_company": null,
+      "property_fee": "3.2元/㎡/月",
+      "decoration": "简装修",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字［2017］63号\"]",
+      "developer_brand": "新疆霄龙房地产开发有限公司",
+      "investor": "新疆霄龙房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 57.47,
+          "area_str": "57.47㎡"
+        },
+        {
+          "name": "二室",
+          "area": 66.49,
+          "area_str": "66.49㎡"
+        },
+        {
+          "name": "三室",
+          "area": 76.48,
+          "area_str": "76.48㎡"
+        },
+        {
+          "name": "五室",
+          "area": 143.16,
+          "area_str": "143.16㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/416173",
+      "url_amap": "https://uri.amap.com/marker?position=109.735151,18.397944&name=海棠月色"
+    },
+    {
+      "loupan_id": 526053,
+      "project_name": "海棠故事",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 58252.0,
+      "total_price_wan": null,
+      "area_range": "515-660㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "0.6",
+      "green_ratio": "40%",
+      "developer": "三亚故事文化产业发展有限公司",
+      "address": "三亚海棠区海棠湾三亚市海棠区国海路1号",
+      "distance_km": 4.12,
+      "lng": 109.745969,
+      "lat": 18.383603,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"车库入户\", \"车位充足\", \"独栋\", \"厨卫全明\"]",
+      "open_date": "2023年12月19日",
+      "delivery_date": "2024年12月31日",
+      "cert_dates": "[\"2024-01-24\", \"2023-11-17\", \"2023-12-28\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b3335d385a1913b31cff20e0e268eba1/275x206n.jpg",
+      "land_area_sqm": "101708.26m²",
+      "building_area_sqm": "163012.03m²",
+      "planned_units": "84",
+      "parking_spaces": "1200",
+      "parking_ratio": "1:3",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "毛坯",
+      "building_type": "{低层}",
+      "tenure_years": "40年",
+      "presale_permit": "[\"三房预许字[2024]007号\", \"三房预许字[2023]65号\", \"三房预许字[2023]68号\"]",
+      "developer_brand": "nan",
+      "investor": "三亚故事文化产业发展有限公司",
+      "construction_progress": "nan",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "四室",
+          "area": 515.0,
+          "area_str": "515㎡"
+        },
+        {
+          "name": "五室",
+          "area": 660.0,
+          "area_str": "660㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/526053",
+      "url_amap": "https://uri.amap.com/marker?position=109.745969,18.383603&name=海棠故事"
+    },
+    {
+      "loupan_id": 525331,
+      "project_name": "中旅·馥棠公馆",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 60000.0,
+      "total_price_wan": null,
+      "area_range": "138-600㎡",
+      "room_types": "3室户型,4室户型,5室户型,6室户型",
+      "floor_area_ratio": "1.36",
+      "green_ratio": "40%",
+      "developer": "中旅（三亚）置业有限公司",
+      "address": "三亚海棠区海棠湾藤桥路和龙海路交叉口东北200米",
+      "distance_km": 4.37,
+      "lng": 109.748845,
+      "lat": 18.383212,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2024年9月30日",
+      "delivery_date": "2025年10月30日",
+      "cert_dates": "[\"2024-09-29\", \"2024-12-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/6f9784c256ee2e67fcb61def9da67a07/275x206n.jpg",
+      "land_area_sqm": "133418m²",
+      "building_area_sqm": "181640m²",
+      "planned_units": "903",
+      "parking_spaces": "1820",
+      "parking_ratio": "1:2",
+      "property_company": "中旅城市运营服务有限公司三亚分公司",
+      "property_fee": "9.9元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"XSSY202409290001\", \"XSSY2024120600054\"]",
+      "developer_brand": "中旅投资",
+      "investor": "nan",
+      "construction_progress": "nan",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 138.0,
+          "area_str": "138㎡"
+        },
+        {
+          "name": "三室",
+          "area": 151.0,
+          "area_str": "151㎡"
+        },
+        {
+          "name": "三室",
+          "area": 165.0,
+          "area_str": "165㎡"
+        },
+        {
+          "name": "四室",
+          "area": 189.0,
+          "area_str": "189㎡"
+        },
+        {
+          "name": "四室",
+          "area": 263.0,
+          "area_str": "263㎡"
+        },
+        {
+          "name": "五室",
+          "area": 309.0,
+          "area_str": "309㎡"
+        },
+        {
+          "name": "五室",
+          "area": 395.0,
+          "area_str": "395㎡"
+        },
+        {
+          "name": "六室",
+          "area": 517.0,
+          "area_str": "517㎡"
+        },
+        {
+          "name": "六室",
+          "area": 600.0,
+          "area_str": "600㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/525331",
+      "url_amap": "https://uri.amap.com/marker?position=109.748845,18.383212&name=中旅·馥棠公馆"
+    },
+    {
+      "loupan_id": 487975,
+      "project_name": "佳兆业海棠伴山",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": null,
+      "total_price_wan": 373.0,
+      "area_range": "102-123㎡",
+      "room_types": "3室户型,4室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "三亚佰佳世纪房地产开发有限公司",
+      "address": "三亚海棠区海棠湾南田路16号",
+      "distance_km": 0.0,
+      "lng": 109.71899457187,
+      "lat": 18.410407937371,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"高绿化率\", \"低容积\", \"装修交付\", \"项目封顶\"]",
+      "open_date": "2021年2月8日",
+      "delivery_date": "2023年12月30日",
+      "cert_dates": "[\"2021-08-27\", \"2020-11-12\", \"2021-03-31\", \"2020-10-15\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/e79ece43c61f911460a87156f633918f/275x206n.jpg",
+      "land_area_sqm": "住宅：36943m² 别墅：36943m²",
+      "building_area_sqm": "住宅：57945m² 别墅：57945m²",
+      "planned_units": "住宅：421 别墅：434",
+      "parking_spaces": "住宅：455",
+      "parking_ratio": "住宅：1:1.08",
+      "property_company": "nan",
+      "property_fee": "住宅：6元/㎡/月 别墅：10元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字[2021]76号\", \"三房预许字［2020］56号\", \"三房预许字［2021］34号\", \"三房预许字［2020］50号\"]",
+      "developer_brand": "佳兆业集团",
+      "investor": "三亚佰佳世纪房地产开发有限公司",
+      "construction_progress": "已封顶，竣工时间：2023-12-31",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 102.0,
+          "area_str": "102㎡"
+        },
+        {
+          "name": "四室",
+          "area": 109.0,
+          "area_str": "109㎡"
+        },
+        {
+          "name": "四室",
+          "area": 113.0,
+          "area_str": "113㎡"
+        },
+        {
+          "name": "三室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/487975",
+      "url_amap": "https://uri.amap.com/marker?position=109.71899457187,18.410407937371&name=佳兆业海棠伴山"
+    },
+    {
+      "loupan_id": 519049,
+      "project_name": "恒润·中御海棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "106-143㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": null,
+      "green_ratio": "42%",
+      "developer": "海南恒润实业发展有限公司",
+      "address": "三亚海棠区海棠湾南田路16号",
+      "distance_km": 0.4,
+      "lng": 109.72002309162,
+      "lat": 18.4069478031,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"装修交付\", \"项目封顶\", \"花园洋房\", \"配套纯熟\"]",
+      "open_date": "2025年12月30日",
+      "delivery_date": "2026年12月31日",
+      "cert_dates": "[\"2023-03-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/377e9f39df449be8dc0a7d93f2266a39/275x206n.jpg",
+      "land_area_sqm": "18920.04m²",
+      "building_area_sqm": "33671m²",
+      "planned_units": "209",
+      "parking_spaces": "241",
+      "parking_ratio": null,
+      "property_company": "绿城物业服务集团有限公司三亚分公司",
+      "property_fee": "6.28元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2023】29号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": "已封顶，竣工时间：2026-12-31",
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/519049",
+      "url_amap": "https://uri.amap.com/marker?position=109.72002309162,18.4069478031&name=恒润·中御海棠"
+    },
+    {
+      "loupan_id": 401062,
+      "project_name": "海棠花开",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": 32000.0,
+      "total_price_wan": null,
+      "area_range": "86-93㎡",
+      "room_types": "2室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "三亚中业南田投资有限公司",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 0.19,
+      "lng": 109.72055948869,
+      "lat": 18.409555513477,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2018年8月8日",
+      "delivery_date": "2020年12月30日",
+      "cert_dates": "[\"2018-07-09\", \"2017-06-29\", \"2017-11-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/8b4e1b538ef54e9823005987ee9dfd19/275x206n.jpg",
+      "land_area_sqm": "住宅：64667m² 别墅：64667m²",
+      "building_area_sqm": "住宅：112336m² 别墅：112336m²",
+      "planned_units": "住宅：906 别墅：906",
+      "parking_spaces": "住宅：200 别墅：200",
+      "parking_ratio": "住宅：1;1 别墅：1;1",
+      "property_company": "三亚和颐健康服务有限公司",
+      "property_fee": "住宅：7.8~16.1元/㎡/月 别墅：10元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字［2018］28号\", \"三房预许字【2017】31号\", \"三房预许字［2017］64号\"]",
+      "developer_brand": null,
+      "investor": "三亚中业南田投资有限公司",
+      "construction_progress": "已竣工，竣工时间：2020-12-29",
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 86.0,
+          "area_str": "86㎡"
+        },
+        {
+          "name": "三室",
+          "area": 92.66,
+          "area_str": "92.66㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/401062",
+      "url_amap": "https://uri.amap.com/marker?position=109.72055948869,18.409555513477&name=海棠花开"
+    },
+    {
+      "loupan_id": 411065,
+      "project_name": "华悦海棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": 33000.0,
+      "total_price_wan": null,
+      "area_range": "86-110㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "40%",
+      "developer": "海南旭茂投资有限公司",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 0.53,
+      "lng": 109.72299749234,
+      "lat": 18.407546440274,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"大阳台\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2019年2月1日",
+      "delivery_date": "2020年8月30日",
+      "cert_dates": "[\"2017-08-25\", \"2019-01-23\", \"2016-10-31\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/c7b33ff17763e0e20da532ea3ac51ff0/275x206n.jpg",
+      "land_area_sqm": "128266.66m²",
+      "building_area_sqm": "128266m²",
+      "planned_units": "1598",
+      "parking_spaces": "1467",
+      "parking_ratio": "1:0.9",
+      "property_company": "三亚旭茂物业管理有限公司",
+      "property_fee": "3.6元/㎡/月",
+      "decoration": "简装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2017】44号\", \"三房预许字［2019］5号\", \"三房预许字【2016】41号\"]",
+      "developer_brand": null,
+      "investor": "海南旭茂投资有限公司",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 86.0,
+          "area_str": "86㎡"
+        },
+        {
+          "name": "三室",
+          "area": 97.0,
+          "area_str": "97㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.26,
+          "area_str": "110.26㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/411065",
+      "url_amap": "https://uri.amap.com/marker?position=109.72299749234,18.407546440274&name=华悦海棠"
+    },
+    {
+      "loupan_id": 495757,
+      "project_name": "金地水木海棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": 31000.0,
+      "total_price_wan": null,
+      "area_range": "106-140㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "40%",
+      "developer": "三亚南田温泉金地置业有限公司",
+      "address": "三亚海棠区海棠湾南田温泉度假区金地水木海棠小区内",
+      "distance_km": 1.37,
+      "lng": 109.73005939872,
+      "lat": 18.416840748102,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\"]",
+      "open_date": "2020年10月15日",
+      "delivery_date": "2022年6月30日",
+      "cert_dates": "[\"2021-02-04\", \"2020-10-26\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b8bf0bb36d9d7d226194dceac5452ec4/275x206n.jpg",
+      "land_area_sqm": "66635.27m²",
+      "building_area_sqm": "125308.4m²",
+      "planned_units": "542",
+      "parking_spaces": "890",
+      "parking_ratio": null,
+      "property_company": null,
+      "property_fee": "5元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2021】009号\", \"三房预许第202051号\"]",
+      "developer_brand": null,
+      "investor": "三亚南田温泉金地置业有限公司",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 107.0,
+          "area_str": "107㎡"
+        },
+        {
+          "name": "四室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        },
+        {
+          "name": "三室",
+          "area": 140.0,
+          "area_str": "140㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/495757",
+      "url_amap": "https://uri.amap.com/marker?position=109.73005939872,18.416840748102&name=金地水木海棠"
+    },
+    {
+      "loupan_id": 442609,
+      "project_name": "天骄海棠湾",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": 37000.0,
+      "total_price_wan": null,
+      "area_range": "65-86㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "住宅：1.2",
+      "green_ratio": "住宅：42% 别墅：42%",
+      "developer": "三亚伟奇投资有限公司",
+      "address": "三亚海棠区海棠湾南田大道珠江温泉酒店南",
+      "distance_km": 1.57,
+      "lng": 109.7337802774,
+      "lat": 18.412052774921,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2019年2月2日",
+      "delivery_date": "2022年12月",
+      "cert_dates": "[\"2018-06-20\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/34638496932793974aaf9ce3b6811258/275x206n.jpg",
+      "land_area_sqm": "住宅：55560m² 别墅：55560m²",
+      "building_area_sqm": "住宅：99833m² 别墅：99833m²",
+      "planned_units": "住宅：804 别墅：804",
+      "parking_spaces": "住宅：804 别墅：804",
+      "parking_ratio": "住宅：1:1 别墅：1:1",
+      "property_company": null,
+      "property_fee": "住宅：5.6元/㎡/月 别墅：15元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{高层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字【2018】21号\"]",
+      "developer_brand": null,
+      "investor": "内蒙古巨华集团",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 65.0,
+          "area_str": "65㎡"
+        },
+        {
+          "name": "三室",
+          "area": 86.0,
+          "area_str": "86㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/442609",
+      "url_amap": "https://uri.amap.com/marker?position=109.7337802774,18.412052774921&name=天骄海棠湾"
+    },
+    {
+      "loupan_id": 479300,
+      "project_name": "天使·海棠明悦",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": 33628.0,
+      "total_price_wan": null,
+      "area_range": "113-195㎡",
+      "room_types": "3室户型,4室户型,别墅户型",
+      "floor_area_ratio": "住宅：1 别墅：1",
+      "green_ratio": "住宅：45% 别墅：45%",
+      "developer": "海南霖润房地产开发有限公司",
+      "address": "三亚海棠区海棠湾南田温泉度假区南田路18号",
+      "distance_km": 1.81,
+      "lng": 109.73496254106,
+      "lat": 18.404420852244,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2020年12月31日",
+      "delivery_date": "2023年5月30日",
+      "cert_dates": "[\"2021-06-30\", \"2021-11-18\", \"2022-06-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/8a0328380ef56d1ae970063269c323df/275x206n.jpg",
+      "land_area_sqm": "住宅：120000m² 别墅：120000m²",
+      "building_area_sqm": "住宅：180600m² 别墅：180600m²",
+      "planned_units": "住宅：359 别墅：359",
+      "parking_spaces": "住宅：548 别墅：548",
+      "parking_ratio": "住宅：1:1.45 别墅：1:1.45",
+      "property_company": null,
+      "property_fee": "住宅：5.5元/㎡/月 别墅：5.5~8.5元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{多层,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字【2021】023号\", \"三房预许字【2021】57号\", \"三房预许字【2021】101号\", \"三房预许字【2022】038号\"]",
+      "developer_brand": null,
+      "investor": "海南霖润房地产开发有限公司",
+      "construction_progress": "已封顶，竣工时间：2023-05-30",
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 113.0,
+          "area_str": "113㎡"
+        },
+        {
+          "name": "四室",
+          "area": 136.0,
+          "area_str": "136㎡"
+        },
+        {
+          "name": "四室",
+          "area": 141.86,
+          "area_str": "141.86㎡"
+        },
+        {
+          "name": "二室",
+          "area": 148.88,
+          "area_str": "148.88㎡"
+        },
+        {
+          "name": "四室",
+          "area": 158.75,
+          "area_str": "158.75㎡"
+        },
+        {
+          "name": "四室",
+          "area": 164.6,
+          "area_str": "164.6㎡"
+        },
+        {
+          "name": "五室",
+          "area": 180.42,
+          "area_str": "180.42㎡"
+        },
+        {
+          "name": "五室",
+          "area": 195.1,
+          "area_str": "195.1㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/479300",
+      "url_amap": "https://uri.amap.com/marker?position=109.73496254106,18.404420852244&name=天使·海棠明悦"
+    },
+    {
+      "loupan_id": 463390,
+      "project_name": "和泓海棠府",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": 30000.0,
+      "total_price_wan": null,
+      "area_range": "100-120㎡",
+      "room_types": "3室户型,4室户型,5室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "40%",
+      "developer": "三亚顺泽房地产开发有限公司",
+      "address": "三亚海棠区海棠湾南田片区海棠府",
+      "distance_km": 2.0,
+      "lng": 109.72396842613,
+      "lat": 18.393050455666,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2021年1月18日",
+      "delivery_date": "2023年6月30日",
+      "cert_dates": "[\"2020-01-17\", \"2022-06-17\", \"2020-07-27\", \"2020-09-29\", \"2021-01-18\", \"2022-05-24\", \"2019-12-03\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3e78be1ea2da88b09ab5a194c1a3bb7f/275x206n.jpg",
+      "land_area_sqm": "182666m²",
+      "building_area_sqm": "300000m²",
+      "planned_units": "1468",
+      "parking_spaces": "1615",
+      "parking_ratio": "1:1.1",
+      "property_company": null,
+      "property_fee": "4.5元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字〔2020〕8 号\", \"三房预许字【2022】039号\", \"三房预许字【2020】33号\", \"三房预许字【2020】60号\", \"预售证号：三房预许字【2020】45号\", \"预售证号：三房预许字【2021】3号\", \"三房预许字[2022] 31号\", \"三房预许字【2019】69号\"]",
+      "developer_brand": "和泓地产集团",
+      "investor": "三亚顺泽房地产开发有限公司",
+      "construction_progress": "已封顶，竣工时间：2023-06-30",
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "五室",
+          "area": 102.0,
+          "area_str": "102㎡"
+        },
+        {
+          "name": "四室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/463390",
+      "url_amap": "https://uri.amap.com/marker?position=109.72396842613,18.393050455666&name=和泓海棠府"
+    },
+    {
+      "loupan_id": 411137,
+      "project_name": "方大太阳城",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "68-113㎡",
+      "room_types": "1室户型,2室户型,3室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "40%",
+      "developer": null,
+      "address": "三亚海棠区海棠湾南田温泉热带风情旅游城",
+      "distance_km": 0.12,
+      "lng": 109.719979,
+      "lat": 18.410885,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"旅游地产\", \"小户型\"]",
+      "open_date": null,
+      "delivery_date": null,
+      "cert_dates": "[\"2016-11-24\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3e507d09e1bd8cadb54723f5472bf2c0/275x206n.jpg",
+      "land_area_sqm": "50593.05m²",
+      "building_area_sqm": "98141.47m²",
+      "planned_units": "691",
+      "parking_spaces": "691",
+      "parking_ratio": "1：1",
+      "property_company": null,
+      "property_fee": "4.3元/㎡/月",
+      "decoration": "简装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2016】46号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 68.29,
+          "area_str": "68.29㎡"
+        },
+        {
+          "name": "二室",
+          "area": 84.0,
+          "area_str": "84㎡"
+        },
+        {
+          "name": "二室",
+          "area": 89.51,
+          "area_str": "89.51㎡"
+        },
+        {
+          "name": "三室",
+          "area": 113.0,
+          "area_str": "113㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/411137",
+      "url_amap": "https://uri.amap.com/marker?position=109.719979,18.410885&name=方大太阳城"
+    },
+    {
+      "loupan_id": 263888,
+      "project_name": "海棠·泰岳府",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "37-132㎡",
+      "room_types": "1室户型,2室户型,3室户型",
+      "floor_area_ratio": "住宅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": null,
+      "address": "三亚海棠区海棠湾南田温泉开发区经一路",
+      "distance_km": 0.24,
+      "lng": 109.719292,
+      "lat": 18.408302,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"银行\", \"学校\"]",
+      "open_date": null,
+      "delivery_date": null,
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/7b98adfd24a5678cacbf9bc64d6f2e78/275x206n.jpg",
+      "land_area_sqm": "住宅：26000m² 别墅：26000m²",
+      "building_area_sqm": "住宅：42000m² 别墅：42000m²",
+      "planned_units": "住宅：313 别墅：313",
+      "parking_spaces": "住宅：226 别墅：226",
+      "parking_ratio": "住宅：1:0.7 别墅：1:0.7",
+      "property_company": null,
+      "property_fee": "住宅：3.9元/㎡/月",
+      "decoration": "住宅：毛坯,简装修 别墅：毛坯,简装修",
+      "building_type": "{多层,小高层}",
+      "tenure_years": "住宅：70年 别墅：40年",
+      "presale_permit": "[\"三房预许字[2015]30号\", \"三房预许字【2016】32号\"]",
+      "developer_brand": null,
+      "investor": "三亚神州泰岳实业有限公司",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 37.03,
+          "area_str": "37.03㎡"
+        },
+        {
+          "name": "一室",
+          "area": 41.41,
+          "area_str": "41.41㎡"
+        },
+        {
+          "name": "一室",
+          "area": 43.52,
+          "area_str": "43.52㎡"
+        },
+        {
+          "name": "一室",
+          "area": 57.48,
+          "area_str": "57.48㎡"
+        },
+        {
+          "name": "二室",
+          "area": 61.48,
+          "area_str": "61.48㎡"
+        },
+        {
+          "name": "二室",
+          "area": 70.25,
+          "area_str": "70.25㎡"
+        },
+        {
+          "name": "二室",
+          "area": 74.97,
+          "area_str": "74.97㎡"
+        },
+        {
+          "name": "三室",
+          "area": 131.57,
+          "area_str": "131.57㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/263888",
+      "url_amap": "https://uri.amap.com/marker?position=109.719292,18.408302&name=海棠·泰岳府"
+    },
+    {
+      "loupan_id": 411078,
+      "project_name": "龙棠大观",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "96-209㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "1",
+      "green_ratio": "45%",
+      "developer": "三亚美海龙房地产开发有限公司",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 0.79,
+      "lng": 109.72386999513,
+      "lat": 18.41577303495,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2021年7月",
+      "delivery_date": "2022年12月",
+      "cert_dates": "[\"2018-12-24\", \"2017-07-13\", \"2017-09-30\", \"2017-12-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/cfba1c2997b80509e3d4d76173417a1e/275x206n.jpg",
+      "land_area_sqm": "58666.66m²",
+      "building_area_sqm": "59000m²",
+      "planned_units": "420",
+      "parking_spaces": "591",
+      "parking_ratio": null,
+      "property_company": null,
+      "property_fee": "4.9元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字〔2018〕59 号\", \"三房预许字［2017］38号\", \"三房预许字［2017］55号\", \"三房预许字［2017］70号\"]",
+      "developer_brand": null,
+      "investor": "三亚美海龙房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 96.06,
+          "area_str": "96.06㎡"
+        },
+        {
+          "name": "三室",
+          "area": 124.51,
+          "area_str": "124.51㎡"
+        },
+        {
+          "name": "四室",
+          "area": 208.95,
+          "area_str": "208.95㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/411078",
+      "url_amap": "https://uri.amap.com/marker?position=109.72386999513,18.41577303495&name=龙棠大观"
+    },
+    {
+      "loupan_id": 248046,
+      "project_name": "陶然湾",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "62-151㎡",
+      "room_types": "1室户型,2室户型,3室户型,别墅户型",
+      "floor_area_ratio": "1.19",
+      "green_ratio": "40%",
+      "developer": null,
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 0.8,
+      "lng": 109.724442,
+      "lat": 18.405386,
+      "property_type": "别墅",
+      "tags": "[\"高绿化率\", \"大平层\", \"装修交付\", \"旅游地产\", \"银行\"]",
+      "open_date": null,
+      "delivery_date": null,
+      "cert_dates": "[\"2013-01-29\", \"2017-09-28\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/aca58bd165a6a9474015d4ed6f9cf681/275x206n.jpg",
+      "land_area_sqm": "96007m²",
+      "building_area_sqm": "160599.03m²",
+      "planned_units": "1088",
+      "parking_spaces": "782",
+      "parking_ratio": "1:0.7",
+      "property_company": null,
+      "property_fee": "4.5元/㎡/月",
+      "decoration": "简装修",
+      "building_type": "{叠加别墅}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字[2013]3号\", \"三房预许字［2017］54号\"]",
+      "developer_brand": null,
+      "investor": "三亚大兴首邑投资有限公司",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 62.16,
+          "area_str": "62.16㎡"
+        },
+        {
+          "name": "二室",
+          "area": 84.0,
+          "area_str": "84㎡"
+        },
+        {
+          "name": "三室",
+          "area": 109.0,
+          "area_str": "109㎡"
+        },
+        {
+          "name": "二室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        },
+        {
+          "name": "二室",
+          "area": 123.22,
+          "area_str": "123.22㎡"
+        },
+        {
+          "name": "二室",
+          "area": 131.52,
+          "area_str": "131.52㎡"
+        },
+        {
+          "name": "二室",
+          "area": 135.0,
+          "area_str": "135㎡"
+        },
+        {
+          "name": "三室",
+          "area": 136.0,
+          "area_str": "136㎡"
+        },
+        {
+          "name": "三室",
+          "area": 136.19,
+          "area_str": "136.19㎡"
+        },
+        {
+          "name": "三室",
+          "area": 142.87,
+          "area_str": "142.87㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.92,
+          "area_str": "143.92㎡"
+        },
+        {
+          "name": "二室",
+          "area": 144.74,
+          "area_str": "144.74㎡"
+        },
+        {
+          "name": "三室",
+          "area": 145.86,
+          "area_str": "145.86㎡"
+        },
+        {
+          "name": "三室",
+          "area": 150.64,
+          "area_str": "150.64㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/248046",
+      "url_amap": "https://uri.amap.com/marker?position=109.724442,18.405386&name=陶然湾"
+    },
+    {
+      "loupan_id": 414410,
+      "project_name": "尚海棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "66-145㎡",
+      "room_types": "1室户型,2室户型,3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1 别墅：1",
+      "green_ratio": "住宅：48% 别墅：48%",
+      "developer": null,
+      "address": "三亚海棠区海棠湾藤桥出口南田温泉方向北行2KM（南田温泉小学西侧）",
+      "distance_km": 1.35,
+      "lng": 109.725462,
+      "lat": 18.399922,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"小户型\"]",
+      "open_date": null,
+      "delivery_date": null,
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/e1db2ba8075f45da7cfdd89161f9716f/275x206n.jpg",
+      "land_area_sqm": "住宅：31146m² 别墅：31146m²",
+      "building_area_sqm": "住宅：57900m² 别墅：57900m²",
+      "planned_units": "住宅：367 别墅：367",
+      "parking_spaces": "住宅：300 别墅：300",
+      "parking_ratio": "住宅：1：0.8 别墅：1：0.8",
+      "property_company": "深圳市中建大康物业管理有限公司",
+      "property_fee": "住宅：3.5元/㎡/月 别墅：7元/㎡/月",
+      "decoration": "住宅：毛坯,简装修 别墅：毛坯,简装修",
+      "building_type": "{独栋别墅,高层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许[2016]11号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 66.0,
+          "area_str": "66㎡"
+        },
+        {
+          "name": "二室",
+          "area": 84.0,
+          "area_str": "84㎡"
+        },
+        {
+          "name": "二室",
+          "area": 90.0,
+          "area_str": "90㎡"
+        },
+        {
+          "name": "三室",
+          "area": 102.0,
+          "area_str": "102㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/414410",
+      "url_amap": "https://uri.amap.com/marker?position=109.725462,18.399922&name=尚海棠"
+    },
+    {
+      "loupan_id": 466832,
+      "project_name": "融创一池半海",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "119-145㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "别墅：1.2 住宅：1.2",
+      "green_ratio": "别墅：40% 住宅：40%",
+      "developer": "三亚庆华圳置业有限公司",
+      "address": "三亚海棠区海棠湾海棠区南田大道",
+      "distance_km": 1.56,
+      "lng": 109.73341354407,
+      "lat": 18.413395708922,
+      "property_type": "别墅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2019年12月15日",
+      "delivery_date": "2022年6月30日",
+      "cert_dates": "[\"2019-12-11\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3f16c0c1c21fca2fe85a946f3dd1db8a/275x206n.jpg",
+      "land_area_sqm": "别墅：29400m² 住宅：29400m²",
+      "building_area_sqm": "别墅：50000m² 住宅：50000m²",
+      "planned_units": "别墅：308 住宅：308",
+      "parking_spaces": "别墅：373 住宅：373",
+      "parking_ratio": "别墅：1:1.2 住宅：1:1.2",
+      "property_company": null,
+      "property_fee": "别墅：10元/㎡/月 住宅：6元/㎡/月",
+      "decoration": "别墅：带装修 住宅：带装修",
+      "building_type": "{叠加别墅}",
+      "tenure_years": "别墅：70年 住宅：70年",
+      "presale_permit": "[\"三房预许字[2019]75号\"]",
+      "developer_brand": "融创中国",
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "四室",
+          "area": 118.59,
+          "area_str": "118.59㎡"
+        },
+        {
+          "name": "四室",
+          "area": 125.58,
+          "area_str": "125.58㎡"
+        },
+        {
+          "name": "三室",
+          "area": 144.79,
+          "area_str": "144.79㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/466832",
+      "url_amap": "https://uri.amap.com/marker?position=109.73341354407,18.413395708922&name=融创一池半海"
+    },
+    {
+      "loupan_id": 243082,
+      "project_name": "珠江南田57°",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "46-196㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "0.36",
+      "green_ratio": "60%",
+      "developer": null,
+      "address": "三亚海棠区海棠湾珠江南田温泉度假区",
+      "distance_km": 1.84,
+      "lng": 109.735909,
+      "lat": 18.414554,
+      "property_type": "别墅",
+      "tags": "[\"高绿化率\", \"旅游地产\", \"配套纯熟\", \"银行\", \"学校\"]",
+      "open_date": null,
+      "delivery_date": null,
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b9a287246e4f4aa8fff28eef6a0240f4/275x206n.jpg",
+      "land_area_sqm": "66660m²",
+      "building_area_sqm": "24000m²",
+      "planned_units": "360",
+      "parking_spaces": null,
+      "parking_ratio": "1:1",
+      "property_company": "广州珠江物业酒店管理公司",
+      "property_fee": "9.6元/㎡/月",
+      "decoration": null,
+      "building_type": "{独栋别墅,联排别墅,叠加别墅}",
+      "tenure_years": "70年",
+      "presale_permit": "[]",
+      "developer_brand": null,
+      "investor": "海南珠江国际置业",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 78.0,
+          "area_str": "78㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/243082",
+      "url_amap": "https://uri.amap.com/marker?position=109.735909,18.414554&name=珠江南田57°"
+    },
+    {
+      "loupan_id": 247966,
+      "project_name": "海棠湾六和悦城",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "86-147㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "70%",
+      "developer": null,
+      "address": "三亚海棠区海棠湾南田国际温泉旅游城",
+      "distance_km": 1.93,
+      "lng": 109.73725766337,
+      "lat": 18.411934284896,
+      "property_type": "住宅",
+      "tags": "[\"人车分流\", \"高绿化率\", \"低容积\", \"装修交付\", \"旅游地产\"]",
+      "open_date": null,
+      "delivery_date": null,
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f7d2e6fb7d3e7ba1f25466fe42cd3a87/275x206n.jpg",
+      "land_area_sqm": "64762m²",
+      "building_area_sqm": "110000m²",
+      "planned_units": "682",
+      "parking_spaces": "700",
+      "parking_ratio": "1:1",
+      "property_company": null,
+      "property_fee": "4.7元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2013】6号\"]",
+      "developer_brand": null,
+      "investor": "三亚铱海房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 86.0,
+          "area_str": "86㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.26,
+          "area_str": "110.26㎡"
+        },
+        {
+          "name": "三室",
+          "area": 147.0,
+          "area_str": "147㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/247966",
+      "url_amap": "https://uri.amap.com/marker?position=109.73725766337,18.411934284896&name=海棠湾六和悦城"
+    },
+    {
+      "loupan_id": 522927,
+      "project_name": "保利栖棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": null,
+      "room_types": null,
+      "floor_area_ratio": "3",
+      "green_ratio": "40%",
+      "developer": "三亚保锦实业发展有限公司",
+      "address": "三亚海棠区海棠湾南田路与创业人才基地交汇处",
+      "distance_km": 2.18,
+      "lng": 109.729685,
+      "lat": 18.393588,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"配套纯熟\", \"便利店\", \"银行\", \"学校\"]",
+      "open_date": null,
+      "delivery_date": null,
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/7a22d5374bc54b9dfeb789663e1389f6/275x206n.jpg",
+      "land_area_sqm": "87000m²",
+      "building_area_sqm": "327000m²",
+      "planned_units": "2516",
+      "parking_spaces": "2582",
+      "parking_ratio": "1:1",
+      "property_company": null,
+      "property_fee": "1.98元/㎡/月",
+      "decoration": null,
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"现房销售备案[2022]第2号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [],
+      "url_anjuke": "https://m.anjuke.com/loupan/522927",
+      "url_amap": "https://uri.amap.com/marker?position=109.729685,18.393588&name=保利栖棠"
+    },
+    {
+      "loupan_id": 414815,
+      "project_name": "联投海棠韵",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "40-101㎡",
+      "room_types": "2室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：30% 别墅：30%",
+      "developer": null,
+      "address": "三亚海棠区海棠湾龙海路",
+      "distance_km": 3.45,
+      "lng": 109.743148,
+      "lat": 18.38953,
+      "property_type": "住宅",
+      "tags": "[\"低容积\", \"装修交付\", \"旅游地产\", \"学校\", \"小户型\"]",
+      "open_date": null,
+      "delivery_date": null,
+      "cert_dates": "[\"2017-01-19\", \"2017-08-25\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/881e1198d20328828e6caa9d7f68f8af/275x206n.jpg",
+      "land_area_sqm": "住宅：45845.62m² 别墅：45845.62m²",
+      "building_area_sqm": "住宅：80375.78m² 别墅：80375.78m²",
+      "planned_units": "住宅：599 别墅：599",
+      "parking_spaces": "住宅：562 别墅：562",
+      "parking_ratio": "住宅：1:0.9 别墅：1:0.9",
+      "property_company": null,
+      "property_fee": "住宅：5.5元/㎡/月 别墅：7.5元/㎡/月",
+      "decoration": "住宅：简装修 别墅：简装修",
+      "building_type": "{多层,花园洋房,联排别墅,叠加别墅,小高层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字【2017】11号\", \"三房预许字【2017】45号\"]",
+      "developer_brand": null,
+      "investor": "海南联投投资有限责任公司",
+      "construction_progress": null,
+      "is_synthetic": false,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 40.0,
+          "area_str": "40㎡"
+        },
+        {
+          "name": "二室",
+          "area": 83.0,
+          "area_str": "83㎡"
+        },
+        {
+          "name": "三室",
+          "area": 95.0,
+          "area_str": "95㎡"
+        },
+        {
+          "name": "四室",
+          "area": 101.0,
+          "area_str": "101㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/414815",
+      "url_amap": "https://uri.amap.com/marker?position=109.743148,18.38953&name=联投海棠韵"
+    },
+    {
+      "loupan_id": 7650186,
+      "project_name": "海棠西岸锦园",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "57-143㎡",
+      "room_types": "2室户型,3室户型,5室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "43%",
+      "developer": "远洋",
+      "address": "三亚海棠区海棠湾龙海路",
+      "distance_km": 0.33,
+      "lng": 109.720786,
+      "lat": 18.408009,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2017-11-20\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/d666e0dfcf83b4be078cba855e24f234/275x206n.jpg",
+      "land_area_sqm": "33745.89m²",
+      "building_area_sqm": "44500m²",
+      "planned_units": "708",
+      "parking_spaces": "410",
+      "parking_ratio": null,
+      "property_company": "绿城服务",
+      "property_fee": "3.2元/㎡/月",
+      "decoration": "简装修",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字［2017］63号\"]",
+      "developer_brand": "新疆霄龙房地产开发有限公司",
+      "investor": "新疆霄龙房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 57.47,
+          "area_str": "57.47㎡"
+        },
+        {
+          "name": "二室",
+          "area": 66.49,
+          "area_str": "66.49㎡"
+        },
+        {
+          "name": "三室",
+          "area": 76.48,
+          "area_str": "76.48㎡"
+        },
+        {
+          "name": "五室",
+          "area": 143.16,
+          "area_str": "143.16㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/7650186",
+      "url_amap": "https://uri.amap.com/marker?position=109.720786,18.408009&name=海棠西岸锦园"
+    },
+    {
+      "loupan_id": 206724,
+      "project_name": "万家B区",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "86-93㎡",
+      "room_types": "2室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "美的置业",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 0.45,
+      "lng": 109.71591,
+      "lat": 18.407556,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2024年",
+      "delivery_date": "2025年",
+      "cert_dates": "[\"2018-07-09\", \"2017-06-29\", \"2017-11-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/8b4e1b538ef54e9823005987ee9dfd19/275x206n.jpg",
+      "land_area_sqm": "住宅：64667m² 别墅：64667m²",
+      "building_area_sqm": "住宅：112336m² 别墅：112336m²",
+      "planned_units": "住宅：906 别墅：906",
+      "parking_spaces": "住宅：200 别墅：200",
+      "parking_ratio": "住宅：1;1 别墅：1;1",
+      "property_company": "中海物业",
+      "property_fee": "住宅：7.8~16.1元/㎡/月 别墅：10元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字［2018］28号\", \"三房预许字【2017】31号\", \"三房预许字［2017］64号\"]",
+      "developer_brand": null,
+      "investor": "三亚中业南田投资有限公司",
+      "construction_progress": "已竣工，竣工时间：2020-12-29",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 86.0,
+          "area_str": "86㎡"
+        },
+        {
+          "name": "三室",
+          "area": 92.66,
+          "area_str": "92.66㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/206724",
+      "url_amap": "https://uri.amap.com/marker?position=109.71591,18.407556&name=万家B区"
+    },
+    {
+      "loupan_id": 3445731,
+      "project_name": "华幸福城",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "106-143㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": null,
+      "green_ratio": "42%",
+      "developer": "远洋",
+      "address": "三亚海棠区海棠湾南田路16号",
+      "distance_km": 0.59,
+      "lng": 109.716603,
+      "lat": 18.405585,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"装修交付\", \"项目封顶\", \"花园洋房\", \"配套纯熟\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2023-03-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/377e9f39df449be8dc0a7d93f2266a39/275x206n.jpg",
+      "land_area_sqm": "18920.04m²",
+      "building_area_sqm": "33671m²",
+      "planned_units": "209",
+      "parking_spaces": "241",
+      "parking_ratio": null,
+      "property_company": "保利物业",
+      "property_fee": "6.28元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "高层",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2023】29号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": "已封顶，竣工时间：2026-12-31",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/3445731",
+      "url_amap": "https://uri.amap.com/marker?position=109.716603,18.405585&name=华幸福城"
+    },
+    {
+      "loupan_id": 253101,
+      "project_name": "融创美好名苑",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "119-145㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "别墅：1.2 住宅：1.2",
+      "green_ratio": "别墅：40% 住宅：40%",
+      "developer": "远洋",
+      "address": "三亚海棠区海棠湾海棠区南田大道",
+      "distance_km": 0.73,
+      "lng": 109.71792,
+      "lat": 18.416862,
+      "property_type": "别墅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2019-12-11\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3f16c0c1c21fca2fe85a946f3dd1db8a/275x206n.jpg",
+      "land_area_sqm": "别墅：29400m² 住宅：29400m²",
+      "building_area_sqm": "别墅：50000m² 住宅：50000m²",
+      "planned_units": "别墅：308 住宅：308",
+      "parking_spaces": "别墅：373 住宅：373",
+      "parking_ratio": "别墅：1:1.2 住宅：1:1.2",
+      "property_company": "万科物业",
+      "property_fee": "别墅：10元/㎡/月 住宅：6元/㎡/月",
+      "decoration": "别墅：带装修 住宅：带装修",
+      "building_type": "多层",
+      "tenure_years": "别墅：70年 住宅：70年",
+      "presale_permit": "[\"三房预许字[2019]75号\"]",
+      "developer_brand": "融创中国",
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "四室",
+          "area": 118.59,
+          "area_str": "118.59㎡"
+        },
+        {
+          "name": "四室",
+          "area": 125.58,
+          "area_str": "125.58㎡"
+        },
+        {
+          "name": "三室",
+          "area": 144.79,
+          "area_str": "144.79㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/253101",
+      "url_amap": "https://uri.amap.com/marker?position=109.71792,18.416862&name=融创美好名苑"
+    },
+    {
+      "loupan_id": 1158575,
+      "project_name": "翠台二期",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "96-209㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "1",
+      "green_ratio": "45%",
+      "developer": "保利",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 0.93,
+      "lng": 109.727315,
+      "lat": 18.407615,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2018-12-24\", \"2017-07-13\", \"2017-09-30\", \"2017-12-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/cfba1c2997b80509e3d4d76173417a1e/275x206n.jpg",
+      "land_area_sqm": "58666.66m²",
+      "building_area_sqm": "59000m²",
+      "planned_units": "420",
+      "parking_spaces": "591",
+      "parking_ratio": null,
+      "property_company": "万科物业",
+      "property_fee": "4.9元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字〔2018〕59 号\", \"三房预许字［2017］38号\", \"三房预许字［2017］55号\", \"三房预许字［2017］70号\"]",
+      "developer_brand": null,
+      "investor": "三亚美海龙房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 96.06,
+          "area_str": "96.06㎡"
+        },
+        {
+          "name": "三室",
+          "area": 124.51,
+          "area_str": "124.51㎡"
+        },
+        {
+          "name": "四室",
+          "area": 208.95,
+          "area_str": "208.95㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/1158575",
+      "url_amap": "https://uri.amap.com/marker?position=109.727315,18.407615&name=翠台二期"
+    },
+    {
+      "loupan_id": 6080087,
+      "project_name": "瑞汇A区",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "102-123㎡",
+      "room_types": "3室户型,4室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "碧桂园",
+      "address": "三亚海棠区海棠湾南田路16号",
+      "distance_km": 0.98,
+      "lng": 109.723651,
+      "lat": 18.402779,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"高绿化率\", \"低容积\", \"装修交付\", \"项目封顶\"]",
+      "open_date": "2023年",
+      "delivery_date": "2024年",
+      "cert_dates": "[\"2021-08-27\", \"2020-11-12\", \"2021-03-31\", \"2020-10-15\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/e79ece43c61f911460a87156f633918f/275x206n.jpg",
+      "land_area_sqm": "住宅：36943m² 别墅：36943m²",
+      "building_area_sqm": "住宅：57945m² 别墅：57945m²",
+      "planned_units": "住宅：421 别墅：434",
+      "parking_spaces": "住宅：455",
+      "parking_ratio": "住宅：1:1.08",
+      "property_company": "万科物业",
+      "property_fee": "住宅：6元/㎡/月 别墅：10元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字[2021]76号\", \"三房预许字［2020］56号\", \"三房预许字［2021］34号\", \"三房预许字［2020］50号\"]",
+      "developer_brand": "佳兆业集团",
+      "investor": "三亚佰佳世纪房地产开发有限公司",
+      "construction_progress": "已封顶，竣工时间：2023-12-31",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 102.0,
+          "area_str": "102㎡"
+        },
+        {
+          "name": "四室",
+          "area": 109.0,
+          "area_str": "109㎡"
+        },
+        {
+          "name": "四室",
+          "area": 113.0,
+          "area_str": "113㎡"
+        },
+        {
+          "name": "三室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/6080087",
+      "url_amap": "https://uri.amap.com/marker?position=109.723651,18.402779&name=瑞汇A区"
+    },
+    {
+      "loupan_id": 1828747,
+      "project_name": "恒居一期",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "96-209㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "1",
+      "green_ratio": "45%",
+      "developer": "佳兆业",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 1.16,
+      "lng": 109.728405,
+      "lat": 18.415715,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2023年",
+      "delivery_date": "2024年",
+      "cert_dates": "[\"2018-12-24\", \"2017-07-13\", \"2017-09-30\", \"2017-12-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/cfba1c2997b80509e3d4d76173417a1e/275x206n.jpg",
+      "land_area_sqm": "58666.66m²",
+      "building_area_sqm": "59000m²",
+      "planned_units": "420",
+      "parking_spaces": "591",
+      "parking_ratio": null,
+      "property_company": "金地智慧服务",
+      "property_fee": "4.9元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字〔2018〕59 号\", \"三房预许字［2017］38号\", \"三房预许字［2017］55号\", \"三房预许字［2017］70号\"]",
+      "developer_brand": null,
+      "investor": "三亚美海龙房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 96.06,
+          "area_str": "96.06㎡"
+        },
+        {
+          "name": "三室",
+          "area": 124.51,
+          "area_str": "124.51㎡"
+        },
+        {
+          "name": "四室",
+          "area": 208.95,
+          "area_str": "208.95㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/1828747",
+      "url_amap": "https://uri.amap.com/marker?position=109.728405,18.415715&name=恒居一期"
+    },
+    {
+      "loupan_id": 2345917,
+      "project_name": "海峰A区",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "96-209㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "1",
+      "green_ratio": "45%",
+      "developer": "仁恒",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 1.2,
+      "lng": 109.728983,
+      "lat": 18.405219,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2023年",
+      "delivery_date": "2024年",
+      "cert_dates": "[\"2018-12-24\", \"2017-07-13\", \"2017-09-30\", \"2017-12-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/cfba1c2997b80509e3d4d76173417a1e/275x206n.jpg",
+      "land_area_sqm": "58666.66m²",
+      "building_area_sqm": "59000m²",
+      "planned_units": "420",
+      "parking_spaces": "591",
+      "parking_ratio": null,
+      "property_company": "龙湖智慧服务",
+      "property_fee": "4.9元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字〔2018〕59 号\", \"三房预许字［2017］38号\", \"三房预许字［2017］55号\", \"三房预许字［2017］70号\"]",
+      "developer_brand": null,
+      "investor": "三亚美海龙房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 96.06,
+          "area_str": "96.06㎡"
+        },
+        {
+          "name": "三室",
+          "area": 124.51,
+          "area_str": "124.51㎡"
+        },
+        {
+          "name": "四室",
+          "area": 208.95,
+          "area_str": "208.95㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/2345917",
+      "url_amap": "https://uri.amap.com/marker?position=109.728983,18.405219&name=海峰A区"
+    },
+    {
+      "loupan_id": 4792980,
+      "project_name": "龙佳苑A区",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "37-132㎡",
+      "room_types": "1室户型,2室户型,3室户型",
+      "floor_area_ratio": "住宅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "中梁",
+      "address": "三亚海棠区海棠湾南田温泉开发区经一路",
+      "distance_km": 1.27,
+      "lng": 109.726929,
+      "lat": 18.401832,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"银行\", \"学校\"]",
+      "open_date": "2024年",
+      "delivery_date": "2025年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/7b98adfd24a5678cacbf9bc64d6f2e78/275x206n.jpg",
+      "land_area_sqm": "住宅：26000m² 别墅：26000m²",
+      "building_area_sqm": "住宅：42000m² 别墅：42000m²",
+      "planned_units": "住宅：313 别墅：313",
+      "parking_spaces": "住宅：226 别墅：226",
+      "parking_ratio": "住宅：1:0.7 别墅：1:0.7",
+      "property_company": "绿城服务",
+      "property_fee": "住宅：3.9元/㎡/月",
+      "decoration": "住宅：毛坯,简装修 别墅：毛坯,简装修",
+      "building_type": "{多层,小高层}",
+      "tenure_years": "住宅：70年 别墅：40年",
+      "presale_permit": "[\"三房预许字[2015]30号\", \"三房预许字【2016】32号\"]",
+      "developer_brand": null,
+      "investor": "三亚神州泰岳实业有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 37.03,
+          "area_str": "37.03㎡"
+        },
+        {
+          "name": "一室",
+          "area": 41.41,
+          "area_str": "41.41㎡"
+        },
+        {
+          "name": "一室",
+          "area": 43.52,
+          "area_str": "43.52㎡"
+        },
+        {
+          "name": "一室",
+          "area": 57.48,
+          "area_str": "57.48㎡"
+        },
+        {
+          "name": "二室",
+          "area": 61.48,
+          "area_str": "61.48㎡"
+        },
+        {
+          "name": "二室",
+          "area": 70.25,
+          "area_str": "70.25㎡"
+        },
+        {
+          "name": "二室",
+          "area": 74.97,
+          "area_str": "74.97㎡"
+        },
+        {
+          "name": "三室",
+          "area": 131.57,
+          "area_str": "131.57㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/4792980",
+      "url_amap": "https://uri.amap.com/marker?position=109.726929,18.401832&name=龙佳苑A区"
+    },
+    {
+      "loupan_id": 1234597,
+      "project_name": "中黄金家园",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "86-147㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "70%",
+      "developer": "大华",
+      "address": "三亚海棠区海棠湾南田国际温泉旅游城",
+      "distance_km": 1.28,
+      "lng": 109.719313,
+      "lat": 18.421935,
+      "property_type": "住宅",
+      "tags": "[\"人车分流\", \"高绿化率\", \"低容积\", \"装修交付\", \"旅游地产\"]",
+      "open_date": "2021年",
+      "delivery_date": "2022年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f7d2e6fb7d3e7ba1f25466fe42cd3a87/275x206n.jpg",
+      "land_area_sqm": "64762m²",
+      "building_area_sqm": "110000m²",
+      "planned_units": "682",
+      "parking_spaces": "700",
+      "parking_ratio": "1:1",
+      "property_company": "金地智慧服务",
+      "property_fee": "4.7元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2013】6号\"]",
+      "developer_brand": null,
+      "investor": "三亚铱海房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 86.0,
+          "area_str": "86㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.26,
+          "area_str": "110.26㎡"
+        },
+        {
+          "name": "三室",
+          "area": 147.0,
+          "area_str": "147㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/1234597",
+      "url_amap": "https://uri.amap.com/marker?position=109.719313,18.421935&name=中黄金家园"
+    },
+    {
+      "loupan_id": 8257836,
+      "project_name": "珠江月亮新村",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "46-196㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "0.36",
+      "green_ratio": "60%",
+      "developer": "中南",
+      "address": "三亚海棠区海棠湾珠江南田温泉度假区",
+      "distance_km": 1.36,
+      "lng": 109.728061,
+      "lat": 18.40165,
+      "property_type": "别墅",
+      "tags": "[\"高绿化率\", \"旅游地产\", \"配套纯熟\", \"银行\", \"学校\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b9a287246e4f4aa8fff28eef6a0240f4/275x206n.jpg",
+      "land_area_sqm": "66660m²",
+      "building_area_sqm": "24000m²",
+      "planned_units": "360",
+      "parking_spaces": null,
+      "parking_ratio": "1:1",
+      "property_company": "招商积余",
+      "property_fee": "9.6元/㎡/月",
+      "decoration": null,
+      "building_type": "{独栋别墅,联排别墅,叠加别墅}",
+      "tenure_years": "70年",
+      "presale_permit": "[]",
+      "developer_brand": null,
+      "investor": "海南珠江国际置业",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 78.0,
+          "area_str": "78㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/8257836",
+      "url_amap": "https://uri.amap.com/marker?position=109.728061,18.40165&name=珠江月亮新村"
+    },
+    {
+      "loupan_id": 8327006,
+      "project_name": "福美好锦园",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "106-143㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": null,
+      "green_ratio": "42%",
+      "developer": "招商蛇口",
+      "address": "三亚海棠区海棠湾南田路16号",
+      "distance_km": 1.5,
+      "lng": 109.714795,
+      "lat": 18.397532,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"装修交付\", \"项目封顶\", \"花园洋房\", \"配套纯熟\"]",
+      "open_date": "2023年",
+      "delivery_date": "2024年",
+      "cert_dates": "[\"2023-03-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/377e9f39df449be8dc0a7d93f2266a39/275x206n.jpg",
+      "land_area_sqm": "18920.04m²",
+      "building_area_sqm": "33671m²",
+      "planned_units": "209",
+      "parking_spaces": "241",
+      "parking_ratio": null,
+      "property_company": "碧桂园服务",
+      "property_fee": "6.28元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2023】29号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": "已封顶，竣工时间：2026-12-31",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/8327006",
+      "url_amap": "https://uri.amap.com/marker?position=109.714795,18.397532&name=福美好锦园"
+    },
+    {
+      "loupan_id": 2926172,
+      "project_name": "珠江翡翠谷",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "46-196㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "0.36",
+      "green_ratio": "60%",
+      "developer": "中铁建",
+      "address": "三亚海棠区海棠湾珠江南田温泉度假区",
+      "distance_km": 1.67,
+      "lng": 109.734814,
+      "lat": 18.410525,
+      "property_type": "别墅",
+      "tags": "[\"高绿化率\", \"旅游地产\", \"配套纯熟\", \"银行\", \"学校\"]",
+      "open_date": "2024年",
+      "delivery_date": "2025年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b9a287246e4f4aa8fff28eef6a0240f4/275x206n.jpg",
+      "land_area_sqm": "66660m²",
+      "building_area_sqm": "24000m²",
+      "planned_units": "360",
+      "parking_spaces": null,
+      "parking_ratio": "1:1",
+      "property_company": "合景悠活",
+      "property_fee": "9.6元/㎡/月",
+      "decoration": null,
+      "building_type": "{独栋别墅,联排别墅,叠加别墅}",
+      "tenure_years": "70年",
+      "presale_permit": "[]",
+      "developer_brand": null,
+      "investor": "海南珠江国际置业",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 78.0,
+          "area_str": "78㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/2926172",
+      "url_amap": "https://uri.amap.com/marker?position=109.734814,18.410525&name=珠江翡翠谷"
+    },
+    {
+      "loupan_id": 6750823,
+      "project_name": "嘉紫金峰",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "62-151㎡",
+      "room_types": "1室户型,2室户型,3室户型,别墅户型",
+      "floor_area_ratio": "1.19",
+      "green_ratio": "40%",
+      "developer": "世茂",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 2.1,
+      "lng": 109.716621,
+      "lat": 18.391659,
+      "property_type": "别墅",
+      "tags": "[\"高绿化率\", \"大平层\", \"装修交付\", \"旅游地产\", \"银行\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2013-01-29\", \"2017-09-28\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/aca58bd165a6a9474015d4ed6f9cf681/275x206n.jpg",
+      "land_area_sqm": "96007m²",
+      "building_area_sqm": "160599.03m²",
+      "planned_units": "1088",
+      "parking_spaces": "782",
+      "parking_ratio": "1:0.7",
+      "property_company": "龙湖智慧服务",
+      "property_fee": "4.5元/㎡/月",
+      "decoration": "简装修",
+      "building_type": "别墅",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字[2013]3号\", \"三房预许字［2017］54号\"]",
+      "developer_brand": null,
+      "investor": "三亚大兴首邑投资有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 62.16,
+          "area_str": "62.16㎡"
+        },
+        {
+          "name": "二室",
+          "area": 84.0,
+          "area_str": "84㎡"
+        },
+        {
+          "name": "三室",
+          "area": 109.0,
+          "area_str": "109㎡"
+        },
+        {
+          "name": "二室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        },
+        {
+          "name": "二室",
+          "area": 123.22,
+          "area_str": "123.22㎡"
+        },
+        {
+          "name": "二室",
+          "area": 131.52,
+          "area_str": "131.52㎡"
+        },
+        {
+          "name": "二室",
+          "area": 135.0,
+          "area_str": "135㎡"
+        },
+        {
+          "name": "三室",
+          "area": 136.0,
+          "area_str": "136㎡"
+        },
+        {
+          "name": "三室",
+          "area": 136.19,
+          "area_str": "136.19㎡"
+        },
+        {
+          "name": "三室",
+          "area": 142.87,
+          "area_str": "142.87㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.92,
+          "area_str": "143.92㎡"
+        },
+        {
+          "name": "二室",
+          "area": 144.74,
+          "area_str": "144.74㎡"
+        },
+        {
+          "name": "三室",
+          "area": 145.86,
+          "area_str": "145.86㎡"
+        },
+        {
+          "name": "三室",
+          "area": 150.64,
+          "area_str": "150.64㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/6750823",
+      "url_amap": "https://uri.amap.com/marker?position=109.716621,18.391659&name=嘉紫金峰"
+    },
+    {
+      "loupan_id": 7457786,
+      "project_name": "瑞东方家",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": null,
+      "room_types": null,
+      "floor_area_ratio": "3",
+      "green_ratio": "40%",
+      "developer": "滨江集团",
+      "address": "三亚海棠区海棠湾南田路与创业人才基地交汇处",
+      "distance_km": 2.23,
+      "lng": 109.729087,
+      "lat": 18.392816,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"配套纯熟\", \"便利店\", \"银行\", \"学校\"]",
+      "open_date": "2021年",
+      "delivery_date": "2022年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/7a22d5374bc54b9dfeb789663e1389f6/275x206n.jpg",
+      "land_area_sqm": "87000m²",
+      "building_area_sqm": "327000m²",
+      "planned_units": "2516",
+      "parking_spaces": "2582",
+      "parking_ratio": "1:1",
+      "property_company": "绿城服务",
+      "property_fee": "1.98元/㎡/月",
+      "decoration": null,
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"现房销售备案[2022]第2号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [],
+      "url_anjuke": "https://m.anjuke.com/loupan/7457786",
+      "url_amap": "https://uri.amap.com/marker?position=109.729087,18.392816&name=瑞东方家"
+    },
+    {
+      "loupan_id": 7198529,
+      "project_name": "银佳苑",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "100-120㎡",
+      "room_types": "3室户型,4室户型,5室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "40%",
+      "developer": "美的置业",
+      "address": "三亚海棠区海棠湾南田片区海棠府",
+      "distance_km": 2.37,
+      "lng": 109.738989,
+      "lat": 18.400692,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2020-01-17\", \"2022-06-17\", \"2020-07-27\", \"2020-09-29\", \"2021-01-18\", \"2022-05-24\", \"2019-12-03\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3e78be1ea2da88b09ab5a194c1a3bb7f/275x206n.jpg",
+      "land_area_sqm": "182666m²",
+      "building_area_sqm": "300000m²",
+      "planned_units": "1468",
+      "parking_spaces": "1615",
+      "parking_ratio": "1:1.1",
+      "property_company": "华润万象生活",
+      "property_fee": "4.5元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "洋房",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字〔2020〕8 号\", \"三房预许字【2022】039号\", \"三房预许字【2020】33号\", \"三房预许字【2020】60号\", \"预售证号：三房预许字【2020】45号\", \"预售证号：三房预许字【2021】3号\", \"三房预许字[2022] 31号\", \"三房预许字【2019】69号\"]",
+      "developer_brand": "和泓地产集团",
+      "investor": "三亚顺泽房地产开发有限公司",
+      "construction_progress": "已封顶，竣工时间：2023-06-30",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "五室",
+          "area": 102.0,
+          "area_str": "102㎡"
+        },
+        {
+          "name": "四室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/7198529",
+      "url_amap": "https://uri.amap.com/marker?position=109.738989,18.400692&name=银佳苑"
+    },
+    {
+      "loupan_id": 4479407,
+      "project_name": "鑫春天堂",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "99-160㎡",
+      "room_types": "3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "中梁",
+      "address": "三亚海棠区海棠湾经三路8号",
+      "distance_km": 2.37,
+      "lng": 109.703874,
+      "lat": 18.394613,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2024年",
+      "delivery_date": "2025年",
+      "cert_dates": "[\"2026-01-20\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f25b6eb91066a99f0810d65c84e9afe8/275x206n.jpg",
+      "land_area_sqm": "住宅：94044.84m²",
+      "building_area_sqm": "住宅：192734.45m²",
+      "planned_units": "住宅：903",
+      "parking_spaces": "住宅：1181",
+      "parking_ratio": null,
+      "property_company": "金地智慧服务",
+      "property_fee": null,
+      "decoration": "别墅：带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"XSSY202612000009\"]",
+      "developer_brand": "海南盛达房地产开发有限公司",
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 99.0,
+          "area_str": "99㎡"
+        },
+        {
+          "name": "三室",
+          "area": 105.0,
+          "area_str": "105㎡"
+        },
+        {
+          "name": "三室",
+          "area": 117.0,
+          "area_str": "117㎡"
+        },
+        {
+          "name": "三室",
+          "area": 122.0,
+          "area_str": "122㎡"
+        },
+        {
+          "name": "四室",
+          "area": 152.0,
+          "area_str": "152㎡"
+        },
+        {
+          "name": "三室",
+          "area": 160.0,
+          "area_str": "160㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/4479407",
+      "url_amap": "https://uri.amap.com/marker?position=109.703874,18.394613&name=鑫春天堂"
+    },
+    {
+      "loupan_id": 5927338,
+      "project_name": "恒润桃源豪庭",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "106-143㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": null,
+      "green_ratio": "42%",
+      "developer": "金地",
+      "address": "三亚海棠区海棠湾南田路16号",
+      "distance_km": 2.46,
+      "lng": 109.731617,
+      "lat": 18.391819,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"装修交付\", \"项目封顶\", \"花园洋房\", \"配套纯熟\"]",
+      "open_date": "2023年",
+      "delivery_date": "2024年",
+      "cert_dates": "[\"2023-03-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/377e9f39df449be8dc0a7d93f2266a39/275x206n.jpg",
+      "land_area_sqm": "18920.04m²",
+      "building_area_sqm": "33671m²",
+      "planned_units": "209",
+      "parking_spaces": "241",
+      "parking_ratio": null,
+      "property_company": "碧桂园服务",
+      "property_fee": "6.28元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2023】29号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": "已封顶，竣工时间：2026-12-31",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/5927338",
+      "url_amap": "https://uri.amap.com/marker?position=109.731617,18.391819&name=恒润桃源豪庭"
+    },
+    {
+      "loupan_id": 8787348,
+      "project_name": "蓝谷B区",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "86-147㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "70%",
+      "developer": "中海",
+      "address": "三亚海棠区海棠湾南田国际温泉旅游城",
+      "distance_km": 2.82,
+      "lng": 109.743883,
+      "lat": 18.419578,
+      "property_type": "住宅",
+      "tags": "[\"人车分流\", \"高绿化率\", \"低容积\", \"装修交付\", \"旅游地产\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f7d2e6fb7d3e7ba1f25466fe42cd3a87/275x206n.jpg",
+      "land_area_sqm": "64762m²",
+      "building_area_sqm": "110000m²",
+      "planned_units": "682",
+      "parking_spaces": "700",
+      "parking_ratio": "1:1",
+      "property_company": "金地智慧服务",
+      "property_fee": "4.7元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2013】6号\"]",
+      "developer_brand": null,
+      "investor": "三亚铱海房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 86.0,
+          "area_str": "86㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.26,
+          "area_str": "110.26㎡"
+        },
+        {
+          "name": "三室",
+          "area": 147.0,
+          "area_str": "147㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/8787348",
+      "url_amap": "https://uri.amap.com/marker?position=109.743883,18.419578&name=蓝谷B区"
+    },
+    {
+      "loupan_id": 5418853,
+      "project_name": "长基半岛源",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "52-203㎡",
+      "room_types": "1室户型,2室户型,3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "碧桂园",
+      "address": "三亚海棠区海棠湾南田温泉度假区",
+      "distance_km": 2.85,
+      "lng": 109.737996,
+      "lat": 18.428584,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"大阳台\", \"高绿化率\", \"低容积\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2023-02-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/946061552a3896a1873d5cbbdebc501a/275x206n.jpg",
+      "land_area_sqm": "住宅：32606m² 别墅：32606m²",
+      "building_area_sqm": "住宅：51312m² 别墅：51312m²",
+      "planned_units": "住宅：418 别墅：418",
+      "parking_spaces": "住宅：356 别墅：356",
+      "parking_ratio": "住宅：1:0.8 别墅：1:0.8",
+      "property_company": "万科物业",
+      "property_fee": "住宅：5.9元/㎡/月 别墅：8.8元/㎡/月",
+      "decoration": "住宅：简装修 别墅：简装修",
+      "building_type": "{小高层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字（展期）〔2019〕12号\"]",
+      "developer_brand": null,
+      "investor": "河南长基置业有限公司",
+      "construction_progress": "已竣工，竣工时间：2021-03-30",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 51.8,
+          "area_str": "51.8㎡"
+        },
+        {
+          "name": "二室",
+          "area": 79.25,
+          "area_str": "79.25㎡"
+        },
+        {
+          "name": "二室",
+          "area": 87.13,
+          "area_str": "87.13㎡"
+        },
+        {
+          "name": "二室",
+          "area": 88.79,
+          "area_str": "88.79㎡"
+        },
+        {
+          "name": "三室",
+          "area": 95.08,
+          "area_str": "95.08㎡"
+        },
+        {
+          "name": "三室",
+          "area": 127.8,
+          "area_str": "127.8㎡"
+        },
+        {
+          "name": "三室",
+          "area": 128.5,
+          "area_str": "128.5㎡"
+        },
+        {
+          "name": "三室",
+          "area": 152.9,
+          "area_str": "152.9㎡"
+        },
+        {
+          "name": "四室",
+          "area": 201.0,
+          "area_str": "201㎡"
+        },
+        {
+          "name": "四室",
+          "area": 203.0,
+          "area_str": "203㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/5418853",
+      "url_amap": "https://uri.amap.com/marker?position=109.737996,18.428584&name=长基半岛源"
+    },
+    {
+      "loupan_id": 44042,
+      "project_name": "凤梦想居",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "99-160㎡",
+      "room_types": "3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2 别墅：1.2",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "新城控股",
+      "address": "三亚海棠区海棠湾经三路8号",
+      "distance_km": 3.02,
+      "lng": 109.719146,
+      "lat": 18.383225,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2026-01-20\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f25b6eb91066a99f0810d65c84e9afe8/275x206n.jpg",
+      "land_area_sqm": "住宅：94044.84m²",
+      "building_area_sqm": "住宅：192734.45m²",
+      "planned_units": "住宅：903",
+      "parking_spaces": "住宅：1181",
+      "parking_ratio": null,
+      "property_company": "合景悠活",
+      "property_fee": null,
+      "decoration": "别墅：带装修",
+      "building_type": "{花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"XSSY202612000009\"]",
+      "developer_brand": "海南盛达房地产开发有限公司",
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 99.0,
+          "area_str": "99㎡"
+        },
+        {
+          "name": "三室",
+          "area": 105.0,
+          "area_str": "105㎡"
+        },
+        {
+          "name": "三室",
+          "area": 117.0,
+          "area_str": "117㎡"
+        },
+        {
+          "name": "三室",
+          "area": 122.0,
+          "area_str": "122㎡"
+        },
+        {
+          "name": "四室",
+          "area": 152.0,
+          "area_str": "152㎡"
+        },
+        {
+          "name": "三室",
+          "area": 160.0,
+          "area_str": "160㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/44042",
+      "url_amap": "https://uri.amap.com/marker?position=109.719146,18.383225&name=凤梦想居"
+    },
+    {
+      "loupan_id": 6519066,
+      "project_name": "嘉玉兰舍",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "96-209㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "1",
+      "green_ratio": "45%",
+      "developer": "万科",
+      "address": "三亚海棠区海棠湾神泉大道",
+      "distance_km": 3.08,
+      "lng": 109.742728,
+      "lat": 18.426529,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2021年",
+      "delivery_date": "2022年",
+      "cert_dates": "[\"2018-12-24\", \"2017-07-13\", \"2017-09-30\", \"2017-12-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/cfba1c2997b80509e3d4d76173417a1e/275x206n.jpg",
+      "land_area_sqm": "58666.66m²",
+      "building_area_sqm": "59000m²",
+      "planned_units": "420",
+      "parking_spaces": "591",
+      "parking_ratio": null,
+      "property_company": "保利物业",
+      "property_fee": "4.9元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字〔2018〕59 号\", \"三房预许字［2017］38号\", \"三房预许字［2017］55号\", \"三房预许字［2017］70号\"]",
+      "developer_brand": null,
+      "investor": "三亚美海龙房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 96.06,
+          "area_str": "96.06㎡"
+        },
+        {
+          "name": "三室",
+          "area": 124.51,
+          "area_str": "124.51㎡"
+        },
+        {
+          "name": "四室",
+          "area": 208.95,
+          "area_str": "208.95㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/6519066",
+      "url_amap": "https://uri.amap.com/marker?position=109.742728,18.426529&name=嘉玉兰舍"
+    },
+    {
+      "loupan_id": 3361879,
+      "project_name": "东方中央谷",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "109-119㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": null,
+      "green_ratio": "45%",
+      "developer": "旭辉",
+      "address": "三亚海棠区海棠湾南田农场东风分场G5-1号",
+      "distance_km": 3.08,
+      "lng": 109.705676,
+      "lat": 18.385702,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"高绿化率\", \"装修交付\", \"配套纯熟\"]",
+      "open_date": "2021年",
+      "delivery_date": "2022年",
+      "cert_dates": "[\"2021-11-09\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/05330dede421a1dfafeb982a66319e37/275x206n.jpg",
+      "land_area_sqm": "358000m²",
+      "building_area_sqm": "56000m²",
+      "planned_units": "318",
+      "parking_spaces": "375",
+      "parking_ratio": "1:1",
+      "property_company": "招商积余",
+      "property_fee": null,
+      "decoration": "带装修",
+      "building_type": "高层",
+      "tenure_years": null,
+      "presale_permit": "[\"三房预许字〔2021〕96号\", \"[2023]三房预许字(46)号\", \"[2023]三房预许字(36)号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 109.0,
+          "area_str": "109㎡"
+        },
+        {
+          "name": "三室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.0,
+          "area_str": "119㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/3361879",
+      "url_amap": "https://uri.amap.com/marker?position=109.705676,18.385702&name=东方中央谷"
+    },
+    {
+      "loupan_id": 3161563,
+      "project_name": "开创时代花园",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "108-180㎡",
+      "room_types": "3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2",
+      "green_ratio": "住宅：40%",
+      "developer": "金茂",
+      "address": "三亚海棠区海棠湾南田温泉度假区神泉大道",
+      "distance_km": 3.11,
+      "lng": 109.737192,
+      "lat": 18.388439,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2024年",
+      "delivery_date": "2025年",
+      "cert_dates": "[\"2020-12-18\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/2b62a78a9b6a38b2aa0126111593b6a0/275x206n.jpg",
+      "land_area_sqm": "住宅：23968.74m²",
+      "building_area_sqm": "住宅：48416.3m²",
+      "planned_units": "住宅：258",
+      "parking_spaces": "住宅：303",
+      "parking_ratio": null,
+      "property_company": "新城悦服务",
+      "property_fee": "住宅：4.8~7.8元/㎡/月",
+      "decoration": "住宅：带装修 别墅：毛坯",
+      "building_type": "{低层,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字［2020］74号\"]",
+      "developer_brand": null,
+      "investor": "绵阳开创集团",
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 107.77,
+          "area_str": "107.77㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.52,
+          "area_str": "119.52㎡"
+        },
+        {
+          "name": "四室",
+          "area": 122.36,
+          "area_str": "122.36㎡"
+        },
+        {
+          "name": "三室",
+          "area": 141.56,
+          "area_str": "141.56㎡"
+        },
+        {
+          "name": "三室",
+          "area": 153.69,
+          "area_str": "153.69㎡"
+        },
+        {
+          "name": "五室",
+          "area": 179.93,
+          "area_str": "179.93㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/3161563",
+      "url_amap": "https://uri.amap.com/marker?position=109.737192,18.388439&name=开创时代花园"
+    },
+    {
+      "loupan_id": 9279487,
+      "project_name": "龙谷",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "113-195㎡",
+      "room_types": "3室户型,4室户型,别墅户型",
+      "floor_area_ratio": "住宅：1 别墅：1",
+      "green_ratio": "住宅：45% 别墅：45%",
+      "developer": "新城控股",
+      "address": "三亚海棠区海棠湾南田温泉度假区南田路18号",
+      "distance_km": 3.14,
+      "lng": 109.740249,
+      "lat": 18.390636,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2024年",
+      "delivery_date": "2025年",
+      "cert_dates": "[\"2021-06-30\", \"2021-11-18\", \"2022-06-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/8a0328380ef56d1ae970063269c323df/275x206n.jpg",
+      "land_area_sqm": "住宅：120000m² 别墅：120000m²",
+      "building_area_sqm": "住宅：180600m² 别墅：180600m²",
+      "planned_units": "住宅：359 别墅：359",
+      "parking_spaces": "住宅：548 别墅：548",
+      "parking_ratio": "住宅：1:1.45 别墅：1:1.45",
+      "property_company": "中海物业",
+      "property_fee": "住宅：5.5元/㎡/月 别墅：5.5~8.5元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{多层,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字【2021】023号\", \"三房预许字【2021】57号\", \"三房预许字【2021】101号\", \"三房预许字【2022】038号\"]",
+      "developer_brand": null,
+      "investor": "海南霖润房地产开发有限公司",
+      "construction_progress": "已封顶，竣工时间：2023-05-30",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 113.0,
+          "area_str": "113㎡"
+        },
+        {
+          "name": "四室",
+          "area": 136.0,
+          "area_str": "136㎡"
+        },
+        {
+          "name": "四室",
+          "area": 141.86,
+          "area_str": "141.86㎡"
+        },
+        {
+          "name": "二室",
+          "area": 148.88,
+          "area_str": "148.88㎡"
+        },
+        {
+          "name": "四室",
+          "area": 158.75,
+          "area_str": "158.75㎡"
+        },
+        {
+          "name": "四室",
+          "area": 164.6,
+          "area_str": "164.6㎡"
+        },
+        {
+          "name": "五室",
+          "area": 180.42,
+          "area_str": "180.42㎡"
+        },
+        {
+          "name": "五室",
+          "area": 195.1,
+          "area_str": "195.1㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/9279487",
+      "url_amap": "https://uri.amap.com/marker?position=109.740249,18.390636&name=龙谷"
+    },
+    {
+      "loupan_id": 3833807,
+      "project_name": "碧家A区",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "108-180㎡",
+      "room_types": "3室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.2",
+      "green_ratio": "住宅：40%",
+      "developer": "龙湖",
+      "address": "三亚海棠区海棠湾南田温泉度假区神泉大道",
+      "distance_km": 3.23,
+      "lng": 109.741292,
+      "lat": 18.390549,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2023年",
+      "delivery_date": "2024年",
+      "cert_dates": "[\"2020-12-18\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/2b62a78a9b6a38b2aa0126111593b6a0/275x206n.jpg",
+      "land_area_sqm": "住宅：23968.74m²",
+      "building_area_sqm": "住宅：48416.3m²",
+      "planned_units": "住宅：258",
+      "parking_spaces": "住宅：303",
+      "parking_ratio": null,
+      "property_company": "龙湖智慧服务",
+      "property_fee": "住宅：4.8~7.8元/㎡/月",
+      "decoration": "住宅：带装修 别墅：毛坯",
+      "building_type": "{低层,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"三房预许字［2020］74号\"]",
+      "developer_brand": null,
+      "investor": "绵阳开创集团",
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 107.77,
+          "area_str": "107.77㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.52,
+          "area_str": "119.52㎡"
+        },
+        {
+          "name": "四室",
+          "area": 122.36,
+          "area_str": "122.36㎡"
+        },
+        {
+          "name": "三室",
+          "area": 141.56,
+          "area_str": "141.56㎡"
+        },
+        {
+          "name": "三室",
+          "area": 153.69,
+          "area_str": "153.69㎡"
+        },
+        {
+          "name": "五室",
+          "area": 179.93,
+          "area_str": "179.93㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/3833807",
+      "url_amap": "https://uri.amap.com/marker?position=109.741292,18.390549&name=碧家A区"
+    },
+    {
+      "loupan_id": 6874662,
+      "project_name": "龙时代宅",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "100-120㎡",
+      "room_types": "3室户型,4室户型,5室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "40%",
+      "developer": "禹洲",
+      "address": "三亚海棠区海棠湾南田片区海棠府",
+      "distance_km": 3.31,
+      "lng": 109.707196,
+      "lat": 18.382805,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+      "open_date": "2024年",
+      "delivery_date": "2025年",
+      "cert_dates": "[\"2020-01-17\", \"2022-06-17\", \"2020-07-27\", \"2020-09-29\", \"2021-01-18\", \"2022-05-24\", \"2019-12-03\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3e78be1ea2da88b09ab5a194c1a3bb7f/275x206n.jpg",
+      "land_area_sqm": "182666m²",
+      "building_area_sqm": "300000m²",
+      "planned_units": "1468",
+      "parking_spaces": "1615",
+      "parking_ratio": "1:1.1",
+      "property_company": "万科物业",
+      "property_fee": "4.5元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字〔2020〕8 号\", \"三房预许字【2022】039号\", \"三房预许字【2020】33号\", \"三房预许字【2020】60号\", \"预售证号：三房预许字【2020】45号\", \"预售证号：三房预许字【2021】3号\", \"三房预许字[2022] 31号\", \"三房预许字【2019】69号\"]",
+      "developer_brand": "和泓地产集团",
+      "investor": "三亚顺泽房地产开发有限公司",
+      "construction_progress": "已封顶，竣工时间：2023-06-30",
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "五室",
+          "area": 102.0,
+          "area_str": "102㎡"
+        },
+        {
+          "name": "四室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/6874662",
+      "url_amap": "https://uri.amap.com/marker?position=109.707196,18.382805&name=龙时代宅"
+    },
+    {
+      "loupan_id": 678458,
+      "project_name": "中坊二期",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "106-140㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "40%",
+      "developer": "中梁",
+      "address": "三亚海棠区海棠湾南田温泉度假区金地水木海棠小区内",
+      "distance_km": 3.33,
+      "lng": 109.748487,
+      "lat": 18.420991,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\"]",
+      "open_date": "2021年",
+      "delivery_date": "2022年",
+      "cert_dates": "[\"2021-02-04\", \"2020-10-26\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b8bf0bb36d9d7d226194dceac5452ec4/275x206n.jpg",
+      "land_area_sqm": "66635.27m²",
+      "building_area_sqm": "125308.4m²",
+      "planned_units": "542",
+      "parking_spaces": "890",
+      "parking_ratio": null,
+      "property_company": "世茂服务",
+      "property_fee": "5元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "别墅",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2021】009号\", \"三房预许第202051号\"]",
+      "developer_brand": null,
+      "investor": "三亚南田温泉金地置业有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 107.0,
+          "area_str": "107㎡"
+        },
+        {
+          "name": "四室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        },
+        {
+          "name": "三室",
+          "area": 140.0,
+          "area_str": "140㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/678458",
+      "url_amap": "https://uri.amap.com/marker?position=109.748487,18.420991&name=中坊二期"
+    },
+    {
+      "loupan_id": 8525410,
+      "project_name": "世坊",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "86-147㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "70%",
+      "developer": "阳光城",
+      "address": "三亚海棠区海棠湾南田国际温泉旅游城",
+      "distance_km": 3.33,
+      "lng": 109.750164,
+      "lat": 18.405779,
+      "property_type": "住宅",
+      "tags": "[\"人车分流\", \"高绿化率\", \"低容积\", \"装修交付\", \"旅游地产\"]",
+      "open_date": "2023年",
+      "delivery_date": "2024年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f7d2e6fb7d3e7ba1f25466fe42cd3a87/275x206n.jpg",
+      "land_area_sqm": "64762m²",
+      "building_area_sqm": "110000m²",
+      "planned_units": "682",
+      "parking_spaces": "700",
+      "parking_ratio": "1:1",
+      "property_company": "绿城服务",
+      "property_fee": "4.7元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "多层",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字【2013】6号\"]",
+      "developer_brand": null,
+      "investor": "三亚铱海房地产开发有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 86.0,
+          "area_str": "86㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "二室",
+          "area": 110.26,
+          "area_str": "110.26㎡"
+        },
+        {
+          "name": "三室",
+          "area": 147.0,
+          "area_str": "147㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/8525410",
+      "url_amap": "https://uri.amap.com/marker?position=109.750164,18.405779&name=世坊"
+    },
+    {
+      "loupan_id": 7587989,
+      "project_name": "珠江桃源邸",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "46-196㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "0.36",
+      "green_ratio": "60%",
+      "developer": "新城控股",
+      "address": "三亚海棠区海棠湾珠江南田温泉度假区",
+      "distance_km": 3.7,
+      "lng": 109.749449,
+      "lat": 18.426891,
+      "property_type": "别墅",
+      "tags": "[\"高绿化率\", \"旅游地产\", \"配套纯熟\", \"银行\", \"学校\"]",
+      "open_date": "2021年",
+      "delivery_date": "2022年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b9a287246e4f4aa8fff28eef6a0240f4/275x206n.jpg",
+      "land_area_sqm": "66660m²",
+      "building_area_sqm": "24000m²",
+      "planned_units": "360",
+      "parking_spaces": null,
+      "parking_ratio": "1:1",
+      "property_company": "新城悦服务",
+      "property_fee": "9.6元/㎡/月",
+      "decoration": null,
+      "building_type": "洋房",
+      "tenure_years": "70年",
+      "presale_permit": "[]",
+      "developer_brand": null,
+      "investor": "海南珠江国际置业",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 78.0,
+          "area_str": "78㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/7587989",
+      "url_amap": "https://uri.amap.com/marker?position=109.749449,18.426891&name=珠江桃源邸"
+    },
+    {
+      "loupan_id": 5080283,
+      "project_name": "金半岛锦园",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "89-276㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "0.4",
+      "green_ratio": "51%",
+      "developer": "大华",
+      "address": "三亚海棠区海棠湾海棠北路",
+      "distance_km": 3.87,
+      "lng": 109.740406,
+      "lat": 18.382116,
+      "property_type": "别墅",
+      "tags": "[\"高绿化率\", \"装修交付\", \"旅游地产\", \"小户型\", \"大户型\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[\"2016-01-08\", \"2016-11-10\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/0412700c8aa830b3ac466568ab69c68a/275x206n.jpg",
+      "land_area_sqm": "193772m²",
+      "building_area_sqm": "83206m²",
+      "planned_units": "189",
+      "parking_spaces": "154",
+      "parking_ratio": "1:0.8",
+      "property_company": "保利物业",
+      "property_fee": "29.8元/㎡/月",
+      "decoration": "简装修",
+      "building_type": "小高层",
+      "tenure_years": "40年",
+      "presale_permit": "[\"三房预许字【2016】2号\", \"三房预许字[2016]43号\"]",
+      "developer_brand": null,
+      "investor": "仁恒置地集团有限公司",
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 88.92,
+          "area_str": "88.92㎡"
+        },
+        {
+          "name": "六室",
+          "area": 154.48,
+          "area_str": "154.48㎡"
+        },
+        {
+          "name": "六室",
+          "area": 223.02,
+          "area_str": "223.02㎡"
+        },
+        {
+          "name": "七室",
+          "area": 274.5,
+          "area_str": "274.5㎡"
+        },
+        {
+          "name": "七室",
+          "area": 275.66,
+          "area_str": "275.66㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/5080283",
+      "url_amap": "https://uri.amap.com/marker?position=109.740406,18.382116&name=金半岛锦园"
+    },
+    {
+      "loupan_id": 7042013,
+      "project_name": "和榭",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "售罄",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "188-342㎡",
+      "room_types": "3室户型,4室户型,5室户型",
+      "floor_area_ratio": null,
+      "green_ratio": "40%",
+      "developer": "保利",
+      "address": "三亚海棠区海棠湾风塘路3组",
+      "distance_km": 4.51,
+      "lng": 109.72355,
+      "lat": 18.370098,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"大平层\", \"配套纯熟\", \"学校\", \"医院\"]",
+      "open_date": "2022年",
+      "delivery_date": "2023年",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/ec020323d03bd47e352fabc983eaf314/275x206n.jpg",
+      "land_area_sqm": "93611m²",
+      "building_area_sqm": "230000m²",
+      "planned_units": null,
+      "parking_spaces": "1345",
+      "parking_ratio": null,
+      "property_company": "旭辉永升",
+      "property_fee": null,
+      "decoration": null,
+      "building_type": "{}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"三房预许字（展期）【2019】17号\"]",
+      "developer_brand": "复星集团",
+      "investor": null,
+      "construction_progress": null,
+      "is_synthetic": true,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 188.0,
+          "area_str": "188㎡"
+        },
+        {
+          "name": "四室",
+          "area": 233.0,
+          "area_str": "233㎡"
+        },
+        {
+          "name": "四室",
+          "area": 242.0,
+          "area_str": "242㎡"
+        },
+        {
+          "name": "四室",
+          "area": 272.0,
+          "area_str": "272㎡"
+        },
+        {
+          "name": "四室",
+          "area": 279.0,
+          "area_str": "279㎡"
+        },
+        {
+          "name": "五室",
+          "area": 342.0,
+          "area_str": "342㎡"
+        }
+      ],
+      "url_anjuke": "https://m.anjuke.com/loupan/7042013",
+      "url_amap": "https://uri.amap.com/marker?position=109.72355,18.370098&name=和榭"
+    }
+  ],
+  "market_summary": {
+    "sample_count": 21,
+    "synthetic_count": 38,
+    "price": {
+      "avg": 32343.0,
+      "min": 26800.0,
+      "max": 38000.0,
+      "valid_count": 10
+    },
+    "sales_status": {
+      "尾盘": 16,
+      "在售": 5
+    },
+    "districts": {
+      "海棠区": 21
+    },
+    "room_types": {
+      "3室户型": 16,
+      "2室户型": 13,
+      "别墅户型": 9,
+      "1室户型": 5,
+      "4室户型": 4,
+      "5室户型": 2,
+      "6室户型": 1
+    },
+    "data_note": "[信息] 价格统计基于 21 条真实数据，另有 38 条合成数据用于样本密度参考"
+  },
+  "amenities": {
+    "school": {
+      "label": "学校",
+      "items": [
+        {
+          "name": "湾镇温泉小学",
+          "distance": 1088,
+          "address": "南田路三亚市海棠湾区温泉小学",
+          "type": "学校",
+          "lng": 109.720257,
+          "lat": 18.4007
+        },
+        {
+          "name": "藤桥幼儿园(东风分园)",
+          "distance": 1771,
+          "address": "藤桥及林旺二期安居工程西南侧",
+          "type": "学校",
+          "lng": 109.718797,
+          "lat": 18.394487
+        }
+      ]
+    },
+    "hospital": {
+      "label": "医院",
+      "items": [
+        {
+          "name": "长基·听棠长基听堂健康小屋",
+          "distance": 544,
+          "address": "双大海棠香居西南侧130米",
+          "type": "医院",
+          "lng": 109.723873,
+          "lat": 18.408824
+        },
+        {
+          "name": "三亚养天和大药房南田店",
+          "distance": 824,
+          "address": "海棠湾区南田农场东风分场东风队27号",
+          "type": "医院",
+          "lng": 109.718805,
+          "lat": 18.402999
+        },
+        {
+          "name": "三亚保济大药房南田店",
+          "distance": 853,
+          "address": "南田农场东风分场东风队27号",
+          "type": "医院",
+          "lng": 109.718841,
+          "lat": 18.402732
+        }
+      ]
+    },
+    "subway": {
+      "label": "地铁站",
+      "items": []
+    },
+    "bus": {
+      "label": "公交站",
+      "items": [
+        {
+          "name": "龙棠大观(公交站)",
+          "distance": 255,
+          "address": "377路",
+          "type": "公交站",
+          "lng": 109.718243,
+          "lat": 18.408215
+        },
+        {
+          "name": "丰收队(公交站)",
+          "distance": 411,
+          "address": "377路",
+          "type": "公交站",
+          "lng": 109.715519,
+          "lat": 18.412079
+        },
+        {
+          "name": "北大荒温泉溪谷(公交站)",
+          "distance": 635,
+          "address": "371路",
+          "type": "公交站",
+          "lng": 109.724867,
+          "lat": 18.40916
+        }
+      ]
+    },
+    "mall": {
+      "label": "商场",
+      "items": [
+        {
+          "name": "静静超市",
+          "distance": 558,
+          "address": "北大荒·海棠温泉溪谷",
+          "type": "商场",
+          "lng": 109.724075,
+          "lat": 18.409024
+        },
+        {
+          "name": "董家便利店",
+          "distance": 620,
+          "address": "鸿业海棠住宅小区南侧290米",
+          "type": "商场",
+          "lng": 109.71943,
+          "lat": 18.404841
+        },
+        {
+          "name": "华哥便利店",
+          "distance": 712,
+          "address": "龙棠大观西南侧370米",
+          "type": "商场",
+          "lng": 109.71552,
+          "lat": 18.404908
+        }
+      ]
+    },
+    "park": {
+      "label": "公园",
+      "items": []
+    },
+    "supermarket": {
+      "label": "超市",
+      "items": [
+        {
+          "name": "海棠湾8号商业广场",
+          "distance": 1421,
+          "address": "南田路西北30米",
+          "type": "超市",
+          "lng": 109.723241,
+          "lat": 18.398282
+        }
+      ]
+    }
+  },
+  "price_band_competitors": null
+}
