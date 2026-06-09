@@ -1,0 +1,408 @@
+"""
+DDS ABM 引擎 v1
+
+从"4 个写死 persona + 硬编码加分"升级到：
+  1. 真分布抽样（蒙特卡洛 1000 虚拟人格 / 城）
+  2. MNL Random Utility 决策模型
+  3. WTP 支付意愿分布 + 去化曲线
+  4. 城市分池（三亚 / 杭州 / 上海 / 青岛）
+
+零外部依赖，纯标准库。极简主义。
+"""
+from __future__ import annotations
+
+import math
+import random
+import statistics
+from dataclasses import dataclass, field, asdict
+
+
+# ============================================================
+# 1. 客群原型 archetype（每城自定）
+# ============================================================
+# 每城客群池由 N 个 archetype 加权组成，archetype 定义：
+#   - 权重（占比）
+#   - 收入分布参数（均值 / 标准差，万元/年）
+#   - 资产倍数（资产 ≈ 年收入 × 倍数）
+#   - 杠杆能力（首付承受比，1.0=全款）
+#   - 年龄区间
+#   - 偏好向量（户型 / 景观 / 学校 / 通勤 / 品牌 / 圈层 / 私密）
+#   - 风险厌恶基线
+@dataclass
+class Archetype:
+    name: str
+    weight: float           # 占比
+    income_mu: float        # 年收入均值（万）
+    income_sigma: float     # 年收入标准差
+    asset_multiplier: float # 总资产 = 年收入 × 该倍数（家庭累积）
+    dp_ratio: float         # 首付比例，0.3=三成（高杠杆），1.0=全款（最保守）
+    age_range: tuple[int, int]
+    pref: dict[str, float] # 偏好权重 0..1
+    risk_aversion: float    # 0..1，越大越保守
+
+
+# 四城客群池配置（基于公开统计 + 行业认知，可后续接七普精修）
+# 参数：年收入μ/σ 万 · 资产倍数 · 首付比例 dp · 年龄区间 · 偏好 · 风险厌恶
+CITY_POOLS: dict[str, list[Archetype]] = {
+    "三亚": [
+        Archetype("外地候鸟-华北", 0.25, 25, 10, 8, 0.5,
+                  (55, 75), {"景观": 0.95, "私密": 0.7, "圈层": 0.6, "户型": 0.5, "通勤": 0.0, "学校": 0.0, "品牌": 0.55}, 0.55),
+        Archetype("外地候鸟-东北", 0.15, 20, 8, 7, 0.5,
+                  (58, 78), {"景观": 0.95, "私密": 0.7, "圈层": 0.5, "户型": 0.5, "通勤": 0.0, "学校": 0.0, "品牌": 0.5}, 0.6),
+        Archetype("外地候鸟-西北", 0.10, 22, 10, 8, 0.5,
+                  (55, 75), {"景观": 0.9, "私密": 0.65, "圈层": 0.5, "户型": 0.5, "通勤": 0.0, "学校": 0.0, "品牌": 0.5}, 0.6),
+        Archetype("度假投资", 0.25, 50, 20, 10, 0.4,
+                  (35, 55), {"景观": 0.85, "私密": 0.6, "圈层": 0.55, "户型": 0.45, "通勤": 0.0, "学校": 0.0, "品牌": 0.75}, 0.4),
+        Archetype("本地改善", 0.15, 15, 6, 6, 0.35,
+                  (30, 50), {"景观": 0.6, "私密": 0.45, "圈层": 0.4, "户型": 0.75, "通勤": 0.5, "学校": 0.7, "品牌": 0.45}, 0.55),
+        Archetype("高净值康养", 0.10, 150, 70, 12, 0.6,
+                  (50, 70), {"景观": 0.95, "私密": 0.95, "圈层": 0.85, "户型": 0.6, "通勤": 0.0, "学校": 0.0, "品牌": 0.9}, 0.3),
+    ],
+    "杭州": [
+        Archetype("互联网工程师", 0.35, 55, 22, 6, 0.3,
+                  (28, 40), {"景观": 0.5, "私密": 0.45, "圈层": 0.55, "户型": 0.8, "通勤": 0.85, "学校": 0.7, "品牌": 0.6}, 0.5),
+        Archetype("本地改善", 0.25, 35, 15, 9, 0.4,
+                  (35, 55), {"景观": 0.55, "私密": 0.5, "圈层": 0.5, "户型": 0.85, "通勤": 0.7, "学校": 0.75, "品牌": 0.55}, 0.5),
+        Archetype("浙商投资", 0.20, 120, 60, 10, 0.5,
+                  (40, 60), {"景观": 0.6, "私密": 0.55, "圈层": 0.7, "户型": 0.5, "通勤": 0.3, "学校": 0.4, "品牌": 0.85}, 0.45),
+        Archetype("学区刚需", 0.15, 30, 12, 7, 0.3,
+                  (30, 45), {"景观": 0.3, "私密": 0.3, "圈层": 0.4, "户型": 0.7, "通勤": 0.6, "学校": 0.95, "品牌": 0.5}, 0.55),
+        Archetype("人才落户", 0.05, 45, 18, 5, 0.3,
+                  (28, 38), {"景观": 0.4, "私密": 0.35, "圈层": 0.5, "户型": 0.75, "通勤": 0.85, "学校": 0.6, "品牌": 0.55}, 0.6),
+    ],
+    "上海": [
+        Archetype("金融精英", 0.30, 90, 40, 8, 0.4,
+                  (32, 50), {"景观": 0.65, "私密": 0.6, "圈层": 0.75, "户型": 0.75, "通勤": 0.7, "学校": 0.8, "品牌": 0.8}, 0.45),
+        Archetype("外籍海归", 0.25, 70, 30, 7, 0.4,
+                  (30, 45), {"景观": 0.6, "私密": 0.55, "圈层": 0.8, "户型": 0.7, "通勤": 0.65, "学校": 0.85, "品牌": 0.75}, 0.5),
+        Archetype("本地改善", 0.20, 40, 18, 10, 0.45,
+                  (38, 58), {"景观": 0.55, "私密": 0.5, "圈层": 0.55, "户型": 0.85, "通勤": 0.6, "学校": 0.7, "品牌": 0.6}, 0.5),
+        Archetype("教育型买房", 0.15, 55, 22, 8, 0.4,
+                  (32, 48), {"景观": 0.4, "私密": 0.4, "圈层": 0.6, "户型": 0.7, "通勤": 0.55, "学校": 0.98, "品牌": 0.6}, 0.5),
+        Archetype("长三角家庭", 0.10, 45, 18, 7, 0.45,
+                  (35, 55), {"景观": 0.55, "私密": 0.5, "圈层": 0.5, "户型": 0.8, "通勤": 0.4, "学校": 0.7, "品牌": 0.65}, 0.55),
+    ],
+    "青岛": [
+        Archetype("本地改善", 0.45, 22, 10, 8, 0.4,
+                  (35, 55), {"景观": 0.75, "私密": 0.5, "圈层": 0.5, "户型": 0.85, "通勤": 0.6, "学校": 0.7, "品牌": 0.55}, 0.5),
+        Archetype("山东省内异地", 0.25, 25, 12, 8, 0.45,
+                  (40, 60), {"景观": 0.85, "私密": 0.55, "圈层": 0.5, "户型": 0.7, "通勤": 0.0, "学校": 0.4, "品牌": 0.55}, 0.55),
+        Archetype("北方度假投资", 0.15, 45, 20, 10, 0.5,
+                  (45, 65), {"景观": 0.95, "私密": 0.6, "圈层": 0.5, "户型": 0.5, "通勤": 0.0, "学校": 0.0, "品牌": 0.7}, 0.5),
+        Archetype("学区刚需", 0.10, 20, 8, 6, 0.3,
+                  (30, 45), {"景观": 0.4, "私密": 0.3, "圈层": 0.4, "户型": 0.75, "通勤": 0.55, "学校": 0.95, "品牌": 0.45}, 0.55),
+        Archetype("高端海景收藏", 0.05, 130, 60, 11, 0.6,
+                  (45, 65), {"景观": 0.98, "私密": 0.85, "圈层": 0.75, "户型": 0.55, "通勤": 0.0, "学校": 0.0, "品牌": 0.85}, 0.35),
+    ],
+}
+
+# 限购政策硬规则（简化版，可后续精修）
+PURCHASE_LIMITS = {
+    "三亚": {"non_local_social_years": 5, "max_units_local": 2, "max_units_non_local": 1},
+    "杭州": {"non_local_social_years": 4, "max_units_local": 2, "max_units_non_local": 1},
+    "上海": {"non_local_social_years": 5, "max_units_local": 2, "max_units_non_local": 1},
+    "青岛": {"non_local_social_years": 0, "max_units_local": 3, "max_units_non_local": 2},
+}
+
+
+# ============================================================
+# 2. 虚拟人格抽样
+# ============================================================
+@dataclass
+class Persona:
+    archetype: str
+    age: int
+    annual_income: float    # 万/年
+    total_asset: float      # 万
+    dp_ratio: float         # 首付比例
+    pref: dict[str, float]
+    risk_aversion: float
+    budget_ceiling: float   # 万，可承受总房款上限
+
+
+def _truncnorm(mu: float, sigma: float, lo: float = 0.5) -> float:
+    """截断正态：拒绝采样，避免收入为负或过低"""
+    while True:
+        v = random.gauss(mu, sigma)
+        if v >= lo:
+            return v
+
+
+def sample_personas(city: str, n: int = 1000) -> list[Persona]:
+    pool = CITY_POOLS.get(city)
+    if not pool:
+        raise ValueError(f"未配置城市客群池：{city}")
+    weights = [a.weight for a in pool]
+    personas = []
+    for _ in range(n):
+        a = random.choices(pool, weights=weights, k=1)[0]
+        income = _truncnorm(a.income_mu, a.income_sigma, lo=5)
+        asset = income * a.asset_multiplier * random.uniform(0.7, 1.3)
+        # 总房款 = 可投入首付 / 首付比例；留 25% 流动性储备
+        liquid = asset * 0.75
+        budget = liquid / max(a.dp_ratio, 0.3)
+        personas.append(Persona(
+            archetype=a.name,
+            age=random.randint(*a.age_range),
+            annual_income=round(income, 1),
+            total_asset=round(asset, 1),
+            dp_ratio=a.dp_ratio,
+            pref={k: max(0, min(1, v + random.gauss(0, 0.08))) for k, v in a.pref.items()},
+            risk_aversion=max(0, min(1, a.risk_aversion + random.gauss(0, 0.08))),
+            budget_ceiling=round(budget, 1),
+        ))
+    return personas
+
+
+# ============================================================
+# 3. MNL 决策模型
+# ============================================================
+@dataclass
+class Product:
+    name: str
+    unit_price: float       # 元/㎡
+    area: float             # ㎡，户型面积
+    pref_score: dict[str, float] = field(default_factory=dict)  # 该产品在各维度上的得分 0..1
+
+
+def _gumbel() -> float:
+    """Gumbel(0,1) 抽样，用于 MNL 异质性项"""
+    u = random.random()
+    return -math.log(-math.log(max(u, 1e-9)))
+
+
+def utility(persona: Persona, product: Product) -> float:
+    """效用函数 U = β₀ + Σ βᵢ·feature + ε"""
+    total_price_wan = product.unit_price * product.area / 10000  # 总价（万）
+    # 1. 预算匹配：超预算急剧惩罚，预算内对数效用
+    if total_price_wan > persona.budget_ceiling * 1.1:
+        budget_fit = -3.0
+    else:
+        ratio = total_price_wan / persona.budget_ceiling
+        budget_fit = -2.0 * (ratio ** 2) + 1.2  # 0.55x 预算时最舒服
+    # 2. 偏好契合：persona 偏好 × 产品得分内积
+    pref_fit = sum(persona.pref.get(k, 0) * product.pref_score.get(k, 0.5)
+                   for k in persona.pref) / max(len(persona.pref), 1)
+    # 3. 风险厌恶折扣
+    risk_penalty = -persona.risk_aversion * 0.3
+    # 4. Gumbel 异质性
+    epsilon = _gumbel() * 0.5
+    return 1.5 * budget_fit + 2.5 * pref_fit + risk_penalty + epsilon
+
+
+def buy_probability(persona: Persona, product: Product, competitors: list[Product]) -> float:
+    """MNL 购买概率：本项目 vs 不买（含竞品集合作为外部选项）"""
+    u_target = utility(persona, product)
+    # 外部选项 = 不买（U=0）+ 竞品平均效用 × 抑制系数
+    if competitors:
+        comp_u = statistics.mean(utility(persona, c) for c in competitors)
+    else:
+        comp_u = 0.0
+    denom = math.exp(u_target) + math.exp(comp_u) + 1.0
+    return math.exp(u_target) / denom
+
+
+def wtp(persona: Persona, product: Product) -> float:
+    """支付意愿（元/㎡）：受预算约束 + 偏好溢价，截断在市场合理倍数内"""
+    budget_per_sqm = persona.budget_ceiling * 10000 / max(product.area, 50)
+    pref_premium = sum(persona.pref.get(k, 0) * product.pref_score.get(k, 0.5)
+                       for k in persona.pref) / max(len(persona.pref), 1)
+    raw = budget_per_sqm * (0.6 + 0.5 * pref_premium) * (1 - 0.2 * persona.risk_aversion)
+    # 市场锚定：不超过产品标价 1.8 倍（理性比价约束）
+    market_ceiling = product.unit_price * (1.2 + 0.6 * pref_premium)
+    return min(raw, market_ceiling)
+
+
+# ============================================================
+# 4. 主入口：城市 + 产品 → 客群组合 / WTP / 去化曲线
+# ============================================================
+def run_abm(
+    city: str,
+    product: Product,
+    competitors: list[Product] | None = None,
+    n: int = 1000,
+    horizon_months: int = 24,
+    monthly_inflow_rate: float = 0.04,  # 每月新增 4% 入场人格
+    seed: int | None = 42,
+) -> dict:
+    if seed is not None:
+        random.seed(seed)
+    competitors = competitors or []
+    personas = sample_personas(city, n)
+
+    # 1. 每个 persona 的购买概率 + WTP
+    rows = []
+    for p in personas:
+        prob = buy_probability(p, product, competitors)
+        rows.append({
+            "archetype": p.archetype,
+            "age": p.age,
+            "income": p.annual_income,
+            "budget": p.budget_ceiling,
+            "buy_prob": prob,
+            "wtp": wtp(p, product),
+        })
+
+    # 2. 客群组合：按 archetype 聚合 buy_prob 加权
+    arch_stats = {}
+    for r in rows:
+        a = r["archetype"]
+        if a not in arch_stats:
+            arch_stats[a] = {"n": 0, "weighted_buyers": 0.0, "wtps": []}
+        arch_stats[a]["n"] += 1
+        arch_stats[a]["weighted_buyers"] += r["buy_prob"]
+        arch_stats[a]["wtps"].append(r["wtp"])
+    total_buyers = sum(s["weighted_buyers"] for s in arch_stats.values()) or 1
+    composition = sorted([
+        {
+            "name": a,
+            "share": round(s["weighted_buyers"] / total_buyers, 3),
+            "raw_count": s["n"],
+            "score": round(100 * s["weighted_buyers"] / s["n"], 1),
+            "wtp_p50": round(statistics.median(s["wtps"]), 0),
+            "wtp_p90": round(sorted(s["wtps"])[int(len(s["wtps"]) * 0.9)], 0),
+        }
+        for a, s in arch_stats.items()
+    ], key=lambda x: x["share"], reverse=True)
+
+    # 3. WTP 分布（直方图，10 桶）
+    all_wtps = [r["wtp"] for r in rows]
+    wtp_hist = _histogram(all_wtps, bins=10)
+
+    # 4. 去化曲线：每月入场 × 平均 buy_prob × 累积
+    avg_prob = sum(r["buy_prob"] for r in rows) / len(rows)
+    monthly_inflow = n * monthly_inflow_rate
+    sellthrough = []
+    cum = 0.0
+    for t in range(1, horizon_months + 1):
+        # 每月新入场 + 老库存的人格继续考虑（衰减 0.7）
+        sold_t = monthly_inflow * avg_prob * (0.7 ** (t // 6))
+        cum += sold_t
+        sellthrough.append({"month": t, "monthly_sales": round(sold_t, 1),
+                            "cumulative": round(cum, 1)})
+
+    # 5. 价格敏感性：单价 ±5% / ±10% 重跑 avg_prob
+    sensitivity = []
+    for delta in (-0.10, -0.05, 0.05, 0.10):
+        shifted = Product(product.name, product.unit_price * (1 + delta),
+                          product.area, product.pref_score)
+        ps = [buy_probability(p, shifted, competitors) for p in personas]
+        sensitivity.append({
+            "price_delta": f"{int(delta*100):+d}%",
+            "avg_buy_prob": round(sum(ps) / len(ps), 3),
+            "vs_base_pct": round((sum(ps) / len(ps) / avg_prob - 1) * 100, 1),
+        })
+
+    return {
+        "role": "ABM 市场模拟 Agent",
+        "method": "Random Utility + MNL，蒙特卡洛 N=" + str(n),
+        "city": city,
+        "product": asdict(product),
+        "n_personas": n,
+        "avg_buy_probability": round(avg_prob, 3),
+        "top_personas": composition[:3],
+        "personas": composition,
+        "wtp_distribution": wtp_hist,
+        "wtp_summary": {
+            "p10": round(sorted(all_wtps)[int(len(all_wtps) * 0.1)], 0),
+            "p50": round(statistics.median(all_wtps), 0),
+            "p90": round(sorted(all_wtps)[int(len(all_wtps) * 0.9)], 0),
+            "unit": "元/㎡",
+        },
+        "sellthrough_curve": sellthrough,
+        "price_sensitivity": sensitivity,
+        "confidence": _compute_confidence(arch_stats, n),
+    }
+
+
+def _histogram(values: list[float], bins: int = 10) -> list[dict]:
+    if not values:
+        return []
+    lo, hi = min(values), max(values)
+    if hi == lo:
+        return [{"range": f"{lo:.0f}", "count": len(values)}]
+    step = (hi - lo) / bins
+    counts = [0] * bins
+    for v in values:
+        idx = min(int((v - lo) / step), bins - 1)
+        counts[idx] += 1
+    return [
+        {"range": f"{lo + i*step:.0f}-{lo + (i+1)*step:.0f}", "count": c}
+        for i, c in enumerate(counts)
+    ]
+
+
+def _compute_confidence(arch_stats: dict, n: int) -> dict:
+    """置信度：基于样本量 + archetype 覆盖度"""
+    coverage = sum(1 for s in arch_stats.values() if s["n"] >= 30) / max(len(arch_stats), 1)
+    sample_score = min(n / 1000, 1.0)
+    score = (coverage * 0.6 + sample_score * 0.4)
+    return {
+        "score": round(score, 2),
+        "level": "高" if score >= 0.8 else ("中" if score >= 0.5 else "低"),
+        "note": "MVP 阶段使用合成人口分布，L1 真实成交数据接入后置信度可升至 0.9+",
+    }
+
+
+# ============================================================
+# 5. 从 parcel_report 推导 Product（适配 dds_decision_engine）
+# ============================================================
+def product_from_client_goal(client_goal: dict, avg_price: float | None) -> Product:
+    """把 dds 客户目标 + 市场均价 → ABM Product"""
+    product_type = client_goal.get("product_type") or "改善产品"
+    # 户型默认面积：商墅/别墅 200，改善 140，刚需 90
+    if "商墅" in product_type or "别墅" in product_type:
+        area = 220
+        pref = {"景观": 0.85, "私密": 0.9, "圈层": 0.7, "户型": 0.75,
+                "通勤": 0.3, "学校": 0.4, "品牌": 0.8}
+    elif "高端" in product_type or "豪宅" in product_type:
+        area = 180
+        pref = {"景观": 0.8, "私密": 0.85, "圈层": 0.75, "户型": 0.8,
+                "通勤": 0.5, "学校": 0.55, "品牌": 0.85}
+    elif "改善" in product_type:
+        area = 140
+        pref = {"景观": 0.65, "私密": 0.55, "圈层": 0.55, "户型": 0.85,
+                "通勤": 0.65, "学校": 0.7, "品牌": 0.6}
+    else:
+        area = 95
+        pref = {"景观": 0.4, "私密": 0.3, "圈层": 0.35, "户型": 0.75,
+                "通勤": 0.8, "学校": 0.7, "品牌": 0.45}
+    return Product(
+        name=product_type,
+        unit_price=avg_price or 30000,
+        area=area,
+        pref_score=pref,
+    )
+
+
+def competitors_from_parcel(competitors_raw: list[dict]) -> list[Product]:
+    """把 parcel_report.nearby_competitors → ABM Product 列表"""
+    out = []
+    for c in competitors_raw[:10]:  # 取前 10 个竞品
+        price = c.get("unit_price_cny")
+        if not price:
+            continue
+        area_str = c.get("area_range") or ""
+        # 粗略从面积区间取中位数（如 "100-140㎡" → 120）
+        area = _parse_area(area_str) or 120
+        out.append(Product(
+            name=c.get("project_name", "竞品"),
+            unit_price=price,
+            area=area,
+            pref_score={"景观": 0.6, "私密": 0.5, "圈层": 0.55, "户型": 0.7,
+                        "通勤": 0.6, "学校": 0.55, "品牌": 0.6},
+        ))
+    return out
+
+
+def _parse_area(s: str) -> float | None:
+    import re
+    nums = re.findall(r"\d+", s)
+    if not nums:
+        return None
+    nums = [float(x) for x in nums]
+    return sum(nums) / len(nums)
+
+
+# 库代码到此结束
+                                                                                                                                                                                                                                                                           

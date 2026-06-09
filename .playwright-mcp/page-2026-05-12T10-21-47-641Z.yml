@@ -1,0 +1,204 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]: DDS · Decision Data System
+  - generic [ref=e5]:
+    - complementary [ref=e6]:
+      - generic [ref=e7]: Index
+      - navigation [ref=e8]:
+        - link "00 核心主张" [ref=e9] [cursor=pointer]:
+          - /url: "#premise"
+          - generic [ref=e10]: "00"
+          - generic [ref=e11]: 核心主张
+        - link "01 客户痛点" [ref=e12] [cursor=pointer]:
+          - /url: "#why"
+          - generic [ref=e13]: "01"
+          - generic [ref=e14]: 客户痛点
+        - link "02 核心三角" [ref=e15] [cursor=pointer]:
+          - /url: "#triangle"
+          - generic [ref=e16]: "02"
+          - generic [ref=e17]: 核心三角
+        - link "03 路线图" [ref=e18] [cursor=pointer]:
+          - /url: "#roadmap"
+          - generic [ref=e19]: "03"
+          - generic [ref=e20]: 路线图
+        - link "04 成功指标" [ref=e21] [cursor=pointer]:
+          - /url: "#metrics"
+          - generic [ref=e22]: "04"
+          - generic [ref=e23]: 成功指标
+        - link "05 下一步" [ref=e24] [cursor=pointer]:
+          - /url: "#assignment"
+          - generic [ref=e25]: "05"
+          - generic [ref=e26]: 下一步
+    - main [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: Premise
+          - heading "从脚本 到产品" [level=1] [ref=e31]:
+            - text: 从脚本
+            - text: 到产品
+          - generic [ref=e32]: DDS 核心三角产品化——让城市总 10 分钟拿到投拓决策初判，替代 20 万、一个月的咨询团队。
+          - generic [ref=e33]:
+            - text: DDS 的下一步不是做更多功能，而是
+            - strong [ref=e34]: 把已经跑通的 40% 做成能收费的产品
+            - text: 。
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e37]: "01"
+            - generic [ref=e38]: 竞品价格分析——周边 5km 在售竞品、价格带、销售状态，一键生成。
+          - generic [ref=e39]:
+            - generic [ref=e40]: "02"
+            - generic [ref=e41]: 拿地敏感区间——周边均价 × 容积率，粗算楼面地价三档上限。
+          - generic [ref=e42]:
+            - generic [ref=e43]: "03"
+            - generic [ref=e44]: 产品定位建议——ABM 客群模拟 + 竞品户型反向推导面积段与总价。
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - generic [ref=e48]: Why
+            - heading "客户现状" [level=2] [ref=e49]
+          - paragraph [ref=e50]: 开发商城市总面对一块地时，需要综合 9 个维度做判断。目前靠雇佣营销咨询团队，花 20 万、耗时一个月完成。
+        - generic [ref=e51]:
+          - article [ref=e52]:
+            - generic [ref=e53]: "01"
+            - heading "决策慢 = 丢地" [level=3] [ref=e54]
+            - paragraph [ref=e55]: 一个月出报告，优质地块早被竞对拿走。去化速度、项目周期、净利润是城市总的核心 KPI。
+          - article [ref=e56]:
+            - generic [ref=e57]: "02"
+            - heading "9 项交付物" [level=3] [ref=e58]
+            - paragraph [ref=e59]: 竞品价格、户型配比、IRR 测算、拿地价建议、功能落位、客群画像、动线分析、建筑设计、故事线导入——一个月手工完成。
+          - article [ref=e60]:
+            - generic [ref=e61]: "03"
+            - heading "20 万成本" [level=3] [ref=e62]
+            - paragraph [ref=e63]: 每个项目雇佣营销咨询团队的成本。开发商已经在为这个流程付费——有预算、有需求。
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - generic [ref=e67]: Wedge
+            - heading "核心三角" [level=2] [ref=e68]
+          - paragraph [ref=e69]: 不追求 9 项全覆盖。先把 DDS 已经能自动化的 40% 做到极致——竞品价格 + 拿地区间 + 产品定位。这是拿地决策的硬约束，别的模块等方案阶段再做。
+        - generic [ref=e70]:
+          - article [ref=e71]:
+            - generic [ref=e72]: A
+            - heading "竞品价格分析" [level=3] [ref=e73]
+            - paragraph [ref=e74]: 周边 5km 在售竞品自动检索，价格带、销售状态、面积段、户型分布、开发商——从一个月人工搜集压缩到 30 秒。
+            - list [ref=e75]:
+              - listitem [ref=e76]: 数据源：安居客 CSV + DuckDB
+              - listitem [ref=e77]: Haversine 距离排序
+              - listitem [ref=e78]: 样本不足时自动扩区
+          - article [ref=e79]:
+            - generic [ref=e80]: B
+            - heading "拿地敏感区间" [level=3] [ref=e81]
+            - paragraph [ref=e82]: 基于周边均价 × 容积率粗算楼面地价上限，输出保守 / 均衡 / 激进三档。不是最终拿地价，但是第一轮快速判断的锚。
+            - list [ref=e83]:
+              - listitem [ref=e84]: 保守：均价 × 0.28 × 容积率
+              - listitem [ref=e85]: 激进：均价 × 0.38 × 容积率
+              - listitem [ref=e86]: 清晰标注假设和数据来源
+          - article [ref=e87]:
+            - generic [ref=e88]: C
+            - heading "产品定位建议" [level=3] [ref=e89]
+            - paragraph [ref=e90]: ABM 客群模拟：预设度假改善、高净值康养、投资收藏、家庭旅居四类虚拟客群，按价格/产品/配套信号打分，输出推荐面积段和户型方向。
+            - list [ref=e91]:
+              - listitem [ref=e92]: 复用 dds_decision_engine.py 打分逻辑
+              - listitem [ref=e93]: 对标项目溢价参照
+              - listitem [ref=e94]: 数据边界清晰标注
+        - generic [ref=e95]:
+          - text: 先打透
+          - strong [ref=e96]: 三亚
+          - text: 作为标杆案例——数据最熟、地块最典型、客户最近。验证通过后再扩杭州、上海、青岛。
+      - generic [ref=e97]:
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e100]: Roadmap
+            - heading "3 阶段路线图" [level=2] [ref=e101]
+          - paragraph [ref=e102]: 1 人 + AI 辅助。先跑通一个真实三亚地块，验证准确率，再收集城市总反馈。Phase 2 通过（至少 1 人愿意付费）才启动 Phase 3。
+        - generic [ref=e103]:
+          - article [ref=e104]:
+            - generic [ref=e106]: "1"
+            - generic [ref=e107]: 第 1-3 周
+            - heading "产品化包装" [level=3] [ref=e108]
+            - paragraph [ref=e109]: Phase 1a — 三亚数据校核 + Flask Web 原型（第 1-2 周）
+            - paragraph [ref=e110]: Phase 1b — Markdown → 专业 PDF 报告（第 2-3 周）
+            - list [ref=e111]:
+              - listitem [ref=e112]: Flask API：POST /api/report
+              - listitem [ref=e113]: 极简 Web 输入页 + spinner
+              - listitem [ref=e114]: API Key 迁移到 .env
+          - article [ref=e115]:
+            - generic [ref=e117]: "2"
+            - generic [ref=e118]: 第 3-4 周 · 有通过标准
+            - heading "标杆验证" [level=3] [ref=e119]
+            - paragraph [ref=e120]: 选 3 个三亚近期成交地块做技术干跑，验证竞品覆盖和价格偏差。
+            - list [ref=e121]:
+              - listitem [ref=e122]: 竞品覆盖 > 80%
+              - listitem [ref=e123]: 价格偏差 < 10%
+              - listitem [ref=e124]: ≥1 位城市总愿意付费
+            - paragraph [ref=e125]: 未通过 → 回到产品迭代，不扩城市
+          - article [ref=e126]:
+            - generic [ref=e128]: "3"
+            - generic [ref=e129]: 第 5-8 周 · 条件启动
+            - heading "四城扩展" [level=3] [ref=e130]
+            - paragraph [ref=e131]: Phase 2 通过后启动。三亚标竿做深后，逐城扩展。
+            - list [ref=e132]:
+              - listitem [ref=e133]: 数据定时更新（≤7天）
+              - listitem [ref=e134]: 新鲜度自动检查标注
+              - listitem [ref=e135]: 每城确认潜在客户再扩
+      - generic [ref=e136]:
+        - generic [ref=e137]:
+          - generic [ref=e138]:
+            - generic [ref=e139]: Success
+            - heading "成功指标" [level=2] [ref=e140]
+          - paragraph [ref=e141]: 所有指标围绕一个核心问题：城市总拿到报告后，愿不愿意为它付费？
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - generic [ref=e144]: <10min
+            - generic [ref=e145]: 从输入坐标到完整报告
+          - generic [ref=e146]:
+            - generic [ref=e147]: <5%
+            - generic [ref=e148]: 价格偏差 vs 人工采集
+          - generic [ref=e149]:
+            - generic [ref=e150]: ≥1
+            - generic [ref=e151]: 真实客户愿意付费或深度试用
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - generic [ref=e154]: 技术栈
+            - generic [ref=e155]: 用途
+            - generic [ref=e156]: 说明
+          - generic [ref=e157]:
+            - generic [ref=e158]: Flask
+            - generic [ref=e159]: 后端 API
+            - generic [ref=e160]: POST /api/report，与现有 Python 脚本直接集成，pip install flask 即用
+          - generic [ref=e161]:
+            - generic [ref=e162]: 高德 GIS
+            - generic [ref=e163]: 地理编码 + POI
+            - generic [ref=e164]: 复用 gis_amap.py，已有 QPS 限流处理
+          - generic [ref=e165]:
+            - generic [ref=e166]: DuckDB
+            - generic [ref=e167]: 楼盘查询
+            - generic [ref=e168]: 复用 query_local.py，安居客 CSV 直接 SQL 查询
+          - generic [ref=e169]:
+            - generic [ref=e170]: DeepSeek
+            - generic [ref=e171]: ABM + 摘要
+            - generic [ref=e172]: 复用 dds_decision_engine.py，失败时降级到规则化 baseline
+      - generic [ref=e173]:
+        - generic [ref=e174]:
+          - generic [ref=e175]:
+            - generic [ref=e176]: Next
+            - heading "下一步" [level=2] [ref=e177]
+          - paragraph [ref=e178]: 不讨论了，开始做。两步走，先验证技术再验证客户。
+        - generic [ref=e179]:
+          - article [ref=e180]:
+            - generic [ref=e181]: Step 1
+            - heading "技术干跑" [level=3] [ref=e182]
+            - paragraph [ref=e183]: 选 3 个三亚近期成交地块，用 DDS 跑完整核心三角报告。人工复采安居客同区域挂牌价，对比价格偏差和竞品覆盖完整度。修复差距后再进入 Step 2。
+          - article [ref=e184]:
+            - generic [ref=e185]: Step 2
+            - heading "客户验证" [level=3] [ref=e186]
+            - paragraph [ref=e187]: 找一个真实的城市总或投拓负责人，把报告拿给他看。问他三句话：
+            - list [ref=e188]:
+              - listitem [ref=e189]: 「这比你团队出的报告差在哪？」
+              - listitem [ref=e190]: 「哪里你觉得不准？」
+              - listitem [ref=e191]: 「如果 5 分钟内出，你愿意花多少钱？」
+            - paragraph [ref=e192]: 把答案带回来。
+      - generic [ref=e193]:
+        - generic [ref=e194]: Conclusion
+        - heading "从能跑通 → 能收费" [level=2] [ref=e195]
+        - paragraph [ref=e196]: DDS 的价值不在于把 9 项交付物全做完，而在于把最硬的 3 项做到比人工团队更快、更准、更可追溯。当城市总能在 10 分钟内拿到一份带数据来源标注、价格敏感区间和产品建议的报告——20 万、一个月的咨询团队就不再是必选项。

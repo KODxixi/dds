@@ -1,0 +1,50 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]: DDS · Decision Data System
+  - generic [ref=e10]:
+    - complementary [ref=e11]:
+      - button "收起目录" [expanded] [ref=e12] [cursor=pointer]: ‹
+      - generic [ref=e13]: Index
+      - navigation
+      - generic [ref=e14]: DDS 核心三角 — 输入地块坐标，输出竞品分析、风险推演、客群定位与拿地建议。所有结论可溯源。
+    - main [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]: Input
+          - heading "地块价值 快速研判" [level=1] [ref=e19]:
+            - text: 地块价值
+            - text: 快速研判
+          - generic [ref=e20]: 输入地块地址或坐标，30–90 秒生成 Bauhaus 风格决策报告。含竞品分析、风险推演、客群定位与拿地敏感区间。
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]: 城市 City
+            - combobox "城市 City" [ref=e25]:
+              - option "三亚" [selected]
+              - option "杭州"
+              - option "上海"
+              - option "青岛"
+          - generic [ref=e26]:
+            - generic [ref=e27]: 地址 / 坐标 Address
+            - textbox "地址 / 坐标 Address" [ref=e28]:
+              - /placeholder: 三亚海棠区南田路16号 或 18.4104,109.71899
+            - generic [ref=e29]: 支持 DD / DM / DMS 三种坐标格式，自动识别
+          - generic [ref=e30]:
+            - generic [ref=e31]: 预期均价 元/㎡（可选）
+            - spinbutton "预期均价 元/㎡（可选）" [ref=e32]
+          - generic [ref=e33]:
+            - generic [ref=e34]: 搜索半径 km
+            - spinbutton "搜索半径 km" [ref=e35]: "5"
+          - generic [ref=e36]:
+            - generic [ref=e37]: 价格带比例 Price Band（可选）
+            - spinbutton "价格带比例 Price Band（可选）" [ref=e38]: "0.15"
+            - generic [ref=e39]: 预期均价上下浮动比例，默认 0.15（±15%）
+          - generic [ref=e40]:
+            - generic [ref=e41]: 预期描述 Vision（可选）
+            - textbox "预期描述 Vision（可选）" [ref=e42]:
+              - /placeholder: 例：拟建50000㎡高端度假酒店+低密住宅，目标客群为高净值康养人群，对标安缦/嘉佩乐级别配套
+            - generic [ref=e43]: 描述项目定位、业态规划、对标项目，AI 将据此定制分析
+          - button "生成报告" [ref=e44] [cursor=pointer]
+  - contentinfo [ref=e45]:
+    - generic [ref=e46]: Trust
+    - heading "透明的大脑 + 可签字的审计链" [level=2] [ref=e47]
+    - paragraph [ref=e48]: 每个结论都能展开来源。权重可调，结果可复算。DDS 不是黑箱，是参与式决策引擎。

@@ -1,0 +1,21 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]: DDS · Decision Data System
+    - generic [ref=e10]: 三亚
+  - generic [ref=e11]:
+    - complementary [ref=e12]:
+      - button "收起目录" [expanded] [ref=e13] [cursor=pointer]: ‹
+      - generic [ref=e14]: Index
+      - navigation
+      - generic [ref=e15]: DDS 核心三角 — 输入地块坐标，输出竞品分析、风险推演、客群定位与拿地建议。所有结论可溯源。
+    - main [ref=e16]:
+      - generic [ref=e56]:
+        - generic [ref=e61]: 分析中，预计 30–90 秒
+        - generic [ref=e62]:
+          - generic [ref=e63]: ✓ 地理编码完成
+          - generic [ref=e64]: ○ 竞品分析中…
+          - generic [ref=e65]: ○ AI 增强分析中…
+  - contentinfo [ref=e46]:
+    - generic [ref=e47]: Trust
+    - heading "透明的大脑 + 可签字的审计链" [level=2] [ref=e48]
+    - paragraph [ref=e49]: 每个结论都能展开来源。权重可调，结果可复算。DDS 不是黑箱，是参与式决策引擎。

@@ -1,0 +1,5 @@
+[    4864ms] [ERROR] Access to XMLHttpRequest at 'https://api.landchina.com/tGygg/transfer/list' from origin 'https://www.landchina.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://www.landchina.com/#/givingNotice:0
+[    4865ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://api.landchina.com/tGygg/transfer/list:0
+[    4869ms] [ERROR] Access to XMLHttpRequest at 'https://api.landchina.com/bptFieldEnum/xzq' from origin 'https://www.landchina.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://www.landchina.com/#/givingNotice:0
+[    4874ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://api.landchina.com/bptFieldEnum/xzq:0
+[    4947ms] [WARNING] Scripts may close only the windows that were opened by them. @ https://www.landchina.com/js/chunk-vendors.6f217df8.js:0

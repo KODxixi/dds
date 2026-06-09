@@ -1,0 +1,7 @@
+flask>=3.0
+python-dotenv>=1.0
+duckdb>=1.0
+pandas>=2.0
+tabulate>=0.9
+anthropic>=0.40
+pytest>=8.0
