@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<title>DDS 决策推演报告 · 海棠区南田路16号</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+       background: #f5f3ee; color: #111; padding: 32px; line-height: 1.6; }
+.container { max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 36px; font-weight: 900; letter-spacing: -1px;
+     border-bottom: 4px solid #111; padding-bottom: 12px; margin-bottom: 24px; }
+h2 { font-size: 22px; font-weight: 800; margin-top: 36px; margin-bottom: 12px;
+     background: #111; color: #f5f3ee; padding: 6px 14px; display: inline-block; }
+h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: #333; }
+.score-card { display: flex; gap: 24px; align-items: stretch; margin-bottom: 20px; }
+.score-box { background: #111; color: #f5f3ee; padding: 28px 36px; border-radius: 0; }
+.score-box .num { font-size: 56px; font-weight: 900; line-height: 1; }
+.score-box .lbl { font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+                  opacity: 0.7; margin-top: 6px; }
+.grade-A\+, .grade-A { background: #d9261c; color: #fff5d9; }
+.grade-B\+, .grade-B { background: #f5b800; color: #111; }
+.grade-C, .grade-D { background: #666; color: #fff; }
+.bar { display: inline-block; height: 18px; background: #d9261c; margin-right: 8px;
+       vertical-align: middle; }
+.kv { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 12px; }
+.kv span { color: #555; font-size: 14px; }
+.kv b { color: #111; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+th, td { padding: 8px 12px; border-bottom: 1px solid #ddd; text-align: left; }
+th { background: #111; color: #f5f3ee; font-weight: 700; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.warn { background: #fff4e0; border-left: 6px solid #f5b800; padding: 12px 16px;
+        margin: 10px 0; font-size: 14px; }
+.danger { background: #ffe4e1; border-left: 6px solid #d9261c; padding: 12px 16px;
+          margin: 10px 0; font-size: 14px; }
+.section { margin-bottom: 24px; }
+.muted { color: #888; font-size: 13px; }
+.list { padding-left: 22px; }
+.list li { margin: 4px 0; font-size: 14px; }
+</style></head><body><div class="container">
+<h1>DDS 决策推演报告</h1>
+<div class="kv"><span>地块: <b>海棠区南田路16号</b></span><span>城市: <b>三亚</b></span><span>生成时间: <b>2026-05-29T01:20:56</b></span><span class="muted">dds-agent-v2-mvp-1</span></div>
+<h2>CEO 综合评分</h2><div class="section">
+<div class="score-card">
+<div class="score-box grade-B"><div class="num">54.3</div><div class="lbl">综合评分 / 100</div></div>
+<div class="score-box"><div class="num">B</div><div class="lbl">等级</div></div>
+<div class="score-box"><div class="num">0.73</div><div class="lbl">整体置信度</div></div>
+<div class="score-box"><div class="num" style="font-size:24px;">invest</div><div class="lbl">视角</div></div>
+</div>
+<p>置信度较高，模型输入充分、内部一致。 综合得分中等，建议先补齐一级法定硬约束 + 客群校验后再决策。</p>
+<h3>分项明细</h3>
+<table><thead><tr><th>Agent</th><th class="num">原始分</th><th class="num">置信度</th><th class="num">权重</th><th class="num">贡献</th><th>条形</th></tr></thead><tbody>
+<tr><td>compliance</td><td class="num">55.0</td><td class="num">0.5</td><td class="num">0.3</td><td class="num"><b>8.25</b></td><td><span class="bar" style="width:82px;"></span></td></tr>
+<tr><td>value</td><td class="num">66.1</td><td class="num">1.0</td><td class="num">0.2</td><td class="num"><b>13.21</b></td><td><span class="bar" style="width:99px;"></span></td></tr>
+<tr><td>abm</td><td class="num">100</td><td class="num">1.0</td><td class="num">0.15</td><td class="num"><b>15.0</b></td><td><span class="bar" style="width:150px;"></span></td></tr>
+<tr><td>unit_mix</td><td class="num">100</td><td class="num">0.7</td><td class="num">0.15</td><td class="num"><b>10.5</b></td><td><span class="bar" style="width:150px;"></span></td></tr>
+<tr><td>migration</td><td class="num">67.2</td><td class="num">0.65</td><td class="num">0.1</td><td class="num"><b>4.37</b></td><td><span class="bar" style="width:100px;"></span></td></tr>
+<tr><td>blueprint</td><td class="num">50</td><td class="num">0.6</td><td class="num">0.1</td><td class="num"><b>3.0</b></td><td><span class="bar" style="width:75px;"></span></td></tr>
+</tbody></table>
+</div>
+<h2>决策摘要</h2><div class="section">
+<p><b>结论：</b>可进入投拓测算，但需先补齐一级法定硬约束后才能定最终拿地价。</p>
+<div class="kv"><span>保守: <b>20192.0</b></span><span>平衡: <b>23798.0</b></span><span>进取: <b>27403.0</b></span><span class="muted">元/㎡土地口径粗算</span></div>
+<p><b>核心机会：</b>客户目标产品为改善产品，应优先验证低密、私密性、到达仪式感和景观资源是否能支撑溢价。</p>
+<div class="warn"><b>合规警示：</b><ul class="list">
+<li>容积率 2.0 是客户假设，尚未由出让合同或控规文件确认。</li>
+<li>缺少一级法定硬约束，当前只能输出投拓初判，不能作为最终拿地价。</li>
+</ul></div>
+</div>
+<h2>类似地块证据</h2><div class="section">
+<div class="kv"><span>来源: <b>chromadb</b></span><span>competitor_projects</span></div>
+<table><thead><tr><th>#</th><th>项目</th><th>区域</th><th class="num">年份</th><th class="num">单价</th><th>面积段</th><th>开发商</th><th class="num">相似度</th></tr></thead><tbody>
+<tr><td>1</td><td><b>蓝雅苑三期</b></td><td>乐东</td><td class="num">2018</td><td class="num">9662</td><td>-</td><td>融创</td><td class="num"><span style="width:100px;background:#1040c0;height:10px;display:inline-block;vertical-align:middle;margin-right:6px;"></span>84%</td></tr>
+<tr><td>2</td><td><b>泰雅苑A区</b></td><td>乐东</td><td class="num">2024</td><td class="num">29369</td><td>-</td><td>仁恒</td><td class="num"><span style="width:100px;background:#1040c0;height:10px;display:inline-block;vertical-align:middle;margin-right:6px;"></span>84%</td></tr>
+<tr><td>3</td><td><b>世梅林豪庭</b></td><td>天涯区</td><td class="num">2017</td><td class="num">33146</td><td>-</td><td>正荣</td><td class="num"><span style="width:100px;background:#1040c0;height:10px;display:inline-block;vertical-align:middle;margin-right:6px;"></span>84%</td></tr>
+<tr><td>4</td><td><b>华雅苑三期</b></td><td>东方</td><td class="num">2022</td><td class="num">13465</td><td>-</td><td>旭辉</td><td class="num"><span style="width:100px;background:#1040c0;height:10px;display:inline-block;vertical-align:middle;margin-right:6px;"></span>83%</td></tr>
+<tr><td>5</td><td><b>海源B区</b></td><td>天涯区</td><td class="num">2019</td><td class="num">37243</td><td>-</td><td>中铁建</td><td class="num"><span style="width:100px;background:#1040c0;height:10px;display:inline-block;vertical-align:middle;margin-right:6px;"></span>83%</td></tr>
+</tbody></table>
+</div>
+<h2>客群语义画像</h2><div class="section">
+<p class="muted">来自 N=1000 个真实虚拟样本的购房意愿加权聚合</p>
+<h3>核心居住痛点 Top 5</h3>
+<table><thead><tr><th>#</th><th>痛点</th><th class="num">权重</th><th>条形</th></tr></thead><tbody>
+<tr><td>1</td><td>无高端私密会所及管家式物业配套</td><td class="num"><b>28.0%</b></td><td><span style="display:inline-block;height:14px;width:240px;background:#d02020;"></span></td></tr>
+<tr><td>2</td><td>圈层鱼龙混杂</td><td class="num"><b>28.0%</b></td><td><span style="display:inline-block;height:14px;width:240px;background:#d02020;"></span></td></tr>
+<tr><td>3</td><td>高净值居住体验差</td><td class="num"><b>28.0%</b></td><td><span style="display:inline-block;height:14px;width:240px;background:#d02020;"></span></td></tr>
+<tr><td>4</td><td>无电梯</td><td class="num"><b>3.1%</b></td><td><span style="display:inline-block;height:14px;width:26px;background:#d02020;"></span></td></tr>
+<tr><td>5</td><td>老小区隔音差</td><td class="num"><b>2.9%</b></td><td><span style="display:inline-block;height:14px;width:24px;background:#d02020;"></span></td></tr>
+</tbody></table>
+<h3>核心细节需求 Top 5</h3>
+<table><thead><tr><th>#</th><th>需求</th><th class="num">权重</th><th>条形</th></tr></thead><tbody>
+<tr><td>1</td><td>独立保姆房</td><td class="num"><b>49.4%</b></td><td><span style="display:inline-block;height:14px;width:240px;background:#1040c0;"></span></td></tr>
+<tr><td>2</td><td>大面宽南向</td><td class="num"><b>42.4%</b></td><td><span style="display:inline-block;height:14px;width:205px;background:#1040c0;"></span></td></tr>
+<tr><td>3</td><td>求采光通透</td><td class="num"><b>2.0%</b></td><td><span style="display:inline-block;height:14px;width:9px;background:#1040c0;"></span></td></tr>
+<tr><td>4</td><td>全明户型</td><td class="num"><b>2.0%</b></td><td><span style="display:inline-block;height:14px;width:9px;background:#1040c0;"></span></td></tr>
+<tr><td>5</td><td>带多功能嵌入式收纳墙以最大化空间利用</td><td class="num"><b>2.0%</b></td><td><span style="display:inline-block;height:14px;width:9px;background:#1040c0;"></span></td></tr>
+</tbody></table>
+</div>
+<h2>ABM 客群模拟</h2><div class="section">
+<div class="kv"><span>方法: <b>Random Utility + MNL，蒙特卡洛 N=1000</b></span><span>样本: <b>N=1000</b></span><span>平均购买率: <b>28.6%</b></span><span>置信度: <b>高</b></span></div>
+<h3>Top 客群</h3>
+<table><thead><tr><th>客群</th><th class="num">占比</th><th>占比图表</th><th class="num">得分</th><th class="num">WTP p50</th><th class="num">WTP p90</th></tr></thead><tbody>
+<tr><td>度假投资</td><td class="num"><b>62.1%</b></td><td><span class="bar" style="width:120px;background:#ac8933;height:12px;display:inline-block;border-radius:2px;"></span></td><td class="num">71.1</td><td class="num">43133.0</td><td class="num">49899.0</td></tr>
+<tr><td>高净值康养</td><td class="num"><b>26.2%</b></td><td><span class="bar" style="width:50px;background:#ac8933;height:12px;display:inline-block;border-radius:2px;"></span></td><td class="num">69.4</td><td class="num">51458.0</td><td class="num">51945.0</td></tr>
+<tr><td>外地候鸟-华北</td><td class="num"><b>7.8%</b></td><td><span class="bar" style="width:15px;background:#ac8933;height:12px;display:inline-block;border-radius:2px;"></span></td><td class="num">8.7</td><td class="num">14504.0</td><td class="num">22893.0</td></tr>
+</tbody></table>
+<h3>价格敏感性</h3>
+<table><thead><tr><th>价格变化</th><th class="num">平均购买率</th><th class="num">相对基线</th></tr></thead><tbody>
+<tr><td>-10%</td><td class="num">0.303</td><td class="num">+5.9%</td></tr>
+<tr><td>-5%</td><td class="num">0.289</td><td class="num">+1.0%</td></tr>
+<tr><td>+5%</td><td class="num">0.28</td><td class="num">-2.1%</td></tr>
+<tr><td>+10%</td><td class="num">0.271</td><td class="num">-5.3%</td></tr>
+</tbody></table>
+</div>
+<h2>户型配比（反向匹配）</h2><div class="section">
+<div class="kv"><span>方法: <b>反向匹配 v1（efu 最高户型分桶 + MNL）</b></span><span>总户数: <b>120</b></span><span>预期销售: <b>5.67 亿</b></span><span>去化预估: <b>39.2 月</b></span></div>
+<table><thead><tr><th>户型</th><th class="num">面积</th><th class="num">单价</th><th class="num">推荐套数</th><th class="num">占比</th><th>占比图表</th><th>主力客群</th><th class="num">预期销售额</th></tr></thead><tbody>
+<tr><td><b>110㎡三房</b></td><td class="num">110㎡</td><td class="num">34254</td><td class="num">85</td><td class="num"><b>70.4%</b></td><td><span class="bar" style="width:120px;background:#038684;height:12px;display:inline-block;border-radius:2px;"></span></td><td>度假投资 38%, 外地候鸟-华北 32%</td><td class="num">3.20 亿</td></tr>
+<tr><td><b>140㎡三房</b></td><td class="num">140㎡</td><td class="num">36057</td><td class="num">3</td><td class="num"><b>2.3%</b></td><td><span class="bar" style="width:3px;background:#038684;height:12px;display:inline-block;border-radius:2px;"></span></td><td>度假投资 100%</td><td class="num">0.15 亿</td></tr>
+<tr><td><b>180㎡大平层</b></td><td class="num">180㎡</td><td class="num">38942</td><td class="num">33</td><td class="num"><b>27.3%</b></td><td><span class="bar" style="width:46px;background:#038684;height:12px;display:inline-block;border-radius:2px;"></span></td><td>度假投资 66%, 高净值康养 34%</td><td class="num">2.31 亿</td></tr>
+</tbody></table>
+</div>
+<h2>5 年客群迁移</h2><div class="section">
+<div class="kv"><span>方法: <b>客群马尔可夫迁移 v1</b></span><span>累计退出率: <b>28.8%</b></span></div>
+<h3>关键迁移 (Y0 → Y5)</h3>
+<table><thead><tr><th>客群</th><th class="num">Y0</th><th class="num">Y5</th><th class="num">变化</th><th>趋势</th></tr></thead><tbody>
+<tr><td>高净值康养</td><td class="num">11%</td><td class="num">23%</td><td class="num" style="color:#d9261c;font-weight:700">+12pp</td><td>上升</td></tr>
+<tr><td>外地候鸟-东北</td><td class="num">14%</td><td class="num">8%</td><td class="num" style="color:#666;font-weight:700">-5pp</td><td>下降</td></tr>
+<tr><td>外地候鸟-华北</td><td class="num">26%</td><td class="num">21%</td><td class="num" style="color:#666;font-weight:700">-5pp</td><td>下降</td></tr>
+<tr><td>本地改善</td><td class="num">15%</td><td class="num">19%</td><td class="num" style="color:#d9261c;font-weight:700">+4pp</td><td>上升</td></tr>
+<tr><td>外地候鸟-西北</td><td class="num">10%</td><td class="num">6%</td><td class="num" style="color:#666;font-weight:700">-3pp</td><td>下降</td></tr>
+</tbody></table>
+<h3>年度分布演化</h3>
+<table><thead><tr><th>年份</th><th>Top 3 客群</th></tr></thead><tbody>
+<tr><td><b>Y0</b></td><td>外地候鸟-华北 26%, 度假投资 25%, 本地改善 15%</td></tr>
+<tr><td><b>Y1</b></td><td>外地候鸟-华北 25%, 度假投资 25%, 本地改善 16%</td></tr>
+<tr><td><b>Y2</b></td><td>度假投资 24%, 外地候鸟-华北 24%, 本地改善 17%</td></tr>
+<tr><td><b>Y3</b></td><td>度假投资 24%, 外地候鸟-华北 23%, 高净值康养 19%</td></tr>
+<tr><td><b>Y4</b></td><td>度假投资 23%, 外地候鸟-华北 22%, 高净值康养 21%</td></tr>
+<tr><td><b>Y5</b></td><td>高净值康养 23%, 度假投资 23%, 外地候鸟-华北 21%</td></tr>
+</tbody></table>
+</div>
+<h2>时间穿越（历史年份对比）</h2><div class="section">
+<div class="kv"><span>城市: <b>三亚</b></span><span>产品: <b>改善产品</b></span></div>
+<div class="kv"><span>价格趋势 <b>2010 → 2026</b>: <b>7866 → 34829</b> 元/㎡, <b>4.43×</b> 增长，年化 <b>9.7%</b></span></div>
+<table><thead><tr><th>年份</th><th class="num">均价</th><th class="num">平均买率</th><th class="num">WTP-p50</th><th>Top3 客群</th></tr></thead><tbody>
+<tr><td><b>Y2010</b></td><td class="num">7866</td><td class="num">0.13</td><td class="num">1774.0</td><td>度假投资 77% · 高净值康养 17% · 本地改善 4%</td></tr>
+<tr><td><b>Y2020</b></td><td class="num">16298</td><td class="num">0.258</td><td class="num">6766.0</td><td>度假投资 54% · 高净值康养 30% · 外地候鸟-华北 10%</td></tr>
+<tr><td><b>Y2026</b></td><td class="num">34829</td><td class="num">0.285</td><td class="num">15200.0</td><td>度假投资 66% · 高净值康养 23% · 外地候鸟-华北 8%</td></tr>
+</tbody></table>
+<h3>客群迁徙轨迹</h3>
+<table><thead><tr><th>Archetype</th><th class="num">Y2010</th><th class="num">Y2020</th><th class="num">Y2026</th></tr></thead><tbody>
+<tr><td>度假投资</td><td class="num">77%</td><td class="num">54%</td><td class="num">66%</td></tr>
+<tr><td>高净值康养</td><td class="num">17%</td><td class="num">30%</td><td class="num">23%</td></tr>
+<tr><td>本地改善</td><td class="num">4%</td><td class="num">—</td><td class="num">—</td></tr>
+<tr><td>外地候鸟-华北</td><td class="num">—</td><td class="num">10%</td><td class="num">8%</td></tr>
+</tbody></table>
+</div>
+</div></body></html>
