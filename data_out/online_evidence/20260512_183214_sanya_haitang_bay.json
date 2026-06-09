@@ -1,0 +1,14 @@
+{
+  "evidence": [
+    {
+      "query": "三亚海棠湾商墅",
+      "title": "三亚海棠湾高端市场2026Q1报告",
+      "url": "https://example.com/sanya-report",
+      "summary": "海棠湾商墅产品2026年Q1成交均价约85000元/㎡，去化周期约14个月。高端康养客群为主要买家。",
+      "data_date": "2026-03-31",
+      "confidence": "supplemental",
+      "captured_at": "2026-05-12T18:32:14",
+      "role": "online_supplement_only"
+    }
+  ]
+}
