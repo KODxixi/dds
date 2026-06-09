@@ -1,0 +1,945 @@
+{
+  "meta": {
+    "generated_at": "2026-05-12T00:29:47",
+    "version": "parcel-report-mvp-1",
+    "data_scope": "Vault/2026新楼盘 本地四城样本"
+  },
+  "input": {
+    "city": "杭州",
+    "district": "滨江区",
+    "address": "杭州滨江区浦沿",
+    "lng": null,
+    "lat": null,
+    "radius_km": 5.0,
+    "expected_price": 33000.0,
+    "price_band": 0.15
+  },
+  "location": {
+    "lng": 120.154489,
+    "lat": 30.1734,
+    "source": "amap_geocode",
+    "formatted_addr": "浙江省杭州市滨江区浦沿",
+    "level": "住宅区",
+    "adcode": "330108"
+  },
+  "nearby_fallback_used": false,
+  "nearby_competitors": [
+    {
+      "project_name": "揽晖美寓",
+      "city": "杭州",
+      "district": "滨江区",
+      "sub_district": "浦沿",
+      "sales_status": "尾盘",
+      "unit_price_cny": 40556.0,
+      "total_price_wan": null,
+      "area_range": "105-165㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2.29",
+      "green_ratio": "35%",
+      "developer": "杭州滨宝置业有限公司",
+      "address": "杭州滨江区浦沿西浦路与坚塔路交汇处",
+      "distance_km": 0.89,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"装修交付\", \"厨卫全明\", \"南北通透\", \"一房一价\"]"
+    },
+    {
+      "project_name": "海威领界",
+      "city": "杭州",
+      "district": "滨江区",
+      "sub_district": "中兴",
+      "sales_status": "在售",
+      "unit_price_cny": 25000.0,
+      "total_price_wan": null,
+      "area_range": "1049㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "4",
+      "green_ratio": "25%",
+      "developer": "杭州弘威置业有限公司",
+      "address": "杭州滨江区中兴东信大道1188号（东信大道与江南大道交汇处）",
+      "distance_km": 2.07,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"车位充足\", \"轨交房\", \"多轨交\", \"低单价\"]"
+    },
+    {
+      "project_name": "英冠绿城·春来晴翠",
+      "city": "杭州",
+      "district": "滨江区",
+      "sub_district": "浦沿",
+      "sales_status": "在售",
+      "unit_price_cny": 33009.0,
+      "total_price_wan": null,
+      "area_range": "105-169㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "3",
+      "green_ratio": "35%",
+      "developer": "杭州绿英置业有限公司",
+      "address": "杭州滨江区浦沿浦炬街与浦沿路交叉路口往东北约240米",
+      "distance_km": 2.19,
+      "property_type": "住宅",
+      "tags": "[\"自带商业\", \"人车分流\", \"装修交付\", \"园林景观\", \"厨卫全明\"]"
+    },
+    {
+      "project_name": "鸣涛里",
+      "city": "杭州",
+      "district": "萧山区",
+      "sub_district": "闻堰",
+      "sales_status": "在售",
+      "unit_price_cny": null,
+      "total_price_wan": 699.0,
+      "area_range": "186-364㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "别墅：1.1 住宅：1.1",
+      "green_ratio": "别墅：30% 住宅：30%",
+      "developer": "杭州滨卓房地产开发有限公司",
+      "address": "杭州萧山区闻堰黄山路与新浦路交会处",
+      "distance_km": 2.58,
+      "property_type": "别墅",
+      "tags": "[\"低容积\", \"项目在建\", \"一房一价\", \"配套纯熟\", \"银行\"]"
+    },
+    {
+      "project_name": "钱塘ONE",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "在售",
+      "unit_price_cny": 37000.0,
+      "total_price_wan": null,
+      "area_range": "22-128㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": null,
+      "green_ratio": "35%",
+      "developer": "杭州汇辉置业有限公司",
+      "address": "杭州西湖区之江之江国家旅游度假区枫桦东路与梧桐路交叉口",
+      "distance_km": 3.59,
+      "property_type": "标准写字楼",
+      "tags": "[\"现房\", \"装修交付\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]"
+    },
+    {
+      "project_name": "之江门公寓",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "在售",
+      "unit_price_cny": 35000.0,
+      "total_price_wan": null,
+      "area_range": "55㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "2.4",
+      "green_ratio": "35%",
+      "developer": "杭州大湾房地产有限公司",
+      "address": "杭州西湖区之江沙秀路与涵秀弄交叉口",
+      "distance_km": 3.83,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"大平层\", \"装修交付\", \"小型社区\", \"品牌开发商\"]"
+    },
+    {
+      "project_name": "中融蓝城Co.C理想城",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "在售",
+      "unit_price_cny": 25000.0,
+      "total_price_wan": null,
+      "area_range": "29-53㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "25%",
+      "developer": "杭州中融控股集团有限公司",
+      "address": "杭州西湖区之江之浦路与之江路交汇处",
+      "distance_km": 3.96,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"项目竣工\", \"复式\", \"车位充足\", \"装修交付\"]"
+    },
+    {
+      "project_name": "华润沄璟文华轩",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "在售",
+      "unit_price_cny": 50080.0,
+      "total_price_wan": null,
+      "area_range": "145-215㎡",
+      "room_types": "4室户型",
+      "floor_area_ratio": "2.2",
+      "green_ratio": "35%",
+      "developer": "杭州华润江澋房地产开发有限公司",
+      "address": "杭州西湖区之江枫桦路和文景路交叉口",
+      "distance_km": 3.99,
+      "property_type": "住宅",
+      "tags": "[\"得房率高\", \"车位充足\", \"装修交付\", \"轨交房\", \"厨卫全明\"]"
+    },
+    {
+      "project_name": "绿城卓越傲旋城公寓",
+      "city": "杭州",
+      "district": "滨江区",
+      "sub_district": "西兴",
+      "sales_status": "在售",
+      "unit_price_cny": 31000.0,
+      "total_price_wan": null,
+      "area_range": "57-312㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "10.59",
+      "green_ratio": "30%",
+      "developer": "杭州恒兴置业有限公司",
+      "address": "杭州滨江区西兴滨康路与时代大道交叉口西侧",
+      "distance_km": 4.12,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"项目竣工\", \"装修交付\", \"轨交房\", \"热搜盘\"]"
+    },
+    {
+      "project_name": "绿城知海棠",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "在售",
+      "unit_price_cny": 31761.0,
+      "total_price_wan": null,
+      "area_range": "106-164㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2.2",
+      "green_ratio": "35%",
+      "developer": "绿城房地产集团有限公司,杭州浙秋置业有限公司",
+      "address": "杭州西湖区之江双浦镇枫桦东路辅路",
+      "distance_km": 4.29,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"装修交付\", \"厨卫全明\", \"三房朝南\", \"南北通透\"]"
+    },
+    {
+      "project_name": "之江印",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "在售",
+      "unit_price_cny": 29000.0,
+      "total_price_wan": null,
+      "area_range": "32-41㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "25%",
+      "developer": "杭州元山置业有限公司",
+      "address": "杭州西湖区之江云河街和枫桦路交叉口（向西300米）",
+      "distance_km": 4.32,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"轨交房\", \"项目在建\", \"低单价\", \"低总价\"]"
+    },
+    {
+      "project_name": "之江长九中心",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "在售",
+      "unit_price_cny": 22000.0,
+      "total_price_wan": null,
+      "area_range": null,
+      "room_types": null,
+      "floor_area_ratio": null,
+      "green_ratio": null,
+      "developer": "浙江长九珊瑚沙置业有限公司",
+      "address": "杭州西湖区之江珊瑚沙路49号",
+      "distance_km": 4.71,
+      "property_type": "写字楼底商",
+      "tags": "[\"现房\", \"项目竣工\", \"轨交房\", \"低单价\", \"配套纯熟\"]"
+    },
+    {
+      "project_name": "建发云启之江",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "尾盘",
+      "unit_price_cny": 37482.0,
+      "total_price_wan": null,
+      "area_range": "103-229㎡",
+      "room_types": "3室户型,4室户型,5室户型",
+      "floor_area_ratio": "2.29",
+      "green_ratio": null,
+      "developer": "杭州启坤置业有限公司,杭州启原置业有限公司",
+      "address": "杭州西湖区之江地铁6号线枫桦西路站C1口",
+      "distance_km": 4.74,
+      "property_type": "住宅",
+      "tags": "[\"大阳台\", \"装修交付\", \"厨卫全明\", \"三房朝南\", \"南北通透\"]"
+    },
+    {
+      "project_name": "西投银泰城",
+      "city": "杭州",
+      "district": "西湖区",
+      "sub_district": "之江",
+      "sales_status": "在售",
+      "unit_price_cny": 30000.0,
+      "total_price_wan": null,
+      "area_range": "310-320㎡",
+      "room_types": null,
+      "floor_area_ratio": null,
+      "green_ratio": "25%",
+      "developer": "杭州之江银泰建设发展有限公司,杭州西投银泰建设发展有限公司",
+      "address": "杭州西湖区之江枫桦西路与梧桐路交叉口",
+      "distance_km": 4.84,
+      "property_type": "商业综合体",
+      "tags": "[\"现房\", \"项目竣工\", \"装修交付\", \"轨交房\", \"低单价\"]"
+    }
+  ],
+  "market_summary": {
+    "sample_count": 14,
+    "price": {
+      "avg": 32838.0,
+      "min": 22000.0,
+      "max": 50080.0,
+      "valid_count": 13
+    },
+    "sales_status": {
+      "在售": 12,
+      "尾盘": 2
+    },
+    "districts": {
+      "西湖区": 9,
+      "滨江区": 4,
+      "萧山区": 1
+    },
+    "room_types": {
+      "4室户型": 6,
+      "商业户型": 6,
+      "3室户型": 5,
+      "2室户型": 1,
+      "5室户型": 1
+    }
+  },
+  "amenities": {
+    "school": {
+      "label": "学校",
+      "items": [
+        {
+          "name": "浙江机电职业技术大学设计艺术系",
+          "distance": 70,
+          "address": "高教园区滨文路529号立德园2幢611号浙江机电职业技术大学",
+          "type": "学校"
+        },
+        {
+          "name": "浙江艺术职业学院附中",
+          "distance": 165,
+          "address": "浦沿街道滨文路518号",
+          "type": "学校"
+        },
+        {
+          "name": "浙江艺术职业学院演艺与教育学院",
+          "distance": 169,
+          "address": "滨文路518号浙江艺术职业学院",
+          "type": "学校"
+        }
+      ]
+    },
+    "hospital": {
+      "label": "医院",
+      "items": [
+        {
+          "name": "老百姓大药房(立业园店)",
+          "distance": 228,
+          "address": "明德路650号立业园1幢3",
+          "type": "医院"
+        },
+        {
+          "name": "护康大药房(江畔云庐店)",
+          "distance": 366,
+          "address": "江畔云庐南3门旁",
+          "type": "医院"
+        },
+        {
+          "name": "济信堂大药房",
+          "distance": 464,
+          "address": "明德路江畔云庐商铺24-1号",
+          "type": "医院"
+        }
+      ]
+    },
+    "subway": {
+      "label": "地铁站",
+      "items": [
+        {
+          "name": "中医药大学地铁站D口",
+          "distance": 754,
+          "address": "4号线;6号线",
+          "type": "地铁站"
+        },
+        {
+          "name": "杨家墩地铁站A口",
+          "distance": 765,
+          "address": "4号线",
+          "type": "地铁站"
+        },
+        {
+          "name": "杨家墩地铁站B口",
+          "distance": 815,
+          "address": "4号线",
+          "type": "地铁站"
+        }
+      ]
+    },
+    "bus": {
+      "label": "公交站",
+      "items": [
+        {
+          "name": "滨文路明德路口(公交站)",
+          "distance": 141,
+          "address": "107路;1518M路;194路;326路;5571路;8225路",
+          "type": "公交站"
+        },
+        {
+          "name": "江畔云庐6幢(招呼站)(公交站)",
+          "distance": 339,
+          "address": "1518M路",
+          "type": "公交站"
+        },
+        {
+          "name": "江畔云庐5幢(招呼站)(公交站)",
+          "distance": 412,
+          "address": "1518M路",
+          "type": "公交站"
+        }
+      ]
+    },
+    "mall": {
+      "label": "商场",
+      "items": [
+        {
+          "name": "左邻·右舍",
+          "distance": 232,
+          "address": "明德路650号立业园",
+          "type": "商场"
+        },
+        {
+          "name": "浙江省杭州市新宇超市",
+          "distance": 257,
+          "address": "明德路650号立业园",
+          "type": "商场"
+        },
+        {
+          "name": "启源学生之家(立业园店)",
+          "distance": 260,
+          "address": "明德路650号立业园1号楼",
+          "type": "商场"
+        }
+      ]
+    },
+    "park": {
+      "label": "公园",
+      "items": [
+        {
+          "name": "高教公园",
+          "distance": 174,
+          "address": "滨文路与明德路交叉口东南160米",
+          "type": "公园"
+        },
+        {
+          "name": "落日公园",
+          "distance": 640,
+          "address": "联庄路与南环路交叉口西北80米",
+          "type": "公园"
+        },
+        {
+          "name": "糖果和滨江综合体育公园",
+          "distance": 841,
+          "address": "滨康路795-797(伟业路地铁站C口步行480米)",
+          "type": "公园"
+        }
+      ]
+    },
+    "supermarket": {
+      "label": "超市",
+      "items": [
+        {
+          "name": "映创城",
+          "distance": 803,
+          "address": "滨江商厦(杨家墩地铁站B口步行340米)",
+          "type": "超市"
+        },
+        {
+          "name": "滨江商厦",
+          "distance": 803,
+          "address": "滨文路585号滨江商厦F1层",
+          "type": "超市"
+        },
+        {
+          "name": "江南汇生活娱乐广场",
+          "distance": 822,
+          "address": "浦沿路773号(中医药大学地铁站D口步行470米)",
+          "type": "超市"
+        }
+      ]
+    }
+  },
+  "price_band_competitors": {
+    "expected_price": 33000.0,
+    "low": 28050.0,
+    "high": 37950.0,
+    "price_band": 0.15,
+    "sample_scope": "本地四城样本：三亚、杭州、上海、青岛",
+    "city_distribution": {
+      "上海": 13,
+      "三亚": 8,
+      "杭州": 7,
+      "青岛": 2
+    },
+    "district_distribution": {
+      "浦东": 7,
+      "海棠区": 4,
+      "金山区": 3,
+      "吉阳区": 2,
+      "松江区": 2,
+      "余杭区": 2,
+      "萧山区": 2,
+      "乐东": 1,
+      "天涯区": 1,
+      "杨浦区": 1
+    },
+    "items": [
+      {
+        "project_name": "龙栖湾新半岛",
+        "city": "三亚",
+        "district": "乐东",
+        "sub_district": "龙栖湾",
+        "sales_status": "尾盘",
+        "unit_price_cny": 33000.0,
+        "area_range": "47-92㎡",
+        "room_types": "商业户型",
+        "developer": "海南龙栖祥湾置业有限公司",
+        "address": "三亚乐东龙栖湾新半岛",
+        "property_type": "商业",
+        "tags": "[\"现房\", \"项目竣工\", \"装修交付\", \"低单价\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "保利碧桂园悦府",
+        "city": "三亚",
+        "district": "吉阳区",
+        "sub_district": "迎宾路",
+        "sales_status": "尾盘",
+        "unit_price_cny": 33000.0,
+        "area_range": "101-151㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "三亚不夜城置业有限公司",
+        "address": "三亚吉阳区迎宾路三亚市吉阳区迎宾路与落笔洞路交汇处（千古情北侧）",
+        "property_type": "住宅",
+        "tags": "[\"车位充足\", \"高绿化率\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "三亚·东岸蓝湾",
+        "city": "三亚",
+        "district": "吉阳区",
+        "sub_district": "荔枝沟路",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "102-143㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "海南和鑫地产开发有限公司",
+        "address": "三亚吉阳区荔枝沟路三亚吉阳区荔枝沟路社区公园特色夜市旁",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"装修交付\", \"项目封顶\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "凤凰水城",
+        "city": "三亚",
+        "district": "天涯区",
+        "sub_district": "三亚湾",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "101-175㎡",
+        "room_types": "3室户型,4室户型,别墅户型",
+        "developer": "三亚凤凰新城实业有限公司",
+        "address": "三亚天涯区三亚湾水城路与育林新路交汇处",
+        "property_type": "住宅",
+        "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "开创·白玉海棠",
+        "city": "三亚",
+        "district": "海棠区",
+        "sub_district": "海棠湾",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "108-180㎡",
+        "room_types": "3室户型,别墅户型",
+        "developer": "三亚绵阳开创房地产开发有限公司",
+        "address": "三亚海棠区海棠湾南田温泉度假区神泉大道",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"项目竣工\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "海棠湾8号温泉公馆",
+        "city": "三亚",
+        "district": "海棠区",
+        "sub_district": "海棠湾",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "83-155㎡",
+        "room_types": "2室户型,3室户型,别墅户型",
+        "developer": "三亚天宝盛投资有限公司",
+        "address": "三亚海棠区海棠湾龙海路",
+        "property_type": "住宅",
+        "tags": "[\"大阳台\", \"车位充足\", \"高绿化率\", \"低容积\", \"厨卫全明\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "长基听棠",
+        "city": "三亚",
+        "district": "海棠区",
+        "sub_district": "海棠湾",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "52-203㎡",
+        "room_types": "1室户型,2室户型,3室户型,别墅户型",
+        "developer": "三亚新海裕实业有限公司",
+        "address": "三亚海棠区海棠湾南田温泉度假区",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"项目竣工\", \"大阳台\", \"高绿化率\", \"低容积\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "华悦海棠",
+        "city": "三亚",
+        "district": "海棠区",
+        "sub_district": "海棠湾",
+        "sales_status": "尾盘",
+        "unit_price_cny": 33000.0,
+        "area_range": "86-110㎡",
+        "room_types": "2室户型,3室户型",
+        "developer": "海南旭茂投资有限公司",
+        "address": "三亚海棠区海棠湾神泉大道",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"大阳台\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "133世界广场写字楼",
+        "city": "上海",
+        "district": "杨浦区",
+        "sub_district": "五角场",
+        "sales_status": "尾盘",
+        "unit_price_cny": 33000.0,
+        "area_range": null,
+        "room_types": null,
+        "developer": "上海物源经济发展有限公司",
+        "address": "上海杨浦区五角场世界路133号",
+        "property_type": "标准写字楼",
+        "tags": "[\"现房\", \"车位充足\", \"内中环\", \"配套纯熟\", \"便利店\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "九亭中心",
+        "city": "上海",
+        "district": "松江区",
+        "sub_district": "九亭",
+        "sales_status": "尾盘",
+        "unit_price_cny": 33000.0,
+        "area_range": null,
+        "room_types": null,
+        "developer": "上海旭亭置业有限公司",
+        "address": "上海松江区九亭沪亭北路199弄（近沪松公路）",
+        "property_type": "标准写字楼",
+        "tags": "[\"现房\", \"外郊环\", \"便利店\", \"银行\", \"医院\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "绿地缤纷广场",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "周康",
+        "sales_status": "尾盘",
+        "unit_price_cny": 33000.0,
+        "area_range": null,
+        "room_types": null,
+        "developer": "上海绿地东煜置业有限公司",
+        "address": "上海浦东周康年家浜路238号",
+        "property_type": "临街店铺",
+        "tags": "[\"现房\", \"外郊环\", \"配套纯熟\", \"银行\", \"医院\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "港城云樾观海",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "惠南",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "88-195㎡",
+        "room_types": "3室户型,4室户型,别墅户型",
+        "developer": "上海曜港房地产有限公司",
+        "address": "上海浦东惠南百润路233弄",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"车位充足\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "临港天宸",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "临港新城",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "99-185㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "上海宸御置业有限公司",
+        "address": "上海浦东临港新城环湖北三路与香柏路交口",
+        "property_type": "住宅",
+        "tags": "[\"项目竣工\", \"装修交付\", \"轨交房\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "雅戈尔星海云境",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "临港新城",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "78-139㎡",
+        "room_types": "2室户型,3室户型,4室户型",
+        "developer": "上海雅原置业有限公司",
+        "address": "上海浦东临港新城杉云路55弄",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"装修交付\", \"轨交房\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "上实望海",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "临港新城",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "100-120㎡",
+        "room_types": "3室户型",
+        "developer": "上海城开宜浩房地产开发有限公司",
+        "address": "上海浦东临港新城安茂路105弄",
+        "property_type": "住宅",
+        "tags": "[\"车位充足\", \"装修交付\", \"轨交房\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "国芳中心SOHO",
+        "city": "杭州",
+        "district": "上城区",
+        "sub_district": "九堡",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "53-80㎡",
+        "room_types": "商业户型",
+        "developer": "杭州国芳置业有限公司",
+        "address": "杭州上城区九堡九沙大道388号",
+        "property_type": "商业",
+        "tags": "[\"现房\", \"自带商业\", \"复式\", \"车位充足\", \"装修交付\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "港郦中心",
+        "city": "杭州",
+        "district": "余杭区",
+        "sub_district": "老余杭",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "32-55㎡",
+        "room_types": "商业户型",
+        "developer": "杭州港郦置业有限公司",
+        "address": "杭州余杭区老余杭城东路与城南路交叉路口往北约100米",
+        "property_type": "商业",
+        "tags": "[\"现房\", \"装修交付\", \"轨交房\", \"卧室全朝南\", \"项目在建\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "西投德信云湖印",
+        "city": "杭州",
+        "district": "西湖区",
+        "sub_district": "之江",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "346㎡",
+        "room_types": "商业户型",
+        "developer": "杭州西投德信商业发展有限公司",
+        "address": "杭州西湖区之江浮山街160号",
+        "property_type": "商业",
+        "tags": "[\"现房\", \"项目竣工\", \"装修交付\", \"轨交房\", \"多轨交\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "青铁鼎峰·云上观澜",
+        "city": "青岛",
+        "district": "市南区",
+        "sub_district": "八大峡",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "110-204㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "青岛青铁南岛置业有限公司",
+        "address": "青岛市南区八大峡团岛三路10号",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"项目竣工\", \"车位充足\", \"装修交付\", \"轨交房\"]",
+        "price_delta_abs": 0.0
+      },
+      {
+        "project_name": "英冠绿城·春来晴翠",
+        "city": "杭州",
+        "district": "滨江区",
+        "sub_district": "浦沿",
+        "sales_status": "在售",
+        "unit_price_cny": 33009.0,
+        "area_range": "105-169㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州绿英置业有限公司",
+        "address": "杭州滨江区浦沿浦炬街与浦沿路交叉路口往东北约240米",
+        "property_type": "住宅",
+        "tags": "[\"自带商业\", \"人车分流\", \"装修交付\", \"园林景观\", \"厨卫全明\"]",
+        "price_delta_abs": 9.0
+      },
+      {
+        "project_name": "港城悦庭",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "临港新城",
+        "sales_status": "在售",
+        "unit_price_cny": 32956.0,
+        "area_range": "92-141㎡",
+        "room_types": "3室户型",
+        "developer": "上海海港新城房地产（集团）有限公司",
+        "address": "上海浦东临港新城临港方竹路566弄",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"项目竣工\", \"车位充足\", \"低容积\", \"装修交付\"]",
+        "price_delta_abs": 44.0
+      },
+      {
+        "project_name": "建发观唐府",
+        "city": "上海",
+        "district": "金山区",
+        "sub_district": "金山新城",
+        "sales_status": "在售",
+        "unit_price_cny": 33088.0,
+        "area_range": "93-188㎡",
+        "room_types": "3室户型,4室户型,别墅户型",
+        "developer": "上海兆琰房地产开发有限公司",
+        "address": "上海金山区金山新城东平北路1218弄",
+        "property_type": "住宅",
+        "tags": "[\"车位充足\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 88.0
+      },
+      {
+        "project_name": "上实·听海",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "临港新城",
+        "sales_status": "在售",
+        "unit_price_cny": 32908.0,
+        "area_range": "100-144㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "上海城浩置业有限公司",
+        "address": "上海浦东临港新城木莲路333弄",
+        "property_type": "住宅",
+        "tags": "[\"项目竣工\", \"车位充足\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 92.0
+      },
+      {
+        "project_name": "金地新乐里",
+        "city": "上海",
+        "district": "松江区",
+        "sub_district": "车墩",
+        "sales_status": "在售",
+        "unit_price_cny": 33220.0,
+        "area_range": "92-100㎡",
+        "room_types": "3室户型",
+        "developer": "上海鑫瑞诚房地产开发有限公司",
+        "address": "上海松江区车墩李高路61弄、南姚东路99弄",
+        "property_type": "住宅",
+        "tags": "[\"项目竣工\", \"车位充足\", \"低容积\", \"装修交付\", \"厨卫全明\"]",
+        "price_delta_abs": 220.0
+      },
+      {
+        "project_name": "建发·朗玥",
+        "city": "上海",
+        "district": "金山区",
+        "sub_district": "金山新城",
+        "sales_status": "在售",
+        "unit_price_cny": 33385.0,
+        "area_range": "97-203㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "上海兆玖房地产开发有限公司",
+        "address": "上海金山区金山新城龙堰路866弄",
+        "property_type": "住宅",
+        "tags": "[\"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+        "price_delta_abs": 385.0
+      },
+      {
+        "project_name": "保利恒尊·崇璟和颂府",
+        "city": "杭州",
+        "district": "萧山区",
+        "sub_district": "南部卧城",
+        "sales_status": "在售",
+        "unit_price_cny": 33430.0,
+        "area_range": "106-133㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州保尊置业有限公司",
+        "address": "杭州萧山区南部卧城潘水路与崇化路交汇处往北50米（水务大楼旁）",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"项目竣工\", \"车位充足\", \"低容积\", \"装修交付\"]",
+        "price_delta_abs": 430.0
+      },
+      {
+        "project_name": "佳运·汇龙府",
+        "city": "上海",
+        "district": "金山区",
+        "sub_district": "金山新城",
+        "sales_status": "在售",
+        "unit_price_cny": 32500.0,
+        "area_range": "123-210㎡",
+        "room_types": "3室户型,4室户型,5室户型",
+        "developer": "上海佳运金城房地产开发有限公司",
+        "address": "上海金山区金山新城海芙路128弄",
+        "property_type": "住宅",
+        "tags": "[\"项目竣工\", \"车位充足\", \"低容积\", \"装修交付\", \"厨卫全明\"]",
+        "price_delta_abs": 500.0
+      },
+      {
+        "project_name": "国汇萧山路88号",
+        "city": "青岛",
+        "district": "西海岸新区",
+        "sub_district": "薛家岛",
+        "sales_status": "在售",
+        "unit_price_cny": 33500.0,
+        "area_range": "173-231㎡",
+        "room_types": "4室户型,别墅户型",
+        "developer": "青岛锦地隆翔置业发展有限公司",
+        "address": "青岛西海岸新区薛家岛萧山路西、珠江路北100米",
+        "property_type": "住宅",
+        "tags": "[\"复式\", \"车位充足\", \"低容积\", \"轨交房\", \"厨卫全明\"]",
+        "price_delta_abs": 500.0
+      },
+      {
+        "project_name": "龙湖·御潮印",
+        "city": "杭州",
+        "district": "萧山区",
+        "sub_district": "钱江世纪城",
+        "sales_status": "在售",
+        "unit_price_cny": 32431.0,
+        "area_range": "98-168㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州金开丰和置业有限公司",
+        "address": "杭州萧山区钱江世纪城耕文路与鸿达路交叉口往北60米",
+        "property_type": "住宅",
+        "tags": "[\"得房率高\", \"车位充足\", \"装修交付\", \"轨交房\", \"厨卫全明\"]",
+        "price_delta_abs": 569.0
+      },
+      {
+        "project_name": "中建玉湖之星",
+        "city": "杭州",
+        "district": "余杭区",
+        "sub_district": "勾庄",
+        "sales_status": "在售",
+        "unit_price_cny": 32396.0,
+        "area_range": "115-185㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州星程房地产开发有限公司",
+        "address": "杭州余杭区勾庄杭行路与郁宅路交叉口往西300米处",
+        "property_type": "住宅",
+        "tags": "[\"轨交房\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+        "price_delta_abs": 604.0
+      }
+    ]
+  }
+}
