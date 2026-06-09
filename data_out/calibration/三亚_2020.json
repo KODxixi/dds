@@ -1,0 +1,425 @@
+{
+  "status": "ok",
+  "city": "三亚",
+  "year": 2020,
+  "n_archetypes": 6,
+  "calibration": {
+    "外地候鸟-华北": {
+      "n_samples": 1151,
+      "pref": {
+        "景观": 0.939,
+        "私密": 0.699,
+        "圈层": 0.599,
+        "户型": 0.499,
+        "通勤": 0.031,
+        "学校": 0.034,
+        "品牌": 0.55
+      },
+      "risk_aversion": 0.55
+    },
+    "外地候鸟-西北": {
+      "n_samples": 445,
+      "pref": {
+        "景观": 0.9,
+        "私密": 0.651,
+        "圈层": 0.5,
+        "户型": 0.497,
+        "通勤": 0.032,
+        "学校": 0.026,
+        "品牌": 0.5
+      },
+      "risk_aversion": 0.604
+    },
+    "度假投资": {
+      "n_samples": 1200,
+      "pref": {
+        "景观": 0.85,
+        "私密": 0.601,
+        "圈层": 0.549,
+        "户型": 0.45,
+        "通勤": 0.032,
+        "学校": 0.033,
+        "品牌": 0.749
+      },
+      "risk_aversion": 0.4
+    },
+    "高净值康养": {
+      "n_samples": 523,
+      "pref": {
+        "景观": 0.936,
+        "私密": 0.937,
+        "圈层": 0.848,
+        "户型": 0.601,
+        "通勤": 0.031,
+        "学校": 0.031,
+        "品牌": 0.897
+      },
+      "risk_aversion": 0.305
+    },
+    "外地候鸟-东北": {
+      "n_samples": 668,
+      "pref": {
+        "景观": 0.938,
+        "私密": 0.702,
+        "圈层": 0.506,
+        "户型": 0.5,
+        "通勤": 0.034,
+        "学校": 0.032,
+        "品牌": 0.494
+      },
+      "risk_aversion": 0.601
+    },
+    "本地改善": {
+      "n_samples": 1013,
+      "pref": {
+        "景观": 0.6,
+        "私密": 0.447,
+        "圈层": 0.399,
+        "户型": 0.754,
+        "通勤": 0.498,
+        "学校": 0.701,
+        "品牌": 0.453
+      },
+      "risk_aversion": 0.549
+    }
+  },
+  "ts": "2026-05-27T15:35:08",
+  "diffs": [
+    {
+      "archetype": "外地候鸟-华北",
+      "pref": "学校",
+      "preset": 0.0,
+      "real": 0.034,
+      "delta": 0.034,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-东北",
+      "pref": "通勤",
+      "preset": 0.0,
+      "real": 0.034,
+      "delta": 0.034,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "度假投资",
+      "pref": "学校",
+      "preset": 0.0,
+      "real": 0.033,
+      "delta": 0.033,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-西北",
+      "pref": "通勤",
+      "preset": 0.0,
+      "real": 0.032,
+      "delta": 0.032,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "度假投资",
+      "pref": "通勤",
+      "preset": 0.0,
+      "real": 0.032,
+      "delta": 0.032,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-东北",
+      "pref": "学校",
+      "preset": 0.0,
+      "real": 0.032,
+      "delta": 0.032,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-华北",
+      "pref": "通勤",
+      "preset": 0.0,
+      "real": 0.031,
+      "delta": 0.031,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "高净值康养",
+      "pref": "通勤",
+      "preset": 0.0,
+      "real": 0.031,
+      "delta": 0.031,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "高净值康养",
+      "pref": "学校",
+      "preset": 0.0,
+      "real": 0.031,
+      "delta": 0.031,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-西北",
+      "pref": "学校",
+      "preset": 0.0,
+      "real": 0.026,
+      "delta": 0.026,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "高净值康养",
+      "pref": "景观",
+      "preset": 0.95,
+      "real": 0.936,
+      "delta": -0.014,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "高净值康养",
+      "pref": "私密",
+      "preset": 0.95,
+      "real": 0.937,
+      "delta": -0.013,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-东北",
+      "pref": "景观",
+      "preset": 0.95,
+      "real": 0.938,
+      "delta": -0.012,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-华北",
+      "pref": "景观",
+      "preset": 0.95,
+      "real": 0.939,
+      "delta": -0.011,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-东北",
+      "pref": "圈层",
+      "preset": 0.5,
+      "real": 0.506,
+      "delta": 0.006,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-东北",
+      "pref": "品牌",
+      "preset": 0.5,
+      "real": 0.494,
+      "delta": -0.006,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "户型",
+      "preset": 0.75,
+      "real": 0.754,
+      "delta": 0.004,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-西北",
+      "pref": "户型",
+      "preset": 0.5,
+      "real": 0.497,
+      "delta": -0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "高净值康养",
+      "pref": "品牌",
+      "preset": 0.9,
+      "real": 0.897,
+      "delta": -0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "私密",
+      "preset": 0.45,
+      "real": 0.447,
+      "delta": -0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "品牌",
+      "preset": 0.45,
+      "real": 0.453,
+      "delta": 0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "高净值康养",
+      "pref": "圈层",
+      "preset": 0.85,
+      "real": 0.848,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-东北",
+      "pref": "私密",
+      "preset": 0.7,
+      "real": 0.702,
+      "delta": 0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "通勤",
+      "preset": 0.5,
+      "real": 0.498,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-华北",
+      "pref": "私密",
+      "preset": 0.7,
+      "real": 0.699,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-华北",
+      "pref": "圈层",
+      "preset": 0.6,
+      "real": 0.599,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-华北",
+      "pref": "户型",
+      "preset": 0.5,
+      "real": 0.499,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-西北",
+      "pref": "私密",
+      "preset": 0.65,
+      "real": 0.651,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "度假投资",
+      "pref": "私密",
+      "preset": 0.6,
+      "real": 0.601,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "度假投资",
+      "pref": "圈层",
+      "preset": 0.55,
+      "real": 0.549,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "度假投资",
+      "pref": "品牌",
+      "preset": 0.75,
+      "real": 0.749,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "高净值康养",
+      "pref": "户型",
+      "preset": 0.6,
+      "real": 0.601,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "圈层",
+      "preset": 0.4,
+      "real": 0.399,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "学校",
+      "preset": 0.7,
+      "real": 0.701,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-华北",
+      "pref": "品牌",
+      "preset": 0.55,
+      "real": 0.55,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-西北",
+      "pref": "景观",
+      "preset": 0.9,
+      "real": 0.9,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-西北",
+      "pref": "圈层",
+      "preset": 0.5,
+      "real": 0.5,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-西北",
+      "pref": "品牌",
+      "preset": 0.5,
+      "real": 0.5,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "度假投资",
+      "pref": "景观",
+      "preset": 0.85,
+      "real": 0.85,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "度假投资",
+      "pref": "户型",
+      "preset": 0.45,
+      "real": 0.45,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外地候鸟-东北",
+      "pref": "户型",
+      "preset": 0.5,
+      "real": 0.5,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "景观",
+      "preset": 0.6,
+      "real": 0.6,
+      "delta": 0.0,
+      "drift_level": "低"
+    }
+  ]
+}
