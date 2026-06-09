@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DDS · 核心三角产品化汇报</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --paper: #f3eee3;
+    --paper-2: #e7dfd1;
+    --ink: #121212;
+    --muted: rgba(18,18,18,.58);
+    --line: rgba(18,18,18,.22);
+    --red: #d02020;
+    --blue: #1040c0;
+    --yellow: #f0c020;
+    --white: #fffaf0;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Outfit, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background-image: radial-gradient(rgba(18,18,18,.055) .8px, transparent .8px);
+    background-size: 22px 22px;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; }
+  .frame { min-height: 100vh; border: 8px solid var(--ink); }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    min-height: 68px;
+    border-bottom: 4px solid var(--ink);
+    background: rgba(18,18,18,.96);
+    color: var(--paper);
+    backdrop-filter: blur(10px);
+    transition: min-height .22s ease-out;
+  }
+  body.header-compact .topbar { min-height: 38px; height: 38px; overflow: hidden; }
+  body.header-compact .brand,
+  body.header-compact .top-meta { font-size: 9px; line-height: 1; }
+  body.header-compact .strip { transform: scale(.58); opacity: .92; }
+  .brand, .top-meta { padding: 0 28px; font-size: 12px; line-height: 1; letter-spacing: .16em; text-transform: uppercase; font-weight: 900; transition: font-size .22s ease-out; white-space: nowrap; }
+  .brand { grid-column: 2; text-align: center; }
+  .top-meta { grid-column: 3; justify-self: end; text-align: right; color: rgba(243,238,227,.62); }
+  .strip { grid-column: 1; grid-row: 1; justify-self: start; position: relative; width: 152px; height: 22px; margin-left: 28px; transition: transform .22s ease-out, opacity .22s ease-out; transform-origin: left center; }
+  .strip div { position: absolute; width: 18px; height: 18px; top: 2px; border: 1.5px solid var(--paper); }
+  .strip div:nth-child(1) { left: 0; background: var(--red); }
+  .strip div:nth-child(2) { left: 42px; width: 0; height: 0; top: 1px; background: transparent; border-left: 11px solid transparent; border-right: 11px solid transparent; border-bottom: 19px solid var(--paper); border-top: 0; }
+  .strip div:nth-child(3) { left: 86px; background: var(--blue); transform: rotate(45deg) scale(.86); }
+  .strip div:nth-child(4) { left: 132px; background: var(--yellow); border-radius: 999px; }
+  .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); transition: grid-template-columns .24s ease-out; }
+  body.rail-collapsed .layout { grid-template-columns: 56px minmax(0, 1fr); }
+  .rail {
+    position: sticky;
+    top: 76px;
+    height: calc(100vh - 76px);
+    border-right: 4px solid var(--ink);
+    background: rgba(243,238,227,.92);
+    padding: 24px 18px;
+    overflow: auto;
+    transition: top .22s ease-out, height .22s ease-out, padding .24s ease-out;
+  }
+  body.header-compact .rail { top: 38px; height: calc(100vh - 38px); }
+  body.rail-collapsed .rail { padding: 14px 8px; overflow: hidden; }
+  .rail-toggle {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 18px;
+    border: 2px solid var(--ink);
+    background: var(--yellow);
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 16px;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: margin-left .24s ease-out;
+  }
+  .rail-label { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; font-weight: 900; color: var(--muted); margin-bottom: 18px; transition: opacity .18s ease-out; }
+  .nav { display: grid; gap: 6px; }
+  .nav a {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    font-weight: 800;
+    transition: color .18s ease-out;
+  }
+  .nav span:first-child { color: rgba(18,18,18,.4); font-variant-numeric: tabular-nums; font-size: 12px; }
+  .nav a.active span:last-child, .nav a:hover span:last-child { color: var(--blue); }
+  body.rail-collapsed .rail-label,
+  body.rail-collapsed .nav span:last-child { opacity: 0; pointer-events: none; }
+  body.rail-collapsed .nav a { grid-template-columns: 30px; justify-content: center; }
+  body.rail-collapsed .nav { gap: 2px; }
+  main { min-width: 0; }
+  section { position: relative; padding: 72px 66px; border-bottom: 4px solid var(--ink); }
+  .hero { min-height: calc(100vh - 76px); display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 64px; align-items: center; }
+  .kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; font-weight: 900; color: var(--ink); }
+  .kicker::before { content: ""; width: 12px; height: 12px; background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; }
+  h1, h2, h3 { margin: 0; }
+  h1 {
+    max-width: 800px;
+    margin-top: 24px;
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", Georgia, serif;
+    font-size: clamp(56px, 6vw, 100px);
+    line-height: 1.05;
+    letter-spacing: -.05em;
+    font-weight: 500;
+    text-wrap: balance;
+  }
+  .subtitle { max-width: 640px; margin-top: 28px; font-size: 24px; line-height: 1.6; color: rgba(18,18,18,.68); font-weight: 600; letter-spacing: -.01em; text-wrap: pretty; }
+  .claim { margin-top: 40px; max-width: 700px; padding-left: 20px; border-left: 10px solid var(--blue); font-size: 22px; line-height: 1.7; color: rgba(18,18,18,.74); text-wrap: pretty; }
+  .claim strong { color: var(--ink); font-weight: 900; }
+  .hero-card { border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); padding: 24px 0; }
+  .thesis { display: grid; grid-template-columns: 40px 1fr; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .thesis:last-child { border-bottom: 0; }
+  .thesis .n { font-weight: 900; color: rgba(18,18,18,.42); font-variant-numeric: tabular-nums; }
+  .thesis .t { font-size: 16px; line-height: 1.55; color: rgba(18,18,18,.74); font-weight: 500; }
+  .shape-a { position: absolute; right: 80px; top: 160px; width: 100px; height: 100px; border: 3px solid var(--ink); border-radius: 999px; background: var(--yellow); opacity: .9; }
+  .shape-a::after { content: ""; position: absolute; right: -28px; bottom: -22px; width: 52px; height: 52px; border: 3px solid var(--ink); background: var(--blue); transform: rotate(45deg); }
+  .section-head { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 56px; align-items: end; margin-bottom: 40px; }
+  h2 { font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", Georgia, serif; font-size: clamp(36px, 4vw, 56px); line-height: 1.1; letter-spacing: -.04em; font-weight: 500; text-wrap: balance; }
+  .section-copy { max-width: 640px; color: rgba(18,18,18,.66); font-size: 18px; line-height: 1.7; font-weight: 500; text-wrap: pretty; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 3px solid var(--ink); border-left: 3px solid var(--ink); }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 3px solid var(--ink); border-left: 3px solid var(--ink); }
+  .card { position: relative; min-height: 180px; padding: 26px 24px; border-right: 3px solid var(--ink); border-bottom: 3px solid var(--ink); background: rgba(243,238,227,.86); transform-origin: center; transition: transform .22s ease-out, box-shadow .22s ease-out, background .22s ease-out; }
+  .card:hover { z-index: 8; transform: scale(1.03); background: rgba(255,250,240,.96); box-shadow: 8px 8px 0 var(--ink); }
+  .card::after { content: ""; position: absolute; right: 18px; top: 20px; width: 12px; height: 12px; border: 2px solid var(--ink); background: var(--red); }
+  .card:nth-child(2n)::after { background: var(--blue); transform: rotate(45deg); }
+  .card:nth-child(3n)::after { background: var(--yellow); border-radius: 999px; }
+  .card:nth-child(5n)::after { background: var(--red); }
+  .num { font-family: Georgia, "Times New Roman", serif; font-size: 36px; color: rgba(18,18,18,.42); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .card h3 { margin-top: 24px; font-size: 22px; line-height: 1.3; font-weight: 900; letter-spacing: -.02em; text-wrap: balance; }
+  .card p, .card li { color: rgba(18,18,18,.62); font-size: 15px; line-height: 1.65; font-weight: 500; text-wrap: pretty; }
+  .card p { margin: 14px 0 0; }
+  .card ul { margin: 12px 0 0; padding-left: 16px; }
+  .highlight-card { background: rgba(240,192,32,.22); }
+  .highlight-card:hover { background: rgba(240,192,32,.38); }
+  .timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .phase { border-top: 4px solid var(--ink); padding-top: 20px; }
+  .phase .phase-no { display: inline-grid; place-items: center; width: 48px; height: 48px; border: 3px solid var(--ink); background: var(--yellow); font-weight: 900; transform: rotate(45deg); margin-bottom: 22px; }
+  .phase .phase-no span { transform: rotate(-45deg); font-size: 15px; }
+  .phase h3 { font-size: 22px; font-weight: 900; letter-spacing: -.02em; }
+  .phase .meta { margin-top: 4px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 800; }
+  .phase p, .phase li { color: rgba(18,18,18,.62); font-size: 15px; line-height: 1.65; font-weight: 500; }
+  .phase ul { margin: 10px 0 0; padding-left: 16px; }
+  .table-card { border: 3px solid var(--ink); background: rgba(243,238,227,.9); }
+  .row { display: grid; grid-template-columns: 180px 220px 1fr; border-bottom: 2px solid var(--ink); }
+  .row:last-child { border-bottom: 0; }
+  .row > div { padding: 16px 18px; border-right: 2px solid var(--ink); font-size: 14px; line-height: 1.55; }
+  .row > div:last-child { border-right: 0; }
+  .row.head { background: var(--ink); color: var(--paper); text-transform: uppercase; letter-spacing: .12em; font-size: 11px; font-weight: 900; }
+  .badge { display: inline-block; padding: 3px 8px; border: 2px solid var(--ink); background: var(--yellow); font-size: 11px; font-weight: 900; white-space: nowrap; }
+  .badge.blue { background: var(--blue); color: var(--paper); border-color: var(--ink); }
+  .badge.red { background: var(--red); color: var(--paper); border-color: var(--ink); }
+  .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .metric { border: 3px solid var(--ink); padding: 28px 24px; background: rgba(243,238,227,.9); text-align: center; }
+  .metric .value { font-family: Georgia, serif; font-size: 56px; line-height: 1; font-weight: 700; letter-spacing: -.03em; }
+  .metric .label { margin-top: 10px; font-size: 14px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+  .callout { margin-top: 32px; padding: 22px 28px; border: 3px solid var(--ink); background: rgba(240,192,32,.18); font-size: 18px; line-height: 1.65; font-weight: 600; color: rgba(18,18,18,.78); }
+  .callout strong { color: var(--ink); }
+  .footer { padding: 64px 66px; background: var(--ink); color: var(--paper); }
+  .footer h2 { color: var(--paper); }
+  .footer p { max-width: 720px; color: rgba(243,238,227,.72); font-size: 19px; line-height: 1.7; }
+  .footer .strip-mini { width: 480px; height: 14px; display: grid; grid-template-columns: 2fr 1fr 1.5fr 2.5fr; border: 2px solid var(--paper); margin-top: 36px; }
+  .footer .strip-mini div:nth-child(1) { background: var(--red); }
+  .footer .strip-mini div:nth-child(2) { background: var(--paper); }
+  .footer .strip-mini div:nth-child(3) { background: var(--yellow); }
+  .footer .strip-mini div:nth-child(4) { background: var(--blue); }
+  @media (max-width: 1100px) {
+    .topbar { grid-template-columns: 1fr; }
+    .strip, .top-meta { display: none; }
+    .brand { grid-column: 1; padding: 16px 20px; }
+    .layout { display: block; }
+    body.rail-collapsed .layout { display: block; }
+    .rail { position: static; height: auto; border-right: 0; border-bottom: 4px solid var(--ink); }
+    body.header-compact .rail { height: auto; }
+    .rail-toggle { display: none; }
+    section, .footer { padding: 44px 24px; }
+    .hero, .section-head, .metric-row { grid-template-columns: 1fr; gap: 28px; }
+    .grid-3, .grid-2, .timeline { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 1fr; }
+    .row > div { border-right: 0; border-bottom: 1px solid var(--line); }
+    h1 { font-size: 48px; }
+    .subtitle, .claim { font-size: 18px; }
+    .shape-a { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header class="topbar">
+    <div class="brand">DDS · Decision Data System</div>
+    <div class="strip"><div></div><div></div><div></div><div></div></div>
+    <div class="top-meta">Core Triangle Brief · 2026-05-12</div>
+  </header>
+  <div class="layout">
+    <aside class="rail">
+      <button class="rail-toggle" id="railToggle" type="button" aria-label="收起目录" aria-expanded="true">‹</button>
+      <div class="rail-label">Index</div>
+      <nav class="nav" id="nav">
+        <a href="#premise"><span>00</span><span>核心主张</span></a>
+        <a href="#why"><span>01</span><span>客户痛点</span></a>
+        <a href="#triangle"><span>02</span><span>核心三角</span></a>
+        <a href="#roadmap"><span>03</span><span>路线图</span></a>
+        <a href="#metrics"><span>04</span><span>成功指标</span></a>
+        <a href="#assignment"><span>05</span><span>下一步</span></a>
+      </nav>
+    </aside>
+    <main>
+      <!-- Hero · 核心主张 -->
+      <section class="hero" id="premise">
+        <div class="shape-a"></div>
+        <div>
+          <div class="kicker">Premise</div>
+          <h1>从脚本<br>到产品</h1>
+          <div class="subtitle">DDS 核心三角产品化——让城市总 10 分钟拿到投拓决策初判，替代 20 万、一个月的咨询团队。</div>
+          <div class="claim">DDS 的下一步不是做更多功能，而是<strong>把已经跑通的 40% 做成能收费的产品</strong>。</div>
+        </div>
+        <div class="hero-card">
+          <div class="thesis"><div class="n">01</div><div class="t">竞品价格分析——周边 5km 在售竞品、价格带、销售状态，一键生成。</div></div>
+          <div class="thesis"><div class="n">02</div><div class="t">拿地敏感区间——周边均价 × 容积率，粗算楼面地价三档上限。</div></div>
+          <div class="thesis"><div class="n">03</div><div class="t">产品定位建议——ABM 客群模拟 + 竞品户型反向推导面积段与总价。</div></div>
+        </div>
+      </section>
+
+      <!-- 客户痛点 -->
+      <section id="why">
+        <div class="section-head">
+          <div><div class="kicker">Why</div><h2>客户现状</h2></div>
+          <p class="section-copy">开发商城市总面对一块地时，需要综合 9 个维度做判断。目前靠雇佣营销咨询团队，花 20 万、耗时一个月完成。</p>
+        </div>
+        <div class="grid-3">
+          <article class="card"><div class="num">01</div><h3>决策慢 = 丢地</h3><p>一个月出报告，优质地块早被竞对拿走。去化速度、项目周期、净利润是城市总的核心 KPI。</p></article>
+          <article class="card"><div class="num">02</div><h3>9 项交付物</h3><p>竞品价格、户型配比、IRR 测算、拿地价建议、功能落位、客群画像、动线分析、建筑设计、故事线导入——一个月手工完成。</p></article>
+          <article class="card"><div class="num">03</div><h3>20 万成本</h3><p>每个项目雇佣营销咨询团队的成本。开发商已经在为这个流程付费——有预算、有需求。</p></article>
+        </div>
+      </section>
+
+      <!-- 核心三角 -->
+      <section id="triangle">
+        <div class="section-head">
+          <div><div class="kicker">Wedge</div><h2>核心三角</h2></div>
+          <p class="section-copy">不追求 9 项全覆盖。先把 DDS 已经能自动化的 40% 做到极致——竞品价格 + 拿地区间 + 产品定位。这是拿地决策的硬约束，别的模块等方案阶段再做。</p>
+        </div>
+        <div class="grid-3">
+          <article class="card highlight-card">
+            <div class="num">A</div>
+            <h3>竞品价格分析</h3>
+            <p>周边 5km 在售竞品自动检索，价格带、销售状态、面积段、户型分布、开发商——从一个月人工搜集压缩到 30 秒。</p>
+            <ul><li>数据源：安居客 CSV + DuckDB</li><li>Haversine 距离排序</li><li>样本不足时自动扩区</li></ul>
+          </article>
+          <article class="card highlight-card">
+            <div class="num">B</div>
+            <h3>拿地敏感区间</h3>
+            <p>基于周边均价 × 容积率粗算楼面地价上限，输出保守 / 均衡 / 激进三档。不是最终拿地价，但是第一轮快速判断的锚。</p>
+            <ul><li>保守：均价 × 0.28 × 容积率</li><li>激进：均价 × 0.38 × 容积率</li><li>清晰标注假设和数据来源</li></ul>
+          </article>
+          <article class="card highlight-card">
+            <div class="num">C</div>
+            <h3>产品定位建议</h3>
+            <p>ABM 客群模拟：预设度假改善、高净值康养、投资收藏、家庭旅居四类虚拟客群，按价格/产品/配套信号打分，输出推荐面积段和户型方向。</p>
+            <ul><li>复用 dds_decision_engine.py 打分逻辑</li><li>对标项目溢价参照</li><li>数据边界清晰标注</li></ul>
+          </article>
+        </div>
+        <div class="callout">先打透<strong>三亚</strong>作为标杆案例——数据最熟、地块最典型、客户最近。验证通过后再扩杭州、上海、青岛。</div>
+      </section>
+
+      <!-- 路线图 -->
+      <section id="roadmap">
+        <div class="section-head">
+          <div><div class="kicker">Roadmap</div><h2>3 阶段路线图</h2></div>
+          <p class="section-copy">1 人 + AI 辅助。先跑通一个真实三亚地块，验证准确率，再收集城市总反馈。Phase 2 通过（至少 1 人愿意付费）才启动 Phase 3。</p>
+        </div>
+        <div class="timeline">
+          <article class="phase">
+            <div class="phase-no"><span>1</span></div>
+            <div class="meta">第 1-3 周</div>
+            <h3>产品化包装</h3>
+            <p>Phase 1a — 三亚数据校核 + Flask Web 原型（第 1-2 周）</p>
+            <p>Phase 1b — Markdown → 专业 PDF 报告（第 2-3 周）</p>
+            <ul>
+              <li>Flask API：POST /api/report</li>
+              <li>极简 Web 输入页 + spinner</li>
+              <li>API Key 迁移到 .env</li>
+            </ul>
+          </article>
+          <article class="phase">
+            <div class="phase-no"><span>2</span></div>
+            <div class="meta">第 3-4 周 · 有通过标准</div>
+            <h3>标杆验证</h3>
+            <p>选 3 个三亚近期成交地块做技术干跑，验证竞品覆盖和价格偏差。</p>
+            <ul>
+              <li>竞品覆盖 > 80%</li>
+              <li>价格偏差 < 10%</li>
+              <li>≥1 位城市总愿意付费</li>
+            </ul>
+            <p style="margin-top:8px;font-size:13px;color:var(--muted)">未通过 → 回到产品迭代，不扩城市</p>
+          </article>
+          <article class="phase">
+            <div class="phase-no"><span>3</span></div>
+            <div class="meta">第 5-8 周 · 条件启动</div>
+            <h3>四城扩展</h3>
+            <p>Phase 2 通过后启动。三亚标竿做深后，逐城扩展。</p>
+            <ul>
+              <li>数据定时更新（≤7天）</li>
+              <li>新鲜度自动检查标注</li>
+              <li>每城确认潜在客户再扩</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- 成功指标 + 技术栈 -->
+      <section id="metrics">
+        <div class="section-head">
+          <div><div class="kicker">Success</div><h2>成功指标</h2></div>
+          <p class="section-copy">所有指标围绕一个核心问题：城市总拿到报告后，愿不愿意为它付费？</p>
+        </div>
+        <div class="metric-row">
+          <div class="metric">
+            <div class="value" style="color:var(--blue)">&lt;10<span style="font-size:28px">min</span></div>
+            <div class="label">从输入坐标到完整报告</div>
+          </div>
+          <div class="metric">
+            <div class="value" style="color:var(--red)">&lt;5<span style="font-size:28px">%</span></div>
+            <div class="label">价格偏差 vs 人工采集</div>
+          </div>
+          <div class="metric">
+            <div class="value" style="color:var(--ink)">≥1</div>
+            <div class="label">真实客户愿意付费或深度试用</div>
+          </div>
+        </div>
+        <div class="table-card" style="margin-top:40px">
+          <div class="row head"><div>技术栈</div><div>用途</div><div>说明</div></div>
+          <div class="row"><div><b>Flask</b></div><div>后端 API</div><div>POST /api/report，与现有 Python 脚本直接集成，pip install flask 即用</div></div>
+          <div class="row"><div><b>高德 GIS</b></div><div>地理编码 + POI</div><div>复用 gis_amap.py，已有 QPS 限流处理</div></div>
+          <div class="row"><div><b>DuckDB</b></div><div>楼盘查询</div><div>复用 query_local.py，安居客 CSV 直接 SQL 查询</div></div>
+          <div class="row"><div><b>DeepSeek</b></div><div>ABM + 摘要</div><div>复用 dds_decision_engine.py，失败时降级到规则化 baseline</div></div>
+        </div>
+      </section>
+
+      <!-- Assignment -->
+      <section id="assignment">
+        <div class="section-head">
+          <div><div class="kicker">Next</div><h2>下一步</h2></div>
+          <p class="section-copy">不讨论了，开始做。两步走，先验证技术再验证客户。</p>
+        </div>
+        <div class="grid-2">
+          <article class="card highlight-card">
+            <div class="num">Step 1</div>
+            <h3>技术干跑</h3>
+            <p>选 3 个三亚近期成交地块，用 DDS 跑完整核心三角报告。人工复采安居客同区域挂牌价，对比价格偏差和竞品覆盖完整度。修复差距后再进入 Step 2。</p>
+          </article>
+          <article class="card highlight-card">
+            <div class="num">Step 2</div>
+            <h3>客户验证</h3>
+            <p>找一个真实的城市总或投拓负责人，把报告拿给他看。问他三句话：</p>
+            <ul>
+              <li>「这比你团队出的报告差在哪？」</li>
+              <li>「哪里你觉得不准？」</li>
+              <li>「如果 5 分钟内出，你愿意花多少钱？」</li>
+            </ul>
+            <p style="margin-top:12px">把答案带回来。</p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="kicker" style="color:var(--paper)">Conclusion</div>
+        <h2>从能跑通 → 能收费</h2>
+        <p>DDS 的价值不在于把 9 项交付物全做完，而在于把最硬的 3 项做到比人工团队更快、更准、更可追溯。当城市总能在 10 分钟内拿到一份带数据来源标注、价格敏感区间和产品建议的报告——20 万、一个月的咨询团队就不再是必选项。</p>
+        <div class="strip-mini"><div></div><div></div><div></div><div></div></div>
+      </footer>
+    </main>
+  </div>
+</div>
+<script>
+  const railToggle = document.getElementById('railToggle');
+  railToggle?.addEventListener('click', () => {
+    const collapsed = document.body.classList.toggle('rail-collapsed');
+    railToggle.textContent = collapsed ? '›' : '‹';
+    railToggle.setAttribute('aria-expanded', String(!collapsed));
+    railToggle.setAttribute('aria-label', collapsed ? '展开目录' : '收起目录');
+  });
+
+  let lastScrollY = window.scrollY;
+  function updateHeaderState() {
+    document.body.classList.toggle('header-compact', window.scrollY > 80);
+    lastScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', updateHeaderState, { passive: true });
+  updateHeaderState();
+
+  const navLinks = [...document.querySelectorAll('.nav a')];
+  const sections = navLinks.map(a => document.querySelector(a.getAttribute('href')));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+    });
+  }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+  sections.forEach(s => s && io.observe(s));
+</script>
+</body>
+</html>
