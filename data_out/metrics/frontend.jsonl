@@ -1,0 +1,32 @@
+{"event": "page_dom_ready", "duration_ms": 105.9, "timestamp": "2026-05-30T16:42:19.088Z", "milestone": "DOM"}
+{"event": "page_fully_loaded", "duration_ms": 239.5, "timestamp": "2026-05-30T16:42:19.222Z", "milestone": "LOAD"}
+{"event": "web_vital_lcp", "duration_ms": 540, "timestamp": "2026-05-30T16:42:19.231Z", "size": 143355, "element": "H1"}
+{"event": "map_loca_init", "duration_ms": 13.1, "timestamp": "2026-05-30T16:44:11.345Z", "milestone": "Loca"}
+{"event": "unit_mix_recommendation_selected", "duration_ms": 0, "timestamp": "2026-05-30T16:44:11.364Z", "recommendation": "激进型（高利润）", "premium": 0.12}
+{"event": "unit_mix_recommendation_loaded", "duration_ms": 0, "timestamp": "2026-05-30T16:44:11.364Z", "recommendation_count": 3, "top_premium": 0.12}
+{"event": "dashboard_render", "duration_ms": 0, "timestamp": "2026-05-30T16:44:11.365Z", "backend_records": 17, "frontend_records": 0}
+{"event": "api_ceo_reweight", "duration_ms": 198.1, "timestamp": "2026-05-30T16:44:11.598Z", "preset": "invest", "status": 200, "has_lights": true}
+{"event": "ceo_render", "duration_ms": 0.3, "timestamp": "2026-05-30T16:44:11.598Z"}
+{"event": "ceo_reweight_total", "duration_ms": 236, "timestamp": "2026-05-30T16:44:11.598Z", "preset": "invest"}
+{"event": "api_ceo_reweight", "duration_ms": 321, "timestamp": "2026-05-30T16:46:43.702Z", "preset": "design", "status": 200, "has_lights": true}
+{"event": "ceo_render", "duration_ms": 0.4, "timestamp": "2026-05-30T16:46:43.703Z"}
+{"event": "ceo_reweight_total", "duration_ms": 321.7, "timestamp": "2026-05-30T16:46:43.703Z", "preset": "design"}
+{"event": "api_ceo_reweight", "duration_ms": 9.8, "timestamp": "2026-05-30T16:46:45.390Z", "preset": "finance", "status": 200, "has_lights": true}
+{"event": "ceo_render", "duration_ms": 0.3, "timestamp": "2026-05-30T16:46:45.390Z"}
+{"event": "ceo_reweight_total", "duration_ms": 10.3, "timestamp": "2026-05-30T16:46:45.390Z", "preset": "finance"}
+{"event": "api_ceo_reweight", "duration_ms": 318.9, "timestamp": "2026-05-30T16:46:48.792Z", "preset": "invest", "status": 200, "has_lights": true}
+{"event": "ceo_render", "duration_ms": 0.2, "timestamp": "2026-05-30T16:46:48.792Z"}
+{"event": "ceo_reweight_total", "duration_ms": 319.5, "timestamp": "2026-05-30T16:46:48.792Z", "preset": "invest"}
+{"event": "unit_mix_recommendation_selected", "duration_ms": 0, "timestamp": "2026-05-30T16:46:53.756Z", "recommendation": "均衡型（稳健）", "premium": 0.08}
+{"event": "unit_mix_recommendation_selected", "duration_ms": 0, "timestamp": "2026-05-30T16:46:55.901Z", "recommendation": "稳健型（低风险）", "premium": 0.04}
+{"event": "unit_mix_recommendation_selected", "duration_ms": 0, "timestamp": "2026-05-30T16:46:57.490Z", "recommendation": "激进型（高利润）", "premium": 0.12}
+{"event": "page_dom_ready", "duration_ms": 99.8, "timestamp": "2026-05-30T18:07:28.171Z", "milestone": "DOM"}
+{"event": "page_fully_loaded", "duration_ms": 203.7, "timestamp": "2026-05-30T18:07:28.275Z", "milestone": "LOAD"}
+{"event": "web_vital_lcp", "duration_ms": 1092, "timestamp": "2026-05-30T18:07:28.286Z", "size": 143355, "element": "H1"}
+{"event": "dashboard_render", "duration_ms": 0, "timestamp": "2026-05-30T18:09:21.378Z", "backend_records": 23, "frontend_records": 22}
+{"event": "unit_mix_recommendation_selected", "duration_ms": 0, "timestamp": "2026-05-30T18:09:21.644Z", "recommendation": "激进型（高利润）", "premium": 0.12}
+{"event": "unit_mix_recommendation_loaded", "duration_ms": 0, "timestamp": "2026-05-30T18:09:21.644Z", "recommendation_count": 3, "top_premium": 0.12}
+{"event": "map_loca_init", "duration_ms": 12.7, "timestamp": "2026-05-30T18:09:21.801Z", "milestone": "Loca"}
+{"event": "api_ceo_reweight", "duration_ms": 342.3, "timestamp": "2026-05-30T18:09:22.007Z", "preset": "invest", "status": 200, "has_lights": true}
+{"event": "ceo_render", "duration_ms": 0.3, "timestamp": "2026-05-30T18:09:22.008Z"}
+{"event": "ceo_reweight_total", "duration_ms": 366.1, "timestamp": "2026-05-30T18:09:22.008Z", "preset": "invest"}
