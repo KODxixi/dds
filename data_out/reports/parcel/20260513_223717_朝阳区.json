@@ -1,0 +1,2233 @@
+{
+  "meta": {
+    "generated_at": "2026-05-13T22:37:17",
+    "version": "parcel-report-mvp-1",
+    "data_scope": "Vault/2026新楼盘 本地四城样本"
+  },
+  "input": {
+    "city": "北京",
+    "district": null,
+    "address": "朝阳区",
+    "lng": null,
+    "lat": null,
+    "radius_km": 5.0,
+    "expected_price": null,
+    "price_band": 0.15
+  },
+  "location": {
+    "lng": 116.443136,
+    "lat": 39.921444,
+    "source": "amap_geocode",
+    "formatted_addr": "北京市朝阳区",
+    "level": "区县",
+    "adcode": "110105"
+  },
+  "nearby_fallback_used": true,
+  "nearby_competitors": [
+    {
+      "project_name": "和达翡翠城",
+      "city": "青岛",
+      "district": "平度市",
+      "sub_district": "平度",
+      "sales_status": "在售",
+      "unit_price_cny": 6000.0,
+      "total_price_wan": null,
+      "area_range": "95-121㎡",
+      "room_types": "3室户型",
+      "floor_area_ratio": "2.4",
+      "green_ratio": "35%",
+      "developer": "青岛和达昇平实业有限公司",
+      "address": "青岛平度市平度常州路与青岛路交汇处",
+      "distance_km": 464.5,
+      "lng": 119.96258291175,
+      "lat": 36.784643655589,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+      "open_date": "2021年11月21日",
+      "delivery_date": "2024年",
+      "cert_dates": "[\"2022-07-15\", \"2022-01-07\", \"2021-11-19\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/4226b5edceb8ddb0540bc0db2d3ec406/275x206n.jpg",
+      "land_area_sqm": "17149m²",
+      "building_area_sqm": "41157m²",
+      "planned_units": "335",
+      "parking_spaces": "465",
+      "parking_ratio": "1:1.39",
+      "property_company": "青岛和达物业管理有限公司",
+      "property_fee": null,
+      "decoration": "毛坯",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（平注）第（2022）028号\", \"青房注字（平注）第（2021）088号\", \"青房注字（平注）第（2021）068号\"]",
+      "developer_brand": "和达集团",
+      "investor": "青岛和达集团有限公司",
+      "construction_progress": "在建中，竣工时间：2024-08-31",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 95.0,
+          "area_str": "95㎡"
+        },
+        {
+          "name": "三室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.0,
+          "area_str": "119㎡"
+        },
+        {
+          "name": "三室",
+          "area": 121.0,
+          "area_str": "121㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "海信城",
+      "city": "青岛",
+      "district": "平度市",
+      "sub_district": "平度",
+      "sales_status": "在售",
+      "unit_price_cny": 6800.0,
+      "total_price_wan": null,
+      "area_range": "105-196㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "35%",
+      "developer": "青岛海瑞达置业有限公司",
+      "address": "青岛平度市平度华山路与长江路交汇处",
+      "distance_km": 466.33,
+      "lng": 119.99350006901,
+      "lat": 36.784160385495,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+      "open_date": "2023年3月20日",
+      "delivery_date": "2027年6月30日",
+      "cert_dates": "[\"2025-09-16\", \"2021-09-18\", \"2025-06-20\", \"2025-04-29\", \"2025-01-26\", \"2023-04-27\", \"2022-09-22\", \"2022-02-28\", \"2020-09-17\", \"2021-02-07\", \"2021-04-30\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/d6b75310a0be2fdc892b4f2a449680b3/275x206n.jpg",
+      "land_area_sqm": "56000m²",
+      "building_area_sqm": "150000m²",
+      "planned_units": "929",
+      "parking_spaces": "1136",
+      "parking_ratio": "1:1.2",
+      "property_company": "青岛睿海城市物业服务有限公司",
+      "property_fee": "2.7元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{多层,小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（平注）第（2025）013号\", \"青房注字（平注）第（2025）015号\", \"青房注字（平注）第（2021）064号\", \"青房注字（平注）第（2025）008号\", \"青房注字（平注）第（2025）006号\", \"青房注字（平注）第（2025）001号\", \"青房注字（平注）第（2023）017号\", \"青房注字（平注）第（2022）044号\", \"青房注字（平注）第（2022）007号\", \"青房注字（平注）第（2020）049号\", \"青房注字（平注）第（2021）005号\", \"青房注字（平注）第（2021）017号\"]",
+      "developer_brand": "海信地产",
+      "investor": "海信地产",
+      "construction_progress": "在建中，竣工时间：2027-06-30",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 105.0,
+          "area_str": "105㎡"
+        },
+        {
+          "name": "三室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 118.0,
+          "area_str": "118㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.0,
+          "area_str": "119㎡"
+        },
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        },
+        {
+          "name": "三室",
+          "area": 133.0,
+          "area_str": "133㎡"
+        },
+        {
+          "name": "三室",
+          "area": 142.0,
+          "area_str": "142㎡"
+        },
+        {
+          "name": "三室",
+          "area": 144.0,
+          "area_str": "144㎡"
+        },
+        {
+          "name": "四室",
+          "area": 152.0,
+          "area_str": "152㎡"
+        },
+        {
+          "name": "四室",
+          "area": 155.0,
+          "area_str": "155㎡"
+        },
+        {
+          "name": "四室",
+          "area": 196.0,
+          "area_str": "196㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "绿城·春风雅园",
+      "city": "青岛",
+      "district": "平度市",
+      "sub_district": "平度",
+      "sales_status": "在售",
+      "unit_price_cny": 9500.0,
+      "total_price_wan": null,
+      "area_range": "125-185㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "1.26",
+      "green_ratio": "38%",
+      "developer": "平度市城市更新发展有限公司",
+      "address": "青岛平度市平度昆明路169号",
+      "distance_km": 466.52,
+      "lng": 119.959749,
+      "lat": 36.759012,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2025年11月23日",
+      "delivery_date": "2027年6月30日",
+      "cert_dates": "[\"2026-03-12\", \"2026-01-30\", \"2025-09-26\", \"2025-11-14\", \"2025-11-20\", \"2025-11-20\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f9340f87346a85428201360548789c04/275x206n.jpg",
+      "land_area_sqm": "86297.05m²",
+      "building_area_sqm": "154211.7m²",
+      "planned_units": null,
+      "parking_spaces": null,
+      "parking_ratio": null,
+      "property_company": null,
+      "property_fee": null,
+      "decoration": "毛坯",
+      "building_type": "{花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（平注）第（2026）002号\", \"青房注字（平注）第（2026）001号\", \"青房注字（平注）第（2025）020号\", \"青房注字（平注）第（2025）021号\", \"青房注字（平注）第（2025）019号\", \"青房注字（平注）第（2025）022号\"]",
+      "developer_brand": null,
+      "investor": "平度市城市更新发展有限公司",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 125.0,
+          "area_str": "125㎡"
+        },
+        {
+          "name": "三室",
+          "area": 135.0,
+          "area_str": "135㎡"
+        },
+        {
+          "name": "三室",
+          "area": 145.0,
+          "area_str": "145㎡"
+        },
+        {
+          "name": "四室",
+          "area": 159.0,
+          "area_str": "159㎡"
+        },
+        {
+          "name": "四室",
+          "area": 185.0,
+          "area_str": "185㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "海信学府里",
+      "city": "青岛",
+      "district": "平度市",
+      "sub_district": "平度",
+      "sales_status": "在售",
+      "unit_price_cny": 8200.0,
+      "total_price_wan": null,
+      "area_range": "106-198㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2.2",
+      "green_ratio": "35%",
+      "developer": "青岛信博置业有限公司",
+      "address": "青岛平度市平度苏州路与同康东路交汇处",
+      "distance_km": 467.75,
+      "lng": 119.967461,
+      "lat": 36.749755,
+      "property_type": "住宅",
+      "tags": "[\"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\", \"一房一价\"]",
+      "open_date": "2024年11月8日",
+      "delivery_date": "2026年12月",
+      "cert_dates": "[\"2025-07-28\", \"2025-06-24\", \"2025-02-06\", \"2025-05-06\", \"2024-11-07\", \"2024-01-24\", \"2023-06-27\", \"2023-08-15\", \"2023-06-29\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/7effd417d64484efcad154dea9337c6c/275x206n.jpg",
+      "land_area_sqm": "67269m²",
+      "building_area_sqm": "147991m²",
+      "planned_units": "1113",
+      "parking_spaces": null,
+      "parking_ratio": null,
+      "property_company": "青岛睿海城市物业服务有限公司",
+      "property_fee": "2.7元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（平注）第（2025）012号\", \"青房注字（平注）第（2025）010号\", \"青房注字(平注)第(2025)002号\", \"青房注字（平注）第（2025）005号\", \"青房注字（平注）第（2024）015号\", \"青房注字（平注）第（2024）001号\", \"青房注字（平注）第（2023）026号\", \"青房注字（平注）第（2023）042号\", \"青房注字（平注）第（2023）037号\"]",
+      "developer_brand": "海信地产",
+      "investor": null,
+      "construction_progress": "在建中，竣工时间：2026-12-31",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        },
+        {
+          "name": "三室",
+          "area": 136.0,
+          "area_str": "136㎡"
+        },
+        {
+          "name": "四室",
+          "area": 152.0,
+          "area_str": "152㎡"
+        },
+        {
+          "name": "四室",
+          "area": 157.0,
+          "area_str": "157㎡"
+        },
+        {
+          "name": "四室",
+          "area": 198.0,
+          "area_str": "198㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "奥润熙湖华府",
+      "city": "青岛",
+      "district": "莱西市",
+      "sub_district": "莱西",
+      "sales_status": "在售",
+      "unit_price_cny": 6500.0,
+      "total_price_wan": null,
+      "area_range": "66-255㎡",
+      "room_types": "1室户型,2室户型,3室户型,4室户型,5室户型",
+      "floor_area_ratio": "住宅：0.8 别墅：0.8",
+      "green_ratio": "住宅：40% 别墅：40%",
+      "developer": "青岛仁和房地产开发有限公司",
+      "address": "青岛莱西市莱西龙水路65号",
+      "distance_km": 480.19,
+      "lng": 120.41047,
+      "lat": 36.922158,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"车位充足\", \"高绿化率\", \"低容积\"]",
+      "open_date": "2018年6月27日",
+      "delivery_date": "2019年5月31日",
+      "cert_dates": "[\"2018-01-30\", \"2016-01-20\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/80d6541e618ad86a013a61c82a5b7c46/275x206n.jpg",
+      "land_area_sqm": "住宅：206666m² 别墅：206666m²",
+      "building_area_sqm": "住宅：250000m² 别墅：250000m²",
+      "planned_units": "住宅：888 别墅：888",
+      "parking_spaces": "住宅：1220 别墅：1220",
+      "parking_ratio": "住宅：1:1.4 别墅：1:1.4",
+      "property_company": null,
+      "property_fee": "住宅：1.1元/㎡/月 别墅：2元/㎡/月",
+      "decoration": "住宅：毛坯,带装修 别墅：毛坯,带装修",
+      "building_type": "{高层,花园洋房}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"西房注字(2018)002号\", \"西房注字(2016)002\"]",
+      "developer_brand": null,
+      "investor": "青岛奥润投资集团",
+      "construction_progress": "已竣工，竣工时间：2019-05-31",
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 66.0,
+          "area_str": "66㎡"
+        },
+        {
+          "name": "二室",
+          "area": 82.0,
+          "area_str": "82㎡"
+        },
+        {
+          "name": "三室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        },
+        {
+          "name": "三室",
+          "area": 122.0,
+          "area_str": "122㎡"
+        },
+        {
+          "name": "四室",
+          "area": 179.23,
+          "area_str": "179.23㎡"
+        },
+        {
+          "name": "五室",
+          "area": 190.0,
+          "area_str": "190㎡"
+        },
+        {
+          "name": "四室",
+          "area": 203.67,
+          "area_str": "203.67㎡"
+        },
+        {
+          "name": "四室",
+          "area": 255.0,
+          "area_str": "255㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "海信九麓府",
+      "city": "青岛",
+      "district": "莱西市",
+      "sub_district": "莱西",
+      "sales_status": "在售",
+      "unit_price_cny": 6500.0,
+      "total_price_wan": null,
+      "area_range": "100-200㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "35%",
+      "developer": "青岛海信昌荣置业有限公司",
+      "address": "青岛莱西市莱西北京路与深圳路交汇处",
+      "distance_km": 488.47,
+      "lng": 120.51202523056,
+      "lat": 36.898034998351,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"车位充足\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2023年3月15日",
+      "delivery_date": "2024年10月19日",
+      "cert_dates": "[\"2023-06-06\", \"2023-03-08\", \"2021-12-13\", \"2021-09-02\", \"2021-06-10\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/611f53d9f3a282fb1dd918401135a2c7/275x206n.jpg",
+      "land_area_sqm": "31841m²",
+      "building_area_sqm": "63681m²",
+      "planned_units": "652",
+      "parking_spaces": "836",
+      "parking_ratio": "1:1.2",
+      "property_company": "青岛睿海城市物业服务有限公司",
+      "property_fee": "2.09元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{小高层,高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"西房注字（2023）013\", \"青房注字（房注字）（第2023）008号\", \"西房注字（2021）068\", \"西房注字（2021）046\", \"西房注字（2021）031号\"]",
+      "developer_brand": "海信地产",
+      "investor": "青岛海信昌荣置业有限公司",
+      "construction_progress": "已竣工，竣工时间：2024-10-19",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "三室",
+          "area": 111.0,
+          "area_str": "111㎡"
+        },
+        {
+          "name": "三室",
+          "area": 113.0,
+          "area_str": "113㎡"
+        },
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        },
+        {
+          "name": "三室",
+          "area": 121.0,
+          "area_str": "121㎡"
+        },
+        {
+          "name": "三室",
+          "area": 122.0,
+          "area_str": "122㎡"
+        },
+        {
+          "name": "三室",
+          "area": 123.0,
+          "area_str": "123㎡"
+        },
+        {
+          "name": "三室",
+          "area": 124.0,
+          "area_str": "124㎡"
+        },
+        {
+          "name": "三室",
+          "area": 130.0,
+          "area_str": "130㎡"
+        },
+        {
+          "name": "三室",
+          "area": 132.0,
+          "area_str": "132㎡"
+        },
+        {
+          "name": "三室",
+          "area": 138.0,
+          "area_str": "138㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        },
+        {
+          "name": "四室",
+          "area": 200.0,
+          "area_str": "200㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "乐好国际城",
+      "city": "青岛",
+      "district": "莱西市",
+      "sub_district": "莱西",
+      "sales_status": "在售",
+      "unit_price_cny": 6500.0,
+      "total_price_wan": null,
+      "area_range": "120-156㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "60%",
+      "developer": "青岛乐好正壹置业有限公司",
+      "address": "青岛莱西市莱西上海西路1号",
+      "distance_km": 489.73,
+      "lng": 120.51298772545,
+      "lat": 36.88281955876,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"高绿化率\", \"低容积\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2022年5月1日",
+      "delivery_date": "2024年12月31日",
+      "cert_dates": "[\"2022-05-28\", \"2022-04-29\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/4de73ff5d4da86842947d43973e216b1/275x206n.jpg",
+      "land_area_sqm": "43500m²",
+      "building_area_sqm": "110000m²",
+      "planned_units": "572",
+      "parking_spaces": "572",
+      "parking_ratio": "1:1",
+      "property_company": "青岛龙湖物业服务有限公司",
+      "property_fee": "2.09元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"西房注字（2022）011\", \"青房注字（房注字）（第2022）006号\"]",
+      "developer_brand": null,
+      "investor": "青岛乐好正壹置业有限公司",
+      "construction_progress": "在建中，竣工时间：2024-12-31",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 119.9,
+          "area_str": "119.9㎡"
+        },
+        {
+          "name": "三室",
+          "area": 134.26,
+          "area_str": "134.26㎡"
+        },
+        {
+          "name": "四室",
+          "area": 156.42,
+          "area_str": "156.42㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "华商金都",
+      "city": "青岛",
+      "district": "莱西市",
+      "sub_district": "莱西",
+      "sales_status": "在售",
+      "unit_price_cny": 6500.0,
+      "total_price_wan": null,
+      "area_range": "108-120㎡",
+      "room_types": "3室户型",
+      "floor_area_ratio": "1.4",
+      "green_ratio": "40%",
+      "developer": "青岛华炫置业有限公司",
+      "address": "青岛莱西市莱西上海路与深圳路交汇处万达广场正对面",
+      "distance_km": 490.32,
+      "lng": 120.508028,
+      "lat": 36.871348,
+      "property_type": "住宅",
+      "tags": "[\"项目竣工\", \"高绿化率\", \"低容积\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2024年",
+      "delivery_date": "2024年12月",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/9cd4dac192c5eaf4df150e27fdfb3d67/275x206n.jpg",
+      "land_area_sqm": null,
+      "building_area_sqm": null,
+      "planned_units": "1288",
+      "parking_spaces": null,
+      "parking_ratio": null,
+      "property_company": "青岛华商物业发展有限公司",
+      "property_fee": "2.06元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字 房注字 第2024 001\", \"青房注字 房注字 第2023 026\", \"青房注字 房注字 第2023 018\", \"青房注字 房注字 第2023 012\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": "已竣工，竣工时间：2024-12-31",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 108.0,
+          "area_str": "108㎡"
+        },
+        {
+          "name": "三室",
+          "area": 118.0,
+          "area_str": "118㎡"
+        },
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "河畔嘉园",
+      "city": "青岛",
+      "district": "莱西市",
+      "sub_district": "莱西",
+      "sales_status": "在售",
+      "unit_price_cny": 6000.0,
+      "total_price_wan": null,
+      "area_range": null,
+      "room_types": null,
+      "floor_area_ratio": "1.5",
+      "green_ratio": "36%",
+      "developer": "青岛天美置业有限公司",
+      "address": "青岛莱西市莱西北京东路43号洙河公园东侧",
+      "distance_km": 491.22,
+      "lng": 120.55615994214,
+      "lat": 36.898708774737,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"车位充足\", \"高绿化率\", \"低容积\"]",
+      "open_date": "2019年11月15日",
+      "delivery_date": "2021年12月31日",
+      "cert_dates": "[\"2020-01-09\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/1fecfd5657a3a08398c99a8d2475cb32/275x206n.jpg",
+      "land_area_sqm": "70000m²",
+      "building_area_sqm": "165000m²",
+      "planned_units": "844",
+      "parking_spaces": "1223",
+      "parking_ratio": "1:1.5",
+      "property_company": "青岛天美嘉园物业服务有限公司",
+      "property_fee": null,
+      "decoration": "毛坯",
+      "building_type": "{多层,小高层,高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"西房注字（2019）056\"]",
+      "developer_brand": null,
+      "investor": "青岛天美置业有限公司",
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "rooms_detail": []
+    },
+    {
+      "project_name": "华商金岸",
+      "city": "青岛",
+      "district": "莱西市",
+      "sub_district": "莱西",
+      "sales_status": "在售",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "93-171㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "住宅：1.73 别墅：1.73",
+      "green_ratio": "住宅：35% 别墅：35%",
+      "developer": "青岛华商置业有限公司",
+      "address": "青岛莱西市莱西上海东路65号",
+      "distance_km": 492.0,
+      "lng": 120.553879,
+      "lat": 36.886828,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"大阳台\", \"低容积\", \"厨卫全明\"]",
+      "open_date": "2025年8月26日",
+      "delivery_date": "2025年10月31日",
+      "cert_dates": "[\"2025-08-26\", \"2019-06-05\", \"2018-08-24\", \"2018-03-23\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/4bba9d49791e4c349ba9ead3871e447a/275x206n.jpg",
+      "land_area_sqm": "住宅：88536m² 别墅：88536m²",
+      "building_area_sqm": "住宅：181581m² 别墅：181581m²",
+      "planned_units": "住宅：1103 别墅：1103",
+      "parking_spaces": "住宅：837 别墅：837",
+      "parking_ratio": "住宅：1:0.8 别墅：1:0.8",
+      "property_company": "青岛华商物业发展有限公司",
+      "property_fee": "住宅：1.8元/㎡/月 别墅：2.2元/㎡/月",
+      "decoration": "住宅：毛坯 别墅：毛坯",
+      "building_type": "{多层,小高层,高层}",
+      "tenure_years": "住宅：50年 别墅：50年",
+      "presale_permit": "[\"鲁2025莱西市不动产权第0022789号\", \"西房注字（2019）022\", \"西房注字(2018)038\", \"西房注字(2018)010\"]",
+      "developer_brand": null,
+      "investor": "青岛华商集团",
+      "construction_progress": "已竣工，竣工时间：2025-10-31",
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 93.0,
+          "area_str": "93㎡"
+        },
+        {
+          "name": "三室",
+          "area": 105.0,
+          "area_str": "105㎡"
+        },
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        },
+        {
+          "name": "三室",
+          "area": 124.13,
+          "area_str": "124.13㎡"
+        },
+        {
+          "name": "三室",
+          "area": 132.0,
+          "area_str": "132㎡"
+        },
+        {
+          "name": "三室",
+          "area": 134.78,
+          "area_str": "134.78㎡"
+        },
+        {
+          "name": "三室",
+          "area": 146.0,
+          "area_str": "146㎡"
+        },
+        {
+          "name": "三室",
+          "area": 158.0,
+          "area_str": "158㎡"
+        },
+        {
+          "name": "三室",
+          "area": 159.43,
+          "area_str": "159.43㎡"
+        },
+        {
+          "name": "三室",
+          "area": 160.0,
+          "area_str": "160㎡"
+        },
+        {
+          "name": "四室",
+          "area": 170.73,
+          "area_str": "170.73㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "澜山悦府",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "空港",
+      "sales_status": "在售",
+      "unit_price_cny": 7800.0,
+      "total_price_wan": null,
+      "area_range": "97-143㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "35%",
+      "developer": "青岛中仁房地产有限公司",
+      "address": "青岛胶州市空港兰州东路与站前大道西50米路南",
+      "distance_km": 503.87,
+      "lng": 120.063205,
+      "lat": 36.39454,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"大阳台\", \"装修交付\", \"轨交房\"]",
+      "open_date": "2021年3月9日",
+      "delivery_date": "2023年6月30日",
+      "cert_dates": "[\"2021-03-09\", \"2019-11-30\", \"2019-11-15\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f51c7eaa2a71dd177589d371e548d25e/275x206n.jpg",
+      "land_area_sqm": "64000m²",
+      "building_area_sqm": "192000m²",
+      "planned_units": "1364",
+      "parking_spaces": "1066",
+      "parking_ratio": "1:0.78",
+      "property_company": "青岛中仁物业管理有限公司",
+      "property_fee": "1.8元/㎡/月",
+      "decoration": "毛坯,带装修",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2021007号\", \"青房注字（胶州）第2020033号\", \"青房注字（胶州）第2019130号\"]",
+      "developer_brand": null,
+      "investor": "青岛中仁房地产有限公司",
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 97.0,
+          "area_str": "97㎡"
+        },
+        {
+          "name": "三室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.0,
+          "area_str": "119㎡"
+        },
+        {
+          "name": "三室",
+          "area": 129.0,
+          "area_str": "129㎡"
+        },
+        {
+          "name": "四室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "信达·君和蓝庭",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "老城区",
+      "sales_status": "在售",
+      "unit_price_cny": 5400.0,
+      "total_price_wan": null,
+      "area_range": "89-115㎡",
+      "room_types": "3室户型",
+      "floor_area_ratio": "2.46",
+      "green_ratio": "35%",
+      "developer": "青岛金泰盛源置业有限公司",
+      "address": "青岛胶州市老城区杨林路以北，儒林路以南，毫州路以东，漳州路以西",
+      "distance_km": 507.87,
+      "lng": 119.98286335609,
+      "lat": 36.300318418916,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+      "open_date": "2022年9月25日",
+      "delivery_date": "2024年8月",
+      "cert_dates": "[\"2023-05-15\", \"2022-09-06\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/e78a51ffafc50a069bb6befb9f15b560/275x206n.jpg",
+      "land_area_sqm": "90007m²",
+      "building_area_sqm": "300000m²",
+      "planned_units": "2071",
+      "parking_spaces": "2385",
+      "parking_ratio": "1:1.15",
+      "property_company": null,
+      "property_fee": "2.31元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2023004号\", \"青房注字（胶州）第2022041号\"]",
+      "developer_brand": "信达地产",
+      "investor": "青岛信达置业有限公司",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 89.0,
+          "area_str": "89㎡"
+        },
+        {
+          "name": "三室",
+          "area": 95.0,
+          "area_str": "95㎡"
+        },
+        {
+          "name": "三室",
+          "area": 105.0,
+          "area_str": "105㎡"
+        },
+        {
+          "name": "三室",
+          "area": 115.0,
+          "area_str": "115㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "龙湖紫都城天越",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "新城",
+      "sales_status": "在售",
+      "unit_price_cny": 6500.0,
+      "total_price_wan": null,
+      "area_range": "100-143㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2.8",
+      "green_ratio": "35%",
+      "developer": "青岛龙泽嘉悦置业有限公司",
+      "address": "青岛胶州市新城寺门首路与柳州路交汇处",
+      "distance_km": 509.55,
+      "lng": 119.9826034061,
+      "lat": 36.281414732663,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+      "open_date": "2025年3月1日",
+      "delivery_date": "2026年10月",
+      "cert_dates": "[\"2026-01-27\", \"2025-06-06\", \"2025-08-15\", \"2025-12-03\", \"2025-12-03\", \"2025-09-19\", \"2025-09-19\", \"2025-06-27\", \"2025-03-21\", \"2025-02-28\", \"2024-10-18\", \"2024-08-15\", \"2023-12-07\", \"2023-09-27\", \"2023-05-15\", \"2021-08-23\", \"2023-07-11\", \"2022-06-14\", \"2021-04-15\", \"2021-04-09\", \"2021-02-05\", \"2020-08-30\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/a3b4b2569e27c7325f7bcea859e07cea/275x206n.jpg",
+      "land_area_sqm": "39360m²",
+      "building_area_sqm": "145884.89m²",
+      "planned_units": "875",
+      "parking_spaces": "1160",
+      "parking_ratio": "1:1.2",
+      "property_company": "龙湖物业服务集团有限公司青岛分公司",
+      "property_fee": "2.6元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{花园洋房,小高层,高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2025048号\", \"青房注字（胶州）第2025015号\", \"青房注字（胶州）第2025022号\", \"青房注字（胶州）第2025042号\", \"青房注字（胶州）第2025041号\", \"青房注字（胶州）第2025029号\", \"青房注字（胶州）第2025028号\", \"青房注字（胶州）第2025019号\", \"青房注字（胶州）第2025004号\", \"青房注字（胶州）第2025003号\", \"青房注字（胶州）第2024029号\", \"青房注字（胶州)第2024027号\", \"青房注字（胶州）第2023035号\", \"青房注字（胶州）第2023025号\", \"青房注字（胶州）第2023010号\", \"青房注字（胶州）第2021075号\", \"青房注字（胶州）第2023009号\", \"青房注字（胶州）第2022027号\", \"青房注字（胶州）第2021028号\", \"青房注字（胶州）第2021023号\", \"青房注字（胶州）第2021008号\", \"青房注字（胶州）第2020087号\"]",
+      "developer_brand": "龙湖地产",
+      "investor": "青岛龙泽嘉悦置业有限公司",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "三室",
+          "area": 105.0,
+          "area_str": "105㎡"
+        },
+        {
+          "name": "三室",
+          "area": 116.0,
+          "area_str": "116㎡"
+        },
+        {
+          "name": "三室",
+          "area": 117.0,
+          "area_str": "117㎡"
+        },
+        {
+          "name": "三室",
+          "area": 118.0,
+          "area_str": "118㎡"
+        },
+        {
+          "name": "四室",
+          "area": 118.0,
+          "area_str": "118㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.0,
+          "area_str": "119㎡"
+        },
+        {
+          "name": "四室",
+          "area": 138.0,
+          "area_str": "138㎡"
+        },
+        {
+          "name": "四室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "绿城·凤栖海棠",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "新城",
+      "sales_status": "在售",
+      "unit_price_cny": 13500.0,
+      "total_price_wan": null,
+      "area_range": "133-370㎡",
+      "room_types": "3室户型,4室户型,5室户型",
+      "floor_area_ratio": "2.9",
+      "green_ratio": "35%",
+      "developer": "青岛鸿锦悦城置业有限公司",
+      "address": "青岛胶州市新城扬州东路与常州路交汇处",
+      "distance_km": 512.4,
+      "lng": 120.02492801682,
+      "lat": 36.274785354574,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"厨卫全明\", \"南北通透\", \"项目在建\", \"一房一价\"]",
+      "open_date": "2022年11月27日",
+      "delivery_date": "2025年3月",
+      "cert_dates": "[\"2026-01-12\", \"2026-01-12\", \"2026-01-04\", \"2025-12-26\", \"2025-05-14\", \"2025-05-14\", \"2025-02-18\", \"2024-08-29\", \"2023-06-16\", \"2023-03-03\", \"2022-11-25\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/ed830d6e5e82957e67bb60303a7ff773/275x206n.jpg",
+      "land_area_sqm": "97808.1m²",
+      "building_area_sqm": "398297.65m²",
+      "planned_units": "1508",
+      "parking_spaces": "2779",
+      "parking_ratio": "1:1.5",
+      "property_company": "绿城物业服务集团有限公司青岛分公司",
+      "property_fee": "2.68元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2025047号\", \"青房注字（胶州）第2025046号\", \"青房注字（胶州）第2025045号\", \"青房注字（胶州）第2025044号\", \"青房注字（胶州）第2025012号\", \"青房注字（胶州）2025013号\", \"青房注字（胶州）第2025002号\", \"青房注字（胶州）第2024036号\", \"青房注字（胶州）第2024028号\", \"青房注字（胶州）第2023014号\", \"青房注字（胶州）第2023001号\", \"青房注字（胶州）第2022051号\"]",
+      "developer_brand": "绿城集团",
+      "investor": "青岛鸿锦悦城置业有限公司",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 133.0,
+          "area_str": "133㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        },
+        {
+          "name": "四室",
+          "area": 169.0,
+          "area_str": "169㎡"
+        },
+        {
+          "name": "四室",
+          "area": 170.0,
+          "area_str": "170㎡"
+        },
+        {
+          "name": "四室",
+          "area": 195.0,
+          "area_str": "195㎡"
+        },
+        {
+          "name": "四室",
+          "area": 235.0,
+          "area_str": "235㎡"
+        },
+        {
+          "name": "五室",
+          "area": 370.0,
+          "area_str": "370㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "水岸名邦",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "新城",
+      "sales_status": "在售",
+      "unit_price_cny": 14000.0,
+      "total_price_wan": null,
+      "area_range": "133-171㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2.9",
+      "green_ratio": "41%",
+      "developer": "青岛上合城乡融合发展集团有限公司",
+      "address": "青岛胶州市新城温州路387号",
+      "distance_km": 514.11,
+      "lng": 120.048687,
+      "lat": 36.269887,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"高绿化率\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2024年11月",
+      "delivery_date": "2025年10月31日",
+      "cert_dates": "[\"2025-02-28\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/194013a98a85561381c72b03250920c9/275x206n.jpg",
+      "land_area_sqm": "18642m²",
+      "building_area_sqm": "75365.93m²",
+      "planned_units": "338",
+      "parking_spaces": "532",
+      "parking_ratio": null,
+      "property_company": "雅生活智慧物业服务有限公司",
+      "property_fee": "2.5~2.7元/㎡/月",
+      "decoration": null,
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2024031号\", \"鲁(2023)胶州市不动产权第0017923号\"]",
+      "developer_brand": null,
+      "investor": null,
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 133.0,
+          "area_str": "133㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        },
+        {
+          "name": "四室",
+          "area": 171.0,
+          "area_str": "171㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "阳光·壹号",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "新城",
+      "sales_status": "在售",
+      "unit_price_cny": 12500.0,
+      "total_price_wan": null,
+      "area_range": "120-160㎡",
+      "room_types": "3室户型",
+      "floor_area_ratio": "2.6",
+      "green_ratio": "40%",
+      "developer": "阳光新天地投资集团（胶州）置业有限公司",
+      "address": "青岛胶州市新城北京路222号",
+      "distance_km": 514.43,
+      "lng": 120.06146793115,
+      "lat": 36.273937640923,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"低单价\"]",
+      "open_date": "2022年12月",
+      "delivery_date": null,
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/c5dc401533a9fd5f6a8785faf4b1c509/275x206n.jpg",
+      "land_area_sqm": "38000m²",
+      "building_area_sqm": "135000m²",
+      "planned_units": "548",
+      "parking_spaces": "548",
+      "parking_ratio": null,
+      "property_company": null,
+      "property_fee": "2.77元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2022053号\"]",
+      "developer_brand": null,
+      "investor": "阳光新天地控股集团有限公司",
+      "construction_progress": null,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        },
+        {
+          "name": "三室",
+          "area": 140.0,
+          "area_str": "140㎡"
+        },
+        {
+          "name": "三室",
+          "area": 160.0,
+          "area_str": "160㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "宝佳雲湖甲第",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "新城",
+      "sales_status": "在售",
+      "unit_price_cny": 15000.0,
+      "total_price_wan": null,
+      "area_range": "121-246㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "1.79",
+      "green_ratio": "30%",
+      "developer": "青岛宝佳置业有限公司",
+      "address": "青岛胶州市新城胶州市香港路以南，滨湖西路以西（青年湖西岸）",
+      "distance_km": 514.73,
+      "lng": 120.037265,
+      "lat": 36.256111,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2024年7月13日",
+      "delivery_date": "2026年4月",
+      "cert_dates": "[\"2025-09-23\", \"2025-09-23\", \"2025-09-23\", \"2025-07-22\", \"2025-07-16\", \"2025-06-16\", \"2025-04-25\", \"2025-04-25\", \"2025-05-30\", \"2024-12-30\", \"2024-11-27\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3e3ee293fcbfa0d26df5373bb40bd615/275x206n.jpg",
+      "land_area_sqm": "63024m²",
+      "building_area_sqm": "161060.73m²",
+      "planned_units": "733",
+      "parking_spaces": "1177",
+      "parking_ratio": "1:1.6",
+      "property_company": "青岛万科物业服务有限公司",
+      "property_fee": "2.77元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2025032号\", \"青房注字（胶州）第2025033号\", \"青房注字（胶州）第2025031号\", \"青房注字（胶州）第2025021号\", \"青房注字（胶州）第2025020号\", \"青房注字（胶州）第2025018号\", \"青房注字（胶州）第2025009号\", \"青房注字（胶州）第2025010号\", \"青房注字（胶州）第2025016号\", \"青房注字（胶州）第2024038号\", \"青房注字（胶州）第2024035号\", \"青房注字(胶州)第2024005号\"]",
+      "developer_brand": null,
+      "investor": "台湾宝佳&青岛神州集团",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 121.0,
+          "area_str": "121㎡"
+        },
+        {
+          "name": "三室",
+          "area": 133.0,
+          "area_str": "133㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        },
+        {
+          "name": "三室",
+          "area": 158.0,
+          "area_str": "158㎡"
+        },
+        {
+          "name": "三室",
+          "area": 159.0,
+          "area_str": "159㎡"
+        },
+        {
+          "name": "三室",
+          "area": 185.0,
+          "area_str": "185㎡"
+        },
+        {
+          "name": "四室",
+          "area": 210.0,
+          "area_str": "210㎡"
+        },
+        {
+          "name": "三室",
+          "area": 246.0,
+          "area_str": "246㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "龙湖·观萃",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "新城",
+      "sales_status": "在售",
+      "unit_price_cny": 12000.0,
+      "total_price_wan": null,
+      "area_range": "126-190㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "50%",
+      "developer": "青岛锦昊嘉辉置业有限公司",
+      "address": "青岛胶州市新城澳门路与海尔大道交汇处（龙湖天街旁）",
+      "distance_km": 515.58,
+      "lng": 120.0634,
+      "lat": 36.262198,
+      "property_type": "住宅",
+      "tags": "[\"得房率高\", \"车位充足\", \"高绿化率\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2025年9月21日",
+      "delivery_date": "2027年4月",
+      "cert_dates": "[\"2026-01-15\", \"2026-02-04\", \"2025-12-02\", \"2025-11-21\", \"2025-11-21\", \"2025-09-05\", \"2025-09-05\", \"2025-09-05\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/04839196d87d7c9e7d81a56a4b9a41cb/275x206n.jpg",
+      "land_area_sqm": "47000m²",
+      "building_area_sqm": "140000m²",
+      "planned_units": "502",
+      "parking_spaces": "1012",
+      "parking_ratio": "1:2",
+      "property_company": "龙湖物业服务集团有限公司青岛分公司",
+      "property_fee": "2.6元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2025040号\", \"青房注字（胶州）第2025039号\", \"青房注字（胶州）第2025036号\", \"青房注字（胶州）第2025035号\", \"青房注字（胶州）第2025037号\", \"青房注字（胶州）第2025024号\", \"青房注字（胶州）第2025026号\", \"青房注字（胶州）第2025025号\"]",
+      "developer_brand": "龙湖地产",
+      "investor": "青岛锦昊嘉辉置业有限公司",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 126.0,
+          "area_str": "126㎡"
+        },
+        {
+          "name": "四室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        },
+        {
+          "name": "四室",
+          "area": 190.0,
+          "area_str": "190㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "中海学仕里",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "少海新城",
+      "sales_status": "在售",
+      "unit_price_cny": 10000.0,
+      "total_price_wan": null,
+      "area_range": "108-140㎡",
+      "room_types": "3室户型",
+      "floor_area_ratio": "1.17",
+      "green_ratio": "40%",
+      "developer": "青岛市联明地产有限公司",
+      "address": "青岛胶州市少海新城实验学校西临",
+      "distance_km": 515.88,
+      "lng": 120.101703,
+      "lat": 36.28211,
+      "property_type": "住宅",
+      "tags": "[\"得房率高\", \"人车分流\", \"车位充足\", \"高绿化率\", \"低容积\"]",
+      "open_date": "2024年4月1日",
+      "delivery_date": "2025年6月下旬",
+      "cert_dates": "[\"2024-12-20\", \"2021-11-12\", \"2021-08-09\", \"2021-06-22\", \"2019-09-24\", \"2019-10-31\", \"2020-03-25\", \"2019-06-11\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/e7efa598d40338ba44290a1194aa96a6/275x206n.jpg",
+      "land_area_sqm": "48000m²",
+      "building_area_sqm": "78000m²",
+      "planned_units": "416",
+      "parking_spaces": "448",
+      "parking_ratio": "1:1.07",
+      "property_company": "中海物业管理有限公司青岛分公司",
+      "property_fee": "2.31元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{多层,小高层,高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2024037号\", \"青岛注字（胶州）第2021092号\", \"青房注字（胶州）第2021067\", \"青房注字（胶州）第2021049号\", \"青房注字（胶州）第2019081号\", \"青房注字（胶州）第2019122号\", \"青房注字（胶州）第2020004号\", \"青房注字（胶州）第2019029号\"]",
+      "developer_brand": "中海地产",
+      "investor": "青岛市联明地产有限公司",
+      "construction_progress": null,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 108.0,
+          "area_str": "108㎡"
+        },
+        {
+          "name": "三室",
+          "area": 128.0,
+          "area_str": "128㎡"
+        },
+        {
+          "name": "三室",
+          "area": 140.0,
+          "area_str": "140㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "龙湖蓝岸郦城",
+      "city": "青岛",
+      "district": "即墨区",
+      "sub_district": "即墨老城",
+      "sales_status": "在售",
+      "unit_price_cny": 5800.0,
+      "total_price_wan": null,
+      "area_range": "89-107㎡",
+      "room_types": "3室户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "35%",
+      "developer": "青岛安洛惠庭置业有限公司",
+      "address": "青岛即墨区即墨老城金泉二路与三城路交叉口",
+      "distance_km": 516.84,
+      "lng": 120.28834946871,
+      "lat": 36.389950619386,
+      "property_type": "住宅",
+      "tags": "[\"厨卫全明\", \"南北通透\", \"绿色住宅\", \"低单价\", \"低总价\"]",
+      "open_date": "2026年3月13日",
+      "delivery_date": "2027年1月30日",
+      "cert_dates": "[\"2025-11-07\", \"2021-05-25\", \"2021-04-19\", \"2022-04-01\", \"2020-07-07\", \"2021-07-14\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/d3a47bcde08725c38dcca0bfd349db6d/275x206n.jpg",
+      "land_area_sqm": "120000m²",
+      "building_area_sqm": "360000m²",
+      "planned_units": "2768",
+      "parking_spaces": "3066",
+      "parking_ratio": null,
+      "property_company": "青岛龙湖物业服务有限公司即墨分公司",
+      "property_fee": "2.6元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"即房注字（2025）第016号\", \"即房注字(2021)第052号\", \"即房注字(2021)第028号\", \"即房注字(2022)第020号\", \"青房注字（2020）第87号\", \"即房注字(2021)第069号\"]",
+      "developer_brand": "龙湖地产",
+      "investor": "青岛安洛惠庭置业有限公司",
+      "construction_progress": null,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 89.0,
+          "area_str": "89㎡"
+        },
+        {
+          "name": "三室",
+          "area": 107.0,
+          "area_str": "107㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "新城·少海府邸",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "少海新城",
+      "sales_status": "在售",
+      "unit_price_cny": 7300.0,
+      "total_price_wan": null,
+      "area_range": "109-140㎡",
+      "room_types": "3室户型",
+      "floor_area_ratio": "2.5",
+      "green_ratio": "55%",
+      "developer": "青岛上合城乡融合发展集团有限公司",
+      "address": "青岛胶州市少海新城云汉路6号",
+      "distance_km": 518.36,
+      "lng": 120.084181,
+      "lat": 36.24359,
+      "property_type": "住宅",
+      "tags": "[\"项目竣工\", \"国企开发\", \"车位充足\", \"高绿化率\", \"厨卫全明\"]",
+      "open_date": "2022年5月1日",
+      "delivery_date": "2023年12月",
+      "cert_dates": "[\"2021-11-02\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3c22f0e96fc7f35a66924115415e18f2/275x206n.jpg",
+      "land_area_sqm": "76046m²",
+      "building_area_sqm": "266400m²",
+      "planned_units": "1387",
+      "parking_spaces": "2048",
+      "parking_ratio": "1:1.2",
+      "property_company": "中海物业管理有限公司青岛分公司",
+      "property_fee": "2.4元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{小高层,高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（胶州）第2021089号\"]",
+      "developer_brand": null,
+      "investor": "青岛市胶州新城建设发展有限公司",
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 109.04,
+          "area_str": "109.04㎡"
+        },
+        {
+          "name": "三室",
+          "area": 109.67,
+          "area_str": "109.67㎡"
+        },
+        {
+          "name": "三室",
+          "area": 125.07,
+          "area_str": "125.07㎡"
+        },
+        {
+          "name": "三室",
+          "area": 130.03,
+          "area_str": "130.03㎡"
+        },
+        {
+          "name": "三室",
+          "area": 137.0,
+          "area_str": "137㎡"
+        },
+        {
+          "name": "三室",
+          "area": 139.53,
+          "area_str": "139.53㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "上合U领寓",
+      "city": "青岛",
+      "district": "胶州市",
+      "sub_district": "少海新城",
+      "sales_status": "在售",
+      "unit_price_cny": 7500.0,
+      "total_price_wan": null,
+      "area_range": "35-65㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "2.69",
+      "green_ratio": "15%",
+      "developer": "青岛宝悦置业有限公司",
+      "address": "青岛胶州市少海新城滦河路5号",
+      "distance_km": 520.71,
+      "lng": 120.105021,
+      "lat": 36.229755,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"厨卫全明\", \"卧室全朝南\", \"低单价\", \"低总价\"]",
+      "open_date": "2020年4月25日",
+      "delivery_date": "2022年5月31日",
+      "cert_dates": "[\"2020-04-23\", \"2020-08-12\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/cf31184c0b3b79c5981eea8f55224e4c/275x206n.jpg",
+      "land_area_sqm": "33772.9m²",
+      "building_area_sqm": "125552.5m²",
+      "planned_units": "1860",
+      "parking_spaces": "911",
+      "parking_ratio": null,
+      "property_company": "青岛宝悦置业有限公司",
+      "property_fee": "2.86元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{}",
+      "tenure_years": "40年",
+      "presale_permit": "[\"青房注字2020第029号\", \"青房注字（胶州）第2020085号\"]",
+      "developer_brand": null,
+      "investor": "青岛宝悦置业有限公司",
+      "construction_progress": null,
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 35.0,
+          "area_str": "35㎡"
+        },
+        {
+          "name": "三室",
+          "area": 35.0,
+          "area_str": "35㎡"
+        },
+        {
+          "name": "二室",
+          "area": 46.0,
+          "area_str": "46㎡"
+        },
+        {
+          "name": "四室",
+          "area": 65.0,
+          "area_str": "65㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "青岛天安科创城",
+      "city": "青岛",
+      "district": "城阳区",
+      "sub_district": "棘洪滩",
+      "sales_status": "在售",
+      "unit_price_cny": 7200.0,
+      "total_price_wan": null,
+      "area_range": "200-1500㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": null,
+      "green_ratio": "21%",
+      "developer": "青岛天安科创城产业有限公司",
+      "address": "青岛城阳区棘洪滩春阳路1667号",
+      "distance_km": 520.85,
+      "lng": 120.24649604231,
+      "lat": 36.316332092083,
+      "property_type": "标准写字楼",
+      "tags": "[\"现房\", \"项目竣工\", \"低单价\", \"低总价\"]",
+      "open_date": "2021年12月30日",
+      "delivery_date": "2023年10月16日",
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/fbad0a2f9deb335def7306646470b153/275x206n.jpg",
+      "land_area_sqm": "318800m²",
+      "building_area_sqm": "1020000m²",
+      "planned_units": null,
+      "parking_spaces": "1361",
+      "parking_ratio": null,
+      "property_company": "青岛天安智慧空间科技服务有限公司",
+      "property_fee": null,
+      "decoration": "毛坯",
+      "building_type": "{}",
+      "tenure_years": "50年",
+      "presale_permit": "[]",
+      "developer_brand": null,
+      "investor": "青岛天安科创城产业有限公司",
+      "construction_progress": "已竣工，竣工时间：2023-10-16",
+      "rooms_detail": []
+    },
+    {
+      "project_name": "天安檀府国际",
+      "city": "青岛",
+      "district": "城阳区",
+      "sub_district": "棘洪滩",
+      "sales_status": "在售",
+      "unit_price_cny": 9000.0,
+      "total_price_wan": null,
+      "area_range": "95-140㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2.29",
+      "green_ratio": "35%",
+      "developer": "青岛天安科创城产业有限公司",
+      "address": "青岛城阳区棘洪滩岙东北路317号",
+      "distance_km": 520.91,
+      "lng": 120.27025491057,
+      "lat": 36.330973301325,
+      "property_type": "住宅",
+      "tags": "[\"项目竣工\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"低单价\"]",
+      "open_date": "2022年6月17日",
+      "delivery_date": "2024年4月",
+      "cert_dates": "[\"2024-05-11\", \"2023-10-13\", \"2022-06-17\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/9a59d1f7d715370f854f7f8faca874e7/275x206n.jpg",
+      "land_area_sqm": "33115m²",
+      "building_area_sqm": "104113.04m²",
+      "planned_units": "640",
+      "parking_spaces": "848",
+      "parking_ratio": null,
+      "property_company": "青岛天安智慧空间科技服务有限公司",
+      "property_fee": "3.02元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{多层,小高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"城行审三（2024）231号\", \"城行审三（2023）673号\", \"城行审三（2022）485号\"]",
+      "developer_brand": null,
+      "investor": "青岛天安科创城产业有限公司",
+      "construction_progress": "已竣工，竣工时间：2024-04-30",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 95.0,
+          "area_str": "95㎡"
+        },
+        {
+          "name": "三室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "三室",
+          "area": 105.0,
+          "area_str": "105㎡"
+        },
+        {
+          "name": "三室",
+          "area": 108.0,
+          "area_str": "108㎡"
+        },
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        },
+        {
+          "name": "三室",
+          "area": 125.0,
+          "area_str": "125㎡"
+        },
+        {
+          "name": "四室",
+          "area": 140.0,
+          "area_str": "140㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "君一·青岛时尚创意产业园",
+      "city": "青岛",
+      "district": "即墨区",
+      "sub_district": "即墨老城",
+      "sales_status": "在售",
+      "unit_price_cny": 9500.0,
+      "total_price_wan": null,
+      "area_range": "40-390㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": null,
+      "green_ratio": "25%",
+      "developer": "青岛海龙衣联置业有限公司",
+      "address": "青岛即墨区即墨老城石林三路357号",
+      "distance_km": 522.14,
+      "lng": 120.40790729283,
+      "lat": 36.408223660391,
+      "property_type": "标准写字楼",
+      "tags": "[\"复式\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"低单价\"]",
+      "open_date": "2021年4月19日",
+      "delivery_date": null,
+      "cert_dates": "[]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/9b59cf829bd57436366721630809dae1/275x206n.jpg",
+      "land_area_sqm": "26563m²",
+      "building_area_sqm": "55804.5m²",
+      "planned_units": "424",
+      "parking_spaces": null,
+      "parking_ratio": null,
+      "property_company": "青岛海尚海生活服务集团有限公司",
+      "property_fee": "2元/㎡/月",
+      "decoration": null,
+      "building_type": "{}",
+      "tenure_years": "40年",
+      "presale_permit": "[]",
+      "developer_brand": "君一控股",
+      "investor": null,
+      "construction_progress": null,
+      "rooms_detail": []
+    },
+    {
+      "project_name": "和达北岸悦璋",
+      "city": "青岛",
+      "district": "城阳区",
+      "sub_district": "上马",
+      "sales_status": "在售",
+      "unit_price_cny": 8800.0,
+      "total_price_wan": null,
+      "area_range": "78-119㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "2.5",
+      "green_ratio": "35%",
+      "developer": "青岛和达博信置业有限公司",
+      "address": "青岛城阳区上马龙润路377号",
+      "distance_km": 522.46,
+      "lng": 120.23516572535,
+      "lat": 36.290544968162,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"人车分流\", \"车位充足\", \"厨卫全明\"]",
+      "open_date": "2020年6月25日",
+      "delivery_date": "2023年8月31日",
+      "cert_dates": "[\"2022-04-29\", \"2022-03-21\", \"2020-12-20\", \"2019-11-06\", \"2020-08-18\", \"2020-07-02\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/2c57e510778e67c0953e54e9b047b0e9/275x206n.jpg",
+      "land_area_sqm": "76000m²",
+      "building_area_sqm": "190000m²",
+      "planned_units": "1741",
+      "parking_spaces": "1788",
+      "parking_ratio": "1:1.02",
+      "property_company": "青岛和达物业管理有限公司",
+      "property_fee": "3元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{小高层,高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"城行审三（2022）323号\", \"城行审三（2022）154号\", \"青房注字城（19）第100号\", \"青房注字（城19）第86号\", \"青房注字城（20）第80号\", \"青房注字城（20）第54号\"]",
+      "developer_brand": "和达集团",
+      "investor": "和达集团",
+      "construction_progress": "已竣工，竣工时间：2023-08-31",
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 78.0,
+          "area_str": "78㎡"
+        },
+        {
+          "name": "二室",
+          "area": 80.0,
+          "area_str": "80㎡"
+        },
+        {
+          "name": "三室",
+          "area": 89.0,
+          "area_str": "89㎡"
+        },
+        {
+          "name": "三室",
+          "area": 90.0,
+          "area_str": "90㎡"
+        },
+        {
+          "name": "三室",
+          "area": 110.0,
+          "area_str": "110㎡"
+        },
+        {
+          "name": "二室",
+          "area": 119.0,
+          "area_str": "119㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "中冶德贤公馆",
+      "city": "青岛",
+      "district": "即墨区",
+      "sub_district": "鹤山路",
+      "sales_status": "在售",
+      "unit_price_cny": 12500.0,
+      "total_price_wan": null,
+      "area_range": "89-160㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "35%",
+      "developer": "青岛中冶名华发展有限公司",
+      "address": "青岛即墨区鹤山路石林三路与鸿雁河一路交汇处",
+      "distance_km": 522.82,
+      "lng": 120.41359819659,
+      "lat": 36.404057571153,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"车位充足\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2021年9月30日",
+      "delivery_date": "2022年9月30日",
+      "cert_dates": "[\"2026-01-12\", \"2025-08-28\", \"2024-11-18\", \"2024-09-12\", \"2024-08-26\", \"2022-04-06\", \"2020-08-18\", \"2020-10-10\", \"2020-10-10\", \"2021-01-08\", \"2021-06-30\", \"2021-06-30\", \"2021-07-22\", \"2021-08-10\", \"2021-09-30\", \"2021-09-30\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/6395ddec10654c3149880df7914010eb/275x206n.jpg",
+      "land_area_sqm": "148950m²",
+      "building_area_sqm": "403866m²",
+      "planned_units": "2434",
+      "parking_spaces": "3349",
+      "parking_ratio": "1:1.4",
+      "property_company": "中冶置业集团物业服务有限公司青岛分公司",
+      "property_fee": "2.77元/㎡/月",
+      "decoration": "简装修",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"鲁（2025）青岛市即墨区不动产权第0070155号\", \"即房注字（2025）第020号\", \"即房注字（2024）第037号\", \"即房注字（2024）第032号\", \"即房注字（2024）第027号\", \"即房注字(2022)第014号\", \"青房注字（2020）第77号\", \"即房注字(2020)第156号\", \"即房注字(2020)第139号\", \"即房注字(2020)第208号\", \"即房注字(2021)第006号\", \"即房注字(2021)第071号\", \"即房注字(2021)第086号\", \"即房注字(2021)第098号\", \"即房注字(2021)第124号\", \"即房注字(2021)第121号\"]",
+      "developer_brand": "中冶置业",
+      "investor": "青岛中冶名华发展有限公司",
+      "construction_progress": null,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 89.0,
+          "area_str": "89㎡"
+        },
+        {
+          "name": "三室",
+          "area": 90.0,
+          "area_str": "90㎡"
+        },
+        {
+          "name": "三室",
+          "area": 108.0,
+          "area_str": "108㎡"
+        },
+        {
+          "name": "四室",
+          "area": 126.0,
+          "area_str": "126㎡"
+        },
+        {
+          "name": "三室",
+          "area": 140.0,
+          "area_str": "140㎡"
+        },
+        {
+          "name": "四室",
+          "area": 160.0,
+          "area_str": "160㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "越秀星汇城",
+      "city": "青岛",
+      "district": "城阳区",
+      "sub_district": "上马",
+      "sales_status": "在售",
+      "unit_price_cny": 6000.0,
+      "total_price_wan": null,
+      "area_range": "87-136㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2.5",
+      "green_ratio": "35%",
+      "developer": "青岛康景实业有限公司",
+      "address": "青岛城阳区上马龙润路333号",
+      "distance_km": 523.22,
+      "lng": 120.23159329622,
+      "lat": 36.279622295254,
+      "property_type": "住宅",
+      "tags": "[\"现房\", \"项目竣工\", \"大阳台\", \"人车分流\", \"车位充足\"]",
+      "open_date": "2021年5月1日",
+      "delivery_date": "2023年6月30日",
+      "cert_dates": "[\"2020-06-04\", \"2021-02-24\", \"2021-11-01\", \"2021-04-29\", \"2020-09-10\", \"2019-12-05\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/ecc42d0bb1355f7467e46bfa785cff32/275x206n.jpg",
+      "land_area_sqm": "140000m²",
+      "building_area_sqm": "220000m²",
+      "planned_units": "2222",
+      "parking_spaces": "2285",
+      "parking_ratio": "1:1.12",
+      "property_company": "青岛越秀物业管理有限公司",
+      "property_fee": "2.1元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"青房注字（城20）第22号\", \"城阳人才房注字〔2020〕第004号\", \"城行审建（2021）1183号\", \"青房注字城（21）第443号\", \"青房注字城（20）第67号\", \"青房注字（城19）第97号\"]",
+      "developer_brand": "越秀地产",
+      "investor": "越秀地产",
+      "construction_progress": "已竣工，竣工时间：2023-06-30",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 87.0,
+          "area_str": "87㎡"
+        },
+        {
+          "name": "三室",
+          "area": 97.0,
+          "area_str": "97㎡"
+        },
+        {
+          "name": "三室",
+          "area": 106.0,
+          "area_str": "106㎡"
+        },
+        {
+          "name": "三室",
+          "area": 107.0,
+          "area_str": "107㎡"
+        },
+        {
+          "name": "三室",
+          "area": 119.0,
+          "area_str": "119㎡"
+        },
+        {
+          "name": "四室",
+          "area": 136.0,
+          "area_str": "136㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "华侨城欢乐莲泉",
+      "city": "青岛",
+      "district": "即墨区",
+      "sub_district": "创智新区",
+      "sales_status": "在售",
+      "unit_price_cny": 6500.0,
+      "total_price_wan": null,
+      "area_range": "89-118㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "35%",
+      "developer": "青岛华侨城投资有限公司",
+      "address": "青岛即墨区创智新区柳泉路与河滨一路交汇处",
+      "distance_km": 523.95,
+      "lng": 120.51896174138,
+      "lat": 36.46431322227,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"绿色住宅\"]",
+      "open_date": "2020年8月23日",
+      "delivery_date": null,
+      "cert_dates": "[\"2020-11-11\", \"2020-08-11\", \"2020-09-18\", \"2021-03-19\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/fe45702c30f688f3cab06e560526061f/275x206n.jpg",
+      "land_area_sqm": "61477m²",
+      "building_area_sqm": "169681.87m²",
+      "planned_units": "1119",
+      "parking_spaces": "1296",
+      "parking_ratio": "1:1.1",
+      "property_company": "华侨城物业（集团）有限公司青岛分公司",
+      "property_fee": "2.29元/㎡/月",
+      "decoration": "毛坯",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"即房注字(2020)第187号\", \"即房注字(2020)第103号\", \"即房注字(2020)第146号\", \"即房注字(2021)第023号\"]",
+      "developer_brand": "华侨城集团",
+      "investor": "青岛华侨城投资有限公司",
+      "construction_progress": null,
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 89.0,
+          "area_str": "89㎡"
+        },
+        {
+          "name": "三室",
+          "area": 115.0,
+          "area_str": "115㎡"
+        },
+        {
+          "name": "四室",
+          "area": 118.0,
+          "area_str": "118㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "君一·翡翠公园",
+      "city": "青岛",
+      "district": "即墨区",
+      "sub_district": "即墨老城",
+      "sales_status": "在售",
+      "unit_price_cny": 13000.0,
+      "total_price_wan": null,
+      "area_range": "103-142㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "1.6",
+      "green_ratio": "35%",
+      "developer": "青岛海龙衣联置业有限公司",
+      "address": "青岛即墨区即墨老城石林二路88号（华山路小学对面）",
+      "distance_km": 524.27,
+      "lng": 120.41163389688,
+      "lat": 36.385713052079,
+      "property_type": "住宅",
+      "tags": "[\"项目竣工\", \"大阳台\", \"车位充足\", \"低容积\", \"装修交付\"]",
+      "open_date": "2021年9月10日",
+      "delivery_date": null,
+      "cert_dates": "[\"2022-08-08\", \"2021-12-16\", \"2020-01-17\", \"2019-10-24\", \"2020-01-21\", \"2020-05-15\", \"2020-10-29\", \"2020-11-01\", \"2019-10-21\", \"2021-01-06\", \"2021-02-08\", \"2021-06-01\", \"2021-07-13\", \"2021-09-10\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b503d42830e94996e3c670f0024c19be/275x206n.jpg",
+      "land_area_sqm": "100531m²",
+      "building_area_sqm": "217549.6m²",
+      "planned_units": "1166",
+      "parking_spaces": "1768",
+      "parking_ratio": "1:1.52",
+      "property_company": "青岛海尚海生活服务集团有限公司",
+      "property_fee": "2.6元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{小高层,花园洋房}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"即房注字(2022)第057号\", \"即房注字(2021)第163号\", \"即房注字(2020)第005号\", \"即房注字(2019)第113号\", \"即房注字(2019)第152号\", \"即房注字(2020)第032号\", \"即房注字(2020)第151号\", \"即房注字(2020)第183号\", \"即房注字(2019)第106号\", \"即房注字(2020)第107号\", \"即房注字(2021)第007号\", \"即房注字(2021)第059号\", \"即房注字(2021)第073号\", \"即房注字(2021)第115号\"]",
+      "developer_brand": "君一控股",
+      "investor": "海尔产城创",
+      "construction_progress": "已竣工，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 103.0,
+          "area_str": "103㎡"
+        },
+        {
+          "name": "三室",
+          "area": 120.0,
+          "area_str": "120㎡"
+        },
+        {
+          "name": "四室",
+          "area": 128.0,
+          "area_str": "128㎡"
+        },
+        {
+          "name": "四室",
+          "area": 133.0,
+          "area_str": "133㎡"
+        },
+        {
+          "name": "三室",
+          "area": 138.0,
+          "area_str": "138㎡"
+        },
+        {
+          "name": "四室",
+          "area": 142.0,
+          "area_str": "142㎡"
+        }
+      ]
+    }
+  ],
+  "market_summary": {
+    "sample_count": 30,
+    "price": {
+      "avg": 8700.0,
+      "min": 5400.0,
+      "max": 15000.0,
+      "valid_count": 29
+    },
+    "sales_status": {
+      "在售": 30
+    },
+    "districts": {
+      "胶州市": 11,
+      "莱西市": 6,
+      "即墨区": 5,
+      "平度市": 4,
+      "城阳区": 4
+    },
+    "room_types": {
+      "3室户型": 26,
+      "4室户型": 18,
+      "2室户型": 3,
+      "商业户型": 3,
+      "5室户型": 2,
+      "1室户型": 1
+    }
+  },
+  "amenities": {
+    "school": {
+      "label": "学校",
+      "items": [
+        {
+          "name": "北京市陈经纶中学",
+          "distance": 372,
+          "address": "朝阳门外大街38号(东大桥地铁站A西北口步行450米)",
+          "type": "学校",
+          "lng": 116.447494,
+          "lat": 39.921368
+        },
+        {
+          "name": "北京市朝阳区游泳运动分校",
+          "distance": 386,
+          "address": "朝外大街38号东大桥蓝岛大厦南侧",
+          "type": "学校",
+          "lng": 116.447663,
+          "lat": 39.921279
+        },
+        {
+          "name": "北京市陈经纶中学(东大桥校区初中部)",
+          "distance": 509,
+          "address": "东大桥地铁站D2西南口步行320米",
+          "type": "学校",
+          "lng": 116.4491,
+          "lat": 39.921408
+        }
+      ]
+    },
+    "hospital": {
+      "label": "医院",
+      "items": [
+        {
+          "name": "明颐堂养生艾灸馆",
+          "distance": 62,
+          "address": "北京城区天福园8号楼1层19门",
+          "type": "医院",
+          "lng": 116.443855,
+          "lat": 39.921332
+        },
+        {
+          "name": "北京福寿康鑫健康养老服务有限公司朝外护理站",
+          "distance": 84,
+          "address": "天福园8号楼17号",
+          "type": "医院",
+          "lng": 116.443979,
+          "lat": 39.921047
+        },
+        {
+          "name": "北京花冠口腔",
+          "distance": 124,
+          "address": "天福园8号楼底商11号",
+          "type": "医院",
+          "lng": 116.444035,
+          "lat": 39.92056
+        }
+      ]
+    },
+    "subway": {
+      "label": "地铁站",
+      "items": [
+        {
+          "name": "东大桥地铁站G口",
+          "distance": 597,
+          "address": "17号线",
+          "type": "地铁站",
+          "lng": 116.450081,
+          "lat": 39.922086
+        },
+        {
+          "name": "东大桥(地铁站)",
+          "distance": 637,
+          "address": "(在建)22号线/平谷线;(在建)28号线;17号线;6号线",
+          "type": "地铁站",
+          "lng": 116.450379,
+          "lat": 39.922852
+        },
+        {
+          "name": "东大桥地铁站E口",
+          "distance": 641,
+          "address": "17号线",
+          "type": "地铁站",
+          "lng": 116.450171,
+          "lat": 39.923462
+        }
+      ]
+    },
+    "bus": {
+      "label": "公交站",
+      "items": [
+        {
+          "name": "朝外市场街(公交站)",
+          "distance": 202,
+          "address": "儿研所专线",
+          "type": "公交站",
+          "lng": 116.440775,
+          "lat": 39.921613
+        },
+        {
+          "name": "神路街(公交站)",
+          "distance": 257,
+          "address": "101路;109路;110路;139路;615路;75路;夜13路",
+          "type": "公交站",
+          "lng": 116.443368,
+          "lat": 39.92375
+        },
+        {
+          "name": "朝阳门外(公交站)",
+          "distance": 502,
+          "address": "101路;109路;110路;139路;75路;儿研所专线;夜13路",
+          "type": "公交站",
+          "lng": 116.43868,
+          "lat": 39.924394
+        }
+      ]
+    },
+    "mall": {
+      "label": "商场",
+      "items": [
+        {
+          "name": "朝外Men雅宝商城",
+          "distance": 100,
+          "address": "朝阳门外大街26号(昆泰大厦对面)",
+          "type": "商场",
+          "lng": 116.442177,
+          "lat": 39.921964
+        },
+        {
+          "name": "便利蜂(朝外Men雅宝商城店)",
+          "distance": 124,
+          "address": "朝外大街朝外门公寓1层",
+          "type": "商场",
+          "lng": 116.442185,
+          "lat": 39.922296
+        },
+        {
+          "name": "便利蜂(鸿豪商业中心店)",
+          "distance": 152,
+          "address": "日坛北路17号院2号楼1层",
+          "type": "商场",
+          "lng": 116.442355,
+          "lat": 39.920216
+        }
+      ]
+    },
+    "park": {
+      "label": "公园",
+      "items": [
+        {
+          "name": "东岳文化广场",
+          "distance": 168,
+          "address": "神路街与朝外南街交叉口北40米",
+          "type": "公园",
+          "lng": 116.443818,
+          "lat": 39.922861
+        },
+        {
+          "name": "朝阳门外口袋公园",
+          "distance": 351,
+          "address": "朝外市场街20号",
+          "type": "公园",
+          "lng": 116.439127,
+          "lat": 39.920725
+        },
+        {
+          "name": "日坛公园",
+          "distance": 659,
+          "address": "朝外街道朝阳门外日坛北路6号",
+          "type": "公园",
+          "lng": 116.443795,
+          "lat": 39.915538
+        }
+      ]
+    },
+    "supermarket": {
+      "label": "超市",
+      "items": [
+        {
+          "name": "朝外Men雅宝商城",
+          "distance": 100,
+          "address": "朝阳门外大街26号(昆泰大厦对面)",
+          "type": "超市",
+          "lng": 116.442177,
+          "lat": 39.921964
+        },
+        {
+          "name": "鸿豪商业中心",
+          "distance": 158,
+          "address": "朝外市场街怡景园3.4.5号楼底商",
+          "type": "超市",
+          "lng": 116.44139,
+          "lat": 39.920961
+        },
+        {
+          "name": "THE BOX 朝外|年轻力中心",
+          "distance": 218,
+          "address": "朝外大街12号",
+          "type": "超市",
+          "lng": 116.445007,
+          "lat": 39.922779
+        }
+      ]
+    }
+  },
+  "price_band_competitors": null
+}
