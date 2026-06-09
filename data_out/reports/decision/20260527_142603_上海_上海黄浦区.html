@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8">
+<title>DDS 决策推演报告 · 上海黄浦区</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+       background: #f5f3ee; color: #111; padding: 32px; line-height: 1.6; }
+.container { max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 36px; font-weight: 900; letter-spacing: -1px;
+     border-bottom: 4px solid #111; padding-bottom: 12px; margin-bottom: 24px; }
+h2 { font-size: 22px; font-weight: 800; margin-top: 36px; margin-bottom: 12px;
+     background: #111; color: #f5f3ee; padding: 6px 14px; display: inline-block; }
+h3 { font-size: 16px; font-weight: 700; margin: 18px 0 8px; color: #333; }
+.score-card { display: flex; gap: 24px; align-items: stretch; margin-bottom: 20px; }
+.score-box { background: #111; color: #f5f3ee; padding: 28px 36px; border-radius: 0; }
+.score-box .num { font-size: 56px; font-weight: 900; line-height: 1; }
+.score-box .lbl { font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+                  opacity: 0.7; margin-top: 6px; }
+.grade-A\+, .grade-A { background: #d9261c; color: #fff5d9; }
+.grade-B\+, .grade-B { background: #f5b800; color: #111; }
+.grade-C, .grade-D { background: #666; color: #fff; }
+.bar { display: inline-block; height: 18px; background: #d9261c; margin-right: 8px;
+       vertical-align: middle; }
+.kv { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 12px; }
+.kv span { color: #555; font-size: 14px; }
+.kv b { color: #111; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+th, td { padding: 8px 12px; border-bottom: 1px solid #ddd; text-align: left; }
+th { background: #111; color: #f5f3ee; font-weight: 700; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.warn { background: #fff4e0; border-left: 6px solid #f5b800; padding: 12px 16px;
+        margin: 10px 0; font-size: 14px; }
+.danger { background: #ffe4e1; border-left: 6px solid #d9261c; padding: 12px 16px;
+          margin: 10px 0; font-size: 14px; }
+.section { margin-bottom: 24px; }
+.muted { color: #888; font-size: 13px; }
+.list { padding-left: 22px; }
+.list li { margin: 4px 0; font-size: 14px; }
+</style></head><body><div class="container">
+<h1>DDS 决策推演报告</h1>
+<div class="kv"><span>地块: <b>上海黄浦区</b></span><span>城市: <b>上海</b></span><span>生成时间: <b>2026-05-27T14:26:03</b></span><span class="muted">dds-agent-v2-mvp-1</span></div>
+<h2>CEO 综合评分</h2><div class="section">
+<div class="score-card">
+<div class="score-box grade-B"><div class="num">50.3</div><div class="lbl">综合评分 / 100</div></div>
+<div class="score-box"><div class="num">B</div><div class="lbl">等级</div></div>
+<div class="score-box"><div class="num">0.73</div><div class="lbl">整体置信度</div></div>
+<div class="score-box"><div class="num" style="font-size:24px;">invest</div><div class="lbl">视角</div></div>
+</div>
+<p>置信度较高，模型输入充分、内部一致。 综合得分中等，建议先补齐一级法定硬约束 + 客群校验后再决策。</p>
+<h3>分项明细</h3>
+<table><thead><tr><th>Agent</th><th class="num">原始分</th><th class="num">置信度</th><th class="num">权重</th><th class="num">贡献</th><th>条形</th></tr></thead><tbody>
+<tr><td>compliance</td><td class="num">55.0</td><td class="num">0.5</td><td class="num">0.3</td><td class="num"><b>8.25</b></td><td><span class="bar" style="width:82px;"></span></td></tr>
+<tr><td>value</td><td class="num">85.0</td><td class="num">1.0</td><td class="num">0.2</td><td class="num"><b>17.0</b></td><td><span class="bar" style="width:127px;"></span></td></tr>
+<tr><td>abm</td><td class="num">47.0</td><td class="num">1.0</td><td class="num">0.15</td><td class="num"><b>7.05</b></td><td><span class="bar" style="width:70px;"></span></td></tr>
+<tr><td>unit_mix</td><td class="num">90.0</td><td class="num">0.7</td><td class="num">0.15</td><td class="num"><b>9.45</b></td><td><span class="bar" style="width:135px;"></span></td></tr>
+<tr><td>migration</td><td class="num">76.9</td><td class="num">0.65</td><td class="num">0.1</td><td class="num"><b>5.0</b></td><td><span class="bar" style="width:115px;"></span></td></tr>
+<tr><td>blueprint</td><td class="num">60</td><td class="num">0.6</td><td class="num">0.1</td><td class="num"><b>3.6</b></td><td><span class="bar" style="width:90px;"></span></td></tr>
+</tbody></table>
+</div>
+<h2>决策摘要</h2><div class="section">
+<p><b>结论：</b>可进入投拓测算，但需先补齐一级法定硬约束后才能定最终拿地价。</p>
+<div class="kv"><span>保守: <b>52130.0</b></span><span>平衡: <b>61439.0</b></span><span>进取: <b>70748.0</b></span><span class="muted">元/㎡土地口径粗算</span></div>
+<p><b>核心机会：</b>客户目标产品为高端住宅，应优先验证低密、私密性、到达仪式感和景观资源是否能支撑溢价。</p>
+<div class="warn"><b>合规警示：</b><ul class="list">
+<li>容积率 1.2 是客户假设，尚未由出让合同或控规文件确认。</li>
+<li>缺少一级法定硬约束，当前只能输出投拓初判，不能作为最终拿地价。</li>
+</ul></div>
+</div>
+<h2>ABM 客群模拟</h2><div class="section">
+<div class="kv"><span>方法: <b>Random Utility + MNL，蒙特卡洛 N=1000</b></span><span>样本: <b>N=1000</b></span><span>平均购买率: <b>4.7%</b></span><span>置信度: <b>高</b></span></div>
+<h3>Top 客群</h3>
+<table><thead><tr><th>客群</th><th class="num">占比</th><th class="num">得分</th><th class="num">WTP p50</th><th class="num">WTP p90</th></tr></thead><tbody>
+<tr><td>金融精英</td><td class="num">45.9%</td><td class="num">7.4</td><td class="num">58324.0</td><td class="num">98646.0</td></tr>
+<tr><td>外籍海归</td><td class="num">24.0%</td><td class="num">4.2</td><td class="num">37696.0</td><td class="num">61760.0</td></tr>
+<tr><td>本地改善</td><td class="num">14.1%</td><td class="num">3.3</td><td class="num">24804.0</td><td class="num">46094.0</td></tr>
+</tbody></table>
+<h3>价格敏感性</h3>
+<table><thead><tr><th>价格变化</th><th class="num">平均购买率</th><th class="num">相对基线</th></tr></thead><tbody>
+<tr><td>-10%</td><td class="num">0.058</td><td class="num">+23.8%</td></tr>
+<tr><td>-5%</td><td class="num">0.05</td><td class="num">+6.1%</td></tr>
+<tr><td>+5%</td><td class="num">0.041</td><td class="num">-11.9%</td></tr>
+<tr><td>+10%</td><td class="num">0.041</td><td class="num">-11.3%</td></tr>
+</tbody></table>
+</div>
+<h2>户型配比（反向匹配）</h2><div class="section">
+<div class="kv"><span>方法: <b>反向匹配 v1（efu 最高户型分桶 + MNL）</b></span><span>总户数: <b>120</b></span><span>预期销售: <b>24.76 亿</b></span><span>去化预估: <b>117.9 月</b></span></div>
+<table><thead><tr><th>户型</th><th class="num">面积</th><th class="num">单价</th><th class="num">推荐套数</th><th class="num">占比</th><th>主力客群</th><th class="num">预期销售额</th></tr></thead><tbody>
+<tr><td><b>140㎡三房</b></td><td class="num">140㎡</td><td class="num">147392</td><td class="num">120</td><td class="num">100.0%</td><td>金融精英 97%, 外籍海归 3%</td><td class="num">24.76 亿</td></tr>
+<tr><td><b>180㎡大平层</b></td><td class="num">180㎡</td><td class="num">162906</td><td class="num">0</td><td class="num">0.0%</td><td>—</td><td class="num">0.00 亿</td></tr>
+<tr><td><b>220㎡商墅</b></td><td class="num">220㎡</td><td class="num">173767</td><td class="num">0</td><td class="num">0.0%</td><td>—</td><td class="num">0.00 亿</td></tr>
+</tbody></table>
+</div>
+<h2>5 年客群迁移</h2><div class="section">
+<div class="kv"><span>方法: <b>客群马尔可夫迁移 v1</b></span><span>累计退出率: <b>22.1%</b></span></div>
+<h3>关键迁移 (Y0 → Y5)</h3>
+<table><thead><tr><th>客群</th><th class="num">Y0</th><th class="num">Y5</th><th class="num">变化</th><th>趋势</th></tr></thead><tbody>
+<tr><td>外籍海归</td><td class="num">27%</td><td class="num">18%</td><td class="num" style="color:#666;font-weight:700">-9pp</td><td>下降</td></tr>
+<tr><td>本地改善</td><td class="num">20%</td><td class="num">28%</td><td class="num" style="color:#d9261c;font-weight:700">+8pp</td><td>上升</td></tr>
+<tr><td>高净值康养</td><td class="num">0%</td><td class="num">5%</td><td class="num" style="color:#d9261c;font-weight:700">+5pp</td><td>上升</td></tr>
+<tr><td>教育型买房</td><td class="num">14%</td><td class="num">10%</td><td class="num" style="color:#666;font-weight:700">-4pp</td><td>下降</td></tr>
+<tr><td>金融精英</td><td class="num">29%</td><td class="num">32%</td><td class="num" style="color:#d9261c;font-weight:700">+3pp</td><td>上升</td></tr>
+</tbody></table>
+<h3>年度分布演化</h3>
+<table><thead><tr><th>年份</th><th>Top 3 客群</th></tr></thead><tbody>
+<tr><td><b>Y0</b></td><td>金融精英 29%, 外籍海归 27%, 本地改善 20%</td></tr>
+<tr><td><b>Y1</b></td><td>金融精英 30%, 外籍海归 25%, 本地改善 22%</td></tr>
+<tr><td><b>Y2</b></td><td>金融精英 31%, 本地改善 23%, 外籍海归 23%</td></tr>
+<tr><td><b>Y3</b></td><td>金融精英 31%, 本地改善 25%, 外籍海归 21%</td></tr>
+<tr><td><b>Y4</b></td><td>金融精英 32%, 本地改善 26%, 外籍海归 19%</td></tr>
+<tr><td><b>Y5</b></td><td>金融精英 32%, 本地改善 27%, 外籍海归 18%</td></tr>
+</tbody></table>
+</div>
+</div></body></html>
