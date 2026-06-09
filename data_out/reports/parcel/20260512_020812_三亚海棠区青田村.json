@@ -1,0 +1,316 @@
+{
+  "meta": {
+    "generated_at": "2026-05-12T02:08:12",
+    "version": "parcel-report-mvp-1",
+    "data_scope": "Vault/2026新楼盘 本地四城样本"
+  },
+  "input": {
+    "city": "三亚",
+    "district": "给我三亚海棠区",
+    "address": "三亚海棠区青田村",
+    "lng": null,
+    "lat": null,
+    "radius_km": 5.0,
+    "expected_price": null,
+    "price_band": 0.15
+  },
+  "location": {
+    "lng": 109.678675,
+    "lat": 18.283274,
+    "source": "amap_geocode",
+    "formatted_addr": "海南省三亚市海棠区青田村",
+    "level": "村庄",
+    "adcode": "460202"
+  },
+  "nearby_fallback_used": false,
+  "nearby_competitors": [
+    {
+      "project_name": "新湖海棠春晓",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 100000.0,
+      "total_price_wan": null,
+      "area_range": "200-228㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "0.48",
+      "green_ratio": "40%",
+      "developer": "海南满天星旅业开发有限公司",
+      "address": "三亚海棠区海棠湾青田小学西南侧",
+      "distance_km": 0.6,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"装修交付\", \"项目在建\", \"银行\", \"小型社区\"]"
+    },
+    {
+      "project_name": "绿城·凤鸣观棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 35000.0,
+      "total_price_wan": null,
+      "area_range": "113-281㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "1.1",
+      "green_ratio": "40%",
+      "developer": "三亚棠华置业有限公司",
+      "address": "三亚海棠区海棠湾海棠湾镇麓湖路",
+      "distance_km": 3.61,
+      "property_type": "住宅",
+      "tags": "[\"第四代住宅\", \"低公摊\", \"小区会所\", \"自持物业\", \"高绿化率\"]"
+    },
+    {
+      "project_name": "国家海岸•保利海棠",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "65-88㎡",
+      "room_types": "2室户型,3室户型",
+      "floor_area_ratio": "住宅：0.4",
+      "green_ratio": "住宅：45% 别墅：45%",
+      "developer": null,
+      "address": "三亚海棠区海棠湾三亚海棠湾片区南部江林路与林旺大道交汇处（北京301医院海南分院斜对面）",
+      "distance_km": 3.68,
+      "property_type": "住宅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"旅游地产\", \"配套纯熟\"]"
+    },
+    {
+      "project_name": "华皓亚龙府",
+      "city": "三亚",
+      "district": "吉阳区",
+      "sub_district": "亚龙湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "55-215㎡",
+      "room_types": "1室户型,2室户型,3室户型,别墅户型",
+      "floor_area_ratio": "别墅：0.95 住宅：0.95",
+      "green_ratio": "别墅：70% 住宅：70%",
+      "developer": "三亚华甸养生谷开发有限公司",
+      "address": "三亚吉阳区亚龙湾东部约25公里国道223线南侧",
+      "distance_km": 3.73,
+      "property_type": "别墅",
+      "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"卧室全朝南\"]"
+    },
+    {
+      "project_name": "保利C+国际博览中心",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 65000.0,
+      "total_price_wan": null,
+      "area_range": "57-144㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "1.2",
+      "green_ratio": "30%",
+      "developer": "海南裕楚商业有限公司",
+      "address": "三亚海棠区海棠湾江林路与林旺大道交汇处（301医院西北面约800米处）",
+      "distance_km": 4.11,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"装修交付\", \"项目封顶\", \"南北通透\", \"低总价\"]"
+    },
+    {
+      "project_name": "国家海岸保利海棠二期",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "69-78㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": "0.4",
+      "green_ratio": "40%",
+      "developer": "保利（三亚）房地产开发有限公司",
+      "address": "三亚海棠区海棠湾海棠湾片区南部江林路与林旺大道交汇处（北京301医院海南分院斜对面）",
+      "distance_km": 4.15,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"大阳台\", \"装修交付\", \"南北通透\", \"旅游地产\"]"
+    },
+    {
+      "project_name": "保利海晏",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "在售",
+      "unit_price_cny": 35000.0,
+      "total_price_wan": null,
+      "area_range": "107-203㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "1.4",
+      "green_ratio": "40%",
+      "developer": "保利（三亚）房地产开发有限公司",
+      "address": "三亚海棠区海棠湾海棠湾保利国际博览中心北侧",
+      "distance_km": 4.17,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\"]"
+    },
+    {
+      "project_name": "中交海棠麓湖",
+      "city": "三亚",
+      "district": "海棠区",
+      "sub_district": "海棠湾",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": 570.0,
+      "area_range": "111-201㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "别墅：0.63 住宅：0.63",
+      "green_ratio": "别墅：40% 住宅：40%",
+      "developer": "三亚中交瀚星投资有限公司",
+      "address": "三亚海棠区海棠湾湾坡路108号",
+      "distance_km": 4.46,
+      "property_type": "别墅",
+      "tags": "[\"现房\", \"车位充足\", \"低容积\", \"装修交付\", \"学校\"]"
+    },
+    {
+      "project_name": "绿地悦澜湾·7号",
+      "city": "三亚",
+      "district": "吉阳区",
+      "sub_district": "吉阳",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "57-132㎡",
+      "room_types": "商业户型",
+      "floor_area_ratio": null,
+      "green_ratio": "30%",
+      "developer": "四川宏凌实业有限公司",
+      "address": "三亚吉阳区吉阳榆亚大道680号",
+      "distance_km": 4.63,
+      "property_type": "商业",
+      "tags": "[\"现房\", \"装修交付\", \"配套纯熟\", \"便利店\", \"银行\"]"
+    }
+  ],
+  "market_summary": {
+    "sample_count": 9,
+    "price": {
+      "avg": 58750.0,
+      "min": 35000.0,
+      "max": 100000.0,
+      "valid_count": 4
+    },
+    "sales_status": {
+      "尾盘": 5,
+      "在售": 4
+    },
+    "districts": {
+      "海棠区": 7,
+      "吉阳区": 2
+    },
+    "room_types": {
+      "商业户型": 4,
+      "2室户型": 4,
+      "3室户型": 4,
+      "4室户型": 2,
+      "别墅户型": 2,
+      "1室户型": 1
+    }
+  },
+  "amenities": {
+    "school": {
+      "label": "学校",
+      "items": [
+        {
+          "name": "三亚市海棠区青田第一幼儿园",
+          "distance": 417,
+          "address": "青田风情小镇内",
+          "type": "学校"
+        },
+        {
+          "name": "青田小学",
+          "distance": 1147,
+          "address": "海棠湾镇(林旺)",
+          "type": "学校"
+        },
+        {
+          "name": "青苗幼儿园",
+          "distance": 1259,
+          "address": "竹落岭路与水厂路交叉口北220米",
+          "type": "学校"
+        }
+      ]
+    },
+    "hospital": {
+      "label": "医院",
+      "items": [
+        {
+          "name": "上工谷运动医学康复医疗中心",
+          "distance": 138,
+          "address": "国道223海棠湾青田风情小镇北区1号运动医学康复中心",
+          "type": "医院"
+        },
+        {
+          "name": "三亚市海棠区青田社区卫生健康服务中心",
+          "distance": 201,
+          "address": "铁炉港路1号",
+          "type": "医院"
+        },
+        {
+          "name": "达仁堂国药文化馆",
+          "distance": 324,
+          "address": "青田路与铁炉路交叉口东200米",
+          "type": "医院"
+        }
+      ]
+    },
+    "subway": {
+      "label": "地铁站",
+      "items": []
+    },
+    "bus": {
+      "label": "公交站",
+      "items": [
+        {
+          "name": "上工谷(公交站)",
+          "distance": 374,
+          "address": "123路;372路",
+          "type": "公交站"
+        },
+        {
+          "name": "铁炉村(公交站)",
+          "distance": 672,
+          "address": "123路;372路",
+          "type": "公交站"
+        }
+      ]
+    },
+    "mall": {
+      "label": "商场",
+      "items": [
+        {
+          "name": "老李便利店(青田风情小镇店)",
+          "distance": 374,
+          "address": "青田风情小镇E3-26号",
+          "type": "商场"
+        },
+        {
+          "name": "贝多奔便利店",
+          "distance": 410,
+          "address": "青田风情小镇",
+          "type": "商场"
+        },
+        {
+          "name": "闯喆便利店(青田风情小镇店)",
+          "distance": 495,
+          "address": "青田风情小镇",
+          "type": "商场"
+        }
+      ]
+    },
+    "park": {
+      "label": "公园",
+      "items": []
+    },
+    "supermarket": {
+      "label": "超市",
+      "items": []
+    }
+  },
+  "price_band_competitors": null
+}
