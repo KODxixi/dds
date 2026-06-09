@@ -1,0 +1,1597 @@
+{
+  "meta": {
+    "generated_at": "2026-05-27T13:54:08",
+    "version": "parcel-report-mvp-1",
+    "data_scope": "Vault/2026年 本地四城样本",
+    "target_year": "2026"
+  },
+  "input": {
+    "city": "上海",
+    "district": "我分析2020年上海黄浦区",
+    "address": "上海黄浦区",
+    "lng": null,
+    "lat": null,
+    "radius_km": 5.0,
+    "expected_price": 35000.0,
+    "price_band": 0.15,
+    "year": null
+  },
+  "location": {
+    "lng": 121.487193,
+    "lat": 31.220485,
+    "source": "offline_proxy_match",
+    "formatted_addr": "离线代理匹配地块: 中海·顺昌玖里 (上海黄浦区淮海中路建国东路66弄)",
+    "level": "proxy",
+    "adcode": null
+  },
+  "nearby_fallback_used": false,
+  "nearby_competitors": [
+    {
+      "project_name": "中海·顺昌玖里",
+      "city": "上海",
+      "district": "黄浦区",
+      "sub_district": "淮海中路",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "151-495㎡",
+      "room_types": "3室户型,4室户型,别墅户型",
+      "floor_area_ratio": "nan",
+      "green_ratio": "nan",
+      "developer": "上海中海海华房地产有限公司",
+      "address": "上海黄浦区淮海中路建国东路66弄",
+      "distance_km": 0.0,
+      "lng": 121.487193,
+      "lat": 31.220485,
+      "property_type": "住宅",
+      "tags": "[\"内环内\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+      "open_date": "2024年11月",
+      "delivery_date": "nan",
+      "cert_dates": "[\"2024-10-29\", \"2024-06-25\", \"2024-03-15\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/d132b1faba2fa5b64b0904bf8045ba4a/275x206n.jpg",
+      "land_area_sqm": "住宅：42905m² 别墅：42905m²",
+      "building_area_sqm": "住宅：283200m² 别墅：283200m²",
+      "planned_units": "nan",
+      "parking_spaces": "nan",
+      "parking_ratio": "nan",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "nan",
+      "building_type": "{高层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"黄浦房管(2024)预字0000317号\", \"黄浦房管(2024)预字0000167号\", \"黄浦房管（2024）预字0000058号\"]",
+      "developer_brand": "中海地产",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 151.0,
+          "area_str": "151㎡"
+        },
+        {
+          "name": "三室",
+          "area": 185.0,
+          "area_str": "185㎡"
+        },
+        {
+          "name": "四室",
+          "area": 218.0,
+          "area_str": "218㎡"
+        },
+        {
+          "name": "四室",
+          "area": 245.0,
+          "area_str": "245㎡"
+        },
+        {
+          "name": "四室",
+          "area": 270.0,
+          "area_str": "270㎡"
+        },
+        {
+          "name": "四室",
+          "area": 325.0,
+          "area_str": "325㎡"
+        },
+        {
+          "name": "四室",
+          "area": 340.0,
+          "area_str": "340㎡"
+        },
+        {
+          "name": "六室",
+          "area": 495.0,
+          "area_str": "495㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "中海·恒昌玖里",
+      "city": "上海",
+      "district": "黄浦区",
+      "sub_district": "淮海中路",
+      "sales_status": "尾盘",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "199-450㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "1.27",
+      "green_ratio": "nan",
+      "developer": "上海中海海华房地产有限公司",
+      "address": "上海黄浦区淮海中路顺昌路444弄",
+      "distance_km": 0.22,
+      "lng": 121.48496014024,
+      "lat": 31.220168584679,
+      "property_type": "别墅",
+      "tags": "[\"车位充足\", \"内环内\", \"项目在建\", \"配套纯熟\", \"便利店\"]",
+      "open_date": "2024年6月26日",
+      "delivery_date": "2026年6月",
+      "cert_dates": "[\"2024-10-29\", \"2024-06-25\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/e0e724f7f7c7519fc40ee16468bd51a7/275x206n.jpg",
+      "land_area_sqm": "43763m²",
+      "building_area_sqm": "137493m²",
+      "planned_units": "137",
+      "parking_spaces": "453",
+      "parking_ratio": "1:3.31",
+      "property_company": "上海中海物业管理有限公司",
+      "property_fee": "23.5元/㎡/月",
+      "decoration": "nan",
+      "building_type": "{联排别墅}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"黄浦房管(2024)预字0000316号\", \"黄浦房管(2024)预字0000166号\"]",
+      "developer_brand": "中海地产",
+      "investor": "上海中海海华房地产有限公司",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "四室",
+          "area": 199.0,
+          "area_str": "199㎡"
+        },
+        {
+          "name": "六室",
+          "area": 450.0,
+          "area_str": "450㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "绿城黄浦ONE",
+      "city": "上海",
+      "district": "黄浦区",
+      "sub_district": "老西门",
+      "sales_status": "在售",
+      "unit_price_cny": 172000.0,
+      "total_price_wan": null,
+      "area_range": "155-193㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "nan",
+      "green_ratio": "35%",
+      "developer": "上海良康房地产开发有限公司",
+      "address": "上海黄浦区老西门南车站路8弄",
+      "distance_km": 0.9,
+      "lng": 121.496021,
+      "lat": 31.217493,
+      "property_type": "住宅",
+      "tags": "[\"装修交付\", \"内环内\", \"轨交房\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2025年12月27日",
+      "delivery_date": "nan",
+      "cert_dates": "[\"2025-10-29\", \"2025-12-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/029dcd3c7e34b7f809b4a031e9bb2d72/275x206n.jpg",
+      "land_area_sqm": "nan",
+      "building_area_sqm": "nan",
+      "planned_units": "112",
+      "parking_spaces": "nan",
+      "parking_ratio": "nan",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "带装修",
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"黄浦房管(2025)预字0000352号\", \"黄浦房管(2025)预字0000438号\"]",
+      "developer_brand": "保利集团",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 155.0,
+          "area_str": "155㎡"
+        },
+        {
+          "name": "四室",
+          "area": 193.0,
+          "area_str": "193㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "士林润园",
+      "city": "上海",
+      "district": "黄浦区",
+      "sub_district": "老西门",
+      "sales_status": "在售",
+      "unit_price_cny": null,
+      "total_price_wan": null,
+      "area_range": "220-400㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "nan",
+      "green_ratio": "nan",
+      "developer": "上海士林置业有限公司",
+      "address": "上海黄浦区老西门上海黄浦区老西门街道复兴中路与河南南路交汇处",
+      "distance_km": 1.23,
+      "lng": 121.49872622302,
+      "lat": 31.225425203518,
+      "property_type": "别墅",
+      "tags": "[\"装修交付\", \"内环内\", \"轨交房\", \"多轨交\", \"配套纯熟\"]",
+      "open_date": "2025年下半年",
+      "delivery_date": "nan",
+      "cert_dates": "[\"2025-02-14\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/03f3d26097a4802f18e9ce94c50c8112/275x206n.jpg",
+      "land_area_sqm": "28000m²",
+      "building_area_sqm": "45000m²",
+      "planned_units": "103",
+      "parking_spaces": "nan",
+      "parking_ratio": "nan",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "带装修",
+      "building_type": "{合院别墅}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"黄浦房管(2025)预字0000005号\"]",
+      "developer_brand": "nan",
+      "investor": "上海士林置业有限公司",
+      "construction_progress": "nan",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 220.0,
+          "area_str": "220㎡"
+        },
+        {
+          "name": "四室",
+          "area": 400.0,
+          "area_str": "400㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "露香园二期",
+      "city": "上海",
+      "district": "黄浦区",
+      "sub_district": "豫园",
+      "sales_status": "在售",
+      "unit_price_cny": 176000.0,
+      "total_price_wan": null,
+      "area_range": "377-882㎡",
+      "room_types": "4室户型,5室户型,别墅户型",
+      "floor_area_ratio": "住宅：3.2",
+      "green_ratio": "住宅：35% 别墅：35%",
+      "developer": "上海露香园建设发展有限公司",
+      "address": "上海黄浦区豫园露香园路89弄、大境路106弄、旧仓街99弄",
+      "distance_km": 1.3,
+      "lng": 121.49258441842,
+      "lat": 31.231258562546,
+      "property_type": "住宅",
+      "tags": "[\"内环内\", \"轨交房\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2024年11月25日",
+      "delivery_date": "nan",
+      "cert_dates": "[\"2024-06-24\", \"2024-11-13\", \"2024-02-21\", \"2024-02-21\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b6642c9f21f9d9e8be483822ceab61a7/275x206n.jpg",
+      "land_area_sqm": "住宅：158000m² 别墅：158000m²",
+      "building_area_sqm": "住宅：386000m² 别墅：386000m²",
+      "planned_units": "住宅：273 别墅：273",
+      "parking_spaces": "nan",
+      "parking_ratio": "nan",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "nan",
+      "building_type": "{高层}",
+      "tenure_years": "住宅：70年",
+      "presale_permit": "[\"黄浦房管(2024)预字0000165号\", \"黄浦房管(2024)预字0000337号\", \"黄浦房管(2024)预字0000025号\", \"黄浦房管(2024)预字0000024号\"]",
+      "developer_brand": "nan",
+      "investor": "上海露香园建设发展有限公司",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "四室",
+          "area": 377.0,
+          "area_str": "377㎡"
+        },
+        {
+          "name": "四室",
+          "area": 400.0,
+          "area_str": "400㎡"
+        },
+        {
+          "name": "六室",
+          "area": 407.94,
+          "area_str": "407.94㎡"
+        },
+        {
+          "name": "六室",
+          "area": 442.35,
+          "area_str": "442.35㎡"
+        },
+        {
+          "name": "四室",
+          "area": 491.0,
+          "area_str": "491㎡"
+        },
+        {
+          "name": "五室",
+          "area": 882.0,
+          "area_str": "882㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "绿发浦江园",
+      "city": "上海",
+      "district": "黄浦区",
+      "sub_district": "黄浦滨江",
+      "sales_status": "在售",
+      "unit_price_cny": 160000.0,
+      "total_price_wan": null,
+      "area_range": "143-195㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "nan",
+      "green_ratio": "nan",
+      "developer": "上海绿发实业投资有限公司",
+      "address": "上海黄浦区黄浦滨江半淞园路299弄",
+      "distance_km": 1.88,
+      "lng": 121.502967,
+      "lat": 31.210324,
+      "property_type": "住宅",
+      "tags": "[\"装修交付\", \"内环内\", \"轨交房\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2024年9月28日",
+      "delivery_date": "2026年12月31日",
+      "cert_dates": "[\"2024-09-14\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/be01d877982522fd4de2d2f42efecd6b/275x206n.jpg",
+      "land_area_sqm": "29795m²",
+      "building_area_sqm": "67367.41m²",
+      "planned_units": "409",
+      "parking_spaces": "nan",
+      "parking_ratio": "nan",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "带装修",
+      "building_type": "{}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"黄浦房管（2024）预备字000258\"]",
+      "developer_brand": "nan",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        },
+        {
+          "name": "三室",
+          "area": 168.0,
+          "area_str": "168㎡"
+        },
+        {
+          "name": "四室",
+          "area": 168.0,
+          "area_str": "168㎡"
+        },
+        {
+          "name": "四室",
+          "area": 195.0,
+          "area_str": "195㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "保利世博天悦",
+      "city": "上海",
+      "district": "浦东",
+      "sub_district": "浦东世博",
+      "sales_status": "在售",
+      "unit_price_cny": 180097.0,
+      "total_price_wan": null,
+      "area_range": "174-252㎡",
+      "room_types": "3室户型,4室户型,5室户型",
+      "floor_area_ratio": "2",
+      "green_ratio": "35%",
+      "developer": "上海华辕实业有限公司",
+      "address": "上海浦东浦东世博雪野路999弄",
+      "distance_km": 2.89,
+      "lng": 121.51147975702,
+      "lat": 31.204869165614,
+      "property_type": "住宅",
+      "tags": "[\"装修交付\", \"内中环\", \"轨交房\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2025年8月16日",
+      "delivery_date": "2026年4月",
+      "cert_dates": "[\"2025-08-05\", \"2024-08-07\", \"2024-08-07\", \"2025-06-03\", \"2025-04-16\", \"2025-02-10\", \"2024-12-12\", \"2024-11-07\", \"2024-04-15\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/35286f0ad873da2e1dc91a5061c6c3a5/275x206n.jpg",
+      "land_area_sqm": "83700m²",
+      "building_area_sqm": "270000m²",
+      "planned_units": "832",
+      "parking_spaces": "1763",
+      "parking_ratio": "nan",
+      "property_company": "保利物业服务股份有限公司上海分公司",
+      "property_fee": "15元/㎡/月",
+      "decoration": "带装修",
+      "building_type": "{多层,高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"浦东新区房管(2025)预字 0000221号\", \"浦东新区房管(2024)预字0000217号\", \"浦东新区房管(2024)预字 0000216号\", \"浦东新区房管(2025)预字 0000153号\", \"浦东新区房管(2025)预字 0000080号\", \"浦东新区房管(2025)预字 0000015号\", \"浦东新区房管(2024)预字0000398号\", \"浦东新区房管(2024)预字0000332号\", \"浦东新区房管(2024)预字0000090号\"]",
+      "developer_brand": "保利集团",
+      "investor": "保利",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 174.0,
+          "area_str": "174㎡"
+        },
+        {
+          "name": "三室",
+          "area": 190.0,
+          "area_str": "190㎡"
+        },
+        {
+          "name": "四室",
+          "area": 195.0,
+          "area_str": "195㎡"
+        },
+        {
+          "name": "四室",
+          "area": 205.0,
+          "area_str": "205㎡"
+        },
+        {
+          "name": "四室",
+          "area": 239.0,
+          "area_str": "239㎡"
+        },
+        {
+          "name": "五室",
+          "area": 252.0,
+          "area_str": "252㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "海玥黄浦源",
+      "city": "上海",
+      "district": "黄浦区",
+      "sub_district": "南京东路",
+      "sales_status": "在售",
+      "unit_price_cny": 145600.0,
+      "total_price_wan": null,
+      "area_range": "93-577㎡",
+      "room_types": "1室户型,3室户型,4室户型,5室户型,6室户型,别墅户型",
+      "floor_area_ratio": "nan",
+      "green_ratio": "住宅：35% 别墅：35%",
+      "developer": "上海建工九龙房产有限公司",
+      "address": "上海黄浦区南京东路新闸路456弄",
+      "distance_km": 3.08,
+      "lng": 121.471862,
+      "lat": 31.244897,
+      "property_type": "住宅",
+      "tags": "[\"装修交付\", \"内环内\", \"轨交房\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2025年4月26日",
+      "delivery_date": "2026年12月31日",
+      "cert_dates": "[\"2025-04-15\", \"2025-05-22\", \"2025-04-15\", \"2024-09-02\", \"2024-09-02\", \"2024-07-23\", \"2023-09-04\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/8ccef607e063cdc0cbf62809cde92f5a/275x206n.jpg",
+      "land_area_sqm": "nan",
+      "building_area_sqm": "住宅：182000m² 别墅：182000m²",
+      "planned_units": "住宅：558 别墅：558",
+      "parking_spaces": "住宅：824 别墅：824",
+      "parking_ratio": "nan",
+      "property_company": "第一太平戴维斯物业顾问（上海）有限公司",
+      "property_fee": "住宅：14元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"黄浦房管（2025）预字0000075号\", \"黄浦房管(2025)预字0000138号\", \"黄浦房管（2025）预字0000074号\", \"黄浦房管（2024）预字0000244号\", \"黄浦房管（2024）预字0000243号\", \"黄浦房管 (2024) 预字0000203号\", \"黄浦房管 (2023) 预字0000274号\"]",
+      "developer_brand": "上海建工",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 93.0,
+          "area_str": "93㎡"
+        },
+        {
+          "name": "一室",
+          "area": 94.0,
+          "area_str": "94㎡"
+        },
+        {
+          "name": "三室",
+          "area": 186.0,
+          "area_str": "186㎡"
+        },
+        {
+          "name": "三室",
+          "area": 190.0,
+          "area_str": "190㎡"
+        },
+        {
+          "name": "三室",
+          "area": 196.0,
+          "area_str": "196㎡"
+        },
+        {
+          "name": "三室",
+          "area": 217.0,
+          "area_str": "217㎡"
+        },
+        {
+          "name": "三室",
+          "area": 233.0,
+          "area_str": "233㎡"
+        },
+        {
+          "name": "三室",
+          "area": 237.0,
+          "area_str": "237㎡"
+        },
+        {
+          "name": "四室",
+          "area": 275.0,
+          "area_str": "275㎡"
+        },
+        {
+          "name": "四室",
+          "area": 280.0,
+          "area_str": "280㎡"
+        },
+        {
+          "name": "四室",
+          "area": 281.0,
+          "area_str": "281㎡"
+        },
+        {
+          "name": "五室",
+          "area": 301.0,
+          "area_str": "301㎡"
+        },
+        {
+          "name": "四室",
+          "area": 330.0,
+          "area_str": "330㎡"
+        },
+        {
+          "name": "五室",
+          "area": 389.0,
+          "area_str": "389㎡"
+        },
+        {
+          "name": "四室",
+          "area": 408.0,
+          "area_str": "408㎡"
+        },
+        {
+          "name": "六室",
+          "area": 577.0,
+          "area_str": "577㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "湾上Domus",
+      "city": "上海",
+      "district": "静安区",
+      "sub_district": "西藏北路",
+      "sales_status": "在售",
+      "unit_price_cny": 134600.0,
+      "total_price_wan": null,
+      "area_range": "138-248㎡",
+      "room_types": "3室户型,4室户型",
+      "floor_area_ratio": "住宅：4.05",
+      "green_ratio": "nan",
+      "developer": "上海晟诺置业有限公司",
+      "address": "上海静安区西藏北路天目中路88弄",
+      "distance_km": 3.65,
+      "lng": 121.48059895682,
+      "lat": 31.252805735833,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"装修交付\", \"内环内\", \"轨交房\", \"厨卫全明\"]",
+      "open_date": "2024年10月30日",
+      "delivery_date": "2026年12月31日",
+      "cert_dates": "[\"2024-10-17\", \"2024-07-25\", \"2024-05-16\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/05385ba3fa899ddcb5dad790e99a8b2f/275x206n.jpg",
+      "land_area_sqm": "住宅：52015.5m² 别墅：52015.5m²",
+      "building_area_sqm": "住宅：551391.68m² 别墅：551391.68m²",
+      "planned_units": "住宅：576 别墅：576",
+      "parking_spaces": "住宅：1186 别墅：1186",
+      "parking_ratio": "住宅：1:1.73 别墅：1:1.73",
+      "property_company": "上海集坤物业管理有限公司",
+      "property_fee": "住宅：14.8元/㎡/月 别墅：20.8元/㎡/月",
+      "decoration": "住宅：带装修 别墅：带装修",
+      "building_type": "{超高层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"静安房管（2024）预字0000299号\", \"静安房管（2024）预字0000204号\", \"静安房管（2024）预字0000118号\"]",
+      "developer_brand": "龙盛置业",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 138.0,
+          "area_str": "138㎡"
+        },
+        {
+          "name": "三室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        },
+        {
+          "name": "三室",
+          "area": 155.0,
+          "area_str": "155㎡"
+        },
+        {
+          "name": "三室",
+          "area": 188.0,
+          "area_str": "188㎡"
+        },
+        {
+          "name": "三室",
+          "area": 194.0,
+          "area_str": "194㎡"
+        },
+        {
+          "name": "三室",
+          "area": 198.0,
+          "area_str": "198㎡"
+        },
+        {
+          "name": "三室",
+          "area": 209.0,
+          "area_str": "209㎡"
+        },
+        {
+          "name": "四室",
+          "area": 248.0,
+          "area_str": "248㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "昌平云岸",
+      "city": "上海",
+      "district": "静安区",
+      "sub_district": "南京西路",
+      "sales_status": "在售",
+      "unit_price_cny": 145000.0,
+      "total_price_wan": null,
+      "area_range": "94-196㎡",
+      "room_types": "1室户型,2室户型,3室户型,4室户型",
+      "floor_area_ratio": "nan",
+      "green_ratio": "nan",
+      "developer": "上海中远泰兴置业有限公司",
+      "address": "上海静安区南京西路昌平路99弄",
+      "distance_km": 3.76,
+      "lng": 121.458728,
+      "lat": 31.244005,
+      "property_type": "住宅",
+      "tags": "[\"内环内\", \"轨交房\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2024年6月24日",
+      "delivery_date": "2026年",
+      "cert_dates": "[\"2024-06-11\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3ddc6c84042d74b86fee4d032d5f3b57/275x206n.jpg",
+      "land_area_sqm": "nan",
+      "building_area_sqm": "nan",
+      "planned_units": "nan",
+      "parking_spaces": "nan",
+      "parking_ratio": "nan",
+      "property_company": "上海古北物业（集团）有限公司",
+      "property_fee": "14.28元/㎡/月",
+      "decoration": "nan",
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"静安房管（2024）预字0000147号\"]",
+      "developer_brand": "nan",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 94.0,
+          "area_str": "94㎡"
+        },
+        {
+          "name": "二室",
+          "area": 103.0,
+          "area_str": "103㎡"
+        },
+        {
+          "name": "二室",
+          "area": 112.0,
+          "area_str": "112㎡"
+        },
+        {
+          "name": "三室",
+          "area": 147.0,
+          "area_str": "147㎡"
+        },
+        {
+          "name": "三室",
+          "area": 148.0,
+          "area_str": "148㎡"
+        },
+        {
+          "name": "三室",
+          "area": 153.0,
+          "area_str": "153㎡"
+        },
+        {
+          "name": "四室",
+          "area": 165.0,
+          "area_str": "165㎡"
+        },
+        {
+          "name": "四室",
+          "area": 168.0,
+          "area_str": "168㎡"
+        },
+        {
+          "name": "四室",
+          "area": 175.0,
+          "area_str": "175㎡"
+        },
+        {
+          "name": "四室",
+          "area": 182.0,
+          "area_str": "182㎡"
+        },
+        {
+          "name": "四室",
+          "area": 193.0,
+          "area_str": "193㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "香港置地启元",
+      "city": "上海",
+      "district": "徐汇区",
+      "sub_district": "龙华",
+      "sales_status": "尾盘",
+      "unit_price_cny": 178000.0,
+      "total_price_wan": null,
+      "area_range": "277-547㎡",
+      "room_types": "4室户型,5室户型",
+      "floor_area_ratio": "2.5",
+      "green_ratio": "35%",
+      "developer": "上海浦辰置业有限公司",
+      "address": "上海徐汇区龙华大木桥路789弄、大木桥路889弄",
+      "distance_km": 3.92,
+      "lng": 121.46965503634,
+      "lat": 31.188622016748,
+      "property_type": "住宅",
+      "tags": "[\"装修交付\", \"内中环\", \"南北通透\", \"项目在建\", \"一房一价\"]",
+      "open_date": "2024年4月29日",
+      "delivery_date": "nan",
+      "cert_dates": "[\"2024-04-12\", \"2024-04-12\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/31769ebd8a40e2d548e84f29849f392e/275x206n.jpg",
+      "land_area_sqm": "28800m²",
+      "building_area_sqm": "102200m²",
+      "planned_units": "76",
+      "parking_spaces": "nan",
+      "parking_ratio": "nan",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "带装修",
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"徐汇房管(2024)预字0000085号\", \"徐汇房管(2024)预字0000086号\"]",
+      "developer_brand": "nan",
+      "investor": "上海怡兴企业发展有限公司",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "四室",
+          "area": 277.0,
+          "area_str": "277㎡"
+        },
+        {
+          "name": "四室",
+          "area": 323.0,
+          "area_str": "323㎡"
+        },
+        {
+          "name": "五室",
+          "area": 477.0,
+          "area_str": "477㎡"
+        },
+        {
+          "name": "五室",
+          "area": 547.0,
+          "area_str": "547㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "静安玺樾",
+      "city": "上海",
+      "district": "静安区",
+      "sub_district": "西藏北路",
+      "sales_status": "在售",
+      "unit_price_cny": 124191.0,
+      "total_price_wan": null,
+      "area_range": "94-165㎡",
+      "room_types": "2室户型,3室户型,4室户型",
+      "floor_area_ratio": "3.05",
+      "green_ratio": "35%",
+      "developer": "上海静安城市更新投资发展有限公司",
+      "address": "上海静安区西藏北路中华新路475弄",
+      "distance_km": 4.64,
+      "lng": 121.472105,
+      "lat": 31.260151,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"内环内\", \"轨交房\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2025年9月17日",
+      "delivery_date": "2026年6月",
+      "cert_dates": "[\"2025-09-03\", \"2024-11-04\", \"2024-04-25\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/ad3b13636727ba50e81920fc3399f05b/275x206n.jpg",
+      "land_area_sqm": "31352.4m²",
+      "building_area_sqm": "97398.6m²",
+      "planned_units": "926",
+      "parking_spaces": "1130",
+      "parking_ratio": "1:1.22",
+      "property_company": "上海万科物业服务有限公司",
+      "property_fee": "9.8元/㎡/月",
+      "decoration": "nan",
+      "building_type": "{高层}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"静安房管(2025)预字0000262号\", \"静安房管(2024)预字0000325号\", \"静安房管（2024）预字0000098号\"]",
+      "developer_brand": "nan",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "二室",
+          "area": 94.0,
+          "area_str": "94㎡"
+        },
+        {
+          "name": "二室",
+          "area": 98.0,
+          "area_str": "98㎡"
+        },
+        {
+          "name": "三室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "二室",
+          "area": 103.0,
+          "area_str": "103㎡"
+        },
+        {
+          "name": "三室",
+          "area": 104.0,
+          "area_str": "104㎡"
+        },
+        {
+          "name": "三室",
+          "area": 122.0,
+          "area_str": "122㎡"
+        },
+        {
+          "name": "三室",
+          "area": 134.0,
+          "area_str": "134㎡"
+        },
+        {
+          "name": "四室",
+          "area": 165.0,
+          "area_str": "165㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "信安里·忻园",
+      "city": "上海",
+      "district": "静安区",
+      "sub_district": "曹家渡",
+      "sales_status": "在售",
+      "unit_price_cny": 136000.0,
+      "total_price_wan": null,
+      "area_range": "90-541㎡",
+      "room_types": "1室户型,2室户型,别墅户型",
+      "floor_area_ratio": "住宅：2.5",
+      "green_ratio": "nan",
+      "developer": "上海信瓴置业有限公司",
+      "address": "上海静安区曹家渡康定路1399弄",
+      "distance_km": 4.82,
+      "lng": 121.439765,
+      "lat": 31.235882,
+      "property_type": "住宅",
+      "tags": "[\"内环内\", \"轨交房\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2024年12月8日",
+      "delivery_date": "2026年12月",
+      "cert_dates": "[\"2024-12-06\", \"2024-11-21\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/7bb5192a6b49130a8af79291112ab2a3/275x206n.jpg",
+      "land_area_sqm": "住宅：10348.1m² 别墅：10348.1m²",
+      "building_area_sqm": "住宅：27054.13m² 别墅：27054.13m²",
+      "planned_units": "住宅：167 别墅：171",
+      "parking_spaces": "nan",
+      "parking_ratio": "nan",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "nan",
+      "building_type": "{}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"静安房管(2024)预字0000378号\", \"静安房管（2024）预字0000354号\"]",
+      "developer_brand": "信达地产",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：暂无数据",
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 90.0,
+          "area_str": "90㎡"
+        },
+        {
+          "name": "二室",
+          "area": 100.0,
+          "area_str": "100㎡"
+        },
+        {
+          "name": "三室",
+          "area": 275.0,
+          "area_str": "275㎡"
+        },
+        {
+          "name": "五室",
+          "area": 367.0,
+          "area_str": "367㎡"
+        },
+        {
+          "name": "六室",
+          "area": 463.0,
+          "area_str": "463㎡"
+        },
+        {
+          "name": "七室",
+          "area": 541.0,
+          "area_str": "541㎡"
+        }
+      ]
+    }
+  ],
+  "market_summary": {
+    "sample_count": 13,
+    "price": {
+      "avg": 155149.0,
+      "min": 124191.0,
+      "max": 180097.0,
+      "valid_count": 10
+    },
+    "sales_status": {
+      "在售": 10,
+      "尾盘": 3
+    },
+    "districts": {
+      "黄浦区": 7,
+      "静安区": 4,
+      "浦东": 1,
+      "徐汇区": 1
+    },
+    "room_types": {
+      "4室户型": 10,
+      "3室户型": 8,
+      "别墅户型": 6,
+      "5室户型": 4,
+      "1室户型": 3,
+      "2室户型": 3,
+      "6室户型": 1
+    }
+  },
+  "amenities": {
+    "school": {
+      "label": "学校",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "hospital": {
+      "label": "医院",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "subway": {
+      "label": "地铁站",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "bus": {
+      "label": "公交站",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "mall": {
+      "label": "商场",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "park": {
+      "label": "公园",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "supermarket": {
+      "label": "超市",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    }
+  },
+  "price_band_competitors": {
+    "expected_price": 35000.0,
+    "low": 29750.0,
+    "high": 40250.0,
+    "price_band": 0.15,
+    "sample_scope": "本地四城样本：三亚、杭州、上海、青岛",
+    "city_distribution": {
+      "三亚": 10,
+      "杭州": 10,
+      "上海": 7,
+      "青岛": 3
+    },
+    "district_distribution": {
+      "吉阳区": 5,
+      "西湖区": 3,
+      "海棠区": 2,
+      "临平区": 2,
+      "萧山区": 2,
+      "崂山区": 2,
+      "浦东": 2,
+      "钱塘区": 2,
+      "陵水": 2,
+      "青浦区": 2
+    },
+    "items": [
+      {
+        "project_name": "国锐亚沙村",
+        "city": "三亚",
+        "district": "吉阳区",
+        "sub_district": "抱坡路",
+        "sales_status": "在售",
+        "unit_price_cny": 35000.0,
+        "area_range": "101-143㎡",
+        "room_types": "2室户型,3室户型",
+        "developer": "三亚国奥体育产业园一区投资有限公司",
+        "address": "三亚吉阳区抱坡路新城国际体育产业园东区",
+        "property_type": "住宅",
+        "tags": "[\"高绿化率\", \"装修交付\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+        "price_delta_abs": 0.0,
+        "open_date": "2025年1月1日",
+        "delivery_date": "2026年12月30日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/8abe4bd3f6f6d8c2161b8d994cc93d27/275x206n.jpg"
+      },
+      {
+        "project_name": "保利海晏",
+        "city": "三亚",
+        "district": "海棠区",
+        "sub_district": "海棠湾",
+        "sales_status": "在售",
+        "unit_price_cny": 35000.0,
+        "area_range": "107-203㎡",
+        "room_types": "2室户型,3室户型,4室户型",
+        "developer": "保利（三亚）房地产开发有限公司",
+        "address": "三亚海棠区海棠湾海棠湾保利国际博览中心北侧",
+        "property_type": "住宅",
+        "tags": "[\"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\"]",
+        "price_delta_abs": 0.0,
+        "open_date": "2024年10月1日",
+        "delivery_date": "2026年3月30日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/d8ba0f12d68a29e57ab15b0adf0163fa/275x206n.jpg"
+      },
+      {
+        "project_name": "绿城·凤鸣观棠",
+        "city": "三亚",
+        "district": "海棠区",
+        "sub_district": "海棠湾",
+        "sales_status": "在售",
+        "unit_price_cny": 35000.0,
+        "area_range": "113-281㎡",
+        "room_types": "2室户型,3室户型,4室户型",
+        "developer": "三亚棠华置业有限公司",
+        "address": "三亚海棠区海棠湾海棠湾镇麓湖路",
+        "property_type": "住宅",
+        "tags": "[\"第四代住宅\", \"低公摊\", \"小区会所\", \"自持物业\", \"高绿化率\"]",
+        "price_delta_abs": 0.0,
+        "open_date": "nan",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/2fd9fd6a5262b229b194d9b95cc4c3f4/275x206n.jpg"
+      },
+      {
+        "project_name": "深嘉上府",
+        "city": "上海",
+        "district": "嘉定区",
+        "sub_district": "安亭",
+        "sales_status": "在售",
+        "unit_price_cny": 34650.0,
+        "area_range": "88-99㎡",
+        "room_types": "3室户型",
+        "developer": "上海深业科能建设有限公司",
+        "address": "上海嘉定区安亭曹安公路4859弄1-18号",
+        "property_type": "住宅",
+        "tags": "[\"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\", \"外郊环\"]",
+        "price_delta_abs": 350.0,
+        "open_date": "2026年3月29日",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/d45cfeee1042760dc7c74b6a47b97d64/275x206n.jpg"
+      },
+      {
+        "project_name": "云树望山院",
+        "city": "杭州",
+        "district": "西湖区",
+        "sub_district": "之江",
+        "sales_status": "在售",
+        "unit_price_cny": 35400.0,
+        "area_range": "248-360㎡",
+        "room_types": "3室户型,4室户型,别墅户型",
+        "developer": "杭州晨悦房地产开发有限公司",
+        "address": "杭州西湖区之江创意路艺创小镇凤凰创意国际西侧",
+        "property_type": "住宅",
+        "tags": "[\"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+        "price_delta_abs": 400.0,
+        "open_date": "2024年10月28日",
+        "delivery_date": "2026年6月30日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3ec4fe778604b31fa28ccb2dd97bcd7f/275x206n.jpg"
+      },
+      {
+        "project_name": "天和·尚海荟庭",
+        "city": "上海",
+        "district": "奉贤区",
+        "sub_district": "金汇",
+        "sales_status": "在售",
+        "unit_price_cny": 35888.0,
+        "area_range": "68-119㎡",
+        "room_types": "1室户型,3室户型,4室户型",
+        "developer": "上海好越开发建设有限公司",
+        "address": "上海奉贤区金汇大叶公路浦星公路口（浦星公路与大叶公路交汇处）",
+        "property_type": "住宅",
+        "tags": "[\"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\", \"外郊环\"]",
+        "price_delta_abs": 888.0,
+        "open_date": "2025年10月18日",
+        "delivery_date": "2026年",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/4fb8d92ece2f1e16aa83a0c44f01dd1c/275x206n.jpg"
+      },
+      {
+        "project_name": "春曼雅庐",
+        "city": "杭州",
+        "district": "临平区",
+        "sub_district": "乔司",
+        "sales_status": "尾盘",
+        "unit_price_cny": 34000.0,
+        "area_range": "176-270㎡",
+        "room_types": "4室户型,5室户型,别墅户型",
+        "developer": "杭州滨意房地产开发有限公司",
+        "address": "杭州临平区乔司乔莫西路与南街交叉口",
+        "property_type": "住宅",
+        "tags": "[\"车位充足\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 1000.0,
+        "open_date": "2024年4月28日",
+        "delivery_date": "2026年4月",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/ed5650c1fd29b23645173203d19790e4/275x206n.jpg"
+      },
+      {
+        "project_name": "绿城凤咏朝阳",
+        "city": "杭州",
+        "district": "拱墅区",
+        "sub_district": "东新",
+        "sales_status": "在售",
+        "unit_price_cny": 36000.0,
+        "area_range": "nan",
+        "room_types": "nan",
+        "developer": "杭州合品置业有限公司",
+        "address": "杭州拱墅区东新东新路与新天地街交叉口",
+        "property_type": "商业",
+        "tags": "[\"车位充足\", \"装修交付\", \"轨交房\", \"多轨交\", \"配套纯熟\"]",
+        "price_delta_abs": 1000.0,
+        "open_date": "2025年3月22日",
+        "delivery_date": "2026年12月31日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/f8ade6adc1e368e33855ad9b347a6b7d/275x206n.jpg"
+      },
+      {
+        "project_name": "中海璞翠云集",
+        "city": "杭州",
+        "district": "萧山区",
+        "sub_district": "市北",
+        "sales_status": "在售",
+        "unit_price_cny": 34000.0,
+        "area_range": "110-156㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州海睿房地产有限公司",
+        "address": "杭州萧山区市北建设二路与万向路交汇处",
+        "property_type": "住宅",
+        "tags": "[\"大阳台\", \"车位充足\", \"装修交付\", \"厨卫全明\", \"三房朝南\"]",
+        "price_delta_abs": 1000.0,
+        "open_date": "2025年2月25日",
+        "delivery_date": "2026年5月31日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/6410a3f4d76810c0a504ecfffaa58b92/275x206n.jpg"
+      },
+      {
+        "project_name": "君一·海尚府",
+        "city": "青岛",
+        "district": "崂山区",
+        "sub_district": "海尔路",
+        "sales_status": "在售",
+        "unit_price_cny": 34000.0,
+        "area_range": "118-348㎡",
+        "room_types": "3室户型,4室户型,5室户型",
+        "developer": "青岛海云创智商业发展有限公司",
+        "address": "青岛崂山区海尔路海尔路1号",
+        "property_type": "住宅",
+        "tags": "[\"大阳台\", \"装修交付\", \"轨交房\", \"厨卫全明\", \"三房朝南\"]",
+        "price_delta_abs": 1000.0,
+        "open_date": "2021年11月",
+        "delivery_date": "2026年4月30日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/7ee6bb151ffc9170186a5d49c602d3b0/275x206n.jpg"
+      },
+      {
+        "project_name": "建发·朗玥",
+        "city": "上海",
+        "district": "金山区",
+        "sub_district": "金山新城",
+        "sales_status": "在售",
+        "unit_price_cny": 33385.0,
+        "area_range": "97-203㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "上海兆玖房地产开发有限公司",
+        "address": "上海金山区金山新城龙堰路866弄",
+        "property_type": "住宅",
+        "tags": "[\"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+        "price_delta_abs": 1615.0,
+        "open_date": "2025年12月31日",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/ef670865cf01030053068bd8ad2a02b4/275x206n.jpg"
+      },
+      {
+        "project_name": "凤凰水城",
+        "city": "三亚",
+        "district": "天涯区",
+        "sub_district": "三亚湾",
+        "sales_status": "在售",
+        "unit_price_cny": 33000.0,
+        "area_range": "101-175㎡",
+        "room_types": "3室户型,4室户型,别墅户型",
+        "developer": "三亚凤凰新城实业有限公司",
+        "address": "三亚天涯区三亚湾水城路与育林新路交汇处",
+        "property_type": "住宅",
+        "tags": "[\"高绿化率\", \"低容积\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 2000.0,
+        "open_date": "2025年1月3日",
+        "delivery_date": "2026年7月30日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/5af993ce572951d596b5cb39d1275b85/275x206n.jpg"
+      },
+      {
+        "project_name": "上实·听海",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "临港新城",
+        "sales_status": "在售",
+        "unit_price_cny": 32908.0,
+        "area_range": "100-144㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "上海城浩置业有限公司",
+        "address": "上海浦东临港新城木莲路333弄",
+        "property_type": "住宅",
+        "tags": "[\"项目竣工\", \"车位充足\", \"装修交付\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 2092.0,
+        "open_date": "2026年1月下旬",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/189d1694bd6d06abb24d2b998c476d76/275x206n.jpg"
+      },
+      {
+        "project_name": "建发云启之江",
+        "city": "杭州",
+        "district": "西湖区",
+        "sub_district": "之江",
+        "sales_status": "尾盘",
+        "unit_price_cny": 37482.0,
+        "area_range": "103-229㎡",
+        "room_types": "3室户型,4室户型,5室户型",
+        "developer": "杭州启坤置业有限公司,杭州启原置业有限公司",
+        "address": "杭州西湖区之江地铁6号线枫桦西路站C1口",
+        "property_type": "住宅",
+        "tags": "[\"大阳台\", \"装修交付\", \"厨卫全明\", \"三房朝南\", \"南北通透\"]",
+        "price_delta_abs": 2482.0,
+        "open_date": "2023年12月",
+        "delivery_date": "2026年6月",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b3ebefa401c61a26eec5eb2ae86ffb53/275x206n.jpg"
+      },
+      {
+        "project_name": "万科·嘉澜地",
+        "city": "三亚",
+        "district": "吉阳区",
+        "sub_district": "河东",
+        "sales_status": "在售",
+        "unit_price_cny": 32000.0,
+        "area_range": "132-240㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "三亚鹿鸣佳苑开发建设有限公司",
+        "address": "三亚吉阳区河东临春城市更新门户(新风街302号）",
+        "property_type": "住宅",
+        "tags": "[\"第四代住宅\", \"高绿化率\", \"厨卫全明\", \"南北通透\", \"配套纯熟\"]",
+        "price_delta_abs": 3000.0,
+        "open_date": "2026年2月13日",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/52cc5c46d2efaffdd79c91b339f5288d/275x206n.jpg"
+      },
+      {
+        "project_name": "悦菩提",
+        "city": "三亚",
+        "district": "吉阳区",
+        "sub_district": "吉阳",
+        "sales_status": "在售",
+        "unit_price_cny": 32000.0,
+        "area_range": "62-150㎡",
+        "room_types": "2室户型,3室户型,4室户型",
+        "developer": "三亚大兴春光投资有限公司",
+        "address": "三亚吉阳区吉阳南新农场师部农场路333号",
+        "property_type": "住宅",
+        "tags": "[\"高绿化率\", \"装修交付\", \"项目封顶\", \"厨卫全明\", \"南北通透\"]",
+        "price_delta_abs": 3000.0,
+        "open_date": "2021年10月1日",
+        "delivery_date": "2026年12月30日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/0871e18492ef036c0144cc50888fe2fb/275x206n.jpg"
+      },
+      {
+        "project_name": "保利天珺",
+        "city": "三亚",
+        "district": "吉阳区",
+        "sub_district": "吉阳",
+        "sales_status": "在售",
+        "unit_price_cny": 32000.0,
+        "area_range": "113-238㎡",
+        "room_types": "3室户型,4室户型,5室户型",
+        "developer": "三亚保荣投资发展有限公司,三亚保岭投资发展有限公司,三亚保瑞实业发展有限公司,海南鸿瓴置业有限公司",
+        "address": "三亚吉阳区吉阳月川中路南侧",
+        "property_type": "住宅",
+        "tags": "[\"高绿化率\", \"装修交付\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+        "price_delta_abs": 3000.0,
+        "open_date": "nan",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic6.ajkimg.com/mat/7b4707ffd7231478b89ae1b5d3f4eb21?imageMogr2/thumbnail/275x206"
+      },
+      {
+        "project_name": "海映江湾",
+        "city": "三亚",
+        "district": "吉阳区",
+        "sub_district": "河东",
+        "sales_status": "在售",
+        "unit_price_cny": 38000.0,
+        "area_range": "62-144㎡",
+        "room_types": "2室户型,3室户型,4室户型",
+        "developer": "海南东朋祥泰房地产开发有限公司",
+        "address": "三亚吉阳区河东298号",
+        "property_type": "住宅",
+        "tags": "[\"高绿化率\", \"配套纯熟\", \"银行\", \"学校\", \"医院\"]",
+        "price_delta_abs": 3000.0,
+        "open_date": "2024年12月17日",
+        "delivery_date": "2026年6月30日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/eca1d1b48cf9b3b8481c397d2b9b9e3e/275x206n.jpg"
+      },
+      {
+        "project_name": "凯德璟高府",
+        "city": "杭州",
+        "district": "钱塘区",
+        "sub_district": "金沙湖",
+        "sales_status": "在售",
+        "unit_price_cny": 38300.0,
+        "area_range": "106-169㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州前潮房地产开发有限公司",
+        "address": "杭州钱塘区金沙湖万华弄8号",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"项目竣工\", \"车位充足\", \"装修交付\", \"轨交房\"]",
+        "price_delta_abs": 3300.0,
+        "open_date": "2023年12月6日",
+        "delivery_date": "2026年1月11日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/9acf7d283a32002632970453d9abd51a/275x206n.jpg"
+      },
+      {
+        "project_name": "保利天珺商铺",
+        "city": "青岛",
+        "district": "市北区",
+        "sub_district": "新都心",
+        "sales_status": "在售",
+        "unit_price_cny": 31680.0,
+        "area_range": "43-142㎡",
+        "room_types": "nan",
+        "developer": "青岛利盛置业有限公司",
+        "address": "青岛市北区新都心市北区台柳路267号",
+        "property_type": "临街店铺",
+        "tags": "[\"项目竣工\", \"轨交房\", \"配套纯熟\", \"便利店\", \"银行\"]",
+        "price_delta_abs": 3320.0,
+        "open_date": "2022年12月30日",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/310d26c2e9a449faa7089aa4817b2423/275x206n.jpg"
+      },
+      {
+        "project_name": "杭铁·和映云筑",
+        "city": "杭州",
+        "district": "西湖区",
+        "sub_district": "留下",
+        "sales_status": "在售",
+        "unit_price_cny": 31440.0,
+        "area_range": "115-180㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州西锦置业有限公司",
+        "address": "杭州西湖区留下地铁3号线小和山站东侧",
+        "property_type": "住宅",
+        "tags": "[\"大阳台\", \"车位充足\", \"低容积\", \"装修交付\", \"轨交房\"]",
+        "price_delta_abs": 3560.0,
+        "open_date": "2024年4月13日",
+        "delivery_date": "2026年5月",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/66bc04f5e299b9e5668bc34f00d39b91/275x206n.jpg"
+      },
+      {
+        "project_name": "兴耀沐晴川",
+        "city": "杭州",
+        "district": "钱塘区",
+        "sub_district": "金沙湖",
+        "sales_status": "尾盘",
+        "unit_price_cny": 31345.0,
+        "area_range": "105-138㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州星淞置业有限公司",
+        "address": "杭州钱塘区金沙湖下沙路与宜学路交叉口",
+        "property_type": "住宅",
+        "tags": "[\"大阳台\", \"车位充足\", \"装修交付\", \"厨卫全明\", \"三房朝南\"]",
+        "price_delta_abs": 3655.0,
+        "open_date": "2024年11月3日",
+        "delivery_date": "2026年8月",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/5e0c6f380a8bbd24da59c5081fe2b3af/275x206n.jpg"
+      },
+      {
+        "project_name": "招商蛇口璀璨映澜",
+        "city": "杭州",
+        "district": "临平区",
+        "sub_district": "乔司",
+        "sales_status": "在售",
+        "unit_price_cny": 30711.0,
+        "area_range": "99-128㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州北桦房地产开发有限公司",
+        "address": "杭州临平区乔司永玄路与育鑫路交叉口",
+        "property_type": "住宅",
+        "tags": "[\"大阳台\", \"车位充足\", \"低容积\", \"装修交付\", \"轨交房\"]",
+        "price_delta_abs": 4289.0,
+        "open_date": "2025年3月4日",
+        "delivery_date": "2026年12月31日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/851f83763890371a1e29762b28f702cd/275x206n.jpg"
+      },
+      {
+        "project_name": "未来港·元启",
+        "city": "上海",
+        "district": "浦东",
+        "sub_district": "临港新城",
+        "sales_status": "在售",
+        "unit_price_cny": 30046.0,
+        "area_range": "68-310㎡",
+        "room_types": "2室户型,3室户型,4室户型,5室户型",
+        "developer": "上海云瑆经济发展有限公司",
+        "address": "上海浦东临港新城香柏路2666弄、香柏路2888弄",
+        "property_type": "住宅",
+        "tags": "[\"装修交付\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"项目在建\"]",
+        "price_delta_abs": 4954.0,
+        "open_date": "2025年4月22日",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/d3cd5d38ee8f8fad6e8a5762ed973ed6/275x206n.jpg"
+      },
+      {
+        "project_name": "滨江翠栖府",
+        "city": "杭州",
+        "district": "萧山区",
+        "sub_district": "南站新城",
+        "sales_status": "在售",
+        "unit_price_cny": 30020.0,
+        "area_range": "97-139㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "杭州滨惠房地产开发有限公司",
+        "address": "杭州萧山区南站新城彩虹大道旁5号线姑娘桥站地铁口",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"项目竣工\", \"大阳台\", \"车位充足\", \"低容积\"]",
+        "price_delta_abs": 4980.0,
+        "open_date": "2025年3月7日",
+        "delivery_date": "2026年1月1日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/3057a246cd17ecd4f96421ae4b8a5a58/275x206n.jpg"
+      },
+      {
+        "project_name": "香水湾18°院",
+        "city": "三亚",
+        "district": "陵水",
+        "sub_district": "香水湾",
+        "sales_status": "在售",
+        "unit_price_cny": 40000.0,
+        "area_range": "124-176㎡",
+        "room_types": "2室户型,3室户型",
+        "developer": "海南盈新文化旅游发展有限公司",
+        "address": "三亚陵水香水湾坡镇铜岭村旅游开发区（A区）",
+        "property_type": "住宅",
+        "tags": "[\"高绿化率\", \"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+        "price_delta_abs": 5000.0,
+        "open_date": "2026年上半年",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/455984018a545b050061f34c52d8020b/275x206n.jpg"
+      },
+      {
+        "project_name": "绿城蓝湾小镇",
+        "city": "三亚",
+        "district": "陵水",
+        "sub_district": "清水湾",
+        "sales_status": "在售",
+        "unit_price_cny": 30000.0,
+        "area_range": "53-1000㎡",
+        "room_types": "1室户型,2室户型,3室户型,4室户型,5室户型,别墅户型",
+        "developer": "海南绿城高地投资有限公司",
+        "address": "三亚陵水清水湾清水湾大道",
+        "property_type": "住宅",
+        "tags": "[\"现房\", \"车位充足\", \"高绿化率\", \"低容积\", \"装修交付\"]",
+        "price_delta_abs": 5000.0,
+        "open_date": "2025年1月30日",
+        "delivery_date": "2026年2月10日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/513780a93e59aa41fcc438ba9544311d/275x206n.jpg"
+      },
+      {
+        "project_name": "海信璟悦",
+        "city": "青岛",
+        "district": "崂山区",
+        "sub_district": "张村河",
+        "sales_status": "在售",
+        "unit_price_cny": 40000.0,
+        "area_range": "128-220㎡",
+        "room_types": "3室户型,4室户型",
+        "developer": "青岛海信信邦置业有限公司",
+        "address": "青岛崂山区张村河瑶海路9号",
+        "property_type": "住宅",
+        "tags": "[\"项目封顶\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\", \"一房一价\"]",
+        "price_delta_abs": 5000.0,
+        "open_date": "2024年3月30日",
+        "delivery_date": "2026年7月30日",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/df89e2963623aa301be539892469eafb/275x206n.jpg"
+      },
+      {
+        "project_name": "淀湖山庄",
+        "city": "上海",
+        "district": "青浦区",
+        "sub_district": "朱家角",
+        "sales_status": "在售",
+        "unit_price_cny": 29983.0,
+        "area_range": "nan",
+        "room_types": "nan",
+        "developer": "上海久凯房地产开发有限公司",
+        "address": "上海青浦区朱家角河畔路258弄",
+        "property_type": "住宅",
+        "tags": "[\"项目竣工\", \"低容积\", \"郊环外\", \"配套纯熟\", \"便利店\"]",
+        "price_delta_abs": 5017.0,
+        "open_date": "2025年5月16日",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/80c2ab8b5dfddbfb869ff134a971419a/275x206n.jpg"
+      },
+      {
+        "project_name": "恒文璞悦江南",
+        "city": "上海",
+        "district": "青浦区",
+        "sub_district": "朱家角",
+        "sales_status": "在售",
+        "unit_price_cny": 40052.0,
+        "area_range": "88-145㎡",
+        "room_types": "3室户型,别墅户型",
+        "developer": "上海文欢置业有限公司",
+        "address": "上海青浦区朱家角珠湖路889弄",
+        "property_type": "住宅",
+        "tags": "[\"车位充足\", \"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+        "price_delta_abs": 5052.0,
+        "open_date": "2026年4月",
+        "delivery_date": "nan",
+        "thumbnail": "https://pic4.ajkimg.com/display/xinfang/5a18f534a48ef722aefa17aa7d6bdabf/275x206n.jpg"
+      }
+    ]
+  }
+}
