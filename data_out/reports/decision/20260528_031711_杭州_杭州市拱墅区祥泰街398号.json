@@ -1,0 +1,1223 @@
+{
+  "meta": {
+    "generated_at": "2026-05-28T03:17:11",
+    "version": "dds-agent-v2-mvp-1"
+  },
+  "input": {
+    "parcel": {
+      "city": "杭州",
+      "district": "拱墅区",
+      "address": "杭州市拱墅区祥泰街398号",
+      "lng": 120.16234,
+      "lat": 30.32891
+    },
+    "client_goal": {
+      "product_type": "改善产品",
+      "floor_area_ratio": 2.5,
+      "benchmark": "英蓝岫町华庭",
+      "total_units": 200
+    }
+  },
+  "data_foundation": {
+    "level_1_legal_constraints": {
+      "status": "missing_level_1_constraints",
+      "trust_weight": 1.0,
+      "available": false,
+      "required_before_final_pricing": [
+        "容积率上限",
+        "用地性质",
+        "限高",
+        "退线",
+        "绿地率",
+        "车位指标",
+        "商业比例",
+        "产权/分割销售口径"
+      ]
+    },
+    "level_2_gis_physical": {
+      "status": "available",
+      "trust_weight": 0.7,
+      "nearest_poi": {},
+      "competitor_sample_count": 15
+    },
+    "level_3_market_sentiment": {
+      "status": "online_supplement_available",
+      "trust_weight": 0.35,
+      "proxy_signals": {
+        "product_type": "改善产品",
+        "benchmark": "英蓝岫町华庭",
+        "room_type_supply": {},
+        "note": "当前用竞品标签、户型结构、对标项目价格作为三级情绪/非标溢价的弱代理。"
+      },
+      "online_evidence": [
+        {
+          "query": "三亚海棠湾商墅",
+          "title": "三亚海棠湾高端市场2026Q1报告",
+          "url": "https://example.com/sanya-report",
+          "summary": "海棠湾商墅产品2026年Q1成交均价约85000元/㎡，去化周期约14个月。高端康养客群为主要买家。",
+          "data_date": "2026-03-31",
+          "confidence": "supplemental",
+          "captured_at": "2026-05-12T18:32:14",
+          "role": "online_supplement_only",
+          "cross_check_score": 0.2,
+          "cross_check_matches": [
+            "概念匹配"
+          ],
+          "is_highly_relevant": false
+        }
+      ]
+    }
+  },
+  "compliance_agent": {
+    "role": "合规 Agent",
+    "verdict": "conditional",
+    "hard_constraints_missing": [
+      "容积率上限",
+      "用地性质",
+      "限高",
+      "退线",
+      "绿地率",
+      "车位指标",
+      "商业比例",
+      "产权/分割销售口径"
+    ],
+    "warnings": [
+      "容积率 2.5 是客户假设，尚未由出让合同或控规文件确认。",
+      "缺少一级法定硬约束，当前只能输出投拓初判，不能作为最终拿地价。"
+    ],
+    "blockers": [],
+    "pricing_boundary": "只能给楼面地价敏感区间，最终价格需等一级数据校准。"
+  },
+  "value_agent": {
+    "role": "价值 Agent",
+    "market_avg_price_cny": 36437,
+    "benchmark": {
+      "project_name": "英蓝岫町华庭",
+      "unit_price_cny": 119999,
+      "area_range": "180-240㎡",
+      "room_types": "3/5室",
+      "district": "拱墅区"
+    },
+    "benchmark_premium_ratio": 3.29,
+    "opportunities": [
+      "对标项目显著高于周边均价，说明存在稀缺资源或强产品力溢价，但需要验证成交真实性和去化速度。",
+      "客户目标产品为改善产品，应优先验证低密、私密性、到达仪式感和景观资源是否能支撑溢价。"
+    ],
+    "product_reference": {
+      "observed_area_ranges": [
+        "180-240㎡",
+        "300-301㎡",
+        "108-166㎡",
+        "105-172㎡",
+        "37-43㎡",
+        "139-190㎡",
+        "104-140㎡",
+        "103-139㎡",
+        "96-126㎡",
+        "99-139㎡",
+        "49-95㎡",
+        "40-136㎡"
+      ],
+      "observed_room_types": [
+        "3/5室",
+        "5室",
+        "3/4室",
+        "3/4/5室",
+        "2室",
+        "4/5室",
+        "3/4室",
+        "3/4室",
+        "3/4室",
+        "3/4室",
+        "1/2/3室",
+        "1/2/3室"
+      ],
+      "top_price_projects": [
+        {
+          "project_name": "英蓝岫町华庭",
+          "price": 119999,
+          "area_range": "180-240㎡",
+          "room_types": "3/5室"
+        },
+        {
+          "project_name": "滨融府新象·lightart",
+          "price": 45000,
+          "area_range": "300-301㎡",
+          "room_types": "5室"
+        },
+        {
+          "project_name": "绿城熙岸晓月轩",
+          "price": 38977,
+          "area_range": "108-166㎡",
+          "room_types": "3/4室"
+        },
+        {
+          "project_name": "伟星星宜嘉映府",
+          "price": 36773,
+          "area_range": "105-172㎡",
+          "room_types": "3/4/5室"
+        },
+        {
+          "project_name": "绿城凤咏朝阳",
+          "price": 36000,
+          "area_range": "",
+          "room_types": ""
+        }
+      ]
+    },
+    "vector_evidence": {
+      "status": "ok",
+      "source": "vault_fallback",
+      "collection": "Vault CSV (近 5 年)",
+      "items": [
+        {
+          "text": "2025年 · 凤银河小区 (拱墅区) · 36427 元/㎡ · 108-166㎡ · 绿城集团",
+          "metadata": {
+            "year": 2025,
+            "project_name": "凤银河小区",
+            "district": "拱墅区",
+            "address": "杭州拱墅区运河新城平安桥路与拱康路交汇处",
+            "unit_price": 36427,
+            "area_range": "108-166㎡",
+            "developer": "绿城集团",
+            "price_distance": 0.0,
+            "product_match": false
+          }
+        },
+        {
+          "text": "2025年 · 博幸福阁 (萧山区) · 36448 元/㎡ · 59-70㎡ · 路劲",
+          "metadata": {
+            "year": 2025,
+            "project_name": "博幸福阁",
+            "district": "萧山区",
+            "address": "杭州萧山区钱江世纪城市心北路与奔竞大道交叉口",
+            "unit_price": 36448,
+            "area_range": "59-70㎡",
+            "developer": "路劲",
+            "price_distance": 0.0,
+            "product_match": false
+          }
+        },
+        {
+          "text": "2022年 · 悦碧水台 (拱墅区) · 36466 元/㎡ · 138-194㎡ · 滨江集团",
+          "metadata": {
+            "year": 2022,
+            "project_name": "悦碧水台",
+            "district": "拱墅区",
+            "address": "杭州拱墅区三塘灯塔巷与新西路交叉口（观成武林学校东侧）",
+            "unit_price": 36466,
+            "area_range": "138-194㎡",
+            "developer": "滨江集团",
+            "price_distance": 0.001,
+            "product_match": false
+          }
+        },
+        {
+          "text": "2022年 · 天琅府 (萧山区) · 36400 元/㎡ · 98-173㎡ · 融信地产,龙湖地产",
+          "metadata": {
+            "year": 2022,
+            "project_name": "天琅府",
+            "district": "萧山区",
+            "address": "杭州萧山区萧山新城金城路与通惠路交汇处",
+            "unit_price": 36400,
+            "area_range": "98-173㎡",
+            "developer": "融信地产,龙湖地产",
+            "price_distance": 0.001,
+            "product_match": false
+          }
+        },
+        {
+          "text": "2021年 · 锦尚乐居翠苑 (拱墅区) · 36382 元/㎡ · 112-185㎡ · 保利集团,越秀地产,滨江集团",
+          "metadata": {
+            "year": 2021,
+            "project_name": "锦尚乐居翠苑",
+            "district": "拱墅区",
+            "address": "杭州拱墅区文晖绍兴路和王马路交叉口东南侧",
+            "unit_price": 36382,
+            "area_range": "112-185㎡",
+            "developer": "保利集团,越秀地产,滨江集团",
+            "price_distance": 0.002,
+            "product_match": false
+          }
+        }
+      ],
+      "note": "chromadb 未配置或无数据，使用 Vault 价格相似度兜底"
+    },
+    "online_cross_check": {
+      "status": "supplemental_only",
+      "source_count": 1,
+      "sources": [
+        {
+          "query": "三亚海棠湾商墅",
+          "title": "三亚海棠湾高端市场2026Q1报告",
+          "url": "https://example.com/sanya-report",
+          "summary": "海棠湾商墅产品2026年Q1成交均价约85000元/㎡，去化周期约14个月。高端康养客群为主要买家。",
+          "data_date": "2026-03-31",
+          "confidence": "supplemental",
+          "captured_at": "2026-05-12T18:32:14",
+          "role": "online_supplement_only",
+          "cross_check_score": 0.2,
+          "cross_check_matches": [
+            "概念匹配"
+          ],
+          "is_highly_relevant": false
+        }
+      ]
+    }
+  },
+  "abm_market_agent": {
+    "role": "ABM 市场模拟 Agent",
+    "method": "Random Utility + MNL，蒙特卡洛 N=1000",
+    "city": "杭州",
+    "product": {
+      "name": "改善产品",
+      "unit_price": 36437,
+      "area": 140,
+      "pref_score": {
+        "景观": 0.65,
+        "私密": 0.55,
+        "圈层": 0.55,
+        "户型": 0.85,
+        "通勤": 0.65,
+        "学校": 0.7,
+        "品牌": 0.6
+      }
+    },
+    "n_personas": 1000,
+    "avg_buy_probability": 0.558,
+    "top_personas": [
+      {
+        "name": "互联网工程师",
+        "share": 0.387,
+        "raw_count": 336,
+        "score": 64.3,
+        "wtp_p50": 43071.0,
+        "wtp_p90": 53125.0
+      },
+      {
+        "name": "本地改善",
+        "share": 0.255,
+        "raw_count": 263,
+        "score": 54.2,
+        "wtp_p50": 31081.0,
+        "wtp_p90": 48563.0
+      },
+      {
+        "name": "浙商投资",
+        "share": 0.23,
+        "raw_count": 208,
+        "score": 61.6,
+        "wtp_p50": 51418.0,
+        "wtp_p90": 52027.0
+      }
+    ],
+    "personas": [
+      {
+        "name": "互联网工程师",
+        "share": 0.387,
+        "raw_count": 336,
+        "score": 64.3,
+        "wtp_p50": 43071.0,
+        "wtp_p90": 53125.0
+      },
+      {
+        "name": "本地改善",
+        "share": 0.255,
+        "raw_count": 263,
+        "score": 54.2,
+        "wtp_p50": 31081.0,
+        "wtp_p90": 48563.0
+      },
+      {
+        "name": "浙商投资",
+        "share": 0.23,
+        "raw_count": 208,
+        "score": 61.6,
+        "wtp_p50": 51418.0,
+        "wtp_p90": 52027.0
+      },
+      {
+        "name": "学区刚需",
+        "share": 0.089,
+        "raw_count": 141,
+        "score": 35.4,
+        "wtp_p50": 22742.0,
+        "wtp_p90": 39396.0
+      },
+      {
+        "name": "人才落户",
+        "share": 0.038,
+        "raw_count": 52,
+        "score": 41.2,
+        "wtp_p50": 25144.0,
+        "wtp_p90": 44656.0
+      }
+    ],
+    "wtp_distribution": [
+      {
+        "range": "4531-9463",
+        "count": 27
+      },
+      {
+        "range": "9463-14395",
+        "count": 37
+      },
+      {
+        "range": "14395-19326",
+        "count": 69
+      },
+      {
+        "range": "19326-24258",
+        "count": 97
+      },
+      {
+        "range": "24258-29189",
+        "count": 95
+      },
+      {
+        "range": "29189-34121",
+        "count": 98
+      },
+      {
+        "range": "34121-39052",
+        "count": 86
+      },
+      {
+        "range": "39052-43984",
+        "count": 93
+      },
+      {
+        "range": "43984-48916",
+        "count": 64
+      },
+      {
+        "range": "48916-53847",
+        "count": 334
+      }
+    ],
+    "wtp_summary": {
+      "p10": 17212.0,
+      "p50": 38115.0,
+      "p90": 52463.0,
+      "unit": "元/㎡"
+    },
+    "sellthrough_curve": [
+      {
+        "month": 1,
+        "monthly_sales": 22.3,
+        "cumulative": 22.3
+      },
+      {
+        "month": 2,
+        "monthly_sales": 22.3,
+        "cumulative": 44.7
+      },
+      {
+        "month": 3,
+        "monthly_sales": 22.3,
+        "cumulative": 67.0
+      },
+      {
+        "month": 4,
+        "monthly_sales": 22.3,
+        "cumulative": 89.3
+      },
+      {
+        "month": 5,
+        "monthly_sales": 22.3,
+        "cumulative": 111.6
+      },
+      {
+        "month": 6,
+        "monthly_sales": 15.6,
+        "cumulative": 127.3
+      },
+      {
+        "month": 7,
+        "monthly_sales": 15.6,
+        "cumulative": 142.9
+      },
+      {
+        "month": 8,
+        "monthly_sales": 15.6,
+        "cumulative": 158.5
+      },
+      {
+        "month": 9,
+        "monthly_sales": 15.6,
+        "cumulative": 174.1
+      },
+      {
+        "month": 10,
+        "monthly_sales": 15.6,
+        "cumulative": 189.8
+      },
+      {
+        "month": 11,
+        "monthly_sales": 15.6,
+        "cumulative": 205.4
+      },
+      {
+        "month": 12,
+        "monthly_sales": 10.9,
+        "cumulative": 216.3
+      },
+      {
+        "month": 13,
+        "monthly_sales": 10.9,
+        "cumulative": 227.3
+      },
+      {
+        "month": 14,
+        "monthly_sales": 10.9,
+        "cumulative": 238.2
+      },
+      {
+        "month": 15,
+        "monthly_sales": 10.9,
+        "cumulative": 249.2
+      },
+      {
+        "month": 16,
+        "monthly_sales": 10.9,
+        "cumulative": 260.1
+      },
+      {
+        "month": 17,
+        "monthly_sales": 10.9,
+        "cumulative": 271.0
+      },
+      {
+        "month": 18,
+        "monthly_sales": 7.7,
+        "cumulative": 278.7
+      },
+      {
+        "month": 19,
+        "monthly_sales": 7.7,
+        "cumulative": 286.4
+      },
+      {
+        "month": 20,
+        "monthly_sales": 7.7,
+        "cumulative": 294.0
+      },
+      {
+        "month": 21,
+        "monthly_sales": 7.7,
+        "cumulative": 301.7
+      },
+      {
+        "month": 22,
+        "monthly_sales": 7.7,
+        "cumulative": 309.3
+      },
+      {
+        "month": 23,
+        "monthly_sales": 7.7,
+        "cumulative": 317.0
+      },
+      {
+        "month": 24,
+        "monthly_sales": 5.4,
+        "cumulative": 322.4
+      }
+    ],
+    "price_sensitivity": [
+      {
+        "price_delta": "-10%",
+        "avg_buy_prob": 0.603,
+        "vs_base_pct": 8.0
+      },
+      {
+        "price_delta": "-5%",
+        "avg_buy_prob": 0.584,
+        "vs_base_pct": 4.6
+      },
+      {
+        "price_delta": "+5%",
+        "avg_buy_prob": 0.543,
+        "vs_base_pct": -2.8
+      },
+      {
+        "price_delta": "+10%",
+        "avg_buy_prob": 0.522,
+        "vs_base_pct": -6.4
+      }
+    ],
+    "confidence": {
+      "score": 1.0,
+      "level": "高",
+      "note": "MVP 阶段使用合成人口分布，L1 真实成交数据接入后置信度可升至 0.9+"
+    },
+    "top_pains": [
+      {
+        "pain": "人车不分流",
+        "weight": 0.178,
+        "raw_score": 219.9
+      },
+      {
+        "pain": "车位常年靠抢",
+        "weight": 0.112,
+        "raw_score": 138.5
+      },
+      {
+        "pain": "老人爬楼梯不便",
+        "weight": 0.112,
+        "raw_score": 138.5
+      },
+      {
+        "pain": "户型动静不分区导致孩子学习经常受到打扰",
+        "weight": 0.112,
+        "raw_score": 138.5
+      },
+      {
+        "pain": "地级市优质医疗高端商业贫瘠",
+        "weight": 0.103,
+        "raw_score": 127.2
+      }
+    ],
+    "top_details": [
+      {
+        "need": "必须带朝南超宽双阳台",
+        "weight": 0.12,
+        "raw_score": 219.9
+      },
+      {
+        "need": "主卫干湿分离",
+        "weight": 0.12,
+        "raw_score": 219.9
+      },
+      {
+        "need": "预留独立书房/电竞办公舱",
+        "weight": 0.12,
+        "raw_score": 219.9
+      },
+      {
+        "need": "配全屋智能家居控制系统",
+        "weight": 0.12,
+        "raw_score": 219.9
+      },
+      {
+        "need": "户型动静分区",
+        "weight": 0.076,
+        "raw_score": 138.5
+      }
+    ],
+    "temporal_consistency": {
+      "status": "ok",
+      "consistency_score": 1.0,
+      "level": "高",
+      "ref_years": [
+        2015,
+        2020,
+        2024
+      ],
+      "snapshots": [
+        {
+          "year": 2015,
+          "top3": [
+            "浙商投资",
+            "本地改善",
+            "互联网工程师"
+          ],
+          "n_samples": 400
+        },
+        {
+          "year": 2020,
+          "top3": [
+            "浙商投资",
+            "本地改善",
+            "互联网工程师"
+          ],
+          "n_samples": 400
+        },
+        {
+          "year": 2024,
+          "top3": [
+            "浙商投资",
+            "本地改善",
+            "互联网工程师"
+          ],
+          "n_samples": 400
+        }
+      ],
+      "interpretation": "2015-2024 跨年度 top3 客群高度重合（100%），模型稳定，预测可信。"
+    }
+  },
+  "unit_mix_agent": {
+    "method": "反向匹配 v1（efu 最高户型分桶 + MNL）",
+    "city": "杭州",
+    "n_personas": 1000,
+    "total_units": 200,
+    "unit_mix": [
+      {
+        "name": "110㎡三房",
+        "area": 110,
+        "unit_price": 34615,
+        "recommended_count": 130,
+        "share": 0.65,
+        "primary_customers": [
+          {
+            "name": "本地改善",
+            "weight": 0.326
+          },
+          {
+            "name": "互联网工程师",
+            "weight": 0.321
+          },
+          {
+            "name": "学区刚需",
+            "weight": 0.186
+          }
+        ],
+        "expected_revenue_cny": 494994500,
+        "demand_score": 76.39
+      },
+      {
+        "name": "140㎡三房",
+        "area": 140,
+        "unit_price": 36437,
+        "recommended_count": 30,
+        "share": 0.152,
+        "primary_customers": [
+          {
+            "name": "互联网工程师",
+            "weight": 0.552
+          },
+          {
+            "name": "本地改善",
+            "weight": 0.343
+          },
+          {
+            "name": "学区刚需",
+            "weight": 0.074
+          }
+        ],
+        "expected_revenue_cny": 153035400,
+        "demand_score": 17.9
+      },
+      {
+        "name": "180㎡大平层",
+        "area": 180,
+        "unit_price": 39352,
+        "recommended_count": 39,
+        "share": 0.197,
+        "primary_customers": [
+          {
+            "name": "浙商投资",
+            "weight": 0.787
+          },
+          {
+            "name": "互联网工程师",
+            "weight": 0.167
+          },
+          {
+            "name": "本地改善",
+            "weight": 0.041
+          }
+        ],
+        "expected_revenue_cny": 276251040,
+        "demand_score": 23.19
+      }
+    ],
+    "total_expected_revenue_cny": 924280940,
+    "expected_overall_sellthrough_months": 42.6,
+    "candidate_unit_count": 3,
+    "role": "户型配比 Agent"
+  },
+  "migration_agent": {
+    "method": "客群马尔可夫迁移 v1",
+    "city": "杭州",
+    "horizon_years": 5,
+    "yearly_distribution": [
+      {
+        "year": 0,
+        "shares": {
+          "浙商投资": 0.208,
+          "互联网工程师": 0.336,
+          "学区刚需": 0.141,
+          "本地改善": 0.263,
+          "人才落户": 0.052
+        },
+        "exit_cumulative": 0.0
+      },
+      {
+        "year": 1,
+        "shares": {
+          "浙商投资": 0.20170859401764235,
+          "互联网工程师": 0.3141203451086489,
+          "学区刚需": 0.12259208047365092,
+          "本地改善": 0.308174124526451,
+          "人才落户": 0.04417192432489909,
+          "高净值康养": 0.009232931548707642
+        },
+        "exit_cumulative": 0.036
+      },
+      {
+        "year": 2,
+        "shares": {
+          "浙商投资": 0.195611141435065,
+          "互联网工程师": 0.2935573824140776,
+          "学区刚需": 0.10670944393911923,
+          "本地改善": 0.3479148279401968,
+          "人才落户": 0.037565263020333126,
+          "高净值康养": 0.018641941251208223
+        },
+        "exit_cumulative": 0.071
+      },
+      {
+        "year": 3,
+        "shares": {
+          "浙商投资": 0.1896949609034709,
+          "互联网工程师": 0.2742653916771397,
+          "学区刚需": 0.09298505961763733,
+          "本地改善": 0.3829346560653186,
+          "人才落户": 0.031981322889005834,
+          "高净值康养": 0.02813860884742753
+        },
+        "exit_cumulative": 0.107
+      },
+      {
+        "year": 4,
+        "shares": {
+          "浙商投资": 0.1839495683149601,
+          "互联网工程师": 0.2561909612478116,
+          "学区刚需": 0.08110869880272877,
+          "本地改善": 0.41384416913498057,
+          "人才落户": 0.02725526177478335,
+          "高净值康养": 0.03765134072473545
+        },
+        "exit_cumulative": 0.143
+      },
+      {
+        "year": 5,
+        "shares": {
+          "浙商投资": 0.178366221827686,
+          "互联网工程师": 0.23927605671910857,
+          "学区刚需": 0.07081757335245106,
+          "本地改善": 0.4411677622792113,
+          "人才落户": 0.02325003641979902,
+          "高净值康养": 0.04712234940174409
+        },
+        "exit_cumulative": 0.179
+      }
+    ],
+    "key_shifts": [
+      {
+        "archetype": "本地改善",
+        "y0_share": 0.263,
+        "y5_share": 0.441,
+        "delta": 0.178,
+        "trend": "上升"
+      },
+      {
+        "archetype": "互联网工程师",
+        "y0_share": 0.336,
+        "y5_share": 0.239,
+        "delta": -0.097,
+        "trend": "下降"
+      },
+      {
+        "archetype": "学区刚需",
+        "y0_share": 0.141,
+        "y5_share": 0.071,
+        "delta": -0.07,
+        "trend": "下降"
+      },
+      {
+        "archetype": "高净值康养",
+        "y0_share": 0,
+        "y5_share": 0.047,
+        "delta": 0.047,
+        "trend": "上升"
+      }
+    ],
+    "exit_cumulative_pct": 17.9,
+    "role": "5 年客群迁移 Agent"
+  },
+  "time_travel_agent": {
+    "role": "时间穿越 Agent",
+    "city": "杭州",
+    "product_type": "改善产品",
+    "years": [
+      2010,
+      2020,
+      2026
+    ],
+    "snapshots": [
+      {
+        "year": 2010,
+        "market_avg_price": 7870,
+        "avg_buy_prob": 0.087,
+        "top3": [
+          {
+            "name": "浙商投资",
+            "share": 0.778
+          },
+          {
+            "name": "互联网工程师",
+            "share": 0.096
+          },
+          {
+            "name": "本地改善",
+            "share": 0.076
+          }
+        ],
+        "wtp_p50": 2132.0
+      },
+      {
+        "year": 2020,
+        "market_avg_price": 16298,
+        "avg_buy_prob": 0.502,
+        "top3": [
+          {
+            "name": "互联网工程师",
+            "share": 0.375
+          },
+          {
+            "name": "浙商投资",
+            "share": 0.265
+          },
+          {
+            "name": "本地改善",
+            "share": 0.211
+          }
+        ],
+        "wtp_p50": 12234.0
+      },
+      {
+        "year": 2026,
+        "market_avg_price": 28049,
+        "avg_buy_prob": 0.726,
+        "top3": [
+          {
+            "name": "互联网工程师",
+            "share": 0.35
+          },
+          {
+            "name": "本地改善",
+            "share": 0.265
+          },
+          {
+            "name": "浙商投资",
+            "share": 0.18
+          }
+        ],
+        "wtp_p50": 35654.0
+      }
+    ],
+    "price_trend": {
+      "from_year": 2010,
+      "to_year": 2026,
+      "from_price": 7870,
+      "to_price": 28049,
+      "growth_multiple": 3.56,
+      "cagr_pct": 8.3
+    },
+    "archetype_evolution": {
+      "浙商投资": {
+        "2010": 0.778,
+        "2020": 0.265,
+        "2026": 0.18
+      },
+      "互联网工程师": {
+        "2010": 0.096,
+        "2020": 0.375,
+        "2026": 0.35
+      },
+      "本地改善": {
+        "2010": 0.076,
+        "2020": 0.211,
+        "2026": 0.265
+      }
+    }
+  },
+  "briefing_engine": {
+    "role": "任务书制定 Agent",
+    "product_positioning": "以改善产品为方向，先验证低密/私密/景观/康养服务是否支撑高端溢价。",
+    "target_price_band": {
+      "conservative": 30971.0,
+      "balanced": 36437,
+      "aggressive": 49190.0,
+      "unit": "元/㎡"
+    },
+    "performance_brief": [
+      "私密性等级：控制公共界面干扰，强化院落/入户/露台的边界感。",
+      "视觉通透度：优先把景观面和主力功能空间绑定，避免只做符号化立面。",
+      "垂直动线效率：低密产品需减少无效交通面积，保证可售效率。",
+      "到达仪式感：车行、人行、会所或公共入口形成清晰等级。",
+      "可售弹性：面积段要覆盖主力客群支付能力，避免只堆大面积高总价。",
+      "服务配置：康养、度假、物业服务必须能被客户感知，否则不能计入溢价假设。",
+      "【核心居住痛点对冲设计】",
+      "  - 痛点 1：人车不分流 (加权占比 17.8%) ➔ 设计方案：提供专项户型治理/配套对冲策略。",
+      "  - 痛点 2：车位常年靠抢 (加权占比 11.2%) ➔ 设计方案：提供专项户型治理/配套对冲策略。",
+      "  - 痛点 3：老人爬楼梯不便 (加权占比 11.2%) ➔ 设计方案：提供专项户型治理/配套对冲策略。",
+      "【核心看房细节需求攻坚】",
+      "  - 细节 1：必须带朝南超宽双阳台 (加权占比 12.0%) ➔ 设计标准：深化图纸该专项细节，列入核心营销点。",
+      "  - 细节 2：主卫干湿分离 (加权占比 12.0%) ➔ 设计标准：深化图纸该专项细节，列入核心营销点。",
+      "  - 细节 3：预留独立书房/电竞办公舱 (加权占比 12.0%) ➔ 设计标准：深化图纸该专项细节，列入核心营销点。"
+    ],
+    "premium_hypotheses": [
+      "品牌/稀缺资源/低密私密性可支撑溢价。",
+      "普通商业配套和表层景观包装不应被高估为核心溢价。",
+      "若一级合规数据不支持商墅口径，产品定位需立即切换。"
+    ],
+    "compliance_dependency": [
+      "容积率上限",
+      "用地性质",
+      "限高",
+      "退线",
+      "绿地率",
+      "车位指标",
+      "商业比例",
+      "产权/分割销售口径"
+    ],
+    "pain_hedging_guide": [
+      "【核心居住痛点对冲设计】",
+      "  - 痛点 1：人车不分流 (加权占比 17.8%) ➔ 设计方案：提供专项户型治理/配套对冲策略。",
+      "  - 痛点 2：车位常年靠抢 (加权占比 11.2%) ➔ 设计方案：提供专项户型治理/配套对冲策略。",
+      "  - 痛点 3：老人爬楼梯不便 (加权占比 11.2%) ➔ 设计方案：提供专项户型治理/配套对冲策略。",
+      "【核心看房细节需求攻坚】",
+      "  - 细节 1：必须带朝南超宽双阳台 (加权占比 12.0%) ➔ 设计标准：深化图纸该专项细节，列入核心营销点。",
+      "  - 细节 2：主卫干湿分离 (加权占比 12.0%) ➔ 设计标准：深化图纸该专项细节，列入核心营销点。",
+      "  - 细节 3：预留独立书房/电竞办公舱 (加权占比 12.0%) ➔ 设计标准：深化图纸该专项细节，列入核心营销点。"
+    ]
+  },
+  "blueprint_logic": {
+    "role": "蓝图与风险 Agent",
+    "scenario_prices": {
+      "conservative_sale_price": 34000,
+      "base_sale_price": 36437,
+      "benchmark_discount_sale_price": 89999.0
+    },
+    "land_value_sensitivity": {
+      "conservative_land_value": 25506.0,
+      "balanced_land_value": 30061.0,
+      "aggressive_land_value": 34615.0,
+      "unit": "元/㎡土地口径粗算",
+      "floor_area_ratio": 2.5,
+      "floor_area_ratio_source": "user_input"
+    },
+    "risk_curve": [
+      {
+        "risk": "政策风险",
+        "level": "高",
+        "trigger": "一级硬约束未补齐"
+      },
+      {
+        "risk": "去化风险",
+        "level": "中",
+        "trigger": "当前预售价偏离客群WTP上限 96%"
+      },
+      {
+        "risk": "回款瓶颈",
+        "level": "中",
+        "trigger": "加权首付比例仅 38%，过度依赖银行按揭放款节奏"
+      },
+      {
+        "risk": "项目错配",
+        "level": "中",
+        "trigger": "商墅若总价过高，会压缩家庭旅居客群"
+      }
+    ],
+    "absorption_simulation": {
+      "total_units": 500,
+      "sellout_months": 13.0,
+      "monthly_absorption_rate_units": 38.6,
+      "price_to_wtp_ratio": 0.96,
+      "estimated_avg_dp_ratio": 0.38
+    },
+    "quarterly_cash_flow": {
+      "inflows_wan": [
+        19341.8,
+        50633.7,
+        50633.7,
+        50633.7,
+        37437.1,
+        9942.1,
+        0.0,
+        0.0
+      ],
+      "outflows_wan": [
+        83211.2,
+        12826.0,
+        12826.0,
+        12826.0,
+        11242.5,
+        1193.0,
+        0.0,
+        0.0
+      ],
+      "net_cash_flow_wan": [
+        -63869.3,
+        37807.6,
+        37807.6,
+        37807.6,
+        26194.7,
+        8749.0,
+        0.0,
+        0.0
+      ]
+    },
+    "financial_indicator": {
+      "simulated_irr_annual": "340.41%",
+      "irr_level": "高",
+      "note": "项目年化模拟 IRR 表现优异，可强力推进"
+    },
+    "next_data_required": [
+      "出让合同/控规图则",
+      "可售面积和计容口径",
+      "建安成本",
+      "税费和融资成本",
+      "目标利润率",
+      "竞品真实成交/去化速度"
+    ]
+  },
+  "decision_summary": {
+    "headline": "可进入投拓测算，但需先补齐一级法定硬约束后才能定最终拿地价。",
+    "pricing_posture": {
+      "conservative": 25506.0,
+      "balanced": 30061.0,
+      "aggressive": 34615.0,
+      "unit": "元/㎡土地口径粗算"
+    },
+    "top_opportunity": "对标项目显著高于周边均价，说明存在稀缺资源或强产品力溢价，但需要验证成交真实性和去化速度。",
+    "top_personas": [
+      {
+        "name": "互联网工程师",
+        "share": 0.387,
+        "raw_count": 336,
+        "score": 64.3,
+        "wtp_p50": 43071.0,
+        "wtp_p90": 53125.0
+      },
+      {
+        "name": "本地改善",
+        "share": 0.255,
+        "raw_count": 263,
+        "score": 54.2,
+        "wtp_p50": 31081.0,
+        "wtp_p90": 48563.0
+      },
+      {
+        "name": "浙商投资",
+        "share": 0.23,
+        "raw_count": 208,
+        "score": 61.6,
+        "wtp_p50": 51418.0,
+        "wtp_p90": 52027.0
+      }
+    ],
+    "brief_focus": [
+      "私密性等级：控制公共界面干扰，强化院落/入户/露台的边界感。",
+      "视觉通透度：优先把景观面和主力功能空间绑定，避免只做符号化立面。",
+      "垂直动线效率：低密产品需减少无效交通面积，保证可售效率。",
+      "到达仪式感：车行、人行、会所或公共入口形成清晰等级。"
+    ],
+    "hard_stop": []
+  },
+  "ceo_aggregator": {
+    "role": "CEO 权重引擎",
+    "preset": "invest",
+    "weights": {
+      "compliance": 0.3,
+      "value": 0.2,
+      "abm": 0.15,
+      "unit_mix": 0.15,
+      "migration": 0.1,
+      "blueprint": 0.1
+    },
+    "total_score": 58.7,
+    "overall_confidence": 0.73,
+    "grade": "B+",
+    "breakdown": [
+      {
+        "agent": "compliance",
+        "raw_score": 55.0,
+        "confidence": 0.5,
+        "weight": 0.3,
+        "contribution": 8.25
+      },
+      {
+        "agent": "value",
+        "raw_score": 81.4,
+        "confidence": 1.0,
+        "weight": 0.2,
+        "contribution": 16.29
+      },
+      {
+        "agent": "abm",
+        "raw_score": 100,
+        "confidence": 1.0,
+        "weight": 0.15,
+        "contribution": 15.0
+      },
+      {
+        "agent": "unit_mix",
+        "raw_score": 99.8,
+        "confidence": 0.7,
+        "weight": 0.15,
+        "contribution": 10.47
+      },
+      {
+        "agent": "migration",
+        "raw_score": 78.1,
+        "confidence": 0.65,
+        "weight": 0.1,
+        "contribution": 5.08
+      },
+      {
+        "agent": "blueprint",
+        "raw_score": 60,
+        "confidence": 0.6,
+        "weight": 0.1,
+        "contribution": 3.6
+      }
+    ],
+    "interpretation": "置信度较高，模型输入充分、内部一致。 综合得分中等，建议先补齐一级法定硬约束 + 客群校验后再决策。"
+  },
+  "traceability": {
+    "parcel_report_meta": {
+      "generated_at": "2026-05-28",
+      "data_scope": "真实拱墅区竞品 N=15"
+    },
+    "source_scope": "真实拱墅区竞品 N=15",
+    "location": {
+      "city": "杭州",
+      "district": "拱墅区",
+      "lng": 120.16234,
+      "lat": 30.32891
+    },
+    "evidence_counts": {
+      "nearby_competitors": 15,
+      "amenity_categories": 0
+    },
+    "trust_weights": {
+      "level_1": 1.0,
+      "level_2": 0.7,
+      "level_3": 0.35
+    },
+    "online_sources": {
+      "status": "supplemental_available",
+      "count": 1,
+      "items": [
+        {
+          "query": "三亚海棠湾商墅",
+          "title": "三亚海棠湾高端市场2026Q1报告",
+          "url": "https://example.com/sanya-report",
+          "summary": "海棠湾商墅产品2026年Q1成交均价约85000元/㎡，去化周期约14个月。高端康养客群为主要买家。",
+          "data_date": "2026-03-31",
+          "confidence": "supplemental",
+          "captured_at": "2026-05-12T18:32:14",
+          "role": "online_supplement_only",
+          "cross_check_score": 0.2,
+          "cross_check_matches": [
+            "概念匹配"
+          ],
+          "is_highly_relevant": false
+        }
+      ]
+    }
+  }
+}
