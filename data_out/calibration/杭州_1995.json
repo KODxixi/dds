@@ -1,0 +1,356 @@
+{
+  "status": "ok",
+  "city": "杭州",
+  "year": 1995,
+  "n_archetypes": 5,
+  "calibration": {
+    "学区刚需": {
+      "n_samples": 346,
+      "pref": {
+        "景观": 0.305,
+        "私密": 0.304,
+        "圈层": 0.4,
+        "户型": 0.704,
+        "通勤": 0.599,
+        "学校": 0.935,
+        "品牌": 0.507
+      },
+      "risk_aversion": 0.549
+    },
+    "本地改善": {
+      "n_samples": 560,
+      "pref": {
+        "景观": 0.55,
+        "私密": 0.498,
+        "圈层": 0.494,
+        "户型": 0.85,
+        "通勤": 0.702,
+        "学校": 0.743,
+        "品牌": 0.55
+      },
+      "risk_aversion": 0.502
+    },
+    "互联网工程师": {
+      "n_samples": 54,
+      "pref": {
+        "景观": 0.508,
+        "私密": 0.454,
+        "圈层": 0.551,
+        "户型": 0.795,
+        "通勤": 0.855,
+        "学校": 0.712,
+        "品牌": 0.61
+      },
+      "risk_aversion": 0.507
+    },
+    "浙商投资": {
+      "n_samples": 30,
+      "pref": {
+        "景观": 0.61,
+        "私密": 0.528,
+        "圈层": 0.69,
+        "户型": 0.518,
+        "通勤": 0.294,
+        "学校": 0.392,
+        "品牌": 0.824
+      },
+      "risk_aversion": 0.457
+    },
+    "人才落户": {
+      "n_samples": 10,
+      "pref": {
+        "景观": 0.381,
+        "私密": 0.351,
+        "圈层": 0.508,
+        "户型": 0.728,
+        "通勤": 0.867,
+        "学校": 0.666,
+        "品牌": 0.561
+      },
+      "risk_aversion": 0.574
+    }
+  },
+  "ts": "2026-05-27T15:35:08",
+  "diffs": [
+    {
+      "archetype": "人才落户",
+      "pref": "学校",
+      "preset": 0.6,
+      "real": 0.666,
+      "delta": 0.066,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "浙商投资",
+      "pref": "品牌",
+      "preset": 0.85,
+      "real": 0.824,
+      "delta": -0.026,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "浙商投资",
+      "pref": "私密",
+      "preset": 0.55,
+      "real": 0.528,
+      "delta": -0.022,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "人才落户",
+      "pref": "户型",
+      "preset": 0.75,
+      "real": 0.728,
+      "delta": -0.022,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "人才落户",
+      "pref": "景观",
+      "preset": 0.4,
+      "real": 0.381,
+      "delta": -0.019,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "浙商投资",
+      "pref": "户型",
+      "preset": 0.5,
+      "real": 0.518,
+      "delta": 0.018,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "人才落户",
+      "pref": "通勤",
+      "preset": 0.85,
+      "real": 0.867,
+      "delta": 0.017,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "学区刚需",
+      "pref": "学校",
+      "preset": 0.95,
+      "real": 0.935,
+      "delta": -0.015,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "互联网工程师",
+      "pref": "学校",
+      "preset": 0.7,
+      "real": 0.712,
+      "delta": 0.012,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "人才落户",
+      "pref": "品牌",
+      "preset": 0.55,
+      "real": 0.561,
+      "delta": 0.011,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "互联网工程师",
+      "pref": "品牌",
+      "preset": 0.6,
+      "real": 0.61,
+      "delta": 0.01,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "浙商投资",
+      "pref": "景观",
+      "preset": 0.6,
+      "real": 0.61,
+      "delta": 0.01,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "浙商投资",
+      "pref": "圈层",
+      "preset": 0.7,
+      "real": 0.69,
+      "delta": -0.01,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "互联网工程师",
+      "pref": "景观",
+      "preset": 0.5,
+      "real": 0.508,
+      "delta": 0.008,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "浙商投资",
+      "pref": "学校",
+      "preset": 0.4,
+      "real": 0.392,
+      "delta": -0.008,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "人才落户",
+      "pref": "圈层",
+      "preset": 0.5,
+      "real": 0.508,
+      "delta": 0.008,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "学区刚需",
+      "pref": "品牌",
+      "preset": 0.5,
+      "real": 0.507,
+      "delta": 0.007,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "学校",
+      "preset": 0.75,
+      "real": 0.743,
+      "delta": -0.007,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "圈层",
+      "preset": 0.5,
+      "real": 0.494,
+      "delta": -0.006,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "浙商投资",
+      "pref": "通勤",
+      "preset": 0.3,
+      "real": 0.294,
+      "delta": -0.006,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "学区刚需",
+      "pref": "景观",
+      "preset": 0.3,
+      "real": 0.305,
+      "delta": 0.005,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "互联网工程师",
+      "pref": "户型",
+      "preset": 0.8,
+      "real": 0.795,
+      "delta": -0.005,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "互联网工程师",
+      "pref": "通勤",
+      "preset": 0.85,
+      "real": 0.855,
+      "delta": 0.005,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "学区刚需",
+      "pref": "私密",
+      "preset": 0.3,
+      "real": 0.304,
+      "delta": 0.004,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "学区刚需",
+      "pref": "户型",
+      "preset": 0.7,
+      "real": 0.704,
+      "delta": 0.004,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "互联网工程师",
+      "pref": "私密",
+      "preset": 0.45,
+      "real": 0.454,
+      "delta": 0.004,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "私密",
+      "preset": 0.5,
+      "real": 0.498,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "通勤",
+      "preset": 0.7,
+      "real": 0.702,
+      "delta": 0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "学区刚需",
+      "pref": "通勤",
+      "preset": 0.6,
+      "real": 0.599,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "互联网工程师",
+      "pref": "圈层",
+      "preset": 0.55,
+      "real": 0.551,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "人才落户",
+      "pref": "私密",
+      "preset": 0.35,
+      "real": 0.351,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "学区刚需",
+      "pref": "圈层",
+      "preset": 0.4,
+      "real": 0.4,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "景观",
+      "preset": 0.55,
+      "real": 0.55,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "户型",
+      "preset": 0.85,
+      "real": 0.85,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "品牌",
+      "preset": 0.55,
+      "real": 0.55,
+      "delta": 0.0,
+      "drift_level": "低"
+    }
+  ]
+}
