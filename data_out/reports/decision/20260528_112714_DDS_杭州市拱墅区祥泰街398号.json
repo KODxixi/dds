@@ -1,0 +1,470 @@
+{
+  "meta": {
+    "generated_at": "2026-05-28T11:26:16",
+    "version": "dds-agent-v2-mvp-1"
+  },
+  "input": {
+    "parcel": {
+      "address": "杭州市拱墅区祥泰街398号",
+      "lng": 120.126902,
+      "lat": 30.332695,
+      "district": "门址",
+      "vision": null
+    },
+    "client_goal": {
+      "product_type": "改善产品",
+      "benchmark": null,
+      "expected_price": null,
+      "floor_area_ratio": 2.0,
+      "year": 2026
+    }
+  },
+  "data_foundation": {
+    "level_1_legal_constraints": {
+      "status": "missing_level_1_constraints",
+      "trust_weight": 1.0,
+      "available": false,
+      "required_before_final_pricing": [
+        "容积率上限",
+        "用地性质",
+        "限高",
+        "退线",
+        "绿地率",
+        "车位指标",
+        "商业比例",
+        "产权/分割销售口径"
+      ]
+    },
+    "level_2_gis_physical": {
+      "status": "available",
+      "trust_weight": 0.7,
+      "nearest_poi": {
+        "school": {
+          "label": "学校",
+          "name": "杭州市祥瑞幼儿园",
+          "distance_m": 336
+        },
+        "hospital": {
+          "label": "医院",
+          "name": "王岐轩肩颈世家(万融城店)",
+          "distance_m": 42
+        },
+        "subway": {
+          "label": "地铁站",
+          "name": "祥园路地铁站D口",
+          "distance_m": 1032
+        },
+        "bus": {
+          "label": "公交站",
+          "name": "祥泰街祥景街口(公交站)",
+          "distance_m": 107
+        },
+        "mall": {
+          "label": "商场",
+          "name": "东兴天地",
+          "distance_m": 69
+        },
+        "park": {
+          "label": "公园",
+          "name": "火车站主题广场",
+          "distance_m": 411
+        },
+        "supermarket": {
+          "label": "超市",
+          "name": "东兴天地",
+          "distance_m": 69
+        }
+      },
+      "competitor_sample_count": 2
+    },
+    "level_3_market_sentiment": {
+      "status": "online_supplement_available",
+      "trust_weight": 0.35,
+      "proxy_signals": {
+        "product_type": "改善产品",
+        "benchmark": null,
+        "room_type_supply": {
+          "3室户型": 1,
+          "5室户型": 1
+        },
+        "note": "当前用竞品标签、户型结构、对标项目价格作为三级情绪/非标溢价的弱代理。"
+      },
+      "online_evidence": [
+        {
+          "query": "三亚海棠湾商墅",
+          "title": "三亚海棠湾高端市场2026Q1报告",
+          "url": "https://example.com/sanya-report",
+          "summary": "海棠湾商墅产品2026年Q1成交均价约85000元/㎡，去化周期约14个月。高端康养客群为主要买家。",
+          "data_date": "2026-03-31",
+          "confidence": "supplemental",
+          "captured_at": "2026-05-12T18:32:14",
+          "role": "online_supplement_only",
+          "cross_check_score": 0.2,
+          "cross_check_matches": [
+            "概念匹配"
+          ],
+          "is_highly_relevant": false
+        }
+      ]
+    }
+  },
+  "compliance_agent": {
+    "role": "合规 Agent",
+    "verdict": "conditional",
+    "hard_constraints_missing": [
+      "容积率上限",
+      "用地性质",
+      "限高",
+      "退线",
+      "绿地率",
+      "车位指标",
+      "商业比例",
+      "产权/分割销售口径"
+    ],
+    "warnings": [
+      "容积率 2.0 是客户假设，尚未由出让合同或控规文件确认。",
+      "缺少一级法定硬约束，当前只能输出投拓初判，不能作为最终拿地价。"
+    ],
+    "blockers": [],
+    "pricing_boundary": "只能给楼面地价敏感区间，最终价格需等一级数据校准。"
+  },
+  "value_agent": {
+    "role": "价值 Agent",
+    "market_avg_price_cny": 71000.0,
+    "benchmark": null,
+    "benchmark_premium_ratio": null,
+    "opportunities": [
+      "客户目标产品为改善产品，应优先验证低密、私密性、到达仪式感和景观资源是否能支撑溢价。"
+    ],
+    "product_reference": {
+      "observed_area_ranges": [
+        "nan",
+        "180-240㎡"
+      ],
+      "observed_room_types": [
+        "nan",
+        "3室户型,5室户型"
+      ],
+      "top_price_projects": [
+        {
+          "project_name": "英蓝岫町华庭",
+          "price": 119999.0,
+          "area_range": "180-240㎡",
+          "room_types": "3室户型,5室户型"
+        },
+        {
+          "project_name": "滨江运宸中心",
+          "price": 22000.0,
+          "area_range": "nan",
+          "room_types": "nan"
+        }
+      ]
+    },
+    "vector_evidence": {
+      "status": "skipped",
+      "reason": "no_city",
+      "items": []
+    },
+    "online_cross_check": {
+      "status": "supplemental_only",
+      "source_count": 1,
+      "sources": [
+        {
+          "query": "三亚海棠湾商墅",
+          "title": "三亚海棠湾高端市场2026Q1报告",
+          "url": "https://example.com/sanya-report",
+          "summary": "海棠湾商墅产品2026年Q1成交均价约85000元/㎡，去化周期约14个月。高端康养客群为主要买家。",
+          "data_date": "2026-03-31",
+          "confidence": "supplemental",
+          "captured_at": "2026-05-12T18:32:14",
+          "role": "online_supplement_only",
+          "cross_check_score": 0.2,
+          "cross_check_matches": [
+            "概念匹配"
+          ],
+          "is_highly_relevant": false
+        }
+      ]
+    }
+  },
+  "abm_market_agent": {
+    "role": "ABM 市场模拟 Agent",
+    "status": "city_not_configured",
+    "error": "未配置城市客群池：None",
+    "personas": [],
+    "top_personas": []
+  },
+  "unit_mix_agent": {
+    "role": "户型配比 Agent",
+    "status": "skipped",
+    "reason": "城市未配置 ABM"
+  },
+  "migration_agent": {
+    "role": "5 年客群迁移 Agent",
+    "status": "skipped"
+  },
+  "time_travel_agent": {
+    "role": "TimeTravel",
+    "status": "skipped",
+    "reason": "no_city"
+  },
+  "briefing_engine": {
+    "role": "任务书制定 Agent",
+    "product_positioning": "以改善产品为方向，先验证低密/私密/景观/康养服务是否支撑高端溢价。",
+    "target_price_band": {
+      "conservative": 60350.0,
+      "balanced": 71000.0,
+      "aggressive": 85200.0,
+      "unit": "元/㎡"
+    },
+    "performance_brief": [
+      "私密性等级：控制公共界面干扰，强化院落/入户/露台的边界感。",
+      "视觉通透度：优先把景观面和主力功能空间绑定，避免只做符号化立面。",
+      "垂直动线效率：低密产品需减少无效交通面积，保证可售效率。",
+      "到达仪式感：车行、人行、会所或公共入口形成清晰等级。",
+      "可售弹性：面积段要覆盖主力客群支付能力，避免只堆大面积高总价。",
+      "服务配置：康养、度假、物业服务必须能被客户感知，否则不能计入溢价假设。"
+    ],
+    "premium_hypotheses": [
+      "品牌/稀缺资源/低密私密性可支撑溢价。",
+      "普通商业配套和表层景观包装不应被高估为核心溢价。",
+      "若一级合规数据不支持商墅口径，产品定位需立即切换。"
+    ],
+    "compliance_dependency": [
+      "容积率上限",
+      "用地性质",
+      "限高",
+      "退线",
+      "绿地率",
+      "车位指标",
+      "商业比例",
+      "产权/分割销售口径"
+    ],
+    "pain_hedging_guide": []
+  },
+  "blueprint_logic": {
+    "role": "蓝图与风险 Agent",
+    "scenario_prices": {
+      "conservative_sale_price": 71000.0,
+      "base_sale_price": 71000.0,
+      "benchmark_discount_sale_price": null
+    },
+    "land_value_sensitivity": {
+      "conservative_land_value": 39760.0,
+      "balanced_land_value": 46860.0,
+      "aggressive_land_value": 53960.0,
+      "unit": "元/㎡土地口径粗算",
+      "floor_area_ratio": 2.0,
+      "floor_area_ratio_source": "user_input"
+    },
+    "risk_curve": [
+      {
+        "risk": "政策风险",
+        "level": "高",
+        "trigger": "一级硬约束未补齐"
+      },
+      {
+        "risk": "去化风险",
+        "level": "高",
+        "trigger": "当前预售价偏离客群WTP上限 237%"
+      },
+      {
+        "risk": "回款瓶颈",
+        "level": "中",
+        "trigger": "加权首付比例仅 40%，过度依赖银行按揭放款节奏"
+      },
+      {
+        "risk": "项目错配",
+        "level": "中",
+        "trigger": "商墅若总价过高，会压缩家庭旅居客群"
+      }
+    ],
+    "absorption_simulation": {
+      "total_units": 500,
+      "sellout_months": 100.0,
+      "monthly_absorption_rate_units": 5.0,
+      "price_to_wtp_ratio": 2.37,
+      "estimated_avg_dp_ratio": 0.4
+    },
+    "quarterly_cash_flow": {
+      "inflows_wan": [
+        5112.0,
+        12780.0,
+        12780.0,
+        12780.0,
+        12780.0,
+        12780.0,
+        12780.0,
+        12780.0
+      ],
+      "outflows_wan": [
+        158233.4,
+        8283.6,
+        8283.6,
+        8283.6,
+        8283.6,
+        1533.6,
+        1533.6,
+        1533.6
+      ],
+      "net_cash_flow_wan": [
+        -153121.4,
+        4496.4,
+        4496.4,
+        4496.4,
+        4496.4,
+        11246.4,
+        11246.4,
+        11246.4
+      ]
+    },
+    "financial_indicator": {
+      "simulated_irr_annual": "-57.07%",
+      "irr_level": "低",
+      "note": "项目年化模拟 IRR 表现预警，拿地风险极大，需压降地价"
+    },
+    "next_data_required": [
+      "出让合同/控规图则",
+      "可售面积和计容口径",
+      "建安成本",
+      "税费和融资成本",
+      "目标利润率",
+      "竞品真实成交/去化速度"
+    ]
+  },
+  "decision_summary": {
+    "headline": "可进入投拓测算，但需先补齐一级法定硬约束后才能定最终拿地价。",
+    "pricing_posture": {
+      "conservative": 39760.0,
+      "balanced": 46860.0,
+      "aggressive": 53960.0,
+      "unit": "元/㎡土地口径粗算"
+    },
+    "top_opportunity": "客户目标产品为改善产品，应优先验证低密、私密性、到达仪式感和景观资源是否能支撑溢价。",
+    "top_personas": [],
+    "brief_focus": [
+      "私密性等级：控制公共界面干扰，强化院落/入户/露台的边界感。",
+      "视觉通透度：优先把景观面和主力功能空间绑定，避免只做符号化立面。",
+      "垂直动线效率：低密产品需减少无效交通面积，保证可售效率。",
+      "到达仪式感：车行、人行、会所或公共入口形成清晰等级。"
+    ],
+    "hard_stop": []
+  },
+  "ceo_aggregator": {
+    "role": "CEO 权重引擎",
+    "preset": "invest",
+    "weights": {
+      "compliance": 0.3,
+      "value": 0.2,
+      "abm": 0.15,
+      "unit_mix": 0.15,
+      "migration": 0.1,
+      "blueprint": 0.1
+    },
+    "total_score": 24.3,
+    "overall_confidence": 0.43,
+    "grade": "D",
+    "breakdown": [
+      {
+        "agent": "compliance",
+        "raw_score": 55.0,
+        "confidence": 0.5,
+        "weight": 0.3,
+        "contribution": 8.25
+      },
+      {
+        "agent": "value",
+        "raw_score": 85.0,
+        "confidence": 0.6,
+        "weight": 0.2,
+        "contribution": 10.2
+      },
+      {
+        "agent": "abm",
+        "raw_score": 30.0,
+        "confidence": 0.3,
+        "weight": 0.15,
+        "contribution": 1.35
+      },
+      {
+        "agent": "unit_mix",
+        "raw_score": 0.0,
+        "confidence": 0.2,
+        "weight": 0.15,
+        "contribution": 0.0
+      },
+      {
+        "agent": "migration",
+        "raw_score": 50.0,
+        "confidence": 0.3,
+        "weight": 0.1,
+        "contribution": 1.5
+      },
+      {
+        "agent": "blueprint",
+        "raw_score": 50,
+        "confidence": 0.6,
+        "weight": 0.1,
+        "contribution": 3.0
+      }
+    ],
+    "interpretation": "⚠ 置信度偏低，结论仅供初步参考，需补一级数据后复核。 综合得分偏低，需重新评估产品定位、地块价值或拿地价区间。"
+  },
+  "traceability": {
+    "parcel_report_meta": {
+      "generated_at": "2026-05-28T11:26:16",
+      "target_year": 2026,
+      "data_timestamp": "2026-05-27T11:26:14",
+      "data_age_days": 1,
+      "data_freshness_warning": null,
+      "amap_js_key": "1b7f1d2c1a5af932034f72d4ea602283",
+      "amap_security_code": "da9ef9ab78e157501fd7f27d08656860",
+      "local_data": {
+        "total_projects": 266,
+        "csv_files": [
+          "三亚（新楼盘-三亚.csv）",
+          "上海（新楼盘-上海.csv）",
+          "杭州（新楼盘-杭州.csv）",
+          "青岛（新楼盘-青岛.csv）"
+        ],
+        "active_city": "杭州",
+        "csv_file": "杭州.csv",
+        "csv_mtime": "2026-05-27T11:26:14",
+        "data_age_days": 1,
+        "data_freshness_warning": null
+      }
+    },
+    "source_scope": "本地样本",
+    "location": {},
+    "evidence_counts": {
+      "nearby_competitors": 2,
+      "amenity_categories": 7
+    },
+    "trust_weights": {
+      "level_1": 1.0,
+      "level_2": 0.7,
+      "level_3": 0.35
+    },
+    "online_sources": {
+      "status": "supplemental_available",
+      "count": 1,
+      "items": [
+        {
+          "query": "三亚海棠湾商墅",
+          "title": "三亚海棠湾高端市场2026Q1报告",
+          "url": "https://example.com/sanya-report",
+          "summary": "海棠湾商墅产品2026年Q1成交均价约85000元/㎡，去化周期约14个月。高端康养客群为主要买家。",
+          "data_date": "2026-03-31",
+          "confidence": "supplemental",
+          "captured_at": "2026-05-12T18:32:14",
+          "role": "online_supplement_only",
+          "cross_check_score": 0.2,
+          "cross_check_matches": [
+            "概念匹配"
+          ],
+          "is_highly_relevant": false
+        }
+      ]
+    }
+  }
+}
