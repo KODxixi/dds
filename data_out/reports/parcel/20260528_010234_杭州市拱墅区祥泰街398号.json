@@ -1,0 +1,390 @@
+{
+  "meta": {
+    "generated_at": "2026-05-28T01:02:34",
+    "version": "parcel-report-mvp-1",
+    "data_scope": "Vault/2026年 本地四城样本",
+    "target_year": "2026"
+  },
+  "input": {
+    "city": "杭州",
+    "district": null,
+    "address": "杭州市拱墅区祥泰街398号",
+    "lng": null,
+    "lat": null,
+    "radius_km": 5.0,
+    "expected_price": null,
+    "price_band": 0.15,
+    "year": "2026"
+  },
+  "location": {
+    "lng": 119.750575,
+    "lat": 30.237445,
+    "source": "offline_proxy_match",
+    "formatted_addr": "离线代理匹配地块: 桃李映湖 (杭州临安区锦城吴山街青龙公寓北侧约180米)",
+    "level": "proxy",
+    "adcode": null
+  },
+  "nearby_fallback_used": true,
+  "nearby_competitors": [
+    {
+      "project_name": "桃李映湖",
+      "city": "杭州",
+      "district": "临安区",
+      "sub_district": "锦城",
+      "sales_status": "在售",
+      "unit_price_cny": null,
+      "total_price_wan": 496.0,
+      "area_range": "185-244㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "1.4",
+      "green_ratio": "20%",
+      "developer": "杭州市临安区国瑞置业有限公司",
+      "address": "杭州临安区锦城吴山街青龙公寓北侧约180米",
+      "distance_km": 0.0,
+      "lng": 119.750575,
+      "lat": 30.237445,
+      "property_type": "别墅",
+      "tags": "[\"厨卫全明\", \"南北通透\", \"项目在建\", \"毛坯\", \"一房一价\"]",
+      "open_date": "2025年1月10日",
+      "delivery_date": "2026年3月",
+      "cert_dates": "[\"2024-12-19\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/86e625b69fc8278a3fdeb795ee8d40c9/275x206n.jpg",
+      "land_area_sqm": "18339m²",
+      "building_area_sqm": "38174.6m²",
+      "planned_units": "30",
+      "parking_spaces": "59",
+      "parking_ratio": "1.1.9",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "毛坯",
+      "building_type": "{合院别墅}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"临安房预许字（2024）第00578号\"]",
+      "developer_brand": "nan",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：2026-03-31",
+      "rooms_detail": [
+        {
+          "name": "四室",
+          "area": 185.0,
+          "area_str": "185㎡"
+        },
+        {
+          "name": "四室",
+          "area": 222.0,
+          "area_str": "222㎡"
+        },
+        {
+          "name": "四室",
+          "area": 244.0,
+          "area_str": "244㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "平峰晓庐",
+      "city": "杭州",
+      "district": "临安区",
+      "sub_district": "青山湖科技城",
+      "sales_status": "在售",
+      "unit_price_cny": null,
+      "total_price_wan": 481.0,
+      "area_range": "89-200㎡",
+      "room_types": "3室户型,4室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.1 别墅：1.1",
+      "green_ratio": "住宅：25% 别墅：25%",
+      "developer": "杭州临安锦海房地产开发有限责任公司",
+      "address": "杭州临安区青山湖科技城环湖公路杭瑞高速公路往南500米",
+      "distance_km": 2.9,
+      "lng": 119.77689824861,
+      "lat": 30.224623656244,
+      "property_type": "住宅",
+      "tags": "[\"大阳台\", \"车位充足\", \"低容积\", \"厨卫全明\", \"南北通透\"]",
+      "open_date": "2024年10月25日",
+      "delivery_date": "2026年12月",
+      "cert_dates": "[\"2024-10-18\", \"2021-11-17\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/b43eedcf56ae741f80928e28769cab27/275x206n.jpg",
+      "land_area_sqm": "住宅：59161m² 别墅：59161m²",
+      "building_area_sqm": "住宅：65077m² 别墅：65077m²",
+      "planned_units": "住宅：469 别墅：469",
+      "parking_spaces": "住宅：602 别墅：602",
+      "parking_ratio": "住宅：1:1.15 别墅：1:1.15",
+      "property_company": "浙江智想大成物业服务集团有限公司临安分公司",
+      "property_fee": "住宅：2.5元/㎡/月",
+      "decoration": "住宅：毛坯 别墅：毛坯",
+      "building_type": "{多层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"临安房预许字（2024）第00466号\", \"临售许字（2021）第ZJ02416号\"]",
+      "developer_brand": "佳源集团",
+      "investor": "佳源",
+      "construction_progress": "在建中，竣工时间：2026-12-31",
+      "rooms_detail": [
+        {
+          "name": "三室",
+          "area": 89.0,
+          "area_str": "89㎡"
+        },
+        {
+          "name": "三室",
+          "area": 108.0,
+          "area_str": "108㎡"
+        },
+        {
+          "name": "三室",
+          "area": 111.0,
+          "area_str": "111㎡"
+        },
+        {
+          "name": "四室",
+          "area": 113.0,
+          "area_str": "113㎡"
+        },
+        {
+          "name": "四室",
+          "area": 117.0,
+          "area_str": "117㎡"
+        },
+        {
+          "name": "四室",
+          "area": 180.0,
+          "area_str": "180㎡"
+        },
+        {
+          "name": "四室",
+          "area": 200.0,
+          "area_str": "200㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "桃李西径",
+      "city": "杭州",
+      "district": "临安区",
+      "sub_district": "双林高校",
+      "sales_status": "在售",
+      "unit_price_cny": 12704.0,
+      "total_price_wan": null,
+      "area_range": "43-298㎡",
+      "room_types": "1室户型,2室户型,3室户型,4室户型,别墅户型",
+      "floor_area_ratio": "住宅：1.75 别墅：1.75",
+      "green_ratio": "住宅：35% 别墅：35%",
+      "developer": "杭州临安新都房地产开发有限公司",
+      "address": "杭州临安区双林高校西径山路和农林街交汇处",
+      "distance_km": 3.48,
+      "lng": 119.728768,
+      "lat": 30.262385,
+      "property_type": "住宅",
+      "tags": "[\"车位充足\", \"低容积\", \"厨卫全明\", \"南北通透\", \"卧室全朝南\"]",
+      "open_date": "2026年3月8日",
+      "delivery_date": "2026年11月30日",
+      "cert_dates": "[\"2026-02-27\", \"2025-07-22\", \"2024-06-13\", \"2024-05-11\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/fe4f320e32fa0e411001bba54f90c36c/275x206n.jpg",
+      "land_area_sqm": "住宅：30336m² 别墅：30336m²",
+      "building_area_sqm": "住宅：53088m² 别墅：82538m²",
+      "planned_units": "住宅：470 别墅：470",
+      "parking_spaces": "住宅：55 别墅：526",
+      "parking_ratio": "住宅：1:1.2 别墅：1:1.2",
+      "property_company": "绿城物业服务集团有限公司临安分公司",
+      "property_fee": "住宅：2.5元/㎡/月 别墅：5元/㎡/月",
+      "decoration": "住宅：毛坯 别墅：毛坯",
+      "building_type": "{高层}",
+      "tenure_years": "住宅：70年 别墅：70年",
+      "presale_permit": "[\"临安房预许字(2026)第00101号\", \"临安房预许字（2025）第00310号\", \"临安房预许字（2024）第00247号\", \"临安房预许字(2024)第00175号\"]",
+      "developer_brand": "nan",
+      "investor": "杭州临安新都房地产开发有限公司",
+      "construction_progress": "在建中，竣工时间：2026-10-30",
+      "rooms_detail": [
+        {
+          "name": "一室",
+          "area": 43.0,
+          "area_str": "43㎡"
+        },
+        {
+          "name": "二室",
+          "area": 66.0,
+          "area_str": "66㎡"
+        },
+        {
+          "name": "二室",
+          "area": 69.0,
+          "area_str": "69㎡"
+        },
+        {
+          "name": "三室",
+          "area": 87.0,
+          "area_str": "87㎡"
+        },
+        {
+          "name": "三室",
+          "area": 109.0,
+          "area_str": "109㎡"
+        },
+        {
+          "name": "三室",
+          "area": 118.0,
+          "area_str": "118㎡"
+        },
+        {
+          "name": "四室",
+          "area": 139.0,
+          "area_str": "139㎡"
+        },
+        {
+          "name": "四室",
+          "area": 143.0,
+          "area_str": "143㎡"
+        },
+        {
+          "name": "四室",
+          "area": 175.0,
+          "area_str": "175㎡"
+        },
+        {
+          "name": "四室",
+          "area": 200.0,
+          "area_str": "200㎡"
+        },
+        {
+          "name": "五室",
+          "area": 200.0,
+          "area_str": "200㎡"
+        },
+        {
+          "name": "五室",
+          "area": 240.0,
+          "area_str": "240㎡"
+        },
+        {
+          "name": "七室",
+          "area": 298.0,
+          "area_str": "298㎡"
+        },
+        {
+          "name": "八室",
+          "area": 298.0,
+          "area_str": "298㎡"
+        }
+      ]
+    },
+    {
+      "project_name": "锦天府",
+      "city": "杭州",
+      "district": "临安区",
+      "sub_district": "锦南",
+      "sales_status": "在售",
+      "unit_price_cny": null,
+      "total_price_wan": 351.0,
+      "area_range": "215-284㎡",
+      "room_types": "别墅户型",
+      "floor_area_ratio": "1.04",
+      "green_ratio": "30%",
+      "developer": "杭州美顺企业管理有限公司",
+      "address": "杭州临安区锦南锦天路与锦溪交汇处",
+      "distance_km": 4.42,
+      "lng": 119.709873,
+      "lat": 30.218953,
+      "property_type": "别墅",
+      "tags": "[\"车位充足\", \"南北通透\", \"项目在建\", \"一房一价\", \"配套纯熟\"]",
+      "open_date": "2025年12月11日",
+      "delivery_date": "2026年11月30日",
+      "cert_dates": "[\"2025-12-04\", \"2025-04-03\"]",
+      "thumbnail": "https://pic4.ajkimg.com/display/xinfang/8d67ba501dc26eb7553f9c2a90232dda/275x206n.jpg",
+      "land_area_sqm": "33742m²",
+      "building_area_sqm": "68469m²",
+      "planned_units": "138",
+      "parking_spaces": "308",
+      "parking_ratio": "1:2.23",
+      "property_company": "nan",
+      "property_fee": "nan",
+      "decoration": "nan",
+      "building_type": "{联排别墅}",
+      "tenure_years": "70年",
+      "presale_permit": "[\"临安房预许字（2025）第00597号\", \"临安房预许字（2025）第00124号\"]",
+      "developer_brand": "nan",
+      "investor": "nan",
+      "construction_progress": "在建中，竣工时间：2026-11-30",
+      "rooms_detail": [
+        {
+          "name": "五室",
+          "area": 215.0,
+          "area_str": "215㎡"
+        },
+        {
+          "name": "三室",
+          "area": 230.0,
+          "area_str": "230㎡"
+        },
+        {
+          "name": "三室",
+          "area": 240.0,
+          "area_str": "240㎡"
+        },
+        {
+          "name": "五室",
+          "area": 284.0,
+          "area_str": "284㎡"
+        }
+      ]
+    }
+  ],
+  "market_summary": {
+    "sample_count": 4,
+    "price": {
+      "avg": 12704.0,
+      "min": 12704.0,
+      "max": 12704.0,
+      "valid_count": 1
+    },
+    "sales_status": {
+      "在售": 4
+    },
+    "districts": {
+      "临安区": 4
+    },
+    "room_types": {
+      "别墅户型": 4,
+      "3室户型": 2,
+      "4室户型": 2,
+      "1室户型": 1,
+      "2室户型": 1
+    }
+  },
+  "amenities": {
+    "school": {
+      "label": "学校",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "hospital": {
+      "label": "医院",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "subway": {
+      "label": "地铁站",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "bus": {
+      "label": "公交站",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "mall": {
+      "label": "商场",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "park": {
+      "label": "公园",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    },
+    "supermarket": {
+      "label": "超市",
+      "error": "<urlopen error _ssl.c:1003: The handshake operation timed out>",
+      "items": []
+    }
+  },
+  "price_band_competitors": null
+}
