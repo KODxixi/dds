@@ -1,0 +1,356 @@
+{
+  "status": "ok",
+  "city": "上海",
+  "year": 2020,
+  "n_archetypes": 5,
+  "calibration": {
+    "本地改善": {
+      "n_samples": 1290,
+      "pref": {
+        "景观": 0.553,
+        "私密": 0.501,
+        "圈层": 0.551,
+        "户型": 0.848,
+        "通勤": 0.598,
+        "学校": 0.7,
+        "品牌": 0.597
+      },
+      "risk_aversion": 0.5
+    },
+    "金融精英": {
+      "n_samples": 1440,
+      "pref": {
+        "景观": 0.652,
+        "私密": 0.602,
+        "圈层": 0.751,
+        "户型": 0.752,
+        "通勤": 0.7,
+        "学校": 0.798,
+        "品牌": 0.798
+      },
+      "risk_aversion": 0.452
+    },
+    "外籍海归": {
+      "n_samples": 954,
+      "pref": {
+        "景观": 0.6,
+        "私密": 0.549,
+        "圈层": 0.8,
+        "户型": 0.696,
+        "通勤": 0.649,
+        "学校": 0.848,
+        "品牌": 0.749
+      },
+      "risk_aversion": 0.502
+    },
+    "教育型买房": {
+      "n_samples": 809,
+      "pref": {
+        "景观": 0.403,
+        "私密": 0.395,
+        "圈层": 0.603,
+        "户型": 0.7,
+        "通勤": 0.553,
+        "学校": 0.959,
+        "品牌": 0.6
+      },
+      "risk_aversion": 0.494
+    },
+    "长三角家庭": {
+      "n_samples": 507,
+      "pref": {
+        "景观": 0.552,
+        "私密": 0.496,
+        "圈层": 0.501,
+        "户型": 0.801,
+        "通勤": 0.398,
+        "学校": 0.693,
+        "品牌": 0.654
+      },
+      "risk_aversion": 0.546
+    }
+  },
+  "ts": "2026-05-27T15:35:00",
+  "diffs": [
+    {
+      "archetype": "教育型买房",
+      "pref": "学校",
+      "preset": 0.98,
+      "real": 0.959,
+      "delta": -0.021,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "长三角家庭",
+      "pref": "学校",
+      "preset": 0.7,
+      "real": 0.693,
+      "delta": -0.007,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "教育型买房",
+      "pref": "私密",
+      "preset": 0.4,
+      "real": 0.395,
+      "delta": -0.005,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外籍海归",
+      "pref": "户型",
+      "preset": 0.7,
+      "real": 0.696,
+      "delta": -0.004,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "长三角家庭",
+      "pref": "私密",
+      "preset": 0.5,
+      "real": 0.496,
+      "delta": -0.004,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "长三角家庭",
+      "pref": "品牌",
+      "preset": 0.65,
+      "real": 0.654,
+      "delta": 0.004,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "景观",
+      "preset": 0.55,
+      "real": 0.553,
+      "delta": 0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "品牌",
+      "preset": 0.6,
+      "real": 0.597,
+      "delta": -0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "教育型买房",
+      "pref": "景观",
+      "preset": 0.4,
+      "real": 0.403,
+      "delta": 0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "教育型买房",
+      "pref": "圈层",
+      "preset": 0.6,
+      "real": 0.603,
+      "delta": 0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "教育型买房",
+      "pref": "通勤",
+      "preset": 0.55,
+      "real": 0.553,
+      "delta": 0.003,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "户型",
+      "preset": 0.85,
+      "real": 0.848,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "通勤",
+      "preset": 0.6,
+      "real": 0.598,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "金融精英",
+      "pref": "景观",
+      "preset": 0.65,
+      "real": 0.652,
+      "delta": 0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "金融精英",
+      "pref": "私密",
+      "preset": 0.6,
+      "real": 0.602,
+      "delta": 0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "金融精英",
+      "pref": "户型",
+      "preset": 0.75,
+      "real": 0.752,
+      "delta": 0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "金融精英",
+      "pref": "学校",
+      "preset": 0.8,
+      "real": 0.798,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "金融精英",
+      "pref": "品牌",
+      "preset": 0.8,
+      "real": 0.798,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外籍海归",
+      "pref": "学校",
+      "preset": 0.85,
+      "real": 0.848,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "长三角家庭",
+      "pref": "景观",
+      "preset": 0.55,
+      "real": 0.552,
+      "delta": 0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "长三角家庭",
+      "pref": "通勤",
+      "preset": 0.4,
+      "real": 0.398,
+      "delta": -0.002,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "私密",
+      "preset": 0.5,
+      "real": 0.501,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "圈层",
+      "preset": 0.55,
+      "real": 0.551,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "金融精英",
+      "pref": "圈层",
+      "preset": 0.75,
+      "real": 0.751,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外籍海归",
+      "pref": "私密",
+      "preset": 0.55,
+      "real": 0.549,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外籍海归",
+      "pref": "通勤",
+      "preset": 0.65,
+      "real": 0.649,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外籍海归",
+      "pref": "品牌",
+      "preset": 0.75,
+      "real": 0.749,
+      "delta": -0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "长三角家庭",
+      "pref": "圈层",
+      "preset": 0.5,
+      "real": 0.501,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "长三角家庭",
+      "pref": "户型",
+      "preset": 0.8,
+      "real": 0.801,
+      "delta": 0.001,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "本地改善",
+      "pref": "学校",
+      "preset": 0.7,
+      "real": 0.7,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "金融精英",
+      "pref": "通勤",
+      "preset": 0.7,
+      "real": 0.7,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外籍海归",
+      "pref": "景观",
+      "preset": 0.6,
+      "real": 0.6,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "外籍海归",
+      "pref": "圈层",
+      "preset": 0.8,
+      "real": 0.8,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "教育型买房",
+      "pref": "户型",
+      "preset": 0.7,
+      "real": 0.7,
+      "delta": 0.0,
+      "drift_level": "低"
+    },
+    {
+      "archetype": "教育型买房",
+      "pref": "品牌",
+      "preset": 0.6,
+      "real": 0.6,
+      "delta": 0.0,
+      "drift_level": "低"
+    }
+  ]
+}
