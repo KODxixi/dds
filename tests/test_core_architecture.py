@@ -1,7 +1,7 @@
 """DDS v2 核心架构测试。
 
 验证：
-1. 数据主动管理 - 检测缺失、自动降级、永不空值
+1. 数据主动管理 - 检测缺失并显式标记，永不静默缺失
 2. 契约强制校验 - 12 个 section 完整性校验
 3. 置信度计算 - 每个字段标记来源，每个 section 有置信度
 """
@@ -14,13 +14,14 @@ from pathlib import Path
 src_path = Path(__file__).parent.parent / "src"
 sys.path.insert(0, str(src_path.absolute()))
 
-from dds.contracts import (
+from dds.contracts import (  # noqa: E402
     SECTION_REQUIREMENTS,
     VALID_SECTION_IDS,
     ContractViolationError,
+    ResolvedStatus,
 )
-from dds.data import DataOrchestrator
-from dds.engine import ContractEnforcer
+from dds.data import DataOrchestrator  # noqa: E402
+from dds.engine import ContractEnforcer  # noqa: E402
 
 
 async def test_data_orchestrator_never_empty():
@@ -61,11 +62,11 @@ async def test_all_sections_complete():
 
     # 验证：12 个 section 全部存在
     assert len(all_sections) == 12, f"应该有 12 个 section，实际有 {len(all_sections)}"
-    print(f"✓ 成功生成全部 12 个 section")
+    print("✓ 成功生成全部 12 个 section")
 
     for section_id in VALID_SECTION_IDS:
         section = all_sections[section_id]
-        confidence = section.confidence['score']
+        confidence = section.confidence["score"]
         real_ratio = section.real_data_ratio()
         print(f"  {section_id}: 置信度={confidence:.2f}, 真实数据比例={real_ratio:.0%}")
 
@@ -89,20 +90,24 @@ async def test_contract_enforcer():
 
     project_context = {"city": "北京", "project_type": "住宅"}
 
-    # 测试 1: 完整数据应该通过校验
+    # 无 EvidenceRecord 时仅结构 gate 可通过，证据/决策/交付必须失败
     all_sections = await orchestrator.ensure_all_sections(project_context, {})
     result = enforcer.validate_report(all_sections, {})
 
     print(f"  完整数据校验结果: {'PASS' if result.valid else 'FAIL'}")
     print(f"  错误数: {len(result.errors)}, 警告数: {len(result.warnings)}")
     print(f"  整体置信度: {result.overall_confidence:.2f}")
+    assert result.gate_status["structure"] == "pass"
+    assert result.gate_status["evidence"] == "fail"
+    assert not result.valid
+    assert result.overall_confidence == 0.0
 
     # 测试 2: 缺少一个 section 应该失败
     print("\n  故意删除 SC1 测试校验失败...")
     incomplete_sections = {k: v for k, v in all_sections.items() if k != "SC1"}
 
     result2 = enforcer.validate_report(incomplete_sections, {})
-    assert result2.valid == False, "缺少 section 应该校验失败"
+    assert not result2.valid, "缺少 section 应该校验失败"
     print(f"  ✓ 缺少 SC1 时校验失败，错误: {result2.errors[0]}")
 
     # 测试 3: enforce_contract 应该抛出异常
@@ -134,17 +139,25 @@ async def test_mixed_real_and_fallback_data():
         "SC1", project_context, existing_data["SC1"]
     )
 
-    # 验证：真实数据保留，缺失数据降级
+    # 原始值保留，但无 EvidenceRecord 时只能是 provided_unverified/partial。
     assert section.data["project_id"] == "TEST-001"
-    assert section.data_origin["project_id"].source == "real"
+    assert section.data_origin["project_id"].source == "provided_unverified"
+    assert section.field_resolution("project_id").status == ResolvedStatus.PARTIAL
 
-    # 缺失字段有降级值
+    # 缺失字段必须是显式 human_input，而不是伪造基准。
     assert "evidence_boundary" in section.data
-    assert section.data_origin["evidence_boundary"].source != "real"
+    assert section.data_origin["evidence_boundary"].source == "human_input"
+    assert (
+        section.field_resolution("evidence_boundary").status
+        == ResolvedStatus.HUMAN_INPUT
+    )
+    assert section.confidence["score"] == 0.0
 
-    print("  ✓ 真实数据保留，缺失数据自动降级")
-    print(f"  ✓ 真实字段: project_id, decision_question")
-    print(f"  ✓ 自动填充: evidence_boundary={section.data_origin['evidence_boundary'].label}")
+    print("  ✓ 原始值保留且明确标为未核验，缺失数据显式登记")
+    print("  ✓ 未核验字段: project_id, decision_question")
+    print(
+        f"  ✓ 自动填充: evidence_boundary={section.data_origin['evidence_boundary'].label}"
+    )
     print(f"  ✓ 自动填充: base_date={section.data_origin['base_date'].label}")
     print(f"  ✓ 置信度: {section.confidence['score']:.2f}")
 
@@ -161,7 +174,7 @@ async def main():
     print("\n" + "=" * 60)
     print("✅ 所有测试通过！")
     print("\n核心特性验证：")
-    print("  ✓ 数据主动管理 - 检测缺失、自动降级、永不空值")
+    print("  ✓ 数据主动管理 - 检测缺失、显式 unknown/human_input、永不静默缺失")
     print("  ✓ 契约强制校验 - 12 个 section 完整性校验")
     print("  ✓ 置信度计算 - 每个字段标记来源，每个 section 有置信度")
     print("  ✓ 数据透明化 - CS 章节自动汇总所有数据缺口")

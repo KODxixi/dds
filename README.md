@@ -1,181 +1,135 @@
-# DDS v2 - 数据驱动的地产决策报告引擎
+# DDS V2
 
-## 核心改进
+DDS V2 是唯一正式产品主线：以可追溯 EvidenceRecord、显式数据缺口、冻结编译和四道质量门为核心的地产决策报告系统。V1 仅作为只读数据与算法资产来源；根目录旧模块及 `dds.agents.generate_report` 不是正式交付入口。
 
-### 1. 数据主动管理
+## 环境与安装
 
-**核心原则：绝对不允许静默留空**
+- Python `>=3.10`
+- `data` 安装组包含 DuckDB 数据适配能力
 
-当数据缺失时，系统自动按优先级进行多级降级填充：
-- `真实数据` → 用户传入或从数据源获取的数据
-- `城市基准` → 基于所在城市的行业基准数据
-- `项目类型平均` → 基于同类项目的行业平均值
-- `全国基准` → 全国通用的地产行业基准
-- `待人工补充` → 明确标记需要人工补充的数据
-
-### 2. 契约强制校验
-
-任何报告输出前必须通过完整的契约校验：
-- ✅ 12 个 decision-unit 完整性检查
-- ✅ 每个 section 必填字段完整性
-- ✅ 置信度计算完整性
-- ✅ CS 章节必须包含数据缺口汇总
-- ❌ 不通过校验的报告直接拒绝输出
-
-### 3. 置信度透明化
-
-每个字段都有来源标记，每个 section 都有 7 维度置信度计算：
-- 数据源质量（0.25）
-- 数据覆盖度（0.15）
-- 新鲜度（0.15）
-- 独立交叉验证（0.15）
-- 地理相关性（0.15）
-- 方法适配度（0.10）
-- 稳定性（0.05）
-
-## 架构设计
-
-```
-dds/
-├── contracts.py            # 契约定义（报告结构、证据类型、置信度计算）
-├── data/
-│   ├── __init__.py
-│   ├── orchestrator.py     # DataOrchestrator - 数据编排核心
-│   ├── fetcher.py          # DataFetcher - 多数据源自动搜索
-│   └── fallback.py         # FallbackEngine - 多级降级策略
-└── engine/
-    ├── __init__.py
-    └── contract_enforcer.py # ContractEnforcer - 契约强制校验
+```powershell
+python -m pip install -e ".[dev,data]"
 ```
 
-## 快速开始
+安装后建议从项目目录之外验证导入，避免仓库目录掩盖打包问题：
+
+```powershell
+Push-Location $env:TEMP
+python -c "import dds; import dds.domain; print(dds.__file__)"
+Pop-Location
+```
+
+## 正式主线
+
+正式链路固定为：
+
+```text
+真实数据适配器
+  → EvidenceRecord / EvidencePackage
+  → 业务引擎与 ReportService
+  → ReportRun
+  → ReportCompilerAdapter.build_frozen_compiler_package
+  → V4 ReportDocument 离线编译
+  → 与 HTML 字节哈希绑定的真实浏览器 QA
+  → DeliveryService 原子交付
+```
+
+核心服务入口如下：
 
 ```python
-import asyncio
-from dds.data import DataOrchestrator
-from dds.engine import ContractEnforcer
+from dds.config import Settings
+from dds.data.repository import CompetitorQuery
+from dds.domain import ProjectContext
+from dds.services import (
+    DeliveryService,
+    ReportCompilerAdapter,
+    ReportService,
+    ResearchService,
+)
 
-# 初始化
-orchestrator = DataOrchestrator(city="北京", project_type="住宅")
-enforcer = ContractEnforcer()
+settings = Settings.from_env()
+context = ProjectContext(
+    project_id="WH-001",
+    project_name="武汉项目",
+    city="武汉",
+    project_type="住宅",
+    base_date="2026-07-22",
+)
 
-# 准备项目上下文
-project_context = {"city": "北京", "project_type": "住宅"}
+# Collector/Resolver 只产生可追溯证据与确定性市场结果，不生成报告措辞。
+research_service = ResearchService()
+market = research_service.research_market(CompetitorQuery(city="武汉", limit=20))
+evidence_snapshot = research_service.freeze_market(context, market)
 
-# 传入部分真实数据
-existing_data = {
-    "SC1": {
-        "project_id": "PROJECT-001",
-        "decision_question": "北京朝阳核心区高端住宅开发决策分析",
-    }
+# 产品与溢价引擎结果在此一并传入；输入不足时字段保持 unknown/not_assessable。
+run = ReportService().assemble(
+    run_id="WH-001-run-001",
+    project_context=context,
+    evidence=market.evidence,
+    market=market.analysis,
+)
+
+package = ReportCompilerAdapter().build_frozen_compiler_package(
+    run,
+    required_units=("SC2",),
+)
+delivery = DeliveryService(settings.exports_root)
+
+# delivery.render(package) 会先执行正式交付门；未就绪即抛错。
+# 通过后必须对返回的 HTML 原始字节执行三视口、打印、图片、控制台检查，
+# 并将官方 QA 报告绑定为 BrowserQAResult 后交给 delivery.deliver(...)。
+```
+
+正式流程必须通过 `BrowserQAResult.from_reports(...)` 从官方 `browser_qa.json` 与 `print_qa.json` 构造 QA 结果，随后由 `DeliveryService` 再次复核 HTML hash。手工构造的对象不构成交付证据，也不得用于正式发布。
+
+## 兼容工作稿入口
+
+旧入口仍保留，目的是避免已有调用方立即中断：
+
+```python
+from dds.agents import generate_report
+```
+
+但它只生成文件名包含 `Work_Report` 的 `legacy_work_report` 工作稿。其返回值、产物 metadata 和 HTML 元数据都固定为：
+
+```python
+{
+    "artifact_kind": "legacy_work_report",
+    "delivery_ready": False,
 }
-
-# 自动填充所有 section
-all_sections = asyncio.run(orchestrator.ensure_all_sections(project_context, existing_data))
-
-# 执行契约校验
-result = enforcer.validate_report(all_sections, {})
-print(f"校验结果: {'PASS' if result.valid else 'FAIL'}")
-print(f"整体置信度: {result.overall_confidence:.2f}")
-
-# 获取数据质量报告
-quality_report = orchestrator.get_data_quality_report(all_sections)
-print(f"真实数据占比: {quality_report['summary']['real_ratio']:.1%}")
 ```
 
-## 运行测试
+这里的 `success=True` 仅代表工作稿文件写入成功，不代表证据有效、决策就绪或可正式交付。正式客户交付必须走上一节的 frozen V4 compiler + hash-bound browser QA + `DeliveryService`。
 
-```bash
-python tests/test_core_functionality.py
+## 质量原则
+
+DDS 的承诺是“缺失绝不静默”，不是“永不为空”。没有合格证据时，字段必须进入 `unknown`、`blocked`、`scenario` 或明确补证状态，禁止用无来源的城市／全国基准冒充事实。
+
+报告依次经过四道闸门：
+
+1. `structure_valid`：12 个 Decision-Unit 的结构与字段契约有效。
+2. `evidence_valid`：证据类型、来源、时间、地域、单位和方法可追溯。
+3. `decision_ready`：业务结论达到对应最低输入门槛。
+4. `delivery_ready`：冻结包、编译器、资源安全及真实浏览器 QA 全部通过。
+
+不得用单一 `valid=True` 把结构完整等同于正式可交付。
+
+## 武汉 V1 Vault（只读）
+
+真实武汉数据通过环境变量指向现有 V1 Vault。DDS V2 不修改、不迁移该目录，也不会将其中内容打入 wheel。
+
+```powershell
+$env:DDS_V1_VAULT_ROOT = "D:\path\to\read-only-v1-vault"
+$env:DDS_EXPORTS_ROOT = "D:\path\to\dds-v2-exports"
+python -m pytest tests/integration -q
 ```
 
-## 12 个 Decision-Unit
+运行时证据快照、缓存和报告产物位于 `data/` 或显式配置目录，不属于 Python 包发布内容。wheel 仅包含 `src/dds` 代码以及声明过的报告模板和 profile。
 
-| 组别 | ID | 名称 | 必填字段数 |
-|------|-----|------|----------|
-| **战略语境 (SC)** | | | |
-| | SC1 | 投决命题与证据边界 | 4 |
-| | SC2 | 市场机会、客群洞察与竞品实证 | 5 |
-| | SC3 | 场地、法定条件与工程边界 | 3 |
-| **产品方案 (AD)** | | | |
-| | AD1 | 方案1／2／3强排比选 | 4 |
-| | AD2 | 主推方案与决策闸门 | 3 |
-| | AD3 | 产品定位、面积段与货量兑现 | 4 |
-| | AD4 | 建筑与空间落地 | 5 |
-| | AD5 | 传统空间文化与市场感知 | 3 |
-| **价值校验 (VA)** | | | |
-| | VA1 | 设计价值溢价 | 2 |
-| | VA2 | 去化、现金流与投资验证 | 3 |
-| | VA3 | 风险与实施闭环 | 4 |
-| **置信状态 (CS)** | | | |
-| | CS | 来源、方法与置信状态 | 5 |
+## 测试
 
-## 核心 API
-
-### DataOrchestrator
-
-```python
-# 准备单个 section
-await ensure_section_data(section_id, project_context, existing_data)
-
-# 准备所有 12 个 section
-await ensure_all_sections(project_context, existing_sections)
-
-# 获取整体置信度
-calculate_overall_confidence(sections)
-
-# 获取数据质量报告
-get_data_quality_report(sections)
+```powershell
+python -m pytest tests -q
 ```
 
-### ContractEnforcer
-
-```python
-# 校验报告
-validate_report(sections, metadata)
-
-# 强制执行契约，失败抛出异常
-enforce_contract(sections, metadata)
-
-# 获取校验摘要
-get_validation_summary(result)
-```
-
-## 置信度等级
-
-| 分数 | 等级 | 说明 |
-|------|------|------|
-| ≥ 0.75 | 高 | 数据质量良好，可用于决策 |
-| ≥ 0.55 | 中 | 数据基本可用，建议补充 |
-| ≥ 0.35 | 低 | 数据质量较差，谨慎使用 |
-| < 0.35 | 不可判定 | 大部分为降级数据，建议人工补充 |
-
-## 设计理念
-
-### 消除静默空值
-
-传统报告系统中，数据缺失时会留下空白，用户可能不会注意到。DDS v2 采取截然不同的策略：
-
-> 数据缺失时，**绝对不静默留空**，而是：
-> 1. 自动从多级数据源搜索
-> 2. 使用最佳可用的降级值填充
-> 3. **明确标记**数据来源和置信度惩罚
-> 4. 在 CS 章节汇总所有数据缺口，提示用户需要补充哪些信息
-
-### 契约驱动质量
-
-契约不是建议，而是硬约束：
-- 所有 12 个 section 必须完整
-- 所有必填字段必须填充（即使是降级值）
-- 所有 section 必须有置信度计算
-- CS 章节必须包含完整的数据缺口清单
-
-### 数据透明化
-
-每个数据点都有可追溯的来源标记，用户可以清晰地看到：
-- 哪些是真实数据
-- 哪些是基于城市基准的推断
-- 哪些是行业平均值
-- 哪些数据需要人工补充
-
-这种透明性让用户对报告质量有清晰的预期，而不是盲目相信"AI 黑箱"。
+只有 pytest 全绿，且目标产物完成哈希绑定浏览器 QA 后，才能进入正式交付阶段。

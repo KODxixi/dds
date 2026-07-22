@@ -1,55 +1,24 @@
-"""DDS v2 - 数据驱动的地产决策报告引擎。
+"""Forward repository-root imports to the authoritative ``src/dds`` package.
 
-本版本核心改进：
-1. 数据主动管理：检测缺失、自动搜索降级、永不空值
-2. 契约强制校验：输出前必须通过 12 个 decision-unit 校验
-3. 置信度透明化：每个字段标记来源，每个 section 有置信度
+The root ``dds`` directory is retained only for repository compatibility. It
+must never fall back to the legacy implementation that remains beside this
+shim.
 """
 
-__version__ = "2.0.0"
+from pathlib import Path as _Path
 
-from dds.contracts import (
-    CONFIDENCE_LEVEL_LABELS,
-    CONFIDENCE_WEIGHTS,
-    FALLBACK_STRATEGIES,
-    FIELD_DESCRIPTIONS,
-    REPORT_GROUPS,
-    REPORT_UNITS,
-    SECTION_REQUIREMENTS,
-    VALID_SECTION_IDS,
-    ContractViolationError,
-    FieldOrigin,
-    SectionData,
-    ValidationResult,
-    build_evidence_confidence,
-    compute_empirical_confidence,
-    compute_evidence_confidence,
-    confidence_level,
-    normalize_evidence_type,
-)
+_SRC_PACKAGE = (_Path(__file__).resolve().parents[1] / "src" / "dds").resolve()
+_SRC_INIT = _SRC_PACKAGE / "__init__.py"
 
-__all__ = [
-    "__version__",
-    # 框架
-    "REPORT_GROUPS",
-    "REPORT_UNITS",
-    "SECTION_REQUIREMENTS",
-    "VALID_SECTION_IDS",
-    # 证据
-    "EVIDENCE_TYPES",
-    "CONFIDENCE_LEVEL_LABELS",
-    "CONFIDENCE_WEIGHTS",
-    "normalize_evidence_type",
-    "confidence_level",
-    "compute_evidence_confidence",
-    "compute_empirical_confidence",
-    "build_evidence_confidence",
-    # 数据结构
-    "FieldOrigin",
-    "SectionData",
-    "ValidationResult",
-    "ContractViolationError",
-    # 降级
-    "FALLBACK_STRATEGIES",
-    "FIELD_DESCRIPTIONS",
-]
+if not _SRC_PACKAGE.is_dir() or not _SRC_INIT.is_file():
+    raise ImportError(f"authoritative DDS src package is missing: {_SRC_INIT}")
+
+__path__ = [str(_SRC_PACKAGE)]
+__file__ = str(_SRC_INIT)
+
+if __spec__ is not None:
+    __spec__.origin = str(_SRC_INIT)
+    if __spec__.submodule_search_locations is not None:
+        __spec__.submodule_search_locations[:] = __path__
+
+exec(compile(_SRC_INIT.read_bytes(), str(_SRC_INIT), "exec"), globals(), globals())
