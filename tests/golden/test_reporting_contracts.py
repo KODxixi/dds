@@ -3,13 +3,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-import sys
-from pathlib import Path
 from typing import Any
 
-
-SRC = Path(__file__).resolve().parents[2] / "src"
-sys.path.insert(0, str(SRC))
 
 from dds.reporting.contracts.evidence_contract import compute_evidence_confidence
 from dds.reporting.contracts.report_chart_contract import normalize_chart_spec

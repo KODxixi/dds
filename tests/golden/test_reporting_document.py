@@ -1,12 +1,6 @@
-# ruff: noqa: E402
 from __future__ import annotations
 
-import sys
-from pathlib import Path
 
-
-SRC = Path(__file__).resolve().parents[2] / "src"
-sys.path.insert(0, str(SRC))
 
 from dds.reporting.compiler import compute_report_document_hash
 from dds.reporting.report_document import build_report_document

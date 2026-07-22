@@ -1,25 +1,19 @@
 """调试脚本：逐步运行 Agent 流程，定位内容生成失败点。"""
-import asyncio
-import sys
 import logging
-from pathlib import Path
+import asyncio
 
-ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT))
-
-logging.basicConfig(level=logging.DEBUG, format="%(name)s %(levelname)s: %(message)s")
-
-from dds.agents.pipeline import create_agent_system
 from dds.agents.base import AgentTask
+from dds.agents.pipeline import create_agent_system
 from dds.agents.orchestrator import (
     TASK_REQUIREMENT_ANALYSIS,
     TASK_DATA_ORCHESTRATION,
     TASK_CONTENT_GENERATION,
     TASK_QUALITY_AUDIT,
-    TASK_REPORT_EXPORT,
-    TASK_GENERATE_REPORT,
 )
 
+
+
+logging.basicConfig(level=logging.DEBUG, format="%(name)s %(levelname)s: %(message)s")
 
 async def main():
     orch = create_agent_system()
@@ -57,7 +51,6 @@ async def main():
         print(f"  [{status}] {sid}: errors={r3.errors}")
         if not r3.success:
             print(f"     full result: {r3}")
-            import traceback
 
     # Step 4: quality audit (if all content ok)
     print("\n=== Step 4: Quality Audit ===")

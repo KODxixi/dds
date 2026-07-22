@@ -9,9 +9,6 @@
 
 import asyncio
 import sys
-from pathlib import Path
-
-sys.path.insert(0, str((Path(__file__).parent.parent / "src").absolute()))
 
 from dds.contracts import ResolvedStatus
 from dds.data import DataOrchestrator

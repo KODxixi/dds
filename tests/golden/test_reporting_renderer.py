@@ -1,13 +1,7 @@
-# ruff: noqa: E402
 from __future__ import annotations
 
 import hashlib
-import sys
-from pathlib import Path
 
-
-SRC = Path(__file__).resolve().parents[2] / "src"
-sys.path.insert(0, str(SRC))
 
 from dds.reporting.renderer import render_cinematic_deck_html
 from dds.reporting.report_document import build_report_document

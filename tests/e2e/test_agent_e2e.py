@@ -9,7 +9,7 @@ import dds
 from dds import SECTION_REQUIREMENTS, create_agent_system, generate_report
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 EXPECTED_PACKAGE_ROOT = (ROOT / "src" / "dds").resolve()
 EXPECTED_SECTION_IDS = set(SECTION_REQUIREMENTS)
 BASE_DATE = "2026-07-22"

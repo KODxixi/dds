@@ -4,11 +4,11 @@ DDS V2 是唯一正式产品主线：以可追溯 EvidenceRecord、显式数据�
 
 ## 环境与安装
 
-- Python `>=3.10`
-- `data` 安装组包含 DuckDB 数据适配能力
+- Python `>=3.11,<3.14`
+- 使用 `uv` 管理锁定环境；开发组已包含完整测试依赖和 DuckDB
 
 ```powershell
-python -m pip install -e ".[dev,data]"
+uv sync --dev
 ```
 
 安装后建议从项目目录之外验证导入，避免仓库目录掩盖打包问题：
@@ -129,7 +129,9 @@ python -m pytest tests/integration -q
 ## 测试
 
 ```powershell
-python -m pytest tests -q
+uv run ruff check --no-cache src tests tools
+uv run pytest -p no:cacheprovider
 ```
 
 只有 pytest 全绿，且目标产物完成哈希绑定浏览器 QA 后，才能进入正式交付阶段。
+目录职责和可删除边界见 `PROJECT_STRUCTURE.md`；历史计划与 handoff 统一位于 `docs/`。

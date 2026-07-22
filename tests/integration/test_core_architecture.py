@@ -7,21 +7,14 @@
 """
 
 import asyncio
-import sys
-from pathlib import Path
-
-# 添加 src 目录到路径
-src_path = Path(__file__).parent.parent / "src"
-sys.path.insert(0, str(src_path.absolute()))
-
-from dds.contracts import (  # noqa: E402
+from dds.contracts import (
     SECTION_REQUIREMENTS,
     VALID_SECTION_IDS,
     ContractViolationError,
     ResolvedStatus,
 )
-from dds.data import DataOrchestrator  # noqa: E402
-from dds.engine import ContractEnforcer  # noqa: E402
+from dds.data import DataOrchestrator
+from dds.engine import ContractEnforcer
 
 
 async def test_data_orchestrator_never_empty():

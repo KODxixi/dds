@@ -1,14 +1,9 @@
 from __future__ import annotations
 
 import hashlib
-import sys
-from pathlib import Path
 
 import pytest
 
-
-SRC = Path(__file__).resolve().parents[2] / "src"
-sys.path.insert(0, str(SRC))
 
 from dds.reporting.renderer import TEMPLATE_PATH  # noqa: E402
 from dds.reporting.runtime_compat import inject_browser_qa_runtime  # noqa: E402
