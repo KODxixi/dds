@@ -13,6 +13,8 @@ import random
 import statistics
 from typing import Mapping, Sequence
 
+from dds.customer import ChoiceModelArtifact
+
 
 def _gumbel(rng: random.Random) -> float:
     """Draw a standard Gumbel variate from the run-local RNG."""
@@ -49,8 +51,8 @@ class SegmentParameters:
             raise ValueError("down_payment_ratio must be within (0, 1]")
         if not 0 <= self.risk_aversion <= 1:
             raise ValueError("risk_aversion must be within [0, 1]")
-        if any(not 0 <= value <= 1 for value in self.preference_weights.values()):
-            raise ValueError("preference weights must be within [0, 1]")
+        if any(not math.isfinite(value) for value in self.preference_weights.values()):
+            raise ValueError("preference weights must be finite")
 
 
 @dataclass(frozen=True, slots=True)
@@ -59,6 +61,7 @@ class CityModelParameters:
     version: str
     segments: tuple[SegmentParameters, ...]
     supporting_evidence_refs: tuple[str, ...]
+    choice_model: ChoiceModelArtifact | None = None
 
     def __post_init__(self) -> None:
         if not self.city.strip() or not self.version.strip():
@@ -67,6 +70,8 @@ class CityModelParameters:
             raise ValueError("at least one segment is required")
         if not self.supporting_evidence_refs:
             raise ValueError("city parameters require supporting evidence references")
+        if self.choice_model is not None and self.choice_model.city != self.city:
+            raise ValueError("choice model city must match the city parameter profile")
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,11 +102,31 @@ class ABMResult:
     sample_size: int
     product_choice_shares: Mapping[str, float]
     exit_share: float
-    wtp_p25_wan: float
-    wtp_median_wan: float
-    wtp_p75_wan: float
+    affordable_budget_p25_wan: float
+    affordable_budget_median_wan: float
+    affordable_budget_p75_wan: float
     supporting_evidence_refs: tuple[str, ...]
+    choice_model_version: str | None = None
+    wtp_by_segment_attribute_wan: Mapping[str, float] | None = None
     evidence_type: str = "model_simulation"
+
+    @property
+    def wtp_p25_wan(self) -> float:
+        """Compatibility alias; this value is affordability, not true WTP."""
+
+        return self.affordable_budget_p25_wan
+
+    @property
+    def wtp_median_wan(self) -> float:
+        """Compatibility alias; this value is affordability, not true WTP."""
+
+        return self.affordable_budget_median_wan
+
+    @property
+    def wtp_p75_wan(self) -> float:
+        """Compatibility alias; this value is affordability, not true WTP."""
+
+        return self.affordable_budget_p75_wan
 
 
 def _percentile(values: Sequence[float], probability: float) -> float:
@@ -147,7 +172,20 @@ class ABMEngine:
         segment_weights = [item.weight for item in profile.segments]
         choices = {item.product_id: 0 for item in products}
         exits = 0
-        willingness_to_pay: list[float] = []
+        affordable_budgets: list[float] = []
+        choice_model = profile.choice_model
+        wtp_by_segment_attribute: dict[str, float] = {}
+        if choice_model is not None:
+            for segment in profile.segments:
+                coefficients = choice_model.coefficients_for(segment.segment_id)
+                for attribute in coefficients:
+                    if attribute == choice_model.price_feature:
+                        continue
+                    key = f"{segment.segment_id}.{attribute}"
+                    wtp_by_segment_attribute[key] = round(
+                        choice_model.wtp_wan(segment.segment_id, attribute),
+                        6,
+                    )
 
         for _ in range(sample_size):
             segment = rng.choices(profile.segments, weights=segment_weights, k=1)[0]
@@ -160,27 +198,47 @@ class ABMEngine:
             )
             assets = income * segment.asset_multiple * rng.uniform(0.8, 1.2)
             budget = assets / segment.down_payment_ratio
-            willingness_to_pay.append(budget)
+            affordable_budgets.append(budget)
             utilities: list[tuple[str, float]] = []
             for product in products:
-                attribute_utility = sum(
-                    segment.preference_weights.get(name, 0.0) * value
-                    for name, value in product.attributes.items()
-                )
-                affordability = min(1.0, budget / product.total_price_wan)
-                price_penalty = max(
-                    0.0,
-                    (product.total_price_wan - budget) / max(budget, 0.1),
-                )
-                utility = (
-                    attribute_utility
-                    + affordability
-                    - price_penalty * (1 + segment.risk_aversion)
-                    + _gumbel(rng)
-                )
+                if choice_model is None:
+                    attribute_utility = sum(
+                        segment.preference_weights.get(name, 0.0) * value
+                        for name, value in product.attributes.items()
+                    )
+                    affordability = min(1.0, budget / product.total_price_wan)
+                    price_penalty = max(
+                        0.0,
+                        (product.total_price_wan - budget) / max(budget, 0.1),
+                    )
+                    utility = (
+                        attribute_utility
+                        + affordability
+                        - price_penalty * (1 + segment.risk_aversion)
+                        + _gumbel(rng)
+                    )
+                else:
+                    coefficients = choice_model.coefficients_for(segment.segment_id)
+                    attribute_utility = sum(
+                        coefficients.get(name, 0.0) * value
+                        for name, value in product.attributes.items()
+                    )
+                    price_utility = (
+                        coefficients[choice_model.price_feature]
+                        * product.total_price_wan
+                    )
+                    utility = (
+                        choice_model.alternative_intercepts.get(product.product_id, 0.0)
+                        + attribute_utility
+                        + price_utility
+                        + _gumbel(rng)
+                    )
                 utilities.append((product.product_id, utility))
             # Explicit outside option represents delaying or abandoning purchase.
-            utilities.append(("__exit__", _gumbel(rng)))
+            outside_intercept = (
+                choice_model.outside_option_intercept if choice_model is not None else 0.0
+            )
+            utilities.append(("__exit__", outside_intercept + _gumbel(rng)))
             chosen = max(utilities, key=lambda item: item[1])[0]
             if chosen == "__exit__":
                 exits += 1
@@ -196,10 +254,19 @@ class ABMEngine:
                 key: round(value / sample_size, 8) for key, value in choices.items()
             },
             exit_share=round(exits / sample_size, 8),
-            wtp_p25_wan=round(_percentile(willingness_to_pay, 0.25), 4),
-            wtp_median_wan=round(statistics.median(willingness_to_pay), 4),
-            wtp_p75_wan=round(_percentile(willingness_to_pay, 0.75), 4),
-            supporting_evidence_refs=profile.supporting_evidence_refs,
+            affordable_budget_p25_wan=round(_percentile(affordable_budgets, 0.25), 4),
+            affordable_budget_median_wan=round(statistics.median(affordable_budgets), 4),
+            affordable_budget_p75_wan=round(_percentile(affordable_budgets, 0.75), 4),
+            supporting_evidence_refs=tuple(
+                dict.fromkeys(
+                    profile.supporting_evidence_refs
+                    + (choice_model.evidence_refs if choice_model is not None else ())
+                )
+            ),
+            choice_model_version=choice_model.version if choice_model is not None else None,
+            wtp_by_segment_attribute_wan=(
+                wtp_by_segment_attribute if choice_model is not None else None
+            ),
         )
 
 
@@ -211,4 +278,3 @@ __all__ = [
     "SimulatedProduct",
     "UnsupportedCityError",
 ]
-

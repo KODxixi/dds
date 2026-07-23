@@ -7,8 +7,10 @@ from typing import Any, Iterable, Mapping
 
 from dds.analysis_profile import resolve_analysis_profile
 from dds.contracts import REPORT_UNITS, SECTION_REQUIREMENTS
+from dds.customer import CustomerIntelligenceBundle
 from dds.domain import (
     EvidenceRecord,
+    EvidenceType,
     ProjectContext,
     ReportRun,
     ResolvedField,
@@ -923,8 +925,10 @@ class ReportService:
         ] | None = None,
         analysis_profile: Mapping[str, Any] | None = None,
         requirements: Iterable[Mapping[str, Any]] = (),
+        customer_intelligence: CustomerIntelligenceBundle | None = None,
     ) -> ReportRun:
         sections = self.empty_sections()
+        evidence_records = list(evidence)
         if market is not None:
             sections["SC2"] = self.market_section(market)
         if product is not None:
@@ -957,7 +961,99 @@ class ReportService:
                     scheme_comparison_evidence_refs or {}
                 ),
             )
-        evidence_records = list(evidence)
+        customer_payload: dict[str, Any] | None = None
+        if customer_intelligence is not None:
+            if customer_intelligence.city != project_context.city:
+                raise ValueError("customer intelligence city must match the project")
+            if str(customer_intelligence.as_of) != str(project_context.base_date):
+                raise ValueError("customer intelligence as_of must match the project base_date")
+            if (
+                customer_intelligence.district
+                and project_context.district
+                and customer_intelligence.district != project_context.district
+            ):
+                raise ValueError("customer intelligence district must match the project")
+            evidence_by_id = {item.evidence_id: item for item in evidence_records}
+            missing_bundle_refs = [
+                ref
+                for ref in customer_intelligence.evidence_refs
+                if ref not in evidence_by_id
+            ]
+            if missing_bundle_refs:
+                raise ValueError(
+                    "customer intelligence references missing evidence: "
+                    f"{missing_bundle_refs}"
+                )
+            segment_refs = tuple(
+                dict.fromkeys(
+                    ref
+                    for segment in customer_intelligence.segments
+                    for ref in segment.evidence_refs
+                )
+            )
+            missing_refs = [ref for ref in segment_refs if ref not in evidence_by_id]
+            if missing_refs:
+                raise ValueError(
+                    f"customer segments reference missing evidence: {missing_refs}"
+                )
+            allowed_segment_evidence = {
+                EvidenceType.OBSERVED_FACT,
+                EvidenceType.SOCIAL_OBSERVATION,
+            }
+            invalid_refs = [
+                ref
+                for ref in segment_refs
+                if evidence_by_id[ref].evidence_type not in allowed_segment_evidence
+            ]
+            if invalid_refs:
+                raise ValueError(
+                    "SC2 customer segments require observed or social evidence: "
+                    f"{invalid_refs}"
+                )
+            sc2 = sections["SC2"]
+            sc2.data["customer_segments"] = ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value=[item.to_dict() for item in customer_intelligence.segments],
+                evidence_refs=list(segment_refs),
+                assumptions=[
+                    f"customer evidence level={customer_intelligence.evidence_level.name.lower()}",
+                    "客群权重仅在冻结地域、时点和样本范围内有效。",
+                ],
+                confidence=None,
+                reason="",
+            )
+            sc2.evidence_refs = list(dict.fromkeys(sc2.evidence_refs + list(segment_refs)))
+            if sc2.status is ResolvedStatus.UNKNOWN:
+                sc2.status = ResolvedStatus.PARTIAL
+            customer_payload = customer_intelligence.to_dict()
+            simulation_refs = list(customer_intelligence.evidence_refs)
+            simulation_value = {
+                "evidence_level": customer_payload["evidence_level"],
+                "synthetic_cohort": customer_payload.get("synthetic_cohort"),
+                "choice_simulation": customer_payload.get("choice_simulation"),
+                "persona_experiment": customer_payload.get("persona_experiment"),
+                "allowed_uses": customer_payload["allowed_uses"],
+                "prohibited_uses": customer_payload["prohibited_uses"],
+            }
+            for section_id, field_name in (
+                ("AD3", "customer_response"),
+                ("VA3", "customer_risks"),
+            ):
+                sections[section_id].data[field_name] = ResolvedField(
+                    status=ResolvedStatus.RESOLVED,
+                    value=simulation_value,
+                    evidence_refs=simulation_refs,
+                    assumptions=[
+                        "该字段是聚合模型模拟，不替代 SC2 真实客群证据。",
+                        "choice share 不得直接换算月销量。",
+                    ],
+                    confidence=None,
+                )
+                sections[section_id].evidence_refs = list(
+                    dict.fromkeys(
+                        sections[section_id].evidence_refs + simulation_refs
+                    )
+                )
         sections["CS"] = SectionResult(
             section_id="CS",
             data={
@@ -997,6 +1093,34 @@ class ReportService:
             confidence=None,
             status=ResolvedStatus.PARTIAL,
         )
+        if customer_payload is not None:
+            cs_methods = sections["CS"].data["methods"]
+            if isinstance(cs_methods, ResolvedField):
+                cs_methods.value = list(cs_methods.value or []) + [
+                    f"customer_intelligence={customer_payload['version']}",
+                    (
+                        "local_population_weighting="
+                        f"{customer_payload['local_population']['weighting_method']}"
+                    ),
+                    "persona_results=aggregated_model_simulation",
+                ]
+                cs_methods.evidence_refs = list(
+                    dict.fromkeys(
+                        cs_methods.evidence_refs + customer_payload["evidence_refs"]
+                    )
+                )
+            cs_assumptions = sections["CS"].data["assumptions"]
+            if isinstance(cs_assumptions, ResolvedField):
+                cs_assumptions.value = list(cs_assumptions.value or []) + [
+                    f"禁止用途：{item}"
+                    for item in customer_payload["prohibited_uses"]
+                ]
+            sections["CS"].evidence_refs = list(
+                dict.fromkeys(
+                    sections["CS"].evidence_refs
+                    + customer_payload["evidence_refs"]
+                )
+            )
         profile = dict(analysis_profile or {})
         if profile and not profile.get("schema_version"):
             profile = resolve_analysis_profile(
@@ -1019,6 +1143,11 @@ class ReportService:
                     "profile_model_version": profile["model_version"],
                     "strategy_objective": "risk_adjusted_operating_value",
                 } if profile else {}),
+                **(
+                    {"customer_intelligence": customer_payload}
+                    if customer_payload is not None
+                    else {}
+                ),
             },
         )
 

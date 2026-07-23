@@ -256,3 +256,82 @@ def test_simulation_api_rejects_requested_level_above_assessed_level(tmp_path):
 
     assert response.status_code == 400
     assert "exceeds assessed" in response.json()["detail"]
+
+
+def test_simulation_api_accepts_only_valid_aggregate_customer_bundle(tmp_path):
+    customer = {
+        "bundle_id": "test-city-c1",
+        "city": "Test City",
+        "as_of": "2026-07-23",
+        "version": "customer/1.0",
+        "evidence_level": "c1",
+        "local_population": {
+            "city": "Test City",
+            "as_of": "2026-07-23",
+            "version": "prior/1.0",
+            "household_marginals": {
+                "household_stage": {"first_home": 1.0}
+            },
+            "evidence_refs": ["e-population"],
+            "source_hashes": ["sha256:population"],
+            "rights_status": "authorized_aggregate",
+        },
+        "segments": [
+            {
+                "segment_id": "first-home",
+                "label": "First-home commuters",
+                "weight": 1.0,
+                "household_stage": "new_family",
+                "income_band": "20-30",
+                "asset_band": "80-150",
+                "current_housing": "rent",
+                "purchase_stage": "active_search",
+                "primary_needs": ["commute"],
+                "purchase_barriers": ["down_payment"],
+                "evidence_refs": ["e-segment"],
+            }
+        ],
+        "evidence_refs": ["e-population", "e-segment"],
+        "artifact_hashes": ["sha256:bundle"],
+        "rights_status": "authorized_aggregate",
+        "allowed_uses": ["customer_hypothesis"],
+        "prohibited_uses": [
+            "direct_monthly_sales_from_choice_share",
+            "raw_personal_data_export",
+        ],
+    }
+    client = TestClient(
+        create_app(ProductSettings(root=tmp_path), research_sources=())
+    )
+    response = client.post(
+        "/api/analysis/simulate",
+        json={
+            "requested_level": 1,
+            "input_profile": {
+                "city": "Test City",
+                "address": "Test City Road 1",
+            },
+            "payload": input_1_payload(),
+            "customer_intelligence": customer,
+        },
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["customer_intelligence"]["evidence_level"] == 1
+    assert body["customer_intelligence"]["segments"][0]["segment_id"] == "first-home"
+
+    customer["segments"][0]["phone"] = "13800000000"
+    rejected = client.post(
+        "/api/analysis/simulate",
+        json={
+            "requested_level": 1,
+            "input_profile": {
+                "city": "Test City",
+                "address": "Test City Road 1",
+            },
+            "payload": input_1_payload(),
+            "customer_intelligence": customer,
+        },
+    )
+    assert rejected.status_code == 400
+    assert "forbidden" in rejected.json()["detail"]

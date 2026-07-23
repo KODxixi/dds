@@ -328,6 +328,361 @@ def _section_blocks(
     return _portable(blocks)
 
 
+_CUSTOMER_PAGE_TITLES = {
+    1: {
+        "SC2": "地方客群机会与需求假设",
+        "AD3": "数字人定位与概念路线推演",
+        "VA2": "标准盘客群响应压力测试",
+        "VA3": "客群异议、敏感性与切换触发",
+        "CS": "客群证据、模型与禁止用途",
+    },
+    2: {
+        "SC2": "地方客群、支付能力与约束匹配",
+        "AD3": "数字人产品与约束响应",
+        "VA2": "项目货量需求信号与现金流边界",
+        "VA3": "客群异议、敏感性与切换触发",
+        "CS": "客群证据、模型与禁止用途",
+    },
+    3: {
+        "SC2": "统一客群基线与样本冻结",
+        "AD3": "同 cohort 多方案行为比选",
+        "VA2": "客群选择与风险调整方案比较",
+        "VA3": "客群异议、敏感性与切换触发",
+        "CS": "客群证据、模型与禁止用途",
+    },
+}
+
+
+def _joined(value: Any) -> str:
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        return "、".join(str(item) for item in value)
+    return str(value or "")
+
+
+def _customer_page(
+    *,
+    section_id: str,
+    level: int,
+    blocks: list[dict[str, Any]],
+    source_refs: list[str],
+    evidence_type: str,
+) -> dict[str, Any]:
+    title = _CUSTOMER_PAGE_TITLES[level][section_id]
+    return {
+        "page_id": f"{section_id.lower()}-customer-intelligence",
+        "chapter_id": section_id.lower(),
+        "section_id": section_id,
+        "unit_id": section_id,
+        "unit_status": "ready",
+        "layout": "summary",
+        "title": title,
+        "takeaway": title,
+        "blocks": _portable(blocks),
+        "source_refs": source_refs,
+        "confidence": {"score": 0.0},
+        "evidence_type": evidence_type,
+    }
+
+
+def _customer_pages(
+    metadata: Mapping[str, Any],
+    source_id_map: Mapping[str, str],
+    included_units: Sequence[str],
+) -> list[dict[str, Any]]:
+    bundle = metadata.get("customer_intelligence")
+    if not isinstance(bundle, Mapping):
+        return []
+    level = int(bundle.get("evidence_level") or 0)
+    if level < 1:
+        return []
+    profile = metadata.get("analysis_profile")
+    input_level = (
+        int(profile.get("effective_level") or 1)
+        if isinstance(profile, Mapping)
+        else 1
+    )
+    input_level = max(1, min(3, input_level))
+    raw_refs = [str(item) for item in bundle.get("evidence_refs") or ()]
+    portable_refs = _mapped_source_refs(raw_refs, source_id_map)
+    pages: list[dict[str, Any]] = []
+
+    if "SC2" in included_units:
+        segment_rows = []
+        for item in bundle.get("segments") or ():
+            if not isinstance(item, Mapping):
+                continue
+            segment_rows.append(
+                {
+                    "segment": item.get("segment_id"),
+                    "label": item.get("label"),
+                    "weight": item.get("weight"),
+                    "household_stage": item.get("household_stage"),
+                    "income_band": item.get("income_band"),
+                    "current_housing": item.get("current_housing"),
+                    "needs": _joined(item.get("primary_needs")),
+                    "barriers": _joined(item.get("purchase_barriers")),
+                }
+            )
+        local = bundle.get("local_population")
+        local = local if isinstance(local, Mapping) else {}
+        blocks: list[dict[str, Any]] = [
+            {
+                "type": "narrative",
+                "text": (
+                    f"客群证据等级 C{level}；地域为 "
+                    f"{bundle.get('city')}/{bundle.get('district') or '全市'}，"
+                    f"数据截至 {bundle.get('as_of')}。"
+                ),
+                "source_refs": portable_refs,
+            },
+            {
+                "type": "narrative",
+                "text": (
+                    "本地人口先验采用 "
+                    f"{local.get('weighting_method') or '未登记方法'}；"
+                    "客群权重只在冻结地域、时点和样本范围内有效。"
+                ),
+                "source_refs": portable_refs,
+            },
+        ]
+        if segment_rows:
+            blocks.append(
+                {
+                    "type": "table",
+                    "title": "证据支持的本地客群分层",
+                    "columns": [
+                        "segment",
+                        "label",
+                        "weight",
+                        "household_stage",
+                        "income_band",
+                        "current_housing",
+                        "needs",
+                        "barriers",
+                    ],
+                    "rows": segment_rows,
+                    "source_refs": portable_refs,
+                }
+            )
+        pages.append(
+            _customer_page(
+                section_id="SC2",
+                level=input_level,
+                blocks=blocks,
+                source_refs=portable_refs,
+                evidence_type="observed_fact",
+            )
+        )
+
+    persona = bundle.get("persona_experiment")
+    if isinstance(persona, Mapping) and "AD3" in included_units:
+        aggregate = persona.get("aggregate_results")
+        persona_rows = []
+        if isinstance(aggregate, Mapping):
+            for segment_id, item in aggregate.items():
+                if not isinstance(item, Mapping):
+                    continue
+                persona_rows.append(
+                    {
+                        "segment": segment_id,
+                        "choice_reasons": _joined(item.get("choice_reasons")),
+                        "objections": _joined(item.get("objections")),
+                        "triggers": _joined(item.get("triggers")),
+                        "validation_questions": _joined(
+                            item.get("validation_questions")
+                        ),
+                    }
+                )
+        blocks = [
+            {
+                "type": "narrative",
+                "text": (
+                    "以下内容为合成人格的聚合模型模拟，不是实际客户原话；"
+                    f"cohort={persona.get('cohort_ref')}，seed={persona.get('seed')}，"
+                    f"prompt={persona.get('prompt_template_hash')}。"
+                ),
+                "source_refs": portable_refs,
+            }
+        ]
+        if persona_rows:
+            blocks.append(
+                {
+                    "type": "table",
+                    "title": "数字人行为任务聚合结果",
+                    "columns": [
+                        "segment",
+                        "choice_reasons",
+                        "objections",
+                        "triggers",
+                        "validation_questions",
+                    ],
+                    "rows": persona_rows,
+                    "source_refs": portable_refs,
+                }
+            )
+        pages.append(
+            _customer_page(
+                section_id="AD3",
+                level=input_level,
+                blocks=blocks,
+                source_refs=portable_refs,
+                evidence_type="model_simulation",
+            )
+        )
+
+    choice = bundle.get("choice_simulation")
+    if isinstance(choice, Mapping) and "VA2" in included_units:
+        share_rows = [
+            {"alternative": key, "choice_share": value}
+            for key, value in (
+                choice.get("product_choice_shares") or {}
+            ).items()
+        ]
+        share_rows.append(
+            {
+                "alternative": "不买／延期",
+                "choice_share": choice.get("exit_share"),
+            }
+        )
+        blocks = [
+            {
+                "type": "narrative",
+                "text": (
+                    f"选择模拟使用 parameter={choice.get('parameter_version')}、"
+                    f"seed={choice.get('seed')}；同一 Input 3 比选必须复用同一 "
+                    "cohort、模型、任务和种子。"
+                ),
+                "source_refs": portable_refs,
+            },
+            {
+                "type": "table",
+                "title": "产品选择与退出份额",
+                "columns": ["alternative", "choice_share"],
+                "rows": share_rows,
+                "source_refs": portable_refs,
+            },
+        ]
+        budget = choice.get("affordable_budget_median_wan")
+        if budget is not None:
+            blocks.append(
+                {
+                    "type": "narrative",
+                    "text": f"可负担预算中位数为 {budget} 万元；该值不是 WTP。",
+                    "source_refs": portable_refs,
+                }
+            )
+        if level < 3:
+            blocks.append(
+                {
+                    "type": "narrative",
+                    "text": (
+                        "当前未达到 C3 漏斗校准；choice share 不得换算月销量、"
+                        "去化周期或现金流。"
+                    ),
+                    "source_refs": portable_refs,
+                }
+            )
+        pages.append(
+            _customer_page(
+                section_id="VA2",
+                level=input_level,
+                blocks=blocks,
+                source_refs=portable_refs,
+                evidence_type="model_simulation",
+            )
+        )
+
+    if "VA3" in included_units:
+        objections: list[dict[str, Any]] = []
+        if isinstance(persona, Mapping) and isinstance(
+            persona.get("aggregate_results"), Mapping
+        ):
+            for segment_id, item in persona["aggregate_results"].items():
+                if isinstance(item, Mapping):
+                    objections.append(
+                        {
+                            "segment": segment_id,
+                            "objections": _joined(item.get("objections")),
+                            "triggers": _joined(item.get("triggers")),
+                        }
+                    )
+        blocks = [
+            {
+                "type": "narrative",
+                "text": (
+                    "定性理由与定量选择冲突时必须作为反证保留；"
+                    "不得由 Writer 删除或改写为确定结论。"
+                ),
+                "source_refs": portable_refs,
+            }
+        ]
+        if objections:
+            blocks.append(
+                {
+                    "type": "table",
+                    "title": "分群异议与切换触发",
+                    "columns": ["segment", "objections", "triggers"],
+                    "rows": objections,
+                    "source_refs": portable_refs,
+                }
+            )
+        pages.append(
+            _customer_page(
+                section_id="VA3",
+                level=input_level,
+                blocks=blocks,
+                source_refs=portable_refs,
+                evidence_type="analysis_inference",
+            )
+        )
+
+    if "CS" in included_units:
+        cohort = bundle.get("synthetic_cohort")
+        cohort = cohort if isinstance(cohort, Mapping) else {}
+        blocks = [
+            {
+                "type": "table",
+                "title": "客群模型冻结记录",
+                "columns": ["item", "value"],
+                "rows": [
+                    {"item": "bundle_version", "value": bundle.get("version")},
+                    {"item": "evidence_level", "value": f"C{level}"},
+                    {"item": "cohort_id", "value": cohort.get("cohort_id")},
+                    {"item": "cohort_seed", "value": cohort.get("seed")},
+                    {
+                        "item": "artifact_hashes",
+                        "value": _joined(bundle.get("artifact_hashes")),
+                    },
+                    {
+                        "item": "rights_status",
+                        "value": bundle.get("rights_status"),
+                    },
+                ],
+                "source_refs": portable_refs,
+            },
+            {
+                "type": "narrative",
+                "text": "允许用途：" + _joined(bundle.get("allowed_uses")),
+                "source_refs": portable_refs,
+            },
+            {
+                "type": "narrative",
+                "text": "禁止用途：" + _joined(bundle.get("prohibited_uses")),
+                "source_refs": portable_refs,
+            },
+        ]
+        pages.append(
+            _customer_page(
+                section_id="CS",
+                level=input_level,
+                blocks=blocks,
+                source_refs=portable_refs,
+                evidence_type="analysis_inference",
+            )
+        )
+    return pages
+
+
 class ReportCompilerAdapter:
     """Create compiler input using only an already assembled ReportRun."""
 
@@ -437,6 +792,7 @@ class ReportCompilerAdapter:
                     "confidence": {"score": _confidence_score(section)},
                     "evidence_type": "analysis_inference",
                 })
+        pages.extend(_customer_pages(run.metadata, source_id_map, included))
         return {
             "meta": {
                 "as_of": _portable(context.base_date),

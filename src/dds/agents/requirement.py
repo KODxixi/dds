@@ -11,7 +11,19 @@ from dds.contracts import SECTION_REQUIREMENTS
 from dds.domain import DataRequirement, EvidenceType
 
 
-_REQUIREMENT_SECTION_ORDER = ("SC2", "SC3", "AD1", "AD2", "AD3", "AD4", "AD5", "VA1", "VA2", "VA3")
+_REQUIREMENT_SECTION_ORDER = (
+    "SC2",
+    "SC3",
+    "AD1",
+    "AD2",
+    "AD3",
+    "AD4",
+    "AD5",
+    "VA1",
+    "VA2",
+    "VA3",
+    "CS",
+)
 _REQUIREMENT_DEPENDENCIES: dict[str, tuple[str, ...]] = {
     "SC2": (),
     "SC3": ("SC1",),
@@ -23,6 +35,7 @@ _REQUIREMENT_DEPENDENCIES: dict[str, tuple[str, ...]] = {
     "AD5": ("AD4",),
     "VA2": ("AD3",),
     "VA3": ("VA2",),
+    "CS": ("SC2", "AD3", "VA2", "VA3"),
 }
 _OBSERVED_ONLY = (EvidenceType.OBSERVED_FACT,)
 _OBSERVED_AND_INFERENCE = (
@@ -74,6 +87,7 @@ _REQUIREMENT_MAX_AGE_DAYS = {
     "AD3": 365,
     "AD4": 365,
     "VA1": 365,
+    "CS": 365,
 }
 _REQUIREMENT_DECISION_USE = {
     "SC2": "Establish market opportunity, customer, comparable, and case evidence.",
@@ -82,6 +96,7 @@ _REQUIREMENT_DECISION_USE = {
     "AD3": "Translate the selected direction into product, area, price, and sales logic.",
     "AD4": "Test site, plan, facade, landscape, and show-area feasibility.",
     "VA1": "Test premium drivers against cost and value evidence.",
+    "CS": "Freeze customer evidence, methods, model versions, limits, and calibration actions.",
 }
 
 

@@ -103,3 +103,35 @@ async def test_requirement_agent_waits_for_profile_location() -> None:
     assert result.success is False
     assert result.status is AgentStatus.WAITING
     assert result.data["missing_fields"] == ["address_or_coordinates"]
+
+
+@pytest.mark.asyncio
+async def test_profile_requirement_graph_closes_with_customer_audit_cs() -> None:
+    result = await RequirementAgent().run(
+        AgentTask(
+            task_type="requirement_analysis",
+            parameters={
+                "requested_level": 1,
+                "input_profile": {"address": "Test City Road 1"},
+                "project_context": {
+                    "project_id": "customer-graph",
+                    "city": "Test City",
+                    "address": "Test City Road 1",
+                    "base_date": "2026-07-23",
+                },
+            },
+        )
+    )
+    assert result.success
+    graph = result.data["data_requirement_graph"]
+    assert graph["section_order"][-1] == "CS"
+    assert {
+        (edge["from_section"], edge["to_section"])
+        for edge in graph["edges"]
+        if edge["to_section"] == "CS"
+    } == {
+        ("SC2", "CS"),
+        ("AD3", "CS"),
+        ("VA2", "CS"),
+        ("VA3", "CS"),
+    }

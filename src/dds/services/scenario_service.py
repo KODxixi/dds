@@ -6,6 +6,10 @@ from dataclasses import asdict, dataclass
 from typing import Any, Mapping
 
 from dds.analysis_profile import resolve_analysis_profile
+from dds.customer import (
+    CustomerIntelligenceBundle,
+    customer_intelligence_from_mapping,
+)
 from dds.engines.absorption import (
     MarketScenario,
     SimulationAssumptions,
@@ -34,6 +38,7 @@ class ScenarioRun:
     simulation_kind: str
     result: dict[str, Any]
     decision_scope: str
+    customer_intelligence: dict[str, Any] | None = None
     delivery_ready: bool = False
     evidence_type: str = "model_simulation"
 
@@ -62,6 +67,9 @@ class ScenarioService:
         requested_level: int,
         input_profile: Mapping[str, Any],
         payload: Mapping[str, Any],
+        customer_intelligence: (
+            Mapping[str, Any] | CustomerIntelligenceBundle | None
+        ) = None,
     ) -> ScenarioRun:
         profile = resolve_analysis_profile(
             input_profile,
@@ -76,6 +84,18 @@ class ScenarioService:
             raise ValueError(
                 "requested input level exceeds assessed input level"
             )
+        customer_bundle = (
+            customer_intelligence_from_mapping(customer_intelligence)
+            if customer_intelligence is not None
+            else None
+        )
+        input_city = str(input_profile.get("city") or "").strip()
+        if (
+            customer_bundle is not None
+            and input_city
+            and customer_bundle.city != input_city
+        ):
+            raise ValueError("customer intelligence city must match input_profile.city")
         raw = dict(payload)
         if requested_level == 1:
             result = self._run_input_1(raw)
@@ -93,6 +113,9 @@ class ScenarioService:
             simulation_kind=kind,
             result=asdict(result),
             decision_scope=profile["decision_scope"],
+            customer_intelligence=(
+                customer_bundle.to_dict() if customer_bundle is not None else None
+            ),
         )
 
     def _run_input_1(self, payload: dict[str, Any]):

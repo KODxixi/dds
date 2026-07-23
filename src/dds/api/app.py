@@ -36,6 +36,7 @@ class AnalysisSimulationRequest(BaseModel):
     requested_level: int = Field(ge=1, le=3)
     input_profile: dict[str, Any]
     payload: dict[str, Any]
+    customer_intelligence: dict[str, Any] | None = None
 
 
 def _default_settings() -> ProductSettings:
@@ -87,6 +88,7 @@ def create_app(
                 requested_level=request.requested_level,
                 input_profile=request.input_profile,
                 payload=request.payload,
+                customer_intelligence=request.customer_intelligence,
             ).to_dict()
         except (TypeError, ValueError) as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
