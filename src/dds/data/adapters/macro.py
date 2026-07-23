@@ -32,7 +32,7 @@ class MacroAdapter:
         city = safe_name(city, "city")
         if limit_per_source < 1 or limit_per_source > 10_000:
             raise ValueError("limit_per_source must be between 1 and 10000")
-        paths = sorted((self.settings.v1_vault_root / "宏观数据").glob(f"{city}-*.parquet"))
+        paths = sorted((self.settings.datasets_root / "macro").glob(f"{city}-*.parquet"))
         if not paths:
             raise FileNotFoundError(f"No configured macro dataset for {city}")
         assets: list[DatasetAsset] = []

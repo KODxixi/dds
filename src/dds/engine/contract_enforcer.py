@@ -15,6 +15,10 @@ import logging
 from collections.abc import Iterable, Mapping
 from typing import Any
 
+from dds.analysis_profile import (
+    analysis_profile_contract_errors,
+    required_units_from_metadata,
+)
 from dds.contracts import (
     EVIDENCE_TYPES,
     SECTION_REQUIREMENTS,
@@ -79,8 +83,10 @@ class ContractEnforcer:
         evidence_by_id = {
             item.evidence_id: item for item in evidence if item.evidence_id
         }
+        required_units = required_units_from_metadata(metadata)
 
-        structure_errors, structure_warnings = self._validate_structure(section_map)
+        structure_errors, structure_warnings = self._validate_structure(section_map, required_units)
+        structure_errors.extend(analysis_profile_contract_errors(metadata))
         structure_gate = GateResult(
             name="structure",
             status="pass" if not structure_errors else "fail",
@@ -94,6 +100,7 @@ class ContractEnforcer:
             evidence_by_id,
             context,
             evidence_input_errors,
+            required_units,
         )
         if not structure_gate.passed:
             evidence_errors.insert(0, "evidence gate 依赖 structure gate 通过")
@@ -112,6 +119,7 @@ class ContractEnforcer:
         decision_errors, decision_warnings = self._validate_decision(
             section_map,
             section_confidences,
+            required_units,
         )
         if not evidence_gate.passed:
             decision_errors.insert(0, "decision gate 依赖 evidence gate 通过")
@@ -130,6 +138,7 @@ class ContractEnforcer:
             section_map,
             metadata,
             report_status,
+            required_units,
         )
         if not decision_gate.passed:
             delivery_errors.insert(0, "delivery gate 依赖 decision gate 通过")
@@ -295,12 +304,13 @@ class ContractEnforcer:
     def _validate_structure(
         self,
         sections: dict[str, Any],
+        required_units: tuple[str, ...] = tuple(VALID_SECTION_IDS),
     ) -> tuple[list[str], list[str]]:
         errors: list[str] = []
         warnings: list[str] = []
         if not sections:
             errors.append("报告 sections 为空")
-        for section_id in VALID_SECTION_IDS:
+        for section_id in required_units:
             if section_id not in sections:
                 errors.append(f"缺少必填章节: {section_id}")
                 continue
@@ -381,6 +391,7 @@ class ContractEnforcer:
         evidence_by_id: dict[str, EvidenceRecord],
         context: ProjectContext,
         input_errors: list[str],
+        required_units: tuple[str, ...] = tuple(VALID_SECTION_IDS),
     ) -> tuple[list[str], list[str], dict[str, float]]:
         errors = list(input_errors)
         warnings: list[str] = []
@@ -398,7 +409,7 @@ class ContractEnforcer:
                 )
 
         section_confidences: dict[str, float] = {}
-        for section_id in VALID_SECTION_IDS:
+        for section_id in required_units:
             section = sections.get(section_id)
             if section is None:
                 section_confidences[section_id] = 0.0
@@ -491,10 +502,11 @@ class ContractEnforcer:
         self,
         sections: dict[str, Any],
         section_confidences: dict[str, float],
+        required_units: tuple[str, ...] = tuple(VALID_SECTION_IDS),
     ) -> tuple[list[str], list[str]]:
         errors: list[str] = []
         warnings: list[str] = []
-        for section_id in VALID_SECTION_IDS:
+        for section_id in required_units:
             if section_id == "CS" or section_id not in sections:
                 continue
             section = sections[section_id]
@@ -540,6 +552,7 @@ class ContractEnforcer:
         sections: dict[str, Any],
         metadata: Mapping[str, Any],
         report_status: ResolvedStatus | str | None,
+        required_units: tuple[str, ...] = tuple(VALID_SECTION_IDS),
     ) -> tuple[list[str], list[str]]:
         errors: list[str] = []
         warnings: list[str] = []
@@ -557,7 +570,7 @@ class ContractEnforcer:
             }:
                 errors.append(f"ReportRun.status={normalized.value}，不可交付")
 
-        unresolved = self._unresolved_fields(sections)
+        unresolved = self._unresolved_fields(sections, required_units)
         cs = sections.get("CS")
         if cs is not None:
             cs_data = self._section_data(cs) or {}
@@ -591,10 +604,14 @@ class ContractEnforcer:
                         pass
         return errors, warnings
 
-    def _unresolved_fields(self, sections: dict[str, Any]) -> list[tuple[str, str]]:
+    def _unresolved_fields(
+        self,
+        sections: dict[str, Any],
+        required_units: tuple[str, ...] = tuple(VALID_SECTION_IDS),
+    ) -> list[tuple[str, str]]:
         result = []
         for section_id, section in sections.items():
-            if section_id == "CS":
+            if section_id == "CS" or section_id not in required_units:
                 continue
             data = self._section_data(section)
             if data is None:
@@ -824,6 +841,4 @@ class ContractEnforcer:
 
 
 __all__ = ["GATE_ORDER", "ContractEnforcer"]
-
-
 

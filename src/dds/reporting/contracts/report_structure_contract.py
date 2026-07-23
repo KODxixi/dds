@@ -472,6 +472,7 @@ def compile_adaptive_manifest(
     pages: Sequence[Mapping[str, Any]],
     *,
     required_units: Sequence[str],
+    included_units: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     """Compile only the units required by an adaptive report profile.
 
@@ -483,9 +484,16 @@ def compile_adaptive_manifest(
     if unknown:
         raise ValueError(f"unknown required units: {unknown}")
 
+    included = tuple(dict.fromkeys(str(unit) for unit in (included_units or required)))
+    unknown_included = [unit for unit in included if unit not in VALID_SECTION_IDS]
+    if unknown_included:
+        raise ValueError(f"unknown included units: {unknown_included}")
+    omitted_required = [unit for unit in required if unit not in included]
+    if omitted_required:
+        raise ValueError(f"included_units omit required units: {omitted_required}")
     normalized = [apply_section_metadata(page) for page in pages]
     visible = [
-        page for page in normalized if page.get("section_id") in required
+        page for page in normalized if page.get("section_id") in included
     ]
     visible = sort_and_number_pages(visible)
     present = {str(page.get("section_id")) for page in visible}
@@ -494,6 +502,7 @@ def compile_adaptive_manifest(
     return {
         "pages": visible,
         "required_units": list(required),
+        "included_units": list(included),
         "missing_required_units": missing,
         "delivery_ready": not missing,
     }

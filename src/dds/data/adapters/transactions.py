@@ -38,7 +38,7 @@ class TransactionAdapter:
             raise ValueError("limit must be between 1 and 10000")
         if date_from and date_to and date_from > date_to:
             raise ValueError("date_from must not exceed date_to")
-        path = self.settings.v1_vault_root / "成交数据" / f"成交-{city}.parquet"
+        path = self.settings.datasets_root / "transactions" / f"成交-{city}.parquet"
         asset = asset_from_path(
             path,
             kind=DatasetKind.TRANSACTIONS,

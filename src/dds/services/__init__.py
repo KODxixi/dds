@@ -14,6 +14,7 @@ from dds.services.delivery_service import (
 from dds.services.report_compiler_adapter import ReportCompilerAdapter
 from dds.services.report_service import ReportService
 from dds.services.research_service import MarketResearchBundle, ResearchService
+from dds.services.scenario_service import ScenarioRun, ScenarioService
 
 __all__ = [
     "MarketResearchBundle",
@@ -27,6 +28,7 @@ __all__ = [
     "ArchFrontBridgeError",
     "ArchFrontBuildResult",
     "ReportCompilerAdapter",
+    "ScenarioRun",
+    "ScenarioService",
 ]
-
 

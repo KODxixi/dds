@@ -1,7 +1,7 @@
 """DDS runtime configuration.
 
 Configuration is deliberately small and path based.  Importing this package never
-touches the network and never mutates the V1 vault.
+touches the network and never mutates curated datasets.
 """
 
 from .settings import Settings

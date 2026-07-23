@@ -68,8 +68,7 @@ class DatasetCatalog:
     def resolve_new_home_listings(self, city: str) -> DatasetAsset:
         city = _safe_city(city)
         candidates = (
-            self.settings.v1_vault_root / "2026新楼盘" / f"新楼盘-{city}.parquet",
-            self.settings.v1_vault_root / "2026新楼盘" / f"新楼盘-{city}.csv",
+            self.settings.datasets_root / "listings" / f"新楼盘-{city}.parquet",
         )
         for path in candidates:
             if path.is_file():

@@ -24,7 +24,7 @@ class LandAdapter:
 
     def collect(self, city: str, *, grade: str | None = None) -> LandEvidenceBundle:
         city = safe_name(city, "city")
-        root = self.settings.v1_vault_root / "土地数据"
+        root = self.settings.datasets_root / "land"
         paths = sorted(root.glob(f"{city}-*.parquet"))
         if not paths:
             raise FileNotFoundError(f"No configured land dataset for {city}")

@@ -17,6 +17,10 @@ dist/
 data/projects/
 data/cache/
 data/exports/
+data/raw/
+data/curated/
+data/knowledge/
+data/manifests/
 output/
 reports/
 work/

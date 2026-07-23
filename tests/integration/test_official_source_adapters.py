@@ -14,8 +14,8 @@ from dds.domain import EvidenceType
 @pytest.mark.integration
 def test_wuhan_transaction_land_macro_sources_are_distinct():
     settings = Settings.from_env()
-    if not settings.v1_vault_root.exists():
-        pytest.skip("configured V1 read-only vault is unavailable")
+    if not settings.datasets_root.exists():
+        pytest.skip("configured curated datasets are unavailable")
     transactions = TransactionAdapter(settings).collect("武汉", limit=10)
     land = LandAdapter(settings).collect("武汉")
     macro = MacroAdapter(settings).collect("武汉", limit_per_source=10)

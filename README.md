@@ -82,6 +82,28 @@ delivery = DeliveryService(settings.exports_root)
 
 正式流程必须通过 `BrowserQAResult.from_reports(...)` 从官方 `browser_qa.json` 与 `print_qa.json` 构造 QA 结果，随后由 `DeliveryService` 再次复核 HTML hash。手工构造的对象不构成交付证据，也不得用于正式发布。
 
+## Research Control Center
+
+DDS V2 提供本机运行的非技术研究界面。Agent 会先拆解 Data Requirement Graph，再主动调用当前可用的外部数据库和搜索 API；搜索结果先进入 `candidate`，必须经过证据资格判定后才能成为报告事实。
+
+```powershell
+# 可选：启用 Tavily 外部网页搜索。密钥不会写入任务日志或报告。
+$env:TAVILY_API_KEY = "your-key"
+
+# 默认仅监听本机；当前版本未实现远程访问鉴权，禁止直接绑定公网地址。
+uv run uvicorn dds.api.app:app --host 127.0.0.1 --port 8765
+```
+
+浏览器打开 `http://127.0.0.1:8765/`，可以创建研究任务、上传项目资料、查看数据源状态、运行日志和带来源哈希的候选证据。未配置的数据源会明确显示为不可用，不会生成假数据。
+
+当前主动研究源：
+
+- `curated-listing-database`：只读访问 V2 curated 楼盘数据，执行参数化城市竞品查询。
+- `volcengine-data-search`：通过用户环境中的 `VOLCENGINE_ACCESS_KEY` / `VOLCENGINE_SECRET_KEY` 只读查询火山公开结构化数据；DDS 仅保留隐私白名单字段。
+- `tavily-web`：通过 `TAVILY_API_KEY` 调用 Tavily Search API。
+
+任务和上传资料默认写入 `data/projects/research-control-center/`；可用 `DDS_PRODUCT_ROOT` 指向其他 V2 管理目录。
+
 ## 兼容工作稿入口
 
 旧入口仍保留，目的是避免已有调用方立即中断：
@@ -114,12 +136,12 @@ DDS 的承诺是“缺失绝不静默”，不是“永不为空”。没有合�
 
 不得用单一 `valid=True` 把结构完整等同于正式可交付。
 
-## 武汉 V1 Vault（只读）
+## V2 Curated 数据（只读）
 
-真实武汉数据通过环境变量指向现有 V1 Vault。DDS V2 不修改、不迁移该目录，也不会将其中内容打入 wheel。
+DDS V2 默认读取仓库内 `data/curated/`。该目录由迁移工具生成，运行时只读，不会打入 wheel 或提交 Git。
 
 ```powershell
-$env:DDS_V1_VAULT_ROOT = "D:\path\to\read-only-v1-vault"
+$env:DDS_DATASETS_ROOT = "D:\path\to\dds-v2-curated"
 $env:DDS_EXPORTS_ROOT = "D:\path\to\dds-v2-exports"
 python -m pytest tests/integration -q
 ```

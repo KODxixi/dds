@@ -27,7 +27,7 @@ class Settings:
     """
 
     repository_root: Path
-    v1_vault_root: Path
+    datasets_root: Path
     projects_root: Path
     cache_root: Path
     exports_root: Path
@@ -48,9 +48,9 @@ class Settings:
             )
         return cls(
             repository_root=root,
-            v1_vault_root=_env_path(
-                "DDS_V1_VAULT_ROOT",
-                root.parent / "DDS" / "Vault",
+            datasets_root=_env_path(
+                "DDS_DATASETS_ROOT",
+                data_root / "curated",
             ),
             projects_root=_env_path("DDS_PROJECTS_ROOT", data_root / "projects"),
             cache_root=_env_path("DDS_CACHE_ROOT", data_root / "cache"),

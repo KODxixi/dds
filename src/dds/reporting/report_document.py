@@ -3994,6 +3994,11 @@ def build_report_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
         if isinstance(panorama, Mapping)
         else []
     )
+    included_units = (
+        list(panorama.get("included_units") or required_units)
+        if isinstance(panorama, Mapping)
+        else list(required_units)
+    )
     adaptive_mode = bool(required_units)
     if report.get("page_manifest_authoritative"):
         authoritative_pages = report.get("page_manifest") or report.get("pages") or []
@@ -4011,6 +4016,7 @@ def build_report_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
         adaptive = compile_adaptive_manifest(
             manifest,
             required_units=required_units,
+            included_units=included_units,
         )
         manifest = adaptive["pages"]
     source_registry = _compile_source_registry(report)

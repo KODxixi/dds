@@ -5,19 +5,24 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+from dds.analysis_profile import resolve_analysis_profile
 from dds.agents.base import AgentResult, AgentStatus, AgentTask, BaseAgent
 from dds.contracts import SECTION_REQUIREMENTS
 from dds.domain import DataRequirement, EvidenceType
 
 
-_REQUIREMENT_SECTION_ORDER = ("SC2", "AD1", "AD2", "AD3", "AD4", "VA1")
+_REQUIREMENT_SECTION_ORDER = ("SC2", "SC3", "AD1", "AD2", "AD3", "AD4", "AD5", "VA1", "VA2", "VA3")
 _REQUIREMENT_DEPENDENCIES: dict[str, tuple[str, ...]] = {
     "SC2": (),
+    "SC3": ("SC1",),
     "AD1": ("SC2",),
     "AD2": ("AD1",),
     "AD3": ("AD2",),
     "AD4": ("AD3",),
     "VA1": ("AD4",),
+    "AD5": ("AD4",),
+    "VA2": ("AD3",),
+    "VA3": ("VA2",),
 }
 _OBSERVED_ONLY = (EvidenceType.OBSERVED_FACT,)
 _OBSERVED_AND_INFERENCE = (
@@ -153,7 +158,36 @@ class RequirementAgent(BaseAgent):
             "evidence_boundary": evidence_boundary,
             "base_date": base_date,
         }
-        requirement_graph = self._build_requirement_graph(normalized)
+        profile_requested = (
+            "input_profile" in task.parameters
+            or "requested_level" in task.parameters
+            or ctx.get("requested_level") is not None
+        )
+        analysis_profile = resolve_analysis_profile(
+            task.parameters.get("input_profile") or normalized,
+            requested_level=task.parameters.get("requested_level") or normalized.get("requested_level"),
+        )
+        if profile_requested:
+            normalized["analysis_profile"] = analysis_profile
+            if not analysis_profile["eligible"]:
+                return AgentResult(
+                    task_id=task.task_id,
+                    success=False,
+                    agent_id=self.agent_id,
+                    status=AgentStatus.WAITING,
+                    data={
+                        "project_context": normalized,
+                        "analysis_profile": analysis_profile,
+                        "blocked": True,
+                        "resolution_status": "human_input",
+                        "missing_fields": ["address_or_coordinates"],
+                    },
+                    errors=["address or coordinates are required for Input 1/2/3 classification"],
+                )
+        requirement_graph = self._build_requirement_graph(
+            normalized,
+            analysis_profile if profile_requested else None,
+        )
 
         return AgentResult(
             task_id=task.task_id,
@@ -165,13 +199,21 @@ class RequirementAgent(BaseAgent):
                 "sc1_fields": sc1_fields,
                 "data_requirement_graph": requirement_graph,
                 "data_requirements": list(requirement_graph["nodes"]),
+                **({
+                    "analysis_profile": analysis_profile,
+                    "decision_scope": analysis_profile["decision_scope"],
+                } if profile_requested else {}),
                 "blocked": False,
                 "resolution_status": "resolved",
             },
             warnings=warnings,
         )
 
-    def _build_requirement_graph(self, ctx: dict[str, Any]) -> dict[str, Any]:
+    def _build_requirement_graph(
+        self,
+        ctx: dict[str, Any],
+        analysis_profile: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Build the serializable SC2-to-VA1 evidence requirement graph."""
 
         city = str(ctx.get("city") or "").strip()
@@ -180,8 +222,23 @@ class RequirementAgent(BaseAgent):
         as_of = str(ctx.get("base_date") or "")
         nodes: list[dict[str, Any]] = []
 
+        profile = analysis_profile
+        if profile is None:
+            active_order = ("SC2", "AD1", "AD2", "AD3", "AD4", "VA1")
+            required_units = set(active_order)
+            optional_units: set[str] = set()
+        else:
+            required_units = set(profile["required_units"])
+            optional_units = set(profile["optional_units"])
+            active_order = tuple(
+                item for item in _REQUIREMENT_SECTION_ORDER
+                if item in required_units | optional_units
+            )
+        active_units = set(active_order)
         for section_id in _REQUIREMENT_SECTION_ORDER:
-            max_age_days = _REQUIREMENT_MAX_AGE_DAYS[section_id]
+            if section_id not in active_units:
+                continue
+            max_age_days = _REQUIREMENT_MAX_AGE_DAYS.get(section_id, 365)
             for field_name in SECTION_REQUIREMENTS[section_id]:
                 minimum_sample = (
                     5
@@ -189,7 +246,7 @@ class RequirementAgent(BaseAgent):
                     else 1
                 )
                 decision_use = (
-                    f"{_REQUIREMENT_DECISION_USE[section_id]} "
+                    f"{_REQUIREMENT_DECISION_USE.get(section_id, 'Resolve the unit evidence requirement.')} "
                     f"Required field: {field_name}."
                 )
                 requirement = DataRequirement(
@@ -197,10 +254,10 @@ class RequirementAgent(BaseAgent):
                     section_id=section_id,
                     field_name=field_name,
                     description=decision_use,
-                    required=True,
-                    evidence_types=_REQUIREMENT_EVIDENCE_TYPES[
-                        f"{section_id}.{field_name}"
-                    ],
+                    required=section_id in required_units,
+                    evidence_types=_REQUIREMENT_EVIDENCE_TYPES.get(
+                        f"{section_id}.{field_name}", _OBSERVED_AND_INFERENCE
+                    ),
                     min_evidence_count=minimum_sample,
                     geography=geography,
                     as_of=as_of,
@@ -213,7 +270,7 @@ class RequirementAgent(BaseAgent):
                             "lookback_days": max_age_days,
                         },
                         "depends_on_sections": list(
-                            _REQUIREMENT_DEPENDENCIES[section_id]
+                            _REQUIREMENT_DEPENDENCIES.get(section_id, ())
                         ),
                     },
                 )
@@ -226,11 +283,13 @@ class RequirementAgent(BaseAgent):
                 "constraint": "requires_upstream_section_result",
             }
             for section_id in _REQUIREMENT_SECTION_ORDER
-            for dependency in _REQUIREMENT_DEPENDENCIES[section_id]
+            if section_id in active_units
+            for dependency in _REQUIREMENT_DEPENDENCIES.get(section_id, ())
         ]
         return {
-            "graph_id": "dds-evidence-requirements-v1",
-            "section_order": list(_REQUIREMENT_SECTION_ORDER),
+            "graph_id": "dds-evidence-requirements-v2" if profile else "dds-evidence-requirements-v1",
+            "analysis_profile": profile,
+            "section_order": list(active_order),
             "nodes": nodes,
             "edges": edges,
         }

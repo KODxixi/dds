@@ -5,9 +5,10 @@ import json
 from pathlib import Path
 
 from dds.data.adapters import ListingEvidenceAdapter
+from dds.analysis_profile import resolve_analysis_profile
 from dds.data.catalog import DatasetAsset, DatasetKind
 from dds.data.repository import CompetitorQuery, QueryResult
-from dds.domain import ProjectContext
+from dds.domain import ProjectContext, ResolvedStatus
 from dds.engines.market import MarketEngine
 from dds.engines.product import ProductEngine
 from dds.reporting import compile_frozen_package, compute_report_document_hash
@@ -139,3 +140,17 @@ def test_report_run_to_compiler_package_is_deterministic_and_portable():
     assert all(raw_id not in serialized for raw_id in raw_evidence_ids)
     assert first["package_hash"]
 
+    run.metadata["analysis_profile"] = resolve_analysis_profile(
+        {"address": "?????? 1 ?"}
+    )
+    run.metadata["decision_scope"] = "opportunity_screening"
+    run.sections["VA1"].status = ResolvedStatus.PARTIAL
+    run.sections["VA1"].conclusions = ["?????????????????"]
+    adaptive = adapter.build_frozen_compiler_package(run)
+    adaptive_document = compile_frozen_package(adaptive)
+    panorama = adaptive["module_inputs"]["report_seed"]["project_panorama"]
+    assert "VA1" not in panorama["required_units"]
+    assert "VA1" in panorama["included_units"]
+    assert "VA1" in {
+        page["section_id"] for page in adaptive_document["page_manifest"]
+    }

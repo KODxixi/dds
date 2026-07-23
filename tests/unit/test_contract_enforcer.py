@@ -15,6 +15,7 @@ from dds.contracts import (
     SectionResult,
 )
 from dds.engine.contract_enforcer import GATE_ORDER, ContractEnforcer
+from dds.analysis_profile import resolve_analysis_profile
 
 
 def _valid_run() -> ReportRun:
@@ -229,3 +230,44 @@ def test_validation_does_not_mutate_report() -> None:
 
     assert run.to_dict() == snapshot
 
+
+def test_profile_optional_units_do_not_block_four_gates() -> None:
+    run = _valid_run()
+    profile = resolve_analysis_profile({"address": "测试城测试路 1 号"})
+    run.metadata["analysis_profile"] = profile
+    run.metadata["decision_scope"] = profile["decision_scope"]
+    run.sections.pop("SC3")
+    run.sections.pop("AD5")
+    run.sections.pop("VA1")
+
+    result = ContractEnforcer().validate_report(run)
+
+    assert result.valid
+    assert set(result.section_confidences) == set(profile["required_units"])
+
+
+def test_tampered_profile_cannot_remove_input_3_required_unit() -> None:
+    run = _valid_run()
+    profile = resolve_analysis_profile(
+        {
+            "address": "Test City Road 1",
+            "constraint_sources": [{"source_ref": "client://planning-v1"}],
+            "core_development_boundaries_ready": True,
+            "schemes": [{"scheme_id": "A"}, {"scheme_id": "B"}],
+        },
+        requested_level=3,
+    )
+    profile["required_units"].remove("VA1")
+    run.metadata.update(
+        {
+            "analysis_profile": profile,
+            "decision_scope": "scheme_selection",
+        }
+    )
+    run.sections.pop("VA1")
+
+    result = ContractEnforcer().validate_report(run)
+
+    assert result.structure_valid is False
+    assert any("profile registry" in error for error in result.errors)
+    assert any("VA1" in error for error in result.errors)

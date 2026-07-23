@@ -12,6 +12,18 @@ from .abm import (
     SimulatedProduct,
     UnsupportedCityError,
 )
+from .absorption import (
+    MarketScenario,
+    MonthlyResult,
+    OperatingSimulation,
+    SimulationAssumptions,
+    StandardAbsorptionEngine,
+    StandardMarketParameters,
+    StrategyCandidate,
+    StrategyScenarioResult,
+    UnsupportedMarketParametersError,
+    pareto_front,
+)
 from .confidence import (
     DIMENSION_WEIGHTS,
     ConfidenceAssessment,
@@ -20,8 +32,26 @@ from .confidence import (
 )
 from .market import MarketAnalysisResult, MarketEngine, MarketReadiness
 from .premium import PremiumEngine, PremiumResult, PremiumStatus
+from .project_cashflow import (
+    MonthlyProductResult,
+    ProductBatch,
+    ProjectCashFlowEngine,
+    ProjectCashFlowResult,
+    ProjectCostParameters,
+    ProjectDemandParameters,
+    ProjectMonthlyResult,
+    ProjectSimulationAssumptions,
+)
 from .product import ProductEngine, ProductMode, ProductResult
 from .resolver import EvidenceResolution, EvidenceResolver, resolve_evidence
+from .scheme_comparison import (
+    ComparisonPolicy,
+    SchemeCandidate,
+    SchemeComparisonEngine,
+    SchemeComparisonResult,
+    SchemeMetrics,
+    SchemeScenarioMetrics,
+)
 
 __all__ = [
     "ABMEngine",
@@ -30,6 +60,16 @@ __all__ = [
     "SegmentParameters",
     "SimulatedProduct",
     "UnsupportedCityError",
+    "MarketScenario",
+    "MonthlyResult",
+    "OperatingSimulation",
+    "SimulationAssumptions",
+    "StandardAbsorptionEngine",
+    "StandardMarketParameters",
+    "StrategyCandidate",
+    "StrategyScenarioResult",
+    "UnsupportedMarketParametersError",
+    "pareto_front",
     "DIMENSION_WEIGHTS",
     "ConfidenceAssessment",
     "ConfidenceEngine",
@@ -40,10 +80,24 @@ __all__ = [
     "PremiumEngine",
     "PremiumResult",
     "PremiumStatus",
+    "MonthlyProductResult",
+    "ProductBatch",
+    "ProjectCashFlowEngine",
+    "ProjectCashFlowResult",
+    "ProjectCostParameters",
+    "ProjectDemandParameters",
+    "ProjectMonthlyResult",
+    "ProjectSimulationAssumptions",
     "ProductEngine",
     "ProductMode",
     "ProductResult",
     "EvidenceResolution",
     "EvidenceResolver",
     "resolve_evidence",
+    "ComparisonPolicy",
+    "SchemeCandidate",
+    "SchemeComparisonEngine",
+    "SchemeComparisonResult",
+    "SchemeMetrics",
+    "SchemeScenarioMetrics",
 ]

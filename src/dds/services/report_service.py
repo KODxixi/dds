@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import asdict
-from typing import Iterable
+from typing import Any, Iterable, Mapping
 
+from dds.analysis_profile import resolve_analysis_profile
 from dds.contracts import REPORT_UNITS, SECTION_REQUIREMENTS
 from dds.domain import (
     EvidenceRecord,
@@ -15,6 +16,9 @@ from dds.domain import (
     SectionResult,
 )
 from dds.engines.market import MarketAnalysisResult, MarketReadiness
+from dds.engines.absorption import OperatingSimulation
+from dds.engines.project_cashflow import ProjectCashFlowResult
+from dds.engines.scheme_comparison import SchemeComparisonResult
 from dds.engines.premium import PremiumResult, PremiumStatus
 from dds.engines.product import (
     DESIGN_TASK_KEYS,
@@ -534,6 +538,370 @@ class ReportService:
             status=status,
         )
 
+    def absorption_section(
+        self,
+        result: OperatingSimulation,
+        *,
+        evidence_refs_by_field: Mapping[str, Iterable[str]],
+    ) -> SectionResult:
+        required_fields = set(SECTION_REQUIREMENTS["VA2"])
+        supplied_fields = set(evidence_refs_by_field)
+        if supplied_fields != required_fields:
+            raise ValueError(
+                "VA2 evidence refs must exactly cover "
+                f"{sorted(required_fields)}"
+            )
+        normalized_refs = {
+            field: list(dict.fromkeys(str(item) for item in refs if str(item)))
+            for field, refs in evidence_refs_by_field.items()
+        }
+        missing_refs = [
+            field for field, refs in normalized_refs.items() if not refs
+        ]
+        if missing_refs:
+            raise ValueError(f"VA2 fields require evidence refs: {missing_refs}")
+        summaries = [
+            {
+                "strategy_id": item.strategy_id,
+                "scenario_id": item.scenario_id,
+                "absorption_3m": item.absorption_3m,
+                "absorption_6m": item.absorption_6m,
+                "absorption_12m": item.absorption_12m,
+                "clearance_month": item.clearance_month,
+                "realized_value_index": item.realized_value_index,
+                "cash_npv_index": item.cash_npv_index,
+                "ending_inventory": item.ending_inventory,
+                "tail_risk_index": item.tail_risk_index,
+                "risk_adjusted_npv_index": item.risk_adjusted_npv_index,
+                "monetary_unit": item.monetary_unit,
+                "model_version": item.model_version,
+                "parameter_version": item.parameter_version,
+                "seed": item.seed,
+                "formula": item.formula,
+            }
+            for item in result.results
+        ]
+        data = {
+            "sales_forecast": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "standard_inventory_units": 100,
+                    "curves": summaries,
+                    "evidence_type": "model_simulation",
+                },
+                evidence_refs=normalized_refs["sales_forecast"],
+            ),
+            "cash_flow": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "basis": "relative_index_base_100",
+                    "curves": [
+                        {
+                            "strategy_id": item.strategy_id,
+                            "scenario_id": item.scenario_id,
+                            "realized_value_index": item.realized_value_index,
+                            "cash_collection_index": item.cash_collection_index,
+                            "cash_npv_index": item.cash_npv_index,
+                        }
+                        for item in result.results
+                    ],
+                    "absolute_currency_allowed": False,
+                },
+                evidence_refs=normalized_refs["cash_flow"],
+            ),
+            "investment_metrics": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "pareto_strategy_ids": list(result.pareto_strategy_ids),
+                    "recommended_strategy_id": result.recommended_strategy_id,
+                    "recommendation_rule": result.recommendation_rule,
+                    "metric": "risk_adjusted_npv_index",
+                    "absolute_investment_conclusion_allowed": False,
+                },
+                evidence_refs=normalized_refs["investment_metrics"],
+            ),
+        }
+        all_refs = list(
+            dict.fromkeys(
+                ref
+                for refs in normalized_refs.values()
+                for ref in refs
+            )
+        )
+        return SectionResult(
+            section_id="VA2",
+            data=data,
+            conclusions=[
+                (
+                    "标准100套操盘沙盘已形成九条情景曲线；推荐仅针对"
+                    "机会筛选范围，不构成项目投资或确定售罄承诺。"
+                )
+            ],
+            evidence_refs=all_refs,
+            assumptions=[
+                "所有金额字段均为基准100相对指数，不是人民币。",
+                "月度需求来自有版本、有证据的城市校准参数。",
+            ],
+            counter_evidence=[
+                "实际客户池、供货和成交反馈偏离校准窗口时必须重新运行。"
+            ],
+            gaps=[],
+            actions=[
+                "获得真实规划、货量和价格输入后升级为 Input 2 项目模型。"
+            ],
+            confidence=None,
+            status=ResolvedStatus.RESOLVED,
+        )
+
+    def project_cashflow_section(
+        self,
+        result: ProjectCashFlowResult,
+        *,
+        evidence_refs_by_field: Mapping[str, Iterable[str]],
+    ) -> SectionResult:
+        required_fields = set(SECTION_REQUIREMENTS["VA2"])
+        if set(evidence_refs_by_field) != required_fields:
+            raise ValueError(
+                "VA2 evidence refs must exactly cover "
+                f"{sorted(required_fields)}"
+            )
+        refs = {
+            field: list(dict.fromkeys(str(item) for item in values if str(item)))
+            for field, values in evidence_refs_by_field.items()
+        }
+        missing = [field for field, values in refs.items() if not values]
+        if missing:
+            raise ValueError(f"VA2 fields require evidence refs: {missing}")
+        monthly_sales = [
+            {
+                "month": item.month,
+                "subscriptions": item.subscriptions,
+                "cancellations": item.cancellations,
+                "contracts": item.contracts,
+                "contracted_sales_value_cny": item.contracted_sales_value_cny,
+                "products": [
+                    {
+                        "product_id": product.product_id,
+                        "released_units": product.released_units,
+                        "subscriptions": product.subscriptions,
+                        "cancellations": product.cancellations,
+                        "contracts": product.contracts,
+                        "closing_available_inventory": (
+                            product.closing_available_inventory
+                        ),
+                        "closing_reserved_inventory": (
+                            product.closing_reserved_inventory
+                        ),
+                    }
+                    for product in item.products
+                ],
+            }
+            for item in result.months
+        ]
+        monthly_cash = [
+            {
+                "month": item.month,
+                "contracted_sales_value_cny": item.contracted_sales_value_cny,
+                "cash_collections_cny": item.cash_collections_cny,
+                "accounting_revenue_cny": item.accounting_revenue_cny,
+                "land_cost_cny": item.land_cost_cny,
+                "construction_cost_cny": item.construction_cost_cny,
+                "design_incremental_cost_cny": (
+                    item.design_incremental_cost_cny
+                ),
+                "marketing_cost_cny": item.marketing_cost_cny,
+                "sales_tax_cny": item.sales_tax_cny,
+                "financing_cost_cny": item.financing_cost_cny,
+                "net_cash_flow_cny": item.net_cash_flow_cny,
+                "cumulative_net_cash_cny": item.cumulative_net_cash_cny,
+            }
+            for item in result.months
+        ]
+        data = {
+            "sales_forecast": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "basis": "sourced_project_inventory",
+                    "monthly": monthly_sales,
+                    "total_released_units": result.total_released_units,
+                    "total_contracts": result.total_contracts,
+                    "ending_available_inventory": (
+                        result.ending_available_inventory
+                    ),
+                    "ending_reserved_inventory": (
+                        result.ending_reserved_inventory
+                    ),
+                    "evidence_type": result.evidence_type,
+                },
+                evidence_refs=refs["sales_forecast"],
+            ),
+            "cash_flow": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "basis": "project_currency_cny",
+                    "monthly": monthly_cash,
+                    "contracted_sales_value_cny": (
+                        result.contracted_sales_value_cny
+                    ),
+                    "cash_collections_cny": result.cash_collections_cny,
+                    "accounting_revenue_cny": result.accounting_revenue_cny,
+                    "formula": result.formula,
+                },
+                evidence_refs=refs["cash_flow"],
+            ),
+            "investment_metrics": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "net_cash_npv_cny": result.net_cash_npv_cny,
+                    "peak_funding_requirement_cny": (
+                        result.peak_funding_requirement_cny
+                    ),
+                    "parameter_version": result.parameter_version,
+                    "model_version": result.model_version,
+                    "investment_decision_allowed": False,
+                },
+                evidence_refs=refs["investment_metrics"],
+            ),
+        }
+        all_refs = list(
+            dict.fromkeys(
+                ref for values in refs.values() for ref in values
+            )
+        )
+        return SectionResult(
+            section_id="VA2",
+            data=data,
+            conclusions=[
+                "已形成基于真实货量的项目级去化与初步现金流压力测试。"
+            ],
+            evidence_refs=all_refs,
+            assumptions=[
+                "结果依赖当前批次、客户池、成本与回款时滞版本。",
+                "成交货值、现金到账与会计收入按不同时间序列处理。",
+            ],
+            counter_evidence=[
+                "法定条件、真实销售反馈或成本口径变化时结果必须失效重算。"
+            ],
+            gaps=[],
+            actions=["用实际来访、认购、签约、退房和回款滚动校准。"],
+            confidence=None,
+            status=ResolvedStatus.RESOLVED,
+        )
+
+    def scheme_comparison_section(
+        self,
+        result: SchemeComparisonResult,
+        *,
+        evidence_refs_by_field: Mapping[str, Iterable[str]],
+    ) -> SectionResult:
+        required_fields = set(SECTION_REQUIREMENTS["VA2"])
+        if set(evidence_refs_by_field) != required_fields:
+            raise ValueError(
+                "VA2 evidence refs must exactly cover "
+                f"{sorted(required_fields)}"
+            )
+        refs = {
+            field: list(dict.fromkeys(str(item) for item in values if str(item)))
+            for field, values in evidence_refs_by_field.items()
+        }
+        missing = [field for field, values in refs.items() if not values]
+        if missing:
+            raise ValueError(f"VA2 fields require evidence refs: {missing}")
+        schemes = [
+            {
+                "scheme_id": item.scheme_id,
+                "feasible": item.feasible,
+                "absorption_12m": item.absorption_12m,
+                "realized_value_cny": item.realized_value_cny,
+                "expected_cash_npv_cny": item.expected_cash_npv_cny,
+                "cvar_cash_npv_cny": item.cvar_cash_npv_cny,
+                "risk_adjusted_npv_cny": item.risk_adjusted_npv_cny,
+                "peak_funding_cny": item.peak_funding_cny,
+                "tail_inventory_rate": item.tail_inventory_rate,
+                "planning_efficiency": item.planning_efficiency,
+                "product_market_fit": item.product_market_fit,
+                "implementation_complexity": (
+                    item.implementation_complexity
+                ),
+                "hard_constraint_failures": list(
+                    item.hard_constraint_failures
+                ),
+            }
+            for item in result.metrics
+        ]
+        policy = {
+            "policy_version": result.policy.policy_version,
+            "cvar_alpha": result.policy.cvar_alpha,
+            "risk_aversion_lambda": result.policy.risk_aversion_lambda,
+            "objective_directions": dict(
+                result.policy.objective_directions
+            ),
+        }
+        data = {
+            "sales_forecast": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "basis": "normalized_scheme_comparison",
+                    "schemes": schemes,
+                    "pareto_scheme_ids": list(result.pareto_scheme_ids),
+                },
+                evidence_refs=refs["sales_forecast"],
+            ),
+            "cash_flow": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "schemes": schemes,
+                    "policy": policy,
+                    "formula": result.formula,
+                },
+                evidence_refs=refs["cash_flow"],
+            ),
+            "investment_metrics": ResolvedField(
+                status=ResolvedStatus.RESOLVED,
+                value={
+                    "pareto_scheme_ids": list(result.pareto_scheme_ids),
+                    "recommended_scheme_id": (
+                        result.recommended_scheme_id
+                    ),
+                    "eliminated_reasons": [
+                        {"scheme_id": scheme_id, "reason": reason}
+                        for scheme_id, reason in result.eliminated_reasons
+                    ],
+                    "no_recommendation_reason": (
+                        result.no_recommendation_reason
+                    ),
+                    "policy": policy,
+                },
+                evidence_refs=refs["investment_metrics"],
+            ),
+        }
+        all_refs = list(
+            dict.fromkeys(
+                ref for values in refs.values() for ref in values
+            )
+        )
+        conclusion = (
+            f"推荐方案 {result.recommended_scheme_id} 位于 Pareto 前沿。"
+            if result.recommended_scheme_id
+            else "所有方案均未通过硬约束，本轮不形成推荐。"
+        )
+        return SectionResult(
+            section_id="VA2",
+            data=data,
+            conclusions=[conclusion],
+            evidence_refs=all_refs,
+            assumptions=[
+                "目标方向、CVaR alpha、风险厌恶 lambda 与硬约束均已冻结。"
+            ],
+            counter_evidence=[
+                "任一方案输入、成本、市场情景或硬约束变化均触发重新比较。"
+            ],
+            gaps=[],
+            actions=["按真实销售反馈滚动校准方案情景与切换条件。"],
+            confidence=None,
+            status=ResolvedStatus.RESOLVED,
+        )
+
     def assemble(
         self,
         *,
@@ -543,6 +911,18 @@ class ReportService:
         market: MarketAnalysisResult | None = None,
         product: ProductResult | None = None,
         premium: PremiumResult | None = None,
+        absorption: OperatingSimulation | None = None,
+        absorption_evidence_refs: Mapping[str, Iterable[str]] | None = None,
+        project_cashflow: ProjectCashFlowResult | None = None,
+        project_cashflow_evidence_refs: Mapping[
+            str, Iterable[str]
+        ] | None = None,
+        scheme_comparison: SchemeComparisonResult | None = None,
+        scheme_comparison_evidence_refs: Mapping[
+            str, Iterable[str]
+        ] | None = None,
+        analysis_profile: Mapping[str, Any] | None = None,
+        requirements: Iterable[Mapping[str, Any]] = (),
     ) -> ReportRun:
         sections = self.empty_sections()
         if market is not None:
@@ -551,6 +931,32 @@ class ReportService:
             sections.update(self.product_sections(product))
         if premium is not None:
             sections["VA1"] = self.premium_section(premium)
+        if absorption is not None:
+            sections["VA2"] = self.absorption_section(
+                absorption,
+                evidence_refs_by_field=absorption_evidence_refs or {},
+            )
+        if project_cashflow is not None:
+            if absorption is not None:
+                raise ValueError(
+                    "standard absorption and project cash flow cannot both "
+                    "populate VA2"
+                )
+            sections["VA2"] = self.project_cashflow_section(
+                project_cashflow,
+                evidence_refs_by_field=project_cashflow_evidence_refs or {},
+            )
+        if scheme_comparison is not None:
+            if absorption is not None or project_cashflow is not None:
+                raise ValueError(
+                    "only one VA2 simulation result can be assembled"
+                )
+            sections["VA2"] = self.scheme_comparison_section(
+                scheme_comparison,
+                evidence_refs_by_field=(
+                    scheme_comparison_evidence_refs or {}
+                ),
+            )
         evidence_records = list(evidence)
         sections["CS"] = SectionResult(
             section_id="CS",
@@ -591,15 +997,29 @@ class ReportService:
             confidence=None,
             status=ResolvedStatus.PARTIAL,
         )
+        profile = dict(analysis_profile or {})
+        if profile and not profile.get("schema_version"):
+            profile = resolve_analysis_profile(
+                profile or project_context.extra.get("input_profile") or project_context.to_dict(),
+                requested_level=profile.get("requested_level") if profile else None,
+            )
         return ReportRun(
             run_id=run_id,
             project_context=project_context,
             sections=sections,
             evidence_records=evidence_records,
-            requirements=[],
+            requirements=list(requirements),
             status=ResolvedStatus.PARTIAL,
             gate_status={},
-            metadata={"assembled_from_engine_results": True},
+            metadata={
+                "assembled_from_engine_results": True,
+                **({
+                    "analysis_profile": profile,
+                    "decision_scope": profile["decision_scope"],
+                    "profile_model_version": profile["model_version"],
+                    "strategy_objective": "risk_adjusted_operating_value",
+                } if profile else {}),
+            },
         )
 
 

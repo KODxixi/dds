@@ -10,6 +10,10 @@ from hashlib import sha256
 from typing import Any, Mapping, Sequence
 
 from dds.contracts import UNIT_BY_ID, VALID_SECTION_IDS
+from dds.analysis_profile import (
+    optional_units_from_metadata,
+    required_units_from_metadata,
+)
 from dds.domain import ReportRun, ResolvedField, ResolvedStatus, SectionResult
 from dds.reporting import AssetResolver, build_frozen_package
 
@@ -178,7 +182,7 @@ def _section_blocks(
                 blocks.append(
                     {
                         "type": "table",
-                        "title": "溢价敏感性区间",
+                        "title": "Premium sensitivity scenarios",
                         "columns": [
                             "scenario",
                             "combined_rate",
@@ -191,6 +195,118 @@ def _section_blocks(
                         "source_refs": list(portable_refs),
                     }
                 )
+    elif section.section_id == "VA2":
+        forecast = _resolved_value(section, "sales_forecast")
+        if isinstance(forecast, Mapping):
+            curves = forecast.get("curves")
+            if isinstance(curves, Sequence) and not isinstance(
+                curves, (str, bytes)
+            ):
+                rows = [
+                    {
+                        "strategy": item.get("strategy_id"),
+                        "scenario": item.get("scenario_id"),
+                        "absorption_12m": item.get("absorption_12m"),
+                        "clearance_month": item.get("clearance_month"),
+                        "value_index": item.get("realized_value_index"),
+                        "npv_index": item.get("risk_adjusted_npv_index"),
+                    }
+                    for item in curves
+                    if isinstance(item, Mapping)
+                ]
+                if rows:
+                    blocks.append(
+                        {
+                            "type": "table",
+                            "title": "Standard 100-unit operating scenarios",
+                            "columns": [
+                                "strategy",
+                                "scenario",
+                                "absorption_12m",
+                                "clearance_month",
+                                "value_index",
+                                "npv_index",
+                            ],
+                            "rows": rows,
+                            "source_refs": list(portable_refs),
+                        }
+                    )
+            monthly = forecast.get("monthly")
+            if isinstance(monthly, Sequence) and not isinstance(
+                monthly, (str, bytes)
+            ):
+                rows = [
+                    {
+                        "month": item.get("month"),
+                        "subscriptions": item.get("subscriptions"),
+                        "cancellations": item.get("cancellations"),
+                        "contracts": item.get("contracts"),
+                        "contracted_value_cny": item.get(
+                            "contracted_sales_value_cny"
+                        ),
+                    }
+                    for item in monthly
+                    if isinstance(item, Mapping)
+                ]
+                if rows:
+                    blocks.append(
+                        {
+                            "type": "table",
+                            "title": "Project monthly subscriptions and contracts",
+                            "columns": [
+                                "month",
+                                "subscriptions",
+                                "cancellations",
+                                "contracts",
+                                "contracted_value_cny",
+                            ],
+                            "rows": rows,
+                            "source_refs": list(portable_refs),
+                        }
+                    )
+            schemes = forecast.get("schemes")
+            if isinstance(schemes, Sequence) and not isinstance(
+                schemes, (str, bytes)
+            ):
+                rows = [
+                    {
+                        "scheme": item.get("scheme_id"),
+                        "feasible": item.get("feasible"),
+                        "absorption_12m": item.get("absorption_12m"),
+                        "realized_value_cny": item.get(
+                            "realized_value_cny"
+                        ),
+                        "risk_adjusted_npv_cny": item.get(
+                            "risk_adjusted_npv_cny"
+                        ),
+                        "peak_funding_cny": item.get(
+                            "peak_funding_cny"
+                        ),
+                        "tail_inventory_rate": item.get(
+                            "tail_inventory_rate"
+                        ),
+                    }
+                    for item in schemes
+                    if isinstance(item, Mapping)
+                ]
+                if rows:
+                    blocks.append(
+                        {
+                            "type": "table",
+                            "title": "Risk-adjusted Pareto scheme comparison",
+                            "columns": [
+                                "scheme",
+                                "feasible",
+                                "absorption_12m",
+                                "realized_value_cny",
+                                "risk_adjusted_npv_cny",
+                                "peak_funding_cny",
+                                "tail_inventory_rate",
+                            ],
+                            "rows": rows,
+                            "source_refs": list(portable_refs),
+                        }
+                    )
     for conclusion in section.conclusions:
         text = str(conclusion).strip()
         if text:
@@ -219,9 +335,11 @@ class ReportCompilerAdapter:
         self,
         run: ReportRun,
         *,
-        required_units: Sequence[str],
+        required_units: Sequence[str] | None = None,
     ) -> dict[str, Any]:
-        required = tuple(dict.fromkeys(str(item) for item in required_units))
+        required = tuple(dict.fromkeys(str(item) for item in (
+            required_units or required_units_from_metadata(run.metadata)
+        )))
         if not required:
             raise ValueError("required_units must not be empty")
         unknown = [item for item in required if item not in VALID_SECTION_IDS]
@@ -292,11 +410,40 @@ class ReportCompilerAdapter:
             for item in sorted(run.evidence_records, key=lambda value: value.evidence_id)
         ]
         context = run.project_context
+        profile = run.metadata.get("analysis_profile")
+        included = list(required)
+        for section_id in optional_units_from_metadata(run.metadata):
+            section = run.sections.get(str(section_id))
+            if isinstance(section, SectionResult) and _section_status(section) not in {"missing", "blocked"}:
+                included.append(str(section_id))
+        included = list(dict.fromkeys(included))
+        if included != list(required):
+            pages_by_unit = {str(page["section_id"]): page for page in pages}
+            for section_id in included:
+                if section_id in pages_by_unit:
+                    continue
+                section = run.sections[section_id]
+                pages.append({
+                    "page_id": f"{section_id.lower()}-primary",
+                    "chapter_id": section_id.lower(),
+                    "section_id": section_id,
+                    "unit_id": section_id,
+                    "unit_status": _section_status(section),
+                    "layout": "summary",
+                    "title": UNIT_BY_ID[section_id]["title"],
+                    "takeaway": str(section.conclusions[0]) if section.conclusions else "条件单元已有实质内容。",
+                    "blocks": _section_blocks(section, source_id_map),
+                    "source_refs": _mapped_source_refs(section.evidence_refs, source_id_map),
+                    "confidence": {"score": _confidence_score(section)},
+                    "evidence_type": "analysis_inference",
+                })
         return {
             "meta": {
                 "as_of": _portable(context.base_date),
                 "compiled_at": f"{_portable(context.base_date)}T00:00:00Z",
                 "run_id": run.run_id,
+                "analysis_profile": profile,
+                "decision_scope": run.metadata.get("decision_scope"),
             },
             "project": {
                 "project_id": context.project_id,
@@ -305,7 +452,11 @@ class ReportCompilerAdapter:
                 "district": context.district,
                 "project_type": context.project_type,
             },
-            "project_panorama": {"required_units": list(required)},
+            "project_panorama": {
+                "required_units": list(required),
+                "included_units": included,
+                "unit_policy": profile.get("unit_policy", {}) if isinstance(profile, Mapping) else {},
+            },
             "page_manifest_authoritative": True,
             "page_manifest": pages,
             "source_registry": source_registry,
@@ -323,7 +474,7 @@ class ReportCompilerAdapter:
         self,
         run: ReportRun,
         *,
-        required_units: Sequence[str],
+        required_units: Sequence[str] | None = None,
         as_of: str | date | None = None,
         asset_resolver: AssetResolver | None = None,
     ) -> dict[str, Any]:
