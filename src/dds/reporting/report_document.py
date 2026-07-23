@@ -111,6 +111,8 @@ PAGE_REQUIRED_FIELDS = (
     "layout",
     "title",
     "takeaway",
+    "decision_question",
+    "decision_impact",
     "blocks",
     "chart_specs",
     "diagram_specs",
@@ -3123,6 +3125,7 @@ def _normalize_page(page: Mapping[str, Any], fallback_index: int) -> dict[str, A
             page.get("takeaway"), "本页结论需与来源和置信度同时阅读。"
         ),
         "decision_question": _safe_text(page.get("decision_question"), full_title),
+        "decision_impact": _safe_text(page.get("decision_impact")),
         "observed_evidence_refs": _normalize_refs(page.get("observed_evidence_refs")),
         "counter_evidence_refs": _normalize_refs(page.get("counter_evidence_refs")),
         "recommendation": _safe_text(page.get("recommendation")),

@@ -9,7 +9,7 @@ from dds.reporting.renderer import TEMPLATE_PATH  # noqa: E402
 from dds.reporting.runtime_compat import inject_browser_qa_runtime  # noqa: E402
 
 
-V1_TEMPLATE_SHA256 = "b3f09e54c417c84f502ae489fad9cfa24d10b59345bf1cc99f78e08e391c88ea"
+V2_TEMPLATE_SHA256 = "3409c3735bd36fed651e785769d5b4db8bdfcdff321524dc6b57f6da41d0a224"
 
 
 def test_runtime_bridge_is_deterministic_without_mutating_v1_template() -> None:
@@ -19,12 +19,14 @@ def test_runtime_bridge_is_deterministic_without_mutating_v1_template() -> None:
     first = inject_browser_qa_runtime(template)
     repeated = inject_browser_qa_runtime(template)
 
-    assert hashlib.sha256(template_bytes).hexdigest() == V1_TEMPLATE_SHA256
+    assert hashlib.sha256(template_bytes).hexdigest() == V2_TEMPLATE_SHA256
     assert first == repeated
     assert "window.DDSReportRuntime" in first
     assert "window.DDSReportModes" in first
     assert "preparePrint" in first
     assert 'addEventListener("beforeprint", preparePrint)' in first
+    assert "sequence.forEach(index =>" in first
+    assert "PRINT_BATCH_LIMIT" not in first
     assert 'stage.dataset.runtimeReady = "true"' in first
     assert 'failedStage.dataset.runtimeReady = "error"' in first
     assert 'notice.setAttribute("data-runtime-error", "")' in first

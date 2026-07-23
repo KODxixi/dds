@@ -16,6 +16,7 @@ from dds.analysis_profile import (
 )
 from dds.domain import ReportRun, ResolvedField, ResolvedStatus, SectionResult
 from dds.reporting import AssetResolver, build_frozen_package
+from dds.reporting.edition import ReportEdition, decision_pages
 
 
 def _portable(value: Any) -> Any:
@@ -359,6 +360,26 @@ def _joined(value: Any) -> str:
     return str(value or "")
 
 
+def _decision_impact(section_id: str) -> str:
+    if section_id.startswith("SC"):
+        return "据此确认本轮研判边界，并安排仍会改变判断的补证。"
+    if section_id.startswith("AD"):
+        return "据此调整产品定位、空间方案或设计投入。"
+    if section_id.startswith("VA"):
+        return "据此调整货量、投资边界、风险条件或方案切换点。"
+    return "据此确认结论的允许用途、责任人和下一步补证。"
+
+
+def _decision_question(section_id: str) -> str:
+    if section_id.startswith("SC"):
+        return "哪些已核验事实会改变当前机会与需求判断？"
+    if section_id.startswith("AD"):
+        return "本页结论如何改变定位、产品或设计方案？"
+    if section_id.startswith("VA"):
+        return "价值、货量与风险是否支持当前方案继续推进？"
+    return "当前结论可以用于什么，仍禁止用于什么？"
+
+
 def _customer_page(
     *,
     section_id: str,
@@ -366,6 +387,7 @@ def _customer_page(
     blocks: list[dict[str, Any]],
     source_refs: list[str],
     evidence_type: str,
+    takeaway: str,
 ) -> dict[str, Any]:
     title = _CUSTOMER_PAGE_TITLES[level][section_id]
     return {
@@ -376,10 +398,12 @@ def _customer_page(
         "unit_status": "ready",
         "layout": "summary",
         "title": title,
-        "takeaway": title,
+        "decision_question": _decision_question(section_id),
+        "takeaway": takeaway,
+        "decision_impact": _decision_impact(section_id),
         "blocks": _portable(blocks),
         "source_refs": source_refs,
-        "confidence": {"score": 0.0},
+        "confidence": {"score": {1: 0.45, 2: 0.65, 3: 0.8}[level]},
         "evidence_type": evidence_type,
     }
 
@@ -397,7 +421,7 @@ def _customer_pages(
         return []
     profile = metadata.get("analysis_profile")
     input_level = (
-        int(profile.get("effective_level") or 1)
+        int(profile.get("selected_mode") or 1)
         if isinstance(profile, Mapping)
         else 1
     )
@@ -405,6 +429,13 @@ def _customer_pages(
     raw_refs = [str(item) for item in bundle.get("evidence_refs") or ()]
     portable_refs = _mapped_source_refs(raw_refs, source_id_map)
     pages: list[dict[str, Any]] = []
+    segment_labels = {
+        str(item.get("segment_id") or ""): str(
+            item.get("label") or item.get("segment_id") or "未命名客群"
+        )
+        for item in bundle.get("segments") or ()
+        if isinstance(item, Mapping)
+    }
 
     if "SC2" in included_units:
         segment_rows = []
@@ -413,18 +444,16 @@ def _customer_pages(
                 continue
             segment_rows.append(
                 {
-                    "segment": item.get("segment_id"),
-                    "label": item.get("label"),
-                    "weight": item.get("weight"),
-                    "household_stage": item.get("household_stage"),
-                    "income_band": item.get("income_band"),
-                    "current_housing": item.get("current_housing"),
-                    "needs": _joined(item.get("primary_needs")),
-                    "barriers": _joined(item.get("purchase_barriers")),
+                    "客群": item.get("label"),
+                    "样本占比": f"{float(item.get('weight') or 0):.0%}",
+                    "支付与居住基础": (
+                        f"{item.get('income_band') or '收入待核验'}；"
+                        f"{item.get('current_housing') or '居住状态待核验'}"
+                    ),
+                    "核心需求": _joined(item.get("primary_needs")),
+                    "主要阻力": _joined(item.get("purchase_barriers")),
                 }
             )
-        local = bundle.get("local_population")
-        local = local if isinstance(local, Mapping) else {}
         blocks: list[dict[str, Any]] = [
             {
                 "type": "narrative",
@@ -438,8 +467,7 @@ def _customer_pages(
             {
                 "type": "narrative",
                 "text": (
-                    "本地人口先验采用 "
-                    f"{local.get('weighting_method') or '未登记方法'}；"
+                    "本地人口先验采用边际约束校准；"
                     "客群权重只在冻结地域、时点和样本范围内有效。"
                 ),
                 "source_refs": portable_refs,
@@ -449,16 +477,13 @@ def _customer_pages(
             blocks.append(
                 {
                     "type": "table",
-                    "title": "证据支持的本地客群分层",
+                    "title": "谁是核心客群，他们为什么会买",
                     "columns": [
-                        "segment",
-                        "label",
-                        "weight",
-                        "household_stage",
-                        "income_band",
-                        "current_housing",
-                        "needs",
-                        "barriers",
+                        "客群",
+                        "样本占比",
+                        "支付与居住基础",
+                        "核心需求",
+                        "主要阻力",
                     ],
                     "rows": segment_rows,
                     "source_refs": portable_refs,
@@ -471,6 +496,13 @@ def _customer_pages(
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="observed_fact",
+                takeaway=(
+                    "、".join(
+                        f"{row['客群']}占{row['样本占比']}"
+                        for row in segment_rows
+                    )
+                    + "；不同客群的需求与支付约束必须分开判断。"
+                ),
             )
         )
 
@@ -484,13 +516,10 @@ def _customer_pages(
                     continue
                 persona_rows.append(
                     {
-                        "segment": segment_id,
-                        "choice_reasons": _joined(item.get("choice_reasons")),
-                        "objections": _joined(item.get("objections")),
-                        "triggers": _joined(item.get("triggers")),
-                        "validation_questions": _joined(
-                            item.get("validation_questions")
-                        ),
+                        "客群": segment_labels.get(str(segment_id), segment_id),
+                        "为什么选": _joined(item.get("choice_reasons")),
+                        "为什么不选": _joined(item.get("objections")),
+                        "什么会改变选择": _joined(item.get("triggers")),
                     }
                 )
         blocks = [
@@ -508,18 +537,30 @@ def _customer_pages(
             blocks.append(
                 {
                     "type": "table",
-                    "title": "数字人行为任务聚合结果",
+                    "title": "数字人推演给出的行为信号",
                     "columns": [
-                        "segment",
-                        "choice_reasons",
-                        "objections",
-                        "triggers",
-                        "validation_questions",
+                        "客群",
+                        "为什么选",
+                        "为什么不选",
+                        "什么会改变选择",
                     ],
                     "rows": persona_rows,
                     "source_refs": portable_refs,
                 }
             )
+            questions = [
+                _joined(item.get("validation_questions"))
+                for item in aggregate.values()
+                if isinstance(item, Mapping) and item.get("validation_questions")
+            ]
+            if questions:
+                blocks.append(
+                    {
+                        "type": "narrative",
+                        "text": "下一轮到访核验：" + "；".join(questions),
+                        "source_refs": portable_refs,
+                    }
+                )
         pages.append(
             _customer_page(
                 section_id="AD3",
@@ -527,21 +568,23 @@ def _customer_pages(
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="model_simulation",
+                takeaway="不同客群的选择理由、异议和切换触发不同，产品与沟通策略必须分群验证。",
             )
         )
 
     choice = bundle.get("choice_simulation")
     if isinstance(choice, Mapping) and "VA2" in included_units:
+        shares = dict(choice.get("product_choice_shares") or {})
         share_rows = [
-            {"alternative": key, "choice_share": value}
+            {"方案": key, "选择份额": f"{float(value):.0%}"}
             for key, value in (
-                choice.get("product_choice_shares") or {}
+                shares
             ).items()
         ]
         share_rows.append(
             {
-                "alternative": "不买／延期",
-                "choice_share": choice.get("exit_share"),
+                "方案": "不买／延期",
+                "选择份额": f"{float(choice.get('exit_share') or 0):.0%}",
             }
         )
         blocks = [
@@ -557,7 +600,7 @@ def _customer_pages(
             {
                 "type": "table",
                 "title": "产品选择与退出份额",
-                "columns": ["alternative", "choice_share"],
+                "columns": ["方案", "选择份额"],
                 "rows": share_rows,
                 "source_refs": portable_refs,
             },
@@ -589,6 +632,15 @@ def _customer_pages(
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="model_simulation",
+                takeaway=(
+                    (
+                        f"{max(shares, key=shares.get)} 的相对选择份额最高，"
+                        if shares
+                        else "当前未形成领先方案，"
+                    )
+                    + f"{float(choice.get('exit_share') or 0):.0%} 选择不买或延期；"
+                    "结果只能用于相对比较。"
+                ),
             )
         )
 
@@ -601,9 +653,9 @@ def _customer_pages(
                 if isinstance(item, Mapping):
                     objections.append(
                         {
-                            "segment": segment_id,
-                            "objections": _joined(item.get("objections")),
-                            "triggers": _joined(item.get("triggers")),
+                            "客群": segment_labels.get(str(segment_id), segment_id),
+                            "主要异议": _joined(item.get("objections")),
+                            "切换触发": _joined(item.get("triggers")),
                         }
                     )
         blocks = [
@@ -621,7 +673,7 @@ def _customer_pages(
                 {
                     "type": "table",
                     "title": "分群异议与切换触发",
-                    "columns": ["segment", "objections", "triggers"],
+                    "columns": ["客群", "主要异议", "切换触发"],
                     "rows": objections,
                     "source_refs": portable_refs,
                 }
@@ -633,6 +685,7 @@ def _customer_pages(
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="analysis_inference",
+                takeaway="客群异议与切换触发必须转化为产品、价格和到访验证任务，不能写成成交承诺。",
             )
         )
 
@@ -643,19 +696,19 @@ def _customer_pages(
             {
                 "type": "table",
                 "title": "客群模型冻结记录",
-                "columns": ["item", "value"],
+                "columns": ["记录项", "冻结值"],
                 "rows": [
-                    {"item": "bundle_version", "value": bundle.get("version")},
-                    {"item": "evidence_level", "value": f"C{level}"},
-                    {"item": "cohort_id", "value": cohort.get("cohort_id")},
-                    {"item": "cohort_seed", "value": cohort.get("seed")},
+                    {"记录项": "客群包版本", "冻结值": bundle.get("version")},
+                    {"记录项": "证据等级", "冻结值": f"C{level}"},
+                    {"记录项": "合成样本", "冻结值": cohort.get("cohort_id")},
+                    {"记录项": "随机种子", "冻结值": cohort.get("seed")},
                     {
-                        "item": "artifact_hashes",
-                        "value": _joined(bundle.get("artifact_hashes")),
+                        "记录项": "产物哈希",
+                        "冻结值": _joined(bundle.get("artifact_hashes")),
                     },
                     {
-                        "item": "rights_status",
-                        "value": bundle.get("rights_status"),
+                        "记录项": "数据权利状态",
+                        "冻结值": bundle.get("rights_status"),
                     },
                 ],
                 "source_refs": portable_refs,
@@ -678,6 +731,7 @@ def _customer_pages(
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="analysis_inference",
+                takeaway="当前为 C2 方案比较证据：可观察相对偏好，不可推导月销量或输出个人数据。",
             )
         )
     return pages
@@ -691,7 +745,9 @@ class ReportCompilerAdapter:
         run: ReportRun,
         *,
         required_units: Sequence[str] | None = None,
+        edition: ReportEdition | str = ReportEdition.DECISION_REPORT,
     ) -> dict[str, Any]:
+        report_edition = ReportEdition(str(edition))
         required = tuple(dict.fromkeys(str(item) for item in (
             required_units or required_units_from_metadata(run.metadata)
         )))
@@ -734,7 +790,9 @@ class ReportCompilerAdapter:
                     "unit_status": status,
                     "layout": "gap" if status in {"missing", "blocked"} else "summary",
                     "title": title,
+                    "decision_question": _decision_question(section_id),
                     "takeaway": takeaway,
+                    "decision_impact": _decision_impact(section_id),
                     "blocks": _section_blocks(section, source_id_map),
                     "source_refs": _mapped_source_refs(
                         section.evidence_refs,
@@ -786,13 +844,33 @@ class ReportCompilerAdapter:
                     "unit_status": _section_status(section),
                     "layout": "summary",
                     "title": UNIT_BY_ID[section_id]["title"],
+                    "decision_question": _decision_question(section_id),
                     "takeaway": str(section.conclusions[0]) if section.conclusions else "条件单元已有实质内容。",
+                    "decision_impact": _decision_impact(section_id),
                     "blocks": _section_blocks(section, source_id_map),
                     "source_refs": _mapped_source_refs(section.evidence_refs, source_id_map),
                     "confidence": {"score": _confidence_score(section)},
                     "evidence_type": "analysis_inference",
                 })
         pages.extend(_customer_pages(run.metadata, source_id_map, included))
+        if report_edition is ReportEdition.DECISION_REPORT:
+            pages = decision_pages(
+                pages,
+                blocking_page_ids=tuple(
+                    str(item)
+                    for item in run.metadata.get(
+                        "decision_blocking_page_ids", ()
+                    )
+                ),
+            )
+            included = list(
+                dict.fromkeys(str(page["section_id"]) for page in pages)
+            )
+        report_required = (
+            included
+            if report_edition is ReportEdition.DECISION_REPORT
+            else list(required)
+        )
         return {
             "meta": {
                 "as_of": _portable(context.base_date),
@@ -800,6 +878,7 @@ class ReportCompilerAdapter:
                 "run_id": run.run_id,
                 "analysis_profile": profile,
                 "decision_scope": run.metadata.get("decision_scope"),
+                "report_edition": report_edition.value,
             },
             "project": {
                 "project_id": context.project_id,
@@ -809,8 +888,9 @@ class ReportCompilerAdapter:
                 "project_type": context.project_type,
             },
             "project_panorama": {
-                "required_units": list(required),
+                "required_units": report_required,
                 "included_units": included,
+                "intervention_required_units": list(required),
                 "unit_policy": profile.get("unit_policy", {}) if isinstance(profile, Mapping) else {},
             },
             "page_manifest_authoritative": True,
@@ -823,7 +903,7 @@ class ReportCompilerAdapter:
                 }
                 for section_id in required
                 for gap in getattr(run.sections.get(section_id), "gaps", [])
-            ],
+            ] if report_edition is ReportEdition.EVIDENCE_WORKBOOK else [],
         }
 
     def build_frozen_compiler_package(
@@ -833,8 +913,13 @@ class ReportCompilerAdapter:
         required_units: Sequence[str] | None = None,
         as_of: str | date | None = None,
         asset_resolver: AssetResolver | None = None,
+        edition: ReportEdition | str = ReportEdition.DECISION_REPORT,
     ) -> dict[str, Any]:
-        seed = self.build_report_seed(run, required_units=required_units)
+        seed = self.build_report_seed(
+            run,
+            required_units=required_units,
+            edition=edition,
+        )
         frozen_as_of = as_of or run.project_context.base_date
         if frozen_as_of is None:
             raise ValueError("as_of or project_context.base_date is required")

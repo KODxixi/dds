@@ -45,7 +45,7 @@ PROFILE_CASES = (
     (
         1,
         {"address": "Test City Opportunity Road 1"},
-        "opportunity_screening",
+        "independent_opportunity_research",
     ),
     (
         2,
@@ -58,7 +58,7 @@ PROFILE_CASES = (
                 }
             ],
         },
-        "constraint_driven_predevelopment",
+        "constraint_collaboration",
     ),
     (
         3,
@@ -73,7 +73,7 @@ PROFILE_CASES = (
             "core_development_boundaries_ready": True,
             "schemes": [{"scheme_id": "A"}, {"scheme_id": "B"}],
         },
-        "scheme_selection",
+        "scheme_review",
     ),
 )
 
@@ -159,7 +159,8 @@ async def test_input_profile_full_truth_and_compiler_chain(
         AgentTask(
             task_type="requirement_analysis",
             parameters={
-                "requested_level": level,
+                "selected_mode": level,
+                "mode_confirmed": True,
                 "input_profile": input_profile,
                 "project_context": {
                     "project_id": f"input-{level}",
@@ -172,7 +173,8 @@ async def test_input_profile_full_truth_and_compiler_chain(
     )
     assert requirement_result.success
     profile = requirement_result.data["analysis_profile"]
-    assert profile["effective_level"] == level
+    assert profile["selected_mode"] == level
+    assert profile["mode_status"] == "confirmed"
     assert profile["decision_scope"] == decision_scope
     assert profile["eligible"] is True
 
@@ -442,7 +444,7 @@ async def test_input_profile_full_truth_and_compiler_chain(
     assert {
         page["section_id"] for page in first_document["page_manifest"]
     } == set(profile["required_units"])
-    assert first_document["meta"]["analysis_profile"]["effective_level"] == level
+    assert first_document["meta"]["analysis_profile"]["selected_mode"] == level
     assert first_document["meta"]["decision_scope"] == decision_scope
     assert "??" not in json.dumps(first_document, ensure_ascii=False)
 

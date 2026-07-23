@@ -4,105 +4,95 @@ import pytest
 
 from dds.agents.base import AgentStatus, AgentTask
 from dds.agents.requirement import RequirementAgent
-from dds.analysis_profile import resolve_analysis_profile
+from dds.analysis_profile import resolve_intervention_profile
 
 
-def test_requested_level_is_clamped_to_assessed_evidence_level() -> None:
-    profile = resolve_analysis_profile(
-        {"address": "测试城测试路 1 号", "requested_level": 3},
-    )
-
-    assert profile["requested_level"] == 3
-    assert profile["assessed_level"] == 1
-    assert profile["effective_level"] == 1
-    assert profile["decision_scope"] == "opportunity_screening"
-    assert "absolute_project_revenue" not in profile["quantitative_authority"]
-
-
-def test_input_2_requires_traceable_constraints_but_not_complete_documents() -> None:
-    profile = resolve_analysis_profile(
+def test_system_recommends_but_does_not_select_a_mode() -> None:
+    profile = resolve_intervention_profile(
         {
             "address": "测试城测试路 1 号",
-            "constraint_sources": [{"source_ref": "client://planning-condition-v1"}],
-        },
-        requested_level=2,
-    )
-
-    assert profile["effective_level"] == 2
-    assert profile["unit_policy"]["SC3"] == "required"
-    assert profile["unit_policy"]["VA1"] == "optional"
-
-
-def test_input_3_requires_core_boundaries_and_two_comparable_schemes() -> None:
-    profile = resolve_analysis_profile(
-        {
-            "address": "测试城测试路 1 号",
-            "constraint_sources": [{"source_ref": "client://planning-condition-v1"}],
-            "core_development_boundaries_ready": True,
-            "schemes": [{"scheme_id": "A"}, {"scheme_id": "B"}],
-        },
-        requested_level=3,
-    )
-
-    assert profile["effective_level"] == 3
-    assert profile["decision_scope"] == "scheme_selection"
-    assert profile["unit_policy"]["VA1"] == "required"
-
-
-def test_missing_location_blocks_profile_even_when_input_3_is_requested() -> None:
-    profile = resolve_analysis_profile(
-        {
-            "requested_level": 3,
-            "constraint_sources": [{"source_ref": "client://planning-condition-v1"}],
-            "core_development_boundaries_ready": True,
             "schemes": [{"scheme_id": "A"}, {"scheme_id": "B"}],
         }
     )
-
-    assert profile["effective_level"] == 1
+    assert profile["recommended_mode"] == 3
+    assert profile["selected_mode"] is None
+    assert profile["mode_status"] == "awaiting_confirmation"
     assert profile["eligible"] is False
-    assert profile["classification_status"] == "blocked"
-    assert profile["classification_blockers"] == ["location_unresolved"]
 
 
-@pytest.mark.parametrize("status", ["conflict", "stale", "expired"])
-def test_unusable_constraints_do_not_promote_input_level(status: str) -> None:
-    profile = resolve_analysis_profile(
+def test_scheme_material_recommends_input_3_without_selecting_it() -> None:
+    profile = resolve_intervention_profile(
         {
-            "address": "Test City Road 1",
-            "requested_level": 3,
-            "constraint_sources": [
-                {
-                    "source_ref": "client://planning-condition-v1",
-                    "status": status,
-                }
-            ],
+            "address": "测试城测试路 1 号",
+            "materials": [{"filename": "三方案比选.pptx"}],
         }
     )
+    assert profile["recommended_mode"] == 3
+    assert profile["selected_mode"] is None
+    assert profile["mode_status"] == "awaiting_confirmation"
 
-    assert profile["effective_level"] == 1
-    assert profile["eligible"] is True
-    assert "constraints_unusable" in profile["classification_reasons"]
+
+@pytest.mark.parametrize("mode", [1, 2, 3])
+def test_user_selection_is_never_replaced_by_recommendation(mode: int) -> None:
+    raw = {
+        "address": "测试城测试路 1 号",
+        "constraint_sources": [{"source_ref": "client://condition"}],
+        "schemes": [{"scheme_id": "A"}, {"scheme_id": "B"}],
+    }
+    profile = resolve_intervention_profile(
+        raw,
+        selected_mode=mode,
+        confirmed=True,
+    )
+    assert profile["selected_mode"] == mode
+    assert profile["mode_status"] == "confirmed"
+
+
+def test_input_3_stays_selected_and_blocks_without_two_schemes() -> None:
+    profile = resolve_intervention_profile(
+        {"address": "测试城测试路 1 号"},
+        selected_mode=3,
+        confirmed=True,
+    )
+    assert profile["recommended_mode"] == 1
+    assert profile["selected_mode"] == 3
+    assert profile["mode_status"] == "blocked"
+    assert profile["missing_inputs"] == ["two_comparable_schemes"]
+
+
+def test_input_1_stays_selected_even_when_complete_schemes_exist() -> None:
+    profile = resolve_intervention_profile(
+        {
+            "address": "测试城测试路 1 号",
+            "constraint_sources": [{"source_ref": "client://condition"}],
+            "schemes": [{"scheme_id": "A"}, {"scheme_id": "B"}],
+        },
+        selected_mode=1,
+        confirmed=True,
+    )
+    assert profile["recommended_mode"] == 3
+    assert profile["selected_mode"] == 1
+    assert profile["decision_scope"] == "independent_opportunity_research"
 
 
 @pytest.mark.asyncio
-async def test_requirement_agent_waits_for_profile_location() -> None:
+async def test_requirement_agent_waits_for_user_confirmation() -> None:
     result = await RequirementAgent().run(
         AgentTask(
             task_type="requirement_analysis",
             parameters={
-                "requested_level": 1,
+                "input_profile": {"address": "Test City Road 1"},
                 "project_context": {
-                    "project_id": "missing-location",
+                    "project_id": "awaiting-mode",
                     "city": "Test City",
+                    "address": "Test City Road 1",
                 },
             },
         )
     )
-
     assert result.success is False
     assert result.status is AgentStatus.WAITING
-    assert result.data["missing_fields"] == ["address_or_coordinates"]
+    assert result.data["missing_fields"] == ["intervention_confirmation"]
 
 
 @pytest.mark.asyncio
@@ -111,8 +101,13 @@ async def test_profile_requirement_graph_closes_with_customer_audit_cs() -> None
         AgentTask(
             task_type="requirement_analysis",
             parameters={
-                "requested_level": 1,
-                "input_profile": {"address": "Test City Road 1"},
+                "selected_mode": 1,
+                "mode_confirmed": True,
+                "input_profile": {
+                    "address": "Test City Road 1",
+                    "selected_mode": 1,
+                    "mode_confirmed": True,
+                },
                 "project_context": {
                     "project_id": "customer-graph",
                     "city": "Test City",

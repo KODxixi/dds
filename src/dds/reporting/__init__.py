@@ -34,6 +34,7 @@ from .report_delivery_evidence import (
     verify_report_delivery_validation,
 )
 from .report_document import build_report_document, compile_page_manifest
+from .edition import ReportEdition, decision_pages, page_value_errors
 
 
 __all__ = [
@@ -46,6 +47,7 @@ __all__ = [
     "ProjectReportError",
     "REPORT_COMPILER_INPUT_VERSION",
     "ReportDeliveryEvidenceError",
+    "ReportEdition",
     "SUPPORTED_PROFILE",
     "TEMPLATE_PATH",
     "build_frozen_package",
@@ -53,6 +55,7 @@ __all__ = [
     "compile_cinematic_manifest",
     "compile_frozen_package",
     "compile_page_manifest",
+    "decision_pages",
     "compiler_fingerprint",
     "compute_package_hash",
     "compute_report_document_hash",
@@ -60,6 +63,7 @@ __all__ = [
     "freeze_evidence_package",
     "freeze_report_seed_assets",
     "load_template_profile",
+    "page_value_errors",
     "render_cinematic_deck_html",
     "render_frozen_package",
     "require_report_delivery_validation",

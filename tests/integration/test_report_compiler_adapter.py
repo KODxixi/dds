@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from dds.data.adapters import ListingEvidenceAdapter
-from dds.analysis_profile import resolve_analysis_profile
+from dds.analysis_profile import resolve_intervention_profile
 from dds.data.catalog import DatasetAsset, DatasetKind
 from dds.data.repository import CompetitorQuery, QueryResult
 from dds.domain import ProjectContext, ResolvedStatus
@@ -101,7 +101,6 @@ def test_report_run_to_compiler_package_is_deterministic_and_portable():
     assert [page["section_id"] for page in document["page_manifest"]] == [
         "SC2",
         "AD3",
-        "VA1",
     ]
     registry = first["source_registry"]
     registry_ids = {item["source_id"] for item in registry}
@@ -140,17 +139,20 @@ def test_report_run_to_compiler_package_is_deterministic_and_portable():
     assert all(raw_id not in serialized for raw_id in raw_evidence_ids)
     assert first["package_hash"]
 
-    run.metadata["analysis_profile"] = resolve_analysis_profile(
-        {"address": "?????? 1 ?"}
+    run.metadata["analysis_profile"] = resolve_intervention_profile(
+        {"address": "?????? 1 ?"},
+        selected_mode=1,
+        confirmed=True,
     )
-    run.metadata["decision_scope"] = "opportunity_screening"
+    run.metadata["decision_scope"] = "independent_opportunity_research"
     run.sections["VA1"].status = ResolvedStatus.PARTIAL
     run.sections["VA1"].conclusions = ["?????????????????"]
     adaptive = adapter.build_frozen_compiler_package(run)
     adaptive_document = compile_frozen_package(adaptive)
     panorama = adaptive["module_inputs"]["report_seed"]["project_panorama"]
+    assert "VA1" not in panorama["intervention_required_units"]
     assert "VA1" not in panorama["required_units"]
-    assert "VA1" in panorama["included_units"]
-    assert "VA1" in {
+    assert "VA1" not in panorama["included_units"]
+    assert "VA1" not in {
         page["section_id"] for page in adaptive_document["page_manifest"]
     }

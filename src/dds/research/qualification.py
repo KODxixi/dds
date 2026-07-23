@@ -5,6 +5,9 @@ from __future__ import annotations
 from datetime import date, datetime, timedelta
 from typing import Any, Iterable, Mapping
 
+_RESTRICTED_RIGHTS = {"forbidden", "unknown", "personal_data", "unlicensed"}
+_INVALID_DOCUMENT_STATUS = {"expired", "superseded", "withdrawn"}
+
 
 def _date(value: object) -> date | None:
     text = str(value or "").strip()
@@ -40,6 +43,14 @@ def qualify_candidates(
             or str(candidate.get("source_hash") or "").strip()
         )
         published_at = _date(candidate.get("published_at"))
+        candidate_geography = str(candidate.get("geography") or "").strip()
+        source_role = str(candidate.get("source_role") or "").strip()
+        document_status = str(
+            candidate.get("document_status") or "effective"
+        ).strip().lower()
+        rights_status = str(
+            candidate.get("rights_status") or ""
+        ).strip().lower()
 
         if not traceable:
             status = "rejected"
@@ -47,6 +58,42 @@ def qualify_candidates(
         elif not metric_ids:
             status = "rejected"
             reasons.append("no_required_metric_match")
+        elif candidate.get("conflict"):
+            status = "conflict"
+            reasons.append("unresolved_source_conflict")
+        elif rights_status in _RESTRICTED_RIGHTS or not rights_status:
+            status = "needs_review"
+            reasons.append("rights_status_missing_or_restricted")
+        elif document_status in _INVALID_DOCUMENT_STATUS:
+            status = "rejected"
+            reasons.append("document_not_effective")
+        elif any(
+            requirement.get("geography")
+            and candidate_geography
+            and str(requirement["geography"]) not in candidate_geography
+            and candidate_geography not in str(requirement["geography"])
+            for metric_id in metric_ids
+            for requirement in (requirements[metric_id],)
+        ):
+            status = "rejected"
+            reasons.append("outside_required_geography")
+        elif any(
+            requirement.get("allowed_source_roles")
+            and source_role not in requirement["allowed_source_roles"]
+            for metric_id in metric_ids
+            for requirement in (requirements[metric_id],)
+        ):
+            status = "rejected"
+            reasons.append("source_role_not_allowed")
+        elif any(
+            requirement.get("min_sample_size")
+            and float(candidate.get("sample_size") or 0)
+            < float(requirement["min_sample_size"])
+            for metric_id in metric_ids
+            for requirement in (requirements[metric_id],)
+        ):
+            status = "needs_review"
+            reasons.append("sample_size_below_requirement")
         elif published_at is None:
             status = "needs_review"
             reasons.append("published_at_missing_or_invalid")

@@ -417,8 +417,7 @@ def _materialize_page_asset_blocks(
 
 
 def _fit_dense_mixed_pages(
-    manifest: Sequence[Mapping[str, Any]], *, mixed_table_rows: int = 2,
-    table_only_rows: int = 6,
+    manifest: Sequence[Mapping[str, Any]], *, table_only_rows: int = 6,
 ) -> list[dict[str, Any]]:
     """Split tables to a 1280x720-safe density without local scrollbars."""
     fitted: list[dict[str, Any]] = []
@@ -449,7 +448,35 @@ def _fit_dense_mixed_pages(
             ),
             default=0,
         )
-        first_limit = mixed_table_rows if other_blocks else table_only_rows
+        if tables and other_blocks:
+            narrative_page = deepcopy(page)
+            narrative_page["blocks"] = deepcopy(other_blocks)
+            fitted.append(narrative_page)
+            offset = 0
+            sequence = 1
+            while offset < max_rows:
+                split_page = deepcopy(page)
+                split_page["blocks"] = []
+                for table in tables:
+                    table_copy = deepcopy(dict(table))
+                    table_copy["rows"] = list(
+                        table.get("rows") or []
+                    )[offset : offset + table_only_rows]
+                    if table_copy["rows"]:
+                        split_page["blocks"].append(table_copy)
+                split_page["page_id"] = (
+                    f"{page.get('page_id')}-table-continuation-{sequence + 1}"
+                )
+                split_page["title"] = (
+                    f"{page.get('title') or '证据矩阵'}（表续 {sequence + 1}）"
+                )
+                split_page["load_priority"] = "deferred"
+                if split_page["blocks"]:
+                    fitted.append(split_page)
+                offset += table_only_rows
+                sequence += 1
+            continue
+        first_limit = table_only_rows
         if max_rows <= first_limit:
             fitted.append(page)
             continue
@@ -973,5 +1000,3 @@ __all__ = [
     "resolve_cinematic_document",
     "render_cinematic_deck_html",
 ]
-
-

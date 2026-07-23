@@ -14,6 +14,7 @@ from threading import RLock
 from typing import Any, Iterable
 from uuid import uuid4
 
+from dds.analysis_profile import resolve_intervention_profile
 from dds.agents.base import AgentTask
 from dds.agents.requirement import RequirementAgent
 from dds.agents.research_planner import ResearchPlannerAgent
@@ -81,10 +82,13 @@ class ResearchJobService:
 
     def create(self, project_context: dict[str, Any]) -> dict[str, Any]:
         job_id = uuid4().hex
+        profile = resolve_intervention_profile(project_context)
         payload = {
             "job_id": job_id,
             "status": "pending",
             "project_context": dict(project_context),
+            "analysis_profile": profile,
+            "intervention_brief": None,
             "requirements": [],
             "candidates": [],
             "materials": [],
@@ -95,6 +99,66 @@ class ResearchJobService:
         self._log(payload, "job_created", "研究任务已创建")
         self._write(payload)
         return payload
+
+    def confirm_intervention(
+        self,
+        job_id: str,
+        brief: dict[str, Any],
+    ) -> dict[str, Any]:
+        job = self.get(job_id)
+        selected_mode = int(brief.get("selected_mode") or 0)
+        context = dict(job["project_context"])
+        context["selected_mode"] = selected_mode
+        context["mode_confirmed"] = True
+        context["materials"] = list(job.get("materials", []))
+        profile = resolve_intervention_profile(
+            context,
+            selected_mode=selected_mode,
+            confirmed=True,
+        )
+        frozen_brief = {
+            "schema_version": "dds.intervention-brief/1.0",
+            "selected_mode": selected_mode,
+            "user_goal": str(brief.get("user_goal") or "").strip(),
+            "decision_audience": str(
+                brief.get("decision_audience") or ""
+            ).strip(),
+            "decision_questions": [
+                str(item).strip()
+                for item in brief.get("decision_questions") or []
+                if str(item).strip()
+            ],
+            "available_materials": [
+                item["filename"] for item in job.get("materials", [])
+            ],
+            "priorities": dict(brief.get("priorities") or {}),
+            "prohibited_conclusions": [
+                str(item).strip()
+                for item in brief.get("prohibited_conclusions") or []
+                if str(item).strip()
+            ],
+            "confirmed_at": _now(),
+        }
+        if not frozen_brief["user_goal"]:
+            raise ValueError("user_goal is required")
+        job["project_context"] = context
+        job["analysis_profile"] = profile
+        job["intervention_brief"] = frozen_brief
+        job["decision_scope"] = profile["decision_scope"]
+        job["status"] = (
+            "pending" if profile["eligible"] else "blocked"
+        )
+        job["input_gate"] = {
+            "status": "ready" if profile["eligible"] else "blocked",
+            "reasons": profile["missing_inputs"],
+        }
+        self._log(
+            job,
+            "intervention_confirmed",
+            f"用户已确认 {profile['display_name']}",
+        )
+        self._write(job)
+        return self.summary(job)
 
     def upload(self, job_id: str, filename: str, content: bytes, content_type: str) -> dict[str, Any]:
         if Path(filename).name != filename or filename in {"", ".", ".."}:
@@ -116,6 +180,15 @@ class ResearchJobService:
         if destination.suffix.lower() == ".xlsx":
             record["integrity"] = WorkbookIntegrityScanner().scan(destination).to_dict()
         job["materials"].append(record)
+        context = dict(job["project_context"])
+        context["materials"] = list(job["materials"])
+        current_profile = job.get("analysis_profile") or {}
+        job["project_context"] = context
+        job["analysis_profile"] = resolve_intervention_profile(
+            context,
+            selected_mode=current_profile.get("selected_mode"),
+            confirmed=current_profile.get("mode_confirmed", False),
+        )
         self._log(job, "material_uploaded", f"已接收资料：{filename}")
         self._write(job)
         return record
@@ -123,6 +196,23 @@ class ResearchJobService:
     def run(self, job_id: str) -> dict[str, Any]:
         with self._lock:
             job = self.get(job_id)
+            profile = job.get("analysis_profile") or {}
+            if profile.get("mode_status") != "confirmed":
+                job["status"] = "blocked"
+                job["input_gate"] = {
+                    "status": "blocked",
+                    "reasons": (
+                        profile.get("missing_inputs")
+                        or ["intervention_confirmation_required"]
+                    ),
+                }
+                self._log(
+                    job,
+                    "intervention_not_confirmed",
+                    "必须先由用户确认 DDS 介入方式",
+                )
+                self._write(job)
+                return self.summary(job)
             blocked_materials = [
                 material
                 for material in job.get("materials", [])
@@ -145,14 +235,10 @@ class ResearchJobService:
             context = job["project_context"]
             requirement_parameters: dict[str, Any] = {
                 "project_context": context,
+                "selected_mode": profile["selected_mode"],
+                "mode_confirmed": True,
+                "input_profile": context,
             }
-            if context.get("requested_level") is not None:
-                requirement_parameters.update(
-                    {
-                        "requested_level": context["requested_level"],
-                        "input_profile": context,
-                    }
-                )
             requirement_result = asyncio.run(
                 RequirementAgent().execute(
                     AgentTask(
@@ -170,7 +256,7 @@ class ResearchJobService:
                     job["input_gate"] = {
                         "status": "blocked",
                         "reasons": requirement_result.data["analysis_profile"].get(
-                            "classification_blockers", []
+                            "missing_inputs", []
                         ),
                     }
                 self._write(job)
@@ -182,7 +268,7 @@ class ResearchJobService:
                     job,
                     "input_profile_classified",
                     (
-                        "Input classified as "
+                        "Intervention confirmed as "
                         f"{job['analysis_profile']['display_name']}; "
                         f"decision scope {job['decision_scope']}"
                     ),

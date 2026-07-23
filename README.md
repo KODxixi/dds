@@ -82,9 +82,21 @@ delivery = DeliveryService(settings.exports_root)
 
 正式流程必须通过 `BrowserQAResult.from_reports(...)` 从官方 `browser_qa.json` 与 `print_qa.json` 构造 QA 结果，随后由 `DeliveryService` 再次复核 HTML hash。手工构造的对象不构成交付证据，也不得用于正式发布。
 
+## 三种项目介入方式
+
+Input 1/2/3 是平行的任务类型，不是资料成熟度等级。系统可以根据地址、约束资料和方案文件给出 `recommended_mode`，但只有用户确认 `selected_mode` 并冻结 `InterventionBrief` 后才能运行；缺资料只会阻断相应结论，不会自动切换任务。
+
+| 介入方式 | DDS 角色 | 决策报告主线 |
+|---|---|---|
+| Input 1 · 独立研判 | 从场地和市场独立提出方向 | 机会—客群—方向—压力测试—验证 |
+| Input 2 · 约束协同 | 在任务书、规划和成本约束内联合策划 | 条件—矛盾—方案—产品操盘—闸门 |
+| Input 3 · 方案审查 | 对多个已有方案进行同口径比选 | 基线—比选—价值风险—推荐淘汰—切换 |
+
+同一项目可以由用户在不同阶段分别创建多个介入任务，已确认任务的 `selected_mode` 永不被系统改写。
+
 ## Research Control Center
 
-DDS V2 提供本机运行的非技术研究界面。Agent 会先拆解 Data Requirement Graph，再主动调用当前可用的外部数据库和搜索 API；搜索结果先进入 `candidate`，必须经过证据资格判定后才能成为报告事实。
+DDS V2 提供本机运行的非技术研究界面。创建项目后，界面先询问“你希望 DDS 怎样介入这个项目？”，展示推荐理由并等待用户确认。确认后 Agent 才会拆解 Data Requirement Graph，并调用当前可用的数据源；搜索结果先进入 `candidate`，必须经过证据资格判定后才能成为报告事实。
 
 ```powershell
 # 可选：启用 Tavily 外部网页搜索。密钥不会写入任务日志或报告。
@@ -103,6 +115,10 @@ uv run uvicorn dds.api.app:app --host 127.0.0.1 --port 8765
 - `tavily-web`：通过 `TAVILY_API_KEY` 调用 Tavily Search API。
 
 任务和上传资料默认写入 `data/projects/research-control-center/`；可用 `DDS_PRODUCT_ROOT` 指向其他 V2 管理目录。
+
+### V1 真实项目迁移
+
+`dds.projects.V1ProjectImporter` 以只读方式盘点 V1 原始资料，计算 SHA-256，复制为 V2 冻结快照，并为 PPTX、DOCX、XLSX、PDF、图片、视频和 DWG 建立可回溯定位或待复核状态。`LegacyProjectReportMigrator` 将客户决策报告与内部证据工作包分开生成；V2 后续运行只依赖冻结快照。
 
 ### 中国地产客群与数字人推演
 
@@ -137,7 +153,7 @@ from dds.agents import generate_report
 
 DDS 的承诺是“缺失绝不静默”，不是“永不为空”。没有合格证据时，字段必须进入 `unknown`、`blocked`、`scenario` 或明确补证状态，禁止用无来源的城市／全国基准冒充事实。
 
-报告依次经过四道闸门：
+报告依次经过四道闸门；决策报告还执行页面价值门，每页必须同时具备具体问题、非重复结论、证据或设计表达，以及决策影响或行动：
 
 1. `structure_valid`：12 个 Decision-Unit 的结构与字段契约有效。
 2. `evidence_valid`：证据类型、来源、时间、地域、单位和方法可追溯。

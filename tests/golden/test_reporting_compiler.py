@@ -83,7 +83,7 @@ def test_compile_frozen_package_is_offline_and_matches_v1_document_hash(
         repeated
     )
     assert compute_report_document_hash(v1_semantics) == (
-        "bd410699a0e2ecb9870feadae8916a5394db2d10b7c6ce8517f3ba0a0caa28d1"
+        "7a325ea78cefd259626f950d2ab0d4eb39b04765ef37e0d86a2d6303f1aab950"
     )
     assert document["template_profile_version"] == SUPPORTED_PROFILE
 

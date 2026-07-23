@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from dds.analysis_profile import resolve_analysis_profile
+from dds.analysis_profile import resolve_intervention_profile
 from dds.agents.base import AgentResult, AgentStatus, AgentTask, BaseAgent
 from dds.contracts import SECTION_REQUIREMENTS
 from dds.domain import DataRequirement, EvidenceType
@@ -175,12 +175,20 @@ class RequirementAgent(BaseAgent):
         }
         profile_requested = (
             "input_profile" in task.parameters
-            or "requested_level" in task.parameters
-            or ctx.get("requested_level") is not None
+            or "selected_mode" in task.parameters
+            or ctx.get("selected_mode") is not None
         )
-        analysis_profile = resolve_analysis_profile(
+        analysis_profile = resolve_intervention_profile(
             task.parameters.get("input_profile") or normalized,
-            requested_level=task.parameters.get("requested_level") or normalized.get("requested_level"),
+            selected_mode=(
+                task.parameters.get("selected_mode")
+                or normalized.get("selected_mode")
+            ),
+            confirmed=(
+                task.parameters.get("mode_confirmed")
+                if "mode_confirmed" in task.parameters
+                else normalized.get("mode_confirmed")
+            ),
         )
         if profile_requested:
             normalized["analysis_profile"] = analysis_profile
@@ -195,9 +203,14 @@ class RequirementAgent(BaseAgent):
                         "analysis_profile": analysis_profile,
                         "blocked": True,
                         "resolution_status": "human_input",
-                        "missing_fields": ["address_or_coordinates"],
+                        "missing_fields": (
+                            analysis_profile["missing_inputs"]
+                            or ["intervention_confirmation"]
+                        ),
                     },
-                    errors=["address or coordinates are required for Input 1/2/3 classification"],
+                    errors=[
+                        "intervention mode must be confirmed and its minimum inputs supplied"
+                    ],
                 )
         requirement_graph = self._build_requirement_graph(
             normalized,

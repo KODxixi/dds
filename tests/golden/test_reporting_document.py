@@ -51,7 +51,7 @@ def test_report_document_matches_v1_golden_hash() -> None:
     document = build_report_document(report_seed())
 
     assert compute_report_document_hash(document) == (
-        "bd410699a0e2ecb9870feadae8916a5394db2d10b7c6ce8517f3ba0a0caa28d1"
+        "7a325ea78cefd259626f950d2ab0d4eb39b04765ef37e0d86a2d6303f1aab950"
     )
     assert document["schema_version"] == "dds.report-document/1.2"
     assert [page["page_id"] for page in document["page_manifest"]] == [

@@ -129,7 +129,7 @@ _BRIDGE_JS = r"""
         releaseMounted(printRoot);
         const sequence = activeIndices();
         const fragment = document.createDocumentFragment();
-        sequence.slice(0, PRINT_BATCH_LIMIT).forEach(index => {
+        sequence.forEach(index => {
           const page = pageAt(index);
           if (!page) return;
           const mount = document.createElement("article");
@@ -215,7 +215,6 @@ def inject_browser_qa_runtime(rendered: str) -> str:
 
 
 __all__ = ["inject_browser_qa_runtime"]
-
 
 
 

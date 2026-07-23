@@ -587,6 +587,12 @@
     .summary-boundary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; color: var(--muted); font-size: 11px; }
     .summary-boundary span { padding-top: 11px; border-top: 1px solid rgba(255,255,255,.10); }
     .page-surface.is-summary .page-content > .block:not(.summary-judgment) { grid-column: span 4; }
+    .page-surface.is-summary .page-content:has(.table-block) > .summary-judgment {
+      grid-column: span 8;
+    }
+    .page-surface.is-summary .page-content:has(.table-block) > .table-block {
+      grid-column: span 4;
+    }
     .page-surface.is-summary .metrics-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
     .callout { color: var(--ink) !important; font-size: clamp(17px, 1.65vw, 27px) !important; font-weight: 700; line-height: 1.46 !important; }
     .metrics-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
@@ -710,7 +716,7 @@
     }
     .page-conclusion > span { color:var(--conclusion-accent); font-size:10px; font-weight:850; letter-spacing:.08em; white-space:nowrap; }
     .page-conclusion > strong { min-width:0; color:var(--ink); font-size:clamp(14px,1.12vw,18px); line-height:1.45; font-weight:760; overflow-wrap:anywhere; }
-    .page-conclusion > small { color:var(--quiet); font-size:9.5px; white-space:nowrap; }
+    .page-conclusion > small { max-width:240px; color:var(--quiet); font-size:9.5px; line-height:1.35; white-space:normal; }
     .evidence-chip,
     .confidence-chip { min-height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--accent); font-weight: 750; }
     .source-line { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -875,7 +881,7 @@
       .page-surface.has-chart .svg-chart { min-height:180px; height:100%; }
       .page-conclusion { min-height:50px; padding:9px 13px; gap:11px; }
       .page-conclusion > strong { font-size:13px; line-height:1.38; }
-      .page-conclusion > small { display:none; }
+      .page-conclusion > small { max-width:210px; font-size:9px; }
       .block { padding: 13px 16px; }
       .block h3 { margin-bottom: 7px; font-size: 18px; }
       .chart-block, .svg-chart-block { gap: 14px; }
@@ -895,7 +901,17 @@
       body { overflow: visible; background: #080808; }
       .topbar, .edge-trigger, .report-shell, .chapter-drawer, .source-matrix, .compatibility-markers, .scene-background, .scene-mask { display: none !important; }
       .print-root { display: block; }
-      .print-root .page-mount { position: relative; inset: auto; display: block; opacity: 1; transform: none; pointer-events: auto; break-after: page; }
+      .print-root .page-mount {
+        position: relative !important;
+        inset: auto !important;
+        top: auto !important;
+        height: auto !important;
+        display: block;
+        opacity: 1;
+        transform: none !important;
+        pointer-events: auto;
+        break-after: page;
+      }
       .print-root .page-surface { width: 16in; height: 9in; max-height: none; border-radius: 0; background: #111; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; }
     }
   </style>
@@ -953,7 +969,7 @@
     "use strict";
 
     const configuredChunkSize = Number("__PAGE_CHUNK_SIZE__");
-    const VIRTUAL_RADIUS=2, MAX_MOUNTED_PAGES=7, PAGE_CACHE_LIMIT=20, CHUNK_CACHE_LIMIT=3, DECODED_IMAGE_LIMIT=12, PRINT_BATCH_LIMIT=12, PAGE_CHUNK_SIZE=Number.isFinite(configuredChunkSize) && configuredChunkSize > 0 ? configuredChunkSize : 24;
+    const VIRTUAL_RADIUS=2, MAX_MOUNTED_PAGES=7, PAGE_CACHE_LIMIT=20, CHUNK_CACHE_LIMIT=3, DECODED_IMAGE_LIMIT=12, PAGE_CHUNK_SIZE=Number.isFinite(configuredChunkSize) && configuredChunkSize > 0 ? configuredChunkSize : 24;
     const NAV_IDLE_DELAY_MS=3200;
     const NAV_WAKE_EDGE_PX=72;
     const EVIDENCE_LABELS = Object.freeze({
@@ -1569,16 +1585,18 @@
       const summarySurface = summary ? `<section class="block summary-judgment solid-plate"><span>投决主结论</span><p>${escapeHTML(page.takeaway || "当前证据只支持条件性判断。")}</p><div class="summary-boundary"><span>使用边界 · 与来源同时阅读</span><span>证据置信度 · ${Math.round(score * 100)}%</span><span>人审闸门 · ${score < .8 ? "必须保留" : "建议复核"}</span></div></section>` : "";
       const headerTakeaway = page.decision_question || (summary ? "结论、来源、置信度和人工复核必须同时成立。" : "本页回答一个明确的开发与设计问题。");
       const conclusion = page.recommendation || page.takeaway || "当前证据只支持条件性判断；补证后再进入下一决策闸门。";
+      const decisionImpact = page.decision_impact || page.decision_gate || "按来源与置信边界复核后再进入下一闸门。";
+      const sourceLine = sources.length ? `来源 ${sources.length} 项 · 见右侧索引` : "来源未登记；不得替代补证";
       return `<div class="page-surface thick-glass${summary ? " is-summary" : ""}${charts.length ? " has-chart" : ""}" data-evidence="${escapeHTML(page.evidence_type || "analysis_inference")}" data-layout="${escapeHTML(page.layout || "content")}" data-story-role="${escapeHTML(page.story_role || "primary_narrative")}" data-visual-language="${escapeHTML(visualLanguage)}" data-risk="${risk}">
         <header class="page-head">
           <div><p class="page-kicker"><span class="section-code">${escapeHTML(pageCode)}</span><span>${escapeHTML(sectionGroupTitle)}</span><span class="section-group-label">${escapeHTML(sectionGroupLabel)}</span></p><h1 class="page-title">${escapeHTML(compactPageTitle(page, index))}</h1></div>
           <p class="page-takeaway">${escapeHTML(headerTakeaway)}</p>
         </header>
         <div class="page-content">${summarySurface}${charts.map(spec => renderChart(spec, visualLanguage)).join("")}${bodyBlocks.map(renderBlock).join("") || (summarySurface ? "" : renderBlock({type:"gap", text:"页面没有可展示内容。"}))}</div>
-        <section class="page-conclusion"><span>核心结论</span><strong>${escapeHTML(conclusion)}</strong><small>${escapeHTML(page.decision_gate || "与来源及置信度同时使用")}</small></section>
+        <section class="page-conclusion"><span>核心结论</span><strong>${escapeHTML(conclusion)}</strong><small>行动 · ${escapeHTML(decisionImpact)}</small></section>
         <footer class="page-foot">
           <span class="evidence-chip">${escapeHTML(evidenceLabel(page.evidence_type))}</span>
-          <span class="source-line">来源：${escapeHTML(sources.length ? sources.join(" / ") : "未登记；不得替代补证")}</span>
+          <span class="source-line">${escapeHTML(sourceLine)}</span>
           <span class="confidence-chip">置信度 ${Math.round(score * 100)}%</span>
           <span class="page-number">${escapeHTML(pageCode)} · ${activePosition(index) + 1} / ${activeIndices().length}</span>
         </footer>
@@ -1818,10 +1836,8 @@
     function renderPrintBatch() {
       releaseMounted(printRoot);
       const sequence = activeIndices();
-      const start = activePosition();
-      const end = Math.min(sequence.length, start + PRINT_BATCH_LIMIT);
       const fragment = document.createDocumentFragment();
-      for (let position = start; position < end; position += 1) {
+      for (let position = 0; position < sequence.length; position += 1) {
         const index = sequence[position];
         const page = pageAt(index);
         if (!page) continue;
@@ -1833,9 +1849,9 @@
       }
       printRoot.appendChild(fragment);
       printRoot.setAttribute("aria-hidden", "false");
-      requestAnimationFrame(() => globalThis.print());
     }
 
+    addEventListener("beforeprint", renderPrintBatch);
     addEventListener("afterprint", () => { releaseMounted(printRoot); printRoot.setAttribute("aria-hidden", "true"); });
     addEventListener("hashchange", () => goTo(indexFromHash(), {fromHash: true}));
     addEventListener("scroll", () => {

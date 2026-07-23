@@ -15,7 +15,7 @@ from dds.contracts import (
     SectionResult,
 )
 from dds.engine.contract_enforcer import GATE_ORDER, ContractEnforcer
-from dds.analysis_profile import resolve_analysis_profile
+from dds.analysis_profile import resolve_intervention_profile
 
 
 def _valid_run() -> ReportRun:
@@ -233,7 +233,11 @@ def test_validation_does_not_mutate_report() -> None:
 
 def test_profile_optional_units_do_not_block_four_gates() -> None:
     run = _valid_run()
-    profile = resolve_analysis_profile({"address": "测试城测试路 1 号"})
+    profile = resolve_intervention_profile(
+        {"address": "测试城测试路 1 号"},
+        selected_mode=1,
+        confirmed=True,
+    )
     run.metadata["analysis_profile"] = profile
     run.metadata["decision_scope"] = profile["decision_scope"]
     run.sections.pop("SC3")
@@ -248,20 +252,21 @@ def test_profile_optional_units_do_not_block_four_gates() -> None:
 
 def test_tampered_profile_cannot_remove_input_3_required_unit() -> None:
     run = _valid_run()
-    profile = resolve_analysis_profile(
+    profile = resolve_intervention_profile(
         {
             "address": "Test City Road 1",
             "constraint_sources": [{"source_ref": "client://planning-v1"}],
             "core_development_boundaries_ready": True,
             "schemes": [{"scheme_id": "A"}, {"scheme_id": "B"}],
         },
-        requested_level=3,
+        selected_mode=3,
+        confirmed=True,
     )
     profile["required_units"].remove("VA1")
     run.metadata.update(
         {
             "analysis_profile": profile,
-            "decision_scope": "scheme_selection",
+            "decision_scope": "scheme_review",
         }
     )
     run.sections.pop("VA1")
@@ -269,5 +274,5 @@ def test_tampered_profile_cannot_remove_input_3_required_unit() -> None:
     result = ContractEnforcer().validate_report(run)
 
     assert result.structure_valid is False
-    assert any("profile registry" in error for error in result.errors)
+    assert any("intervention registry" in error for error in result.errors)
     assert any("VA1" in error for error in result.errors)

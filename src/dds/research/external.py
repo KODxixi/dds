@@ -36,6 +36,13 @@ class ResearchCandidate:
     source_hash: str
     metric_ids: tuple[str, ...] = ()
     published_at: str = ""
+    geography: str = ""
+    source_role: str = "public_web_candidate"
+    document_status: str = "effective"
+    rights_status: str = "public_web"
+    sample_size: int | float | None = None
+    allowed_uses: tuple[str, ...] = ()
+    conflict: bool = False
     qualification_status: str = "candidate"
 
     def to_dict(self) -> dict[str, Any]:
@@ -135,6 +142,7 @@ class TavilyResearchSource:
                     published_at=frozen["published_date"],
                     source_hash=_candidate_hash(frozen),
                     metric_ids=query.metric_ids,
+                    geography=query.geography,
                 )
             )
         return ResearchResult(self.source_id, query.query, tuple(candidates))
@@ -180,6 +188,9 @@ class CuratedListingDatabaseSource:
                 source_hash=item.source_hash,
                 metric_ids=query.metric_ids,
                 published_at=str(item.effective_at or ""),
+                geography=item.geography,
+                source_role="licensed_structured_listing",
+                rights_status="licensed_internal_analysis",
             )
             for item in bundle.evidence
         )

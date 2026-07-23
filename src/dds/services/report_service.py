@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict
 from typing import Any, Iterable, Mapping
 
-from dds.analysis_profile import resolve_analysis_profile
+from dds.analysis_profile import resolve_intervention_profile
 from dds.contracts import REPORT_UNITS, SECTION_REQUIREMENTS
 from dds.customer import CustomerIntelligenceBundle
 from dds.domain import (
@@ -649,7 +649,7 @@ class ReportService:
             ],
             gaps=[],
             actions=[
-                "获得真实规划、货量和价格输入后升级为 Input 2 项目模型。"
+                "如需约束协同，用户应另行确认并发起 Input 2 任务。"
             ],
             confidence=None,
             status=ResolvedStatus.RESOLVED,
@@ -1123,9 +1123,10 @@ class ReportService:
             )
         profile = dict(analysis_profile or {})
         if profile and not profile.get("schema_version"):
-            profile = resolve_analysis_profile(
+            profile = resolve_intervention_profile(
                 profile or project_context.extra.get("input_profile") or project_context.to_dict(),
-                requested_level=profile.get("requested_level") if profile else None,
+                selected_mode=profile.get("selected_mode") if profile else None,
+                confirmed=profile.get("mode_status") == "confirmed" if profile else None,
             )
         return ReportRun(
             run_id=run_id,

@@ -1,4 +1,4 @@
-"""Single source of truth for DDS Input 1/2/3 analysis depth."""
+"""User-confirmed DDS intervention modes and independent data readiness."""
 
 from __future__ import annotations
 
@@ -9,15 +9,16 @@ from typing import Any, Mapping
 from dds.contracts import VALID_SECTION_IDS
 
 
-class AnalysisLevel(IntEnum):
+class InterventionMode(IntEnum):
     INPUT_1 = 1
     INPUT_2 = 2
     INPUT_3 = 3
 
 
 @dataclass(frozen=True)
-class ProfileDefinition:
-    level: AnalysisLevel
+class InterventionDefinition:
+    mode: InterventionMode
+    display_name: str
     decision_scope: str
     required_units: tuple[str, ...]
     optional_units: tuple[str, ...]
@@ -32,13 +33,12 @@ class ProfileDefinition:
         return policy
 
 
-_COMMON_REQUIRED = ("SC1", "SC2", "AD1", "AD2", "AD3", "AD4", "VA2", "VA3", "CS")
-
-PROFILE_REGISTRY: dict[AnalysisLevel, ProfileDefinition] = {
-    AnalysisLevel.INPUT_1: ProfileDefinition(
-        level=AnalysisLevel.INPUT_1,
-        decision_scope="opportunity_screening",
-        required_units=_COMMON_REQUIRED,
+INTERVENTION_REGISTRY: dict[InterventionMode, InterventionDefinition] = {
+    InterventionMode.INPUT_1: InterventionDefinition(
+        mode=InterventionMode.INPUT_1,
+        display_name="Input 1 · 独立研判",
+        decision_scope="independent_opportunity_research",
+        required_units=("SC1", "SC2", "AD1", "AD2", "AD3", "AD4", "VA2", "VA3", "CS"),
         optional_units=("SC3", "AD5", "VA1"),
         excluded_units=(),
         quantitative_authority=(
@@ -48,9 +48,10 @@ PROFILE_REGISTRY: dict[AnalysisLevel, ProfileDefinition] = {
             "relative_npv_index",
         ),
     ),
-    AnalysisLevel.INPUT_2: ProfileDefinition(
-        level=AnalysisLevel.INPUT_2,
-        decision_scope="constraint_driven_predevelopment",
+    InterventionMode.INPUT_2: InterventionDefinition(
+        mode=InterventionMode.INPUT_2,
+        display_name="Input 2 · 约束协同",
+        decision_scope="constraint_collaboration",
         required_units=("SC1", "SC2", "SC3", "AD1", "AD2", "AD3", "AD4", "VA2", "VA3", "CS"),
         optional_units=("AD5", "VA1"),
         excluded_units=(),
@@ -60,9 +61,10 @@ PROFILE_REGISTRY: dict[AnalysisLevel, ProfileDefinition] = {
             "preliminary_cash_flow",
         ),
     ),
-    AnalysisLevel.INPUT_3: ProfileDefinition(
-        level=AnalysisLevel.INPUT_3,
-        decision_scope="scheme_selection",
+    InterventionMode.INPUT_3: InterventionDefinition(
+        mode=InterventionMode.INPUT_3,
+        display_name="Input 3 · 方案审查",
+        decision_scope="scheme_review",
         required_units=("SC1", "SC2", "SC3", "AD1", "AD2", "AD3", "AD4", "VA1", "VA2", "VA3", "CS"),
         optional_units=("AD5",),
         excluded_units=(),
@@ -76,87 +78,149 @@ PROFILE_REGISTRY: dict[AnalysisLevel, ProfileDefinition] = {
 }
 
 
-def _level(value: Any, *, default: AnalysisLevel = AnalysisLevel.INPUT_1) -> AnalysisLevel:
-    if isinstance(value, AnalysisLevel):
+def _mode(value: Any) -> InterventionMode | None:
+    if isinstance(value, InterventionMode):
         return value
     text = str(value or "").strip().lower().replace("input", "").replace("_", " ")
+    if not text:
+        return None
     try:
-        return AnalysisLevel(int(text.strip()))
-    except (TypeError, ValueError):
-        return default
+        return InterventionMode(int(text.strip()))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("selected_mode must be 1, 2, or 3") from exc
 
 
-def assess_analysis_level(input_profile: Mapping[str, Any]) -> tuple[AnalysisLevel, list[str]]:
-    """Classify deterministically; weak evidence never promotes the whole project."""
+def recommend_intervention_mode(
+    input_profile: Mapping[str, Any] | None,
+) -> tuple[InterventionMode, list[str]]:
+    """Recommend a mode from supplied material without selecting it."""
 
-    has_location = bool(
-        input_profile.get("address")
-        or (input_profile.get("latitude") is not None and input_profile.get("longitude") is not None)
-        or (input_profile.get("lat") is not None and input_profile.get("lng") is not None)
-    )
-    if not has_location:
-        return AnalysisLevel.INPUT_1, ["location_unresolved"]
-    reasons = ["location_resolved"]
-    constraints = input_profile.get("constraint_sources") or input_profile.get("constraints") or []
-    constraint_items = constraints if isinstance(constraints, (list, tuple)) else []
-    valid_constraints = [
-        item for item in constraint_items
-        if isinstance(item, Mapping)
-        and (item.get('source_ref') or item.get('source_hash'))
-        and str(item.get('status') or 'verified').lower()
-        not in {'conflict', 'stale', 'expired'}
+    raw = dict(input_profile or {})
+    schemes = raw.get("schemes") or raw.get("scheme_inputs") or []
+    if isinstance(schemes, (list, tuple)) and len(schemes) >= 2:
+        return InterventionMode.INPUT_3, ["two_or_more_schemes_supplied"]
+    materials = raw.get("materials") or raw.get("available_materials") or []
+    material_names = [
+        str(item.get("filename") if isinstance(item, Mapping) else item).lower()
+        for item in materials
     ]
-    constraint_ready = bool(valid_constraints)
-    if constraint_items and not constraint_ready:
-        reasons.append('constraints_unusable')
-    if constraint_ready:
-        reasons.append("traceable_constraints_present")
-    schemes = input_profile.get("schemes") or input_profile.get("scheme_inputs") or []
-    comparable_schemes = len(schemes) if isinstance(schemes, (list, tuple)) else 0
-    core_boundaries = bool(input_profile.get("core_development_boundaries_ready"))
-    if constraint_ready and core_boundaries and comparable_schemes >= 2:
-        return AnalysisLevel.INPUT_3, reasons + ["core_boundaries_ready", "two_comparable_schemes"]
-    if constraint_ready:
-        return AnalysisLevel.INPUT_2, reasons
-    return AnalysisLevel.INPUT_1, reasons
+    if any(
+        name.endswith(".pptx")
+        or any(keyword in name for keyword in ("方案", "总图", "强排", "户配"))
+        for name in material_names
+    ):
+        return InterventionMode.INPUT_3, [
+            "scheme_material_detected_requires_comparability_review"
+        ]
+    constraints = raw.get("constraint_sources") or raw.get("constraints") or []
+    if isinstance(constraints, (list, tuple)) and constraints:
+        return InterventionMode.INPUT_2, ["constraint_material_supplied"]
+    if any(
+        any(keyword in name for keyword in ("规划", "任务书", "成本", "条件"))
+        for name in material_names
+    ):
+        return InterventionMode.INPUT_2, ["constraint_material_detected"]
+    return InterventionMode.INPUT_1, ["site_or_project_question_supplied"]
 
 
-def resolve_analysis_profile(
+def _has_location(raw: Mapping[str, Any]) -> bool:
+    return bool(
+        raw.get("address")
+        or (
+            (raw.get("latitude") is not None or raw.get("lat") is not None)
+            and (raw.get("longitude") is not None or raw.get("lng") is not None)
+        )
+    )
+
+
+def _data_readiness(raw: Mapping[str, Any]) -> dict[str, str]:
+    constraints = raw.get("constraint_sources") or raw.get("constraints") or []
+    schemes = raw.get("schemes") or raw.get("scheme_inputs") or []
+    materials = raw.get("materials") or raw.get("available_materials") or []
+    return {
+        "location": "ready" if _has_location(raw) else "missing",
+        "constraints": "ready" if constraints else "missing",
+        "schemes": (
+            "ready"
+            if isinstance(schemes, (list, tuple)) and len(schemes) >= 2
+            else "missing"
+        ),
+        "project_materials": "ready" if materials else "missing",
+        "market_evidence": "not_assessed",
+        "customer_evidence": "not_assessed",
+        "cost_and_finance": "not_assessed",
+    }
+
+
+def resolve_intervention_profile(
     input_profile: Mapping[str, Any] | None = None,
     *,
-    requested_level: AnalysisLevel | int | str | None = None,
+    selected_mode: InterventionMode | int | str | None = None,
+    confirmed: bool | None = None,
 ) -> dict[str, Any]:
+    """Resolve a recommendation and preserve the user's confirmed selection."""
+
     raw = dict(input_profile or {})
-    assessed, reasons = assess_analysis_level(raw)
-    requested = _level(requested_level or raw.get("requested_level"), default=assessed)
-    effective = min(requested, assessed)
-    definition = PROFILE_REGISTRY[effective]
-    blockers = [reason for reason in reasons if reason == 'location_unresolved']
+    recommended, reasons = recommend_intervention_mode(raw)
+    selected = _mode(
+        selected_mode if selected_mode is not None else raw.get("selected_mode")
+    )
+    is_confirmed = bool(
+        confirmed if confirmed is not None else raw.get("mode_confirmed", False)
+    )
+    readiness = _data_readiness(raw)
+    missing: list[str] = []
+    if selected is not None and is_confirmed:
+        if readiness["location"] != "ready":
+            missing.append("address_or_coordinates")
+        if selected is InterventionMode.INPUT_2 and readiness["constraints"] != "ready":
+            missing.append("constraint_material")
+        if selected is InterventionMode.INPUT_3 and readiness["schemes"] != "ready":
+            missing.append("two_comparable_schemes")
+
+    if selected is None or not is_confirmed:
+        status = "awaiting_confirmation"
+    elif missing:
+        status = "blocked"
+    else:
+        status = "confirmed"
+    definition = INTERVENTION_REGISTRY[selected or recommended]
     return {
-        'classification_status': 'blocked' if blockers else 'resolved',
-        'classification_blockers': blockers,
-        'eligible': not blockers,
-        "schema_version": "dds.analysis-profile/1.0",
-        "requested_level": int(requested),
-        "assessed_level": int(assessed),
-        "effective_level": int(effective),
-        "display_name": f"Input {int(effective)}",
+        "schema_version": "dds.intervention-profile/2.0",
+        "recommended_mode": int(recommended),
+        "recommendation_reasons": reasons,
+        "selected_mode": int(selected) if selected is not None else None,
+        "mode_status": status,
+        "mode_confirmed": status in {"confirmed", "blocked"},
+        "eligible": status == "confirmed",
+        "missing_inputs": missing,
+        "data_readiness": readiness,
+        "display_name": definition.display_name,
         "decision_scope": definition.decision_scope,
-        "classification_reasons": reasons,
         "unit_policy": definition.unit_policy,
         "required_units": list(definition.required_units),
         "optional_units": list(definition.optional_units),
         "excluded_units": list(definition.excluded_units),
         "quantitative_authority": list(definition.quantitative_authority),
-        "model_version": "dds.input-profile/1.0",
+        "model_version": "dds.intervention-mode/2.0",
     }
 
 
-def required_units_from_metadata(metadata: Mapping[str, Any] | None) -> tuple[str, ...]:
+def intervention_definition_from_metadata(
+    metadata: Mapping[str, Any] | None,
+) -> InterventionDefinition | None:
     profile = (metadata or {}).get("analysis_profile")
     if not isinstance(profile, Mapping):
-        return tuple(VALID_SECTION_IDS)
-    definition = profile_definition_from_metadata(metadata)
+        return None
+    try:
+        selected = _mode(profile.get("selected_mode"))
+    except ValueError:
+        return None
+    return INTERVENTION_REGISTRY.get(selected) if selected is not None else None
+
+
+def required_units_from_metadata(metadata: Mapping[str, Any] | None) -> tuple[str, ...]:
+    definition = intervention_definition_from_metadata(metadata)
     return definition.required_units if definition else tuple(VALID_SECTION_IDS)
 
 
@@ -169,21 +233,8 @@ def included_units_from_metadata(metadata: Mapping[str, Any] | None) -> tuple[st
 
 
 def optional_units_from_metadata(metadata: Mapping[str, Any] | None) -> tuple[str, ...]:
-    definition = profile_definition_from_metadata(metadata)
+    definition = intervention_definition_from_metadata(metadata)
     return definition.optional_units if definition else ()
-
-
-def profile_definition_from_metadata(
-    metadata: Mapping[str, Any] | None,
-) -> ProfileDefinition | None:
-    profile = (metadata or {}).get("analysis_profile")
-    if not isinstance(profile, Mapping):
-        return None
-    try:
-        level = AnalysisLevel(int(profile.get("effective_level")))
-    except (TypeError, ValueError):
-        return None
-    return PROFILE_REGISTRY[level]
 
 
 def analysis_profile_contract_errors(
@@ -192,10 +243,11 @@ def analysis_profile_contract_errors(
     profile = (metadata or {}).get("analysis_profile")
     if not isinstance(profile, Mapping):
         return []
-    definition = profile_definition_from_metadata(metadata)
+    definition = intervention_definition_from_metadata(metadata)
     if definition is None:
-        return ["analysis_profile.effective_level is invalid"]
-    errors = []
+        return ["analysis_profile.selected_mode is invalid or unconfirmed"]
+    if profile.get("mode_status") != "confirmed":
+        return ["analysis_profile.mode_status must be confirmed"]
     expected = {
         "decision_scope": definition.decision_scope,
         "required_units": list(definition.required_units),
@@ -203,27 +255,25 @@ def analysis_profile_contract_errors(
         "unit_policy": definition.unit_policy,
         "quantitative_authority": list(definition.quantitative_authority),
     }
-    for field, expected_value in expected.items():
-        if profile.get(field) != expected_value:
-            errors.append(
-                f"analysis_profile.{field} does not match profile registry"
-            )
+    errors = [
+        f"analysis_profile.{field} does not match intervention registry"
+        for field, expected_value in expected.items()
+        if profile.get(field) != expected_value
+    ]
     if (metadata or {}).get("decision_scope") != definition.decision_scope:
-        errors.append(
-            "report_metadata.decision_scope does not match profile registry"
-        )
+        errors.append("report_metadata.decision_scope does not match intervention registry")
     return errors
 
 
 __all__ = [
-    "AnalysisLevel",
-    "PROFILE_REGISTRY",
-    "ProfileDefinition",
+    "INTERVENTION_REGISTRY",
+    "InterventionDefinition",
+    "InterventionMode",
     "analysis_profile_contract_errors",
-    "assess_analysis_level",
     "included_units_from_metadata",
+    "intervention_definition_from_metadata",
     "optional_units_from_metadata",
-    "profile_definition_from_metadata",
+    "recommend_intervention_mode",
     "required_units_from_metadata",
-    "resolve_analysis_profile",
+    "resolve_intervention_profile",
 ]

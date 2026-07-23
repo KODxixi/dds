@@ -81,11 +81,10 @@ def test_real_wuhan_sc2_ad3_va1_freeze_compile_work_report():
     section_order = list(
         dict.fromkeys(page["section_id"] for page in first["page_manifest"])
     )
-    assert section_order == ["SC2", "AD3", "VA1"]
+    assert section_order == ["SC2", "AD3"]
     assert {page["section_id"] for page in first["page_manifest"]} == {
         "SC2",
         "AD3",
-        "VA1",
     }
     assert first["qa"]["delivery_ready"] is False
     assert first["qa"]["unit_readiness"]["VA1"] == "missing"

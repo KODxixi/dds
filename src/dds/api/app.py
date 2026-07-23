@@ -26,17 +26,26 @@ class ResearchJobRequest(BaseModel):
     longitude: float | None = Field(default=None, ge=-180, le=180)
     project_type: str = Field(default="", max_length=80)
     decision_question: str = Field(default="", max_length=1000)
-    requested_level: int | None = Field(default=None, ge=1, le=3)
     constraint_sources: list[dict[str, Any]] = Field(default_factory=list)
     schemes: list[dict[str, Any]] = Field(default_factory=list)
     core_development_boundaries_ready: bool = False
 
 
 class AnalysisSimulationRequest(BaseModel):
-    requested_level: int = Field(ge=1, le=3)
+    selected_mode: int = Field(ge=1, le=3)
+    mode_confirmed: bool
     input_profile: dict[str, Any]
     payload: dict[str, Any]
     customer_intelligence: dict[str, Any] | None = None
+
+
+class InterventionConfirmRequest(BaseModel):
+    selected_mode: int = Field(ge=1, le=3)
+    user_goal: str = Field(min_length=1, max_length=2000)
+    decision_audience: str = Field(default="", max_length=500)
+    decision_questions: list[str] = Field(default_factory=list)
+    priorities: dict[str, float] = Field(default_factory=dict)
+    prohibited_conclusions: list[str] = Field(default_factory=list)
 
 
 def _default_settings() -> ProductSettings:
@@ -85,7 +94,8 @@ def create_app(
     ) -> dict[str, Any]:
         try:
             return ScenarioService().run(
-                requested_level=request.requested_level,
+                selected_mode=request.selected_mode,
+                mode_confirmed=request.mode_confirmed,
                 input_profile=request.input_profile,
                 payload=request.payload,
                 customer_intelligence=request.customer_intelligence,
@@ -114,6 +124,18 @@ def create_app(
             return service.get(job_id).get("logs", [])
         except (KeyError, ValueError) as exc:
             raise HTTPException(status_code=404, detail="研究任务不存在") from exc
+
+    @app.post("/api/research-jobs/{job_id}/intervention")
+    def confirm_intervention(
+        job_id: str,
+        request: InterventionConfirmRequest,
+    ) -> dict[str, Any]:
+        try:
+            return service.confirm_intervention(job_id, request.model_dump())
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail="研究任务不存在") from exc
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     @app.post("/api/research-jobs/{job_id}/materials", status_code=status.HTTP_201_CREATED)
     async def upload_material(
@@ -151,6 +173,7 @@ app = create_app()
 
 __all__ = [
     "AnalysisSimulationRequest",
+    "InterventionConfirmRequest",
     "ResearchJobRequest",
     "app",
     "create_app",

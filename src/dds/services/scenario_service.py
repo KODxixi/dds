@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Any, Mapping
 
-from dds.analysis_profile import resolve_analysis_profile
+from dds.analysis_profile import resolve_intervention_profile
 from dds.customer import (
     CustomerIntelligenceBundle,
     customer_intelligence_from_mapping,
@@ -59,30 +59,30 @@ def _sequence(value: Any, field: str) -> list[dict[str, Any]]:
 
 
 class ScenarioService:
-    """Dispatch only to the engine authorized by the effective Input level."""
+    """Dispatch only to the engine selected and confirmed by the user."""
 
     def run(
         self,
         *,
-        requested_level: int,
+        selected_mode: int,
+        mode_confirmed: bool,
         input_profile: Mapping[str, Any],
         payload: Mapping[str, Any],
         customer_intelligence: (
             Mapping[str, Any] | CustomerIntelligenceBundle | None
         ) = None,
     ) -> ScenarioRun:
-        profile = resolve_analysis_profile(
+        profile = resolve_intervention_profile(
             input_profile,
-            requested_level=requested_level,
+            selected_mode=selected_mode,
+            confirmed=mode_confirmed,
         )
         if not profile["eligible"]:
             raise ValueError(
-                "input profile is blocked: "
-                + ",".join(profile["classification_blockers"])
-            )
-        if profile["effective_level"] != requested_level:
-            raise ValueError(
-                "requested input level exceeds assessed input level"
+                "intervention is not runnable: "
+                + ",".join(
+                    profile["missing_inputs"] or ["user_confirmation_required"]
+                )
             )
         customer_bundle = (
             customer_intelligence_from_mapping(customer_intelligence)
@@ -97,17 +97,17 @@ class ScenarioService:
         ):
             raise ValueError("customer intelligence city must match input_profile.city")
         raw = dict(payload)
-        if requested_level == 1:
+        if selected_mode == 1:
             result = self._run_input_1(raw)
             kind = "standard_100_operating_lab"
-        elif requested_level == 2:
+        elif selected_mode == 2:
             result = self._run_input_2(raw)
             kind = "project_inventory_cashflow"
-        elif requested_level == 3:
+        elif selected_mode == 3:
             result = self._run_input_3(raw)
             kind = "scheme_risk_pareto"
         else:
-            raise ValueError("requested_level must be 1, 2, or 3")
+            raise ValueError("selected_mode must be 1, 2, or 3")
         return ScenarioRun(
             analysis_profile=profile,
             simulation_kind=kind,

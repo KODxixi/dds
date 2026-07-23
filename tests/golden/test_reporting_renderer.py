@@ -16,7 +16,7 @@ def test_renderer_hash_is_stable_and_output_is_self_contained() -> None:
 
     assert rendered == repeated
     assert hashlib.sha256(rendered.encode("utf-8")).hexdigest() == (
-        "3f98ffc7c50decae82b7be628dbef3048aa3f15291e42af4db3bc5c7672b2689"
+        "37534e6cc0ddcc04a2d847981573b03c3ea742df7baed294995a691db38e6c82"
     )
     assert 'src="https://' not in rendered
     assert 'src="http://' not in rendered

@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from dds.analysis_profile import resolve_analysis_profile
+from dds.analysis_profile import resolve_intervention_profile
 from dds.customer import (
     CustomerEvidenceLevel,
     CustomerIntelligenceBundle,
@@ -177,7 +177,11 @@ def profile(level: int) -> dict:
     if level >= 3:
         raw["core_development_boundaries_ready"] = True
         raw["schemes"] = [{"scheme_id": "A"}, {"scheme_id": "B"}]
-    return resolve_analysis_profile(raw, requested_level=level)
+    return resolve_intervention_profile(
+        raw,
+        selected_mode=level,
+        confirmed=True,
+    )
 
 
 @pytest.mark.parametrize(

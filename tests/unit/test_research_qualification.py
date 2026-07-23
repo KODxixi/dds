@@ -20,6 +20,7 @@ def _candidate(**overrides):
         "source_hash": "a" * 64,
         "metric_ids": ["SC2.competitors"],
         "published_at": "2026-07-01",
+        "rights_status": "public_web",
     }
     candidate.update(overrides)
     return candidate

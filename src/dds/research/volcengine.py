@@ -250,6 +250,9 @@ class VolcengineDataSearchSource:
                     ),
                     metric_ids=query.metric_ids,
                     published_at=updated_at,
+                    geography=query.geography,
+                    source_role="public_structured_company_data",
+                    rights_status="provider_terms_internal_analysis",
                 )
             )
             if len(candidates) >= max(1, min(query.max_results, 10)):

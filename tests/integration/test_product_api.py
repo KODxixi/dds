@@ -71,6 +71,7 @@ def test_non_technical_api_creates_runs_uploads_and_performs_research(tmp_path):
         json={
             "project_name": "测试项目",
             "city": "武汉",
+            "address": "武汉市测试路 1 号",
             "project_type": "住宅",
             "decision_question": "应该做什么产品？",
         },
@@ -87,6 +88,12 @@ def test_non_technical_api_creates_runs_uploads_and_performs_research(tmp_path):
     assert uploaded.status_code == 201
     assert uploaded.json()["sha256"]
 
+    confirmed = client.post(
+        f"/api/research-jobs/{job['job_id']}/intervention",
+        json={"selected_mode": 1, "user_goal": "判断项目机会和产品方向"},
+    )
+    assert confirmed.status_code == 200
+
     executed = client.post(f"/api/research-jobs/{job['job_id']}/run")
     assert executed.status_code == 200
     result = executed.json()
@@ -101,6 +108,8 @@ def test_non_technical_api_creates_runs_uploads_and_performs_research(tmp_path):
     assert [item["event"] for item in logs] == [
         "job_created",
         "material_uploaded",
+        "intervention_confirmed",
+        "input_profile_classified",
         "requirements_planned",
         "source_started",
         "source_completed",
@@ -126,6 +135,14 @@ def test_upload_rejects_traversal_and_oversize(tmp_path):
         f"/api/research-jobs/{job_id}/materials?filename=large.txt",
         content=b"12345",
     ).status_code == 413
+    uploaded = client.post(
+        f"/api/research-jobs/{job_id}/materials?filename=schemes.pptx",
+        content=b"x",
+    )
+    assert uploaded.status_code == 201
+    refreshed = client.get(f"/api/research-jobs/{job_id}").json()
+    assert refreshed["analysis_profile"]["recommended_mode"] == 3
+    assert refreshed["analysis_profile"]["selected_mode"] is None
 
 
 def test_broken_workbook_blocks_job_before_external_research(tmp_path):
@@ -134,7 +151,7 @@ def test_broken_workbook_blocks_job_before_external_research(tmp_path):
     )
     job_id = client.post(
         "/api/research-jobs",
-        json={"project_name": "P", "city": "襄阳"},
+        json={"project_name": "P", "city": "襄阳", "address": "襄阳市测试路 1 号"},
     ).json()["job_id"]
 
     uploaded = client.post(
@@ -145,6 +162,12 @@ def test_broken_workbook_blocks_job_before_external_research(tmp_path):
     assert uploaded.status_code == 201
     assert uploaded.json()["integrity"]["status"] == "blocked"
 
+    confirmed = client.post(
+        f"/api/research-jobs/{job_id}/intervention",
+        json={"selected_mode": 1, "user_goal": "独立研判项目机会"},
+    )
+    assert confirmed.status_code == 200
+
     result = client.post(f"/api/research-jobs/{job_id}/run").json()
     assert result["status"] == "blocked"
     assert result["input_gate_status"] == "blocked"
@@ -152,6 +175,7 @@ def test_broken_workbook_blocks_job_before_external_research(tmp_path):
     assert [item["event"] for item in logs] == [
         "job_created",
         "material_uploaded",
+        "intervention_confirmed",
         "material_integrity_blocked",
     ]
 
@@ -166,12 +190,12 @@ def test_home_page_is_served_as_chinese_liquid_glass_ui(tmp_path):
 
 
 @pytest.mark.parametrize(
-    ("requested_level", "profile_fields", "decision_scope"),
+    ("selected_mode", "profile_fields", "decision_scope"),
     [
         (
             1,
             {"address": "Wuhan Opportunity Road 1"},
-            "opportunity_screening",
+            "independent_opportunity_research",
         ),
         (
             2,
@@ -184,7 +208,7 @@ def test_home_page_is_served_as_chinese_liquid_glass_ui(tmp_path):
                     }
                 ],
             },
-            "constraint_driven_predevelopment",
+            "constraint_collaboration",
         ),
         (
             3,
@@ -199,39 +223,48 @@ def test_home_page_is_served_as_chinese_liquid_glass_ui(tmp_path):
                 "core_development_boundaries_ready": True,
                 "schemes": [{"scheme_id": "A"}, {"scheme_id": "B"}],
             },
-            "scheme_selection",
+            "scheme_review",
         ),
     ],
 )
 def test_api_runs_input_profiles(
     tmp_path,
-    requested_level,
+    selected_mode,
     profile_fields,
     decision_scope,
 ):
     client = TestClient(
         create_app(
-            ProductSettings(root=tmp_path / f"input-{requested_level}"),
+            ProductSettings(root=tmp_path / f"input-{selected_mode}"),
             research_sources=(FixtureSource(),),
         )
     )
     created = client.post(
         "/api/research-jobs",
         json={
-            "project_name": f"Input {requested_level} Project",
+            "project_name": f"Input {selected_mode} Project",
             "city": "Wuhan",
-            "requested_level": requested_level,
             **profile_fields,
         },
     )
     assert created.status_code == 201
+
+    confirmed = client.post(
+        f"/api/research-jobs/{created.json()['job_id']}/intervention",
+        json={
+            "selected_mode": selected_mode,
+            "user_goal": f"执行 Input {selected_mode} 介入任务",
+        },
+    )
+    assert confirmed.status_code == 200
 
     result = client.post(
         f"/api/research-jobs/{created.json()['job_id']}/run"
     ).json()
 
     assert result["status"] == "research_completed"
-    assert result["analysis_profile"]["effective_level"] == requested_level
+    assert result["analysis_profile"]["selected_mode"] == selected_mode
+    assert result["analysis_profile"]["mode_status"] == "confirmed"
     assert result["analysis_profile"]["eligible"] is True
     assert result["decision_scope"] == decision_scope
 
@@ -245,9 +278,14 @@ def test_api_profile_run_blocks_missing_location(tmp_path):
         json={
             "project_name": "Missing Location",
             "city": "Wuhan",
-            "requested_level": 1,
         },
     )
+
+    confirmed = client.post(
+        f"/api/research-jobs/{created.json()['job_id']}/intervention",
+        json={"selected_mode": 1, "user_goal": "独立研判项目机会"},
+    )
+    assert confirmed.status_code == 200
 
     result = client.post(
         f"/api/research-jobs/{created.json()['job_id']}/run"
@@ -255,6 +293,7 @@ def test_api_profile_run_blocks_missing_location(tmp_path):
 
     assert result["status"] == "blocked"
     assert result["input_gate_status"] == "blocked"
-    assert result["analysis_profile"]["classification_blockers"] == [
-        "location_unresolved"
+    assert result["analysis_profile"]["selected_mode"] == 1
+    assert result["analysis_profile"]["missing_inputs"] == [
+        "address_or_coordinates"
     ]

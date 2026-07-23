@@ -226,7 +226,8 @@ def test_simulation_api_runs_each_input_level(
     response = client.post(
         "/api/analysis/simulate",
         json={
-            "requested_level": level,
+            "selected_mode": level,
+            "mode_confirmed": True,
             "input_profile": profile,
             "payload": payload,
         },
@@ -234,28 +235,30 @@ def test_simulation_api_runs_each_input_level(
 
     assert response.status_code == 200, response.text
     body = response.json()
-    assert body["analysis_profile"]["effective_level"] == level
+    assert body["analysis_profile"]["selected_mode"] == level
+    assert body["analysis_profile"]["mode_status"] == "confirmed"
     assert body["simulation_kind"] == kind
     assert body["evidence_type"] == "model_simulation"
     assert body["delivery_ready"] is False
     assert body["result"]
 
 
-def test_simulation_api_rejects_requested_level_above_assessed_level(tmp_path):
+def test_simulation_api_keeps_input_3_blocked_when_schemes_are_missing(tmp_path):
     client = TestClient(
         create_app(ProductSettings(root=tmp_path), research_sources=())
     )
     response = client.post(
         "/api/analysis/simulate",
         json={
-            "requested_level": 3,
+            "selected_mode": 3,
+            "mode_confirmed": True,
             "input_profile": {"address": "Test City Road 1"},
             "payload": input_3_payload(),
         },
     )
 
     assert response.status_code == 400
-    assert "exceeds assessed" in response.json()["detail"]
+    assert "two_comparable_schemes" in response.json()["detail"]
 
 
 def test_simulation_api_accepts_only_valid_aggregate_customer_bundle(tmp_path):
@@ -306,7 +309,8 @@ def test_simulation_api_accepts_only_valid_aggregate_customer_bundle(tmp_path):
     response = client.post(
         "/api/analysis/simulate",
         json={
-            "requested_level": 1,
+            "selected_mode": 1,
+            "mode_confirmed": True,
             "input_profile": {
                 "city": "Test City",
                 "address": "Test City Road 1",
@@ -324,7 +328,8 @@ def test_simulation_api_accepts_only_valid_aggregate_customer_bundle(tmp_path):
     rejected = client.post(
         "/api/analysis/simulate",
         json={
-            "requested_level": 1,
+            "selected_mode": 1,
+            "mode_confirmed": True,
             "input_profile": {
                 "city": "Test City",
                 "address": "Test City Road 1",
