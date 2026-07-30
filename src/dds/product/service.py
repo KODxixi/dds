@@ -23,8 +23,78 @@ from dds.research import ResearchQuery, ResearchSource, SourceUnavailableError
 from dds.research.qualification import qualify_candidates
 
 
+_FUTURE_EVENT_QUERY_TERMS = {
+    "major_employer_or_headquarters": "重大雇主 总部 园区 入驻 员工",
+    "industrial_cluster": "产业集群 招商 企业 入驻",
+    "transport_infrastructure": "轨道交通 地铁 通勤 开通",
+    "public_service_investment": "公共服务 教育 医疗 商业 投用",
+    "regulatory_or_supply_change": "规划 供地 住房供应 政策",
+}
+_FUTURE_HORIZON_QUERY_TERMS = {
+    "current_operation": "当前运营 已投用",
+    "0_to_3_years": "未来三年 在建",
+    "3_to_5_years": "未来五年 规划",
+}
+
+
+class InterventionBriefFrozenError(RuntimeError):
+    """Raised when a confirmed intervention task is asked to change."""
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def intervention_brief_hash(
+    job_id: str,
+    intervention_brief: dict[str, Any],
+) -> str:
+    frozen_payload = json.dumps(
+        {
+            "job_id": job_id,
+            "intervention_brief": intervention_brief,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return sha256(frozen_payload).hexdigest()
+
+
+def _metric_query_text(
+    context: dict[str, Any],
+    source_plan_item: dict[str, Any],
+    geography: str,
+) -> str:
+    parts = [
+        geography,
+        str(context.get("project_name") or ""),
+        str(context.get("address") or ""),
+        str(context.get("project_type") or ""),
+        str(source_plan_item.get("field_name") or ""),
+        str(source_plan_item.get("description") or ""),
+        str(context.get("decision_question") or ""),
+    ]
+    for field_name in ("project_entities", "key_entities", "nearby_landmarks"):
+        raw_value = context.get(field_name) or ()
+        values = raw_value if isinstance(raw_value, (list, tuple, set)) else (raw_value,)
+        parts.extend(str(item) for item in values if str(item).strip())
+
+    if source_plan_item.get("metric_id") == "SC2.future_demand_event_scan":
+        event_scan = dict(
+            source_plan_item.get("metadata", {}).get("future_event_scan") or {}
+        )
+        parts.append("未来需求事件 客群迁移 就业人口 居住转化")
+        parts.extend(
+            _FUTURE_EVENT_QUERY_TERMS.get(str(item), str(item))
+            for item in event_scan.get("event_classes", ())
+        )
+        parts.extend(
+            _FUTURE_HORIZON_QUERY_TERMS.get(str(item), str(item))
+            for item in event_scan.get("time_horizons", ())
+        )
+
+    return " ".join(dict.fromkeys(item.strip() for item in parts if item.strip()))
 
 
 @dataclass(frozen=True, slots=True)
@@ -106,6 +176,11 @@ class ResearchJobService:
         brief: dict[str, Any],
     ) -> dict[str, Any]:
         job = self.get(job_id)
+        if job.get("intervention_brief") is not None:
+            raise InterventionBriefFrozenError(
+                "intervention brief is already confirmed and immutable; "
+                "create a new intervention task for a different mode or scope"
+            )
         selected_mode = int(brief.get("selected_mode") or 0)
         context = dict(job["project_context"])
         context["selected_mode"] = selected_mode
@@ -141,6 +216,10 @@ class ResearchJobService:
         }
         if not frozen_brief["user_goal"]:
             raise ValueError("user_goal is required")
+        job["intervention_brief_hash"] = intervention_brief_hash(
+            job_id,
+            frozen_brief,
+        )
         job["project_context"] = context
         job["analysis_profile"] = profile
         job["intervention_brief"] = frozen_brief
@@ -279,12 +358,16 @@ class ResearchJobService:
             job["research_plan"] = plan
             self._log(job, "requirements_planned", f"已拆解 {len(requirements)} 项数据需求")
 
-            metric_ids = tuple(item["metric_id"] for item in plan["source_plan"] if item["status"] == "planned")
-            geography = "/".join(
-                item for item in (str(context.get("city") or ""), str(context.get("district") or "")) if item
-            )
-            query_text = " ".join(
-                item for item in (geography, str(context.get("project_type") or ""), str(context.get("decision_question") or "")) if item
+            planned_items = [
+                item for item in plan["source_plan"] if item["status"] == "planned"
+            ]
+            default_geography = "/".join(
+                item
+                for item in (
+                    str(context.get("city") or ""),
+                    str(context.get("district") or ""),
+                )
+                if item
             )
             for source in self.sources:
                 availability = source.availability()
@@ -292,23 +375,60 @@ class ResearchJobService:
                     self._log(job, "source_unavailable", f"数据源不可用：{source.source_id}", availability)
                     continue
                 self._log(job, "source_started", f"开始检索：{source.source_id}")
-                try:
-                    result = source.search(
-                        ResearchQuery(
-                            query=query_text,
-                            metric_ids=metric_ids,
-                            geography=geography,
-                            max_results=20,
-                        )
+                returned_count = 0
+                failures: list[str] = []
+                for plan_item in planned_items:
+                    metric_id = str(plan_item["metric_id"])
+                    geography = str(
+                        plan_item.get("geography") or default_geography
                     )
-                except SourceUnavailableError as exc:
-                    self._log(job, "source_unavailable", str(exc), availability)
+                    try:
+                        result = source.search(
+                            ResearchQuery(
+                                query=_metric_query_text(
+                                    context,
+                                    plan_item,
+                                    geography,
+                                ),
+                                metric_ids=(metric_id,),
+                                geography=geography,
+                                max_results=max(
+                                    1,
+                                    min(
+                                        10,
+                                        int(plan_item.get("missing_count") or 1)
+                                        * 3,
+                                    ),
+                                ),
+                            )
+                        )
+                    except SourceUnavailableError as exc:
+                        failures.append(f"{metric_id}: {exc}")
+                        continue
+                    for candidate in result.candidates:
+                        candidate_payload = candidate.to_dict()
+                        candidate_payload["metric_ids"] = [metric_id]
+                        job["candidates"].append(candidate_payload)
+                        returned_count += 1
+                if failures and not returned_count:
+                    self._log(
+                        job,
+                        "source_unavailable",
+                        f"{source.source_id} 未完成分指标检索",
+                        {**availability, "errors": failures},
+                    )
                     continue
-                job["candidates"].extend(item.to_dict() for item in result.candidates)
+                if failures:
+                    self._log(
+                        job,
+                        "source_partial",
+                        f"{source.source_id} 有 {len(failures)} 项指标检索失败",
+                        {"errors": failures},
+                    )
                 self._log(
                     job,
                     "source_completed",
-                    f"{source.source_id} 返回 {len(result.candidates)} 条候选证据",
+                    f"{source.source_id} 返回 {returned_count} 条分指标候选证据",
                 )
             job["candidates"], job["readiness"] = qualify_candidates(
                 job["candidates"], plan["source_plan"]
@@ -346,6 +466,7 @@ class ResearchJobService:
             "decision_ready": job.get("readiness", {}).get("decision_ready", False),
             "analysis_profile": job.get("analysis_profile"),
             "decision_scope": job.get("decision_scope"),
+            "intervention_brief_hash": job.get("intervention_brief_hash"),
             "created_at": job["created_at"],
             "updated_at": job["updated_at"],
         }

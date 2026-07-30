@@ -12,7 +12,11 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
 from dds.config import Settings
-from dds.product import ProductSettings, ResearchJobService
+from dds.product import (
+    InterventionBriefFrozenError,
+    ProductSettings,
+    ResearchJobService,
+)
 from dds.research import ResearchSource, sources_from_environment
 from dds.services.scenario_service import ScenarioService
 
@@ -32,9 +36,12 @@ class ResearchJobRequest(BaseModel):
 
 
 class AnalysisSimulationRequest(BaseModel):
-    selected_mode: int = Field(ge=1, le=3)
-    mode_confirmed: bool
-    input_profile: dict[str, Any]
+    job_id: str = Field(min_length=1, max_length=64)
+    intervention_brief_hash: str = Field(
+        min_length=64,
+        max_length=64,
+        pattern=r"^[0-9a-f]{64}$",
+    )
     payload: dict[str, Any]
     customer_intelligence: dict[str, Any] | None = None
 
@@ -93,13 +100,14 @@ def create_app(
         request: AnalysisSimulationRequest,
     ) -> dict[str, Any]:
         try:
-            return ScenarioService().run(
-                selected_mode=request.selected_mode,
-                mode_confirmed=request.mode_confirmed,
-                input_profile=request.input_profile,
+            return ScenarioService(service).run(
+                job_id=request.job_id,
+                intervention_brief_hash=request.intervention_brief_hash,
                 payload=request.payload,
                 customer_intelligence=request.customer_intelligence,
             ).to_dict()
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail="研究任务不存在") from exc
         except (TypeError, ValueError) as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -134,6 +142,8 @@ def create_app(
             return service.confirm_intervention(job_id, request.model_dump())
         except KeyError as exc:
             raise HTTPException(status_code=404, detail="研究任务不存在") from exc
+        except InterventionBriefFrozenError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
 

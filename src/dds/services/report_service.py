@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import asdict
 from typing import Any, Iterable, Mapping
 
-from dds.analysis_profile import resolve_intervention_profile
+from dds.analysis_profile import (
+    required_units_from_metadata,
+    resolve_intervention_profile,
+)
 from dds.contracts import REPORT_UNITS, SECTION_REQUIREMENTS
 from dds.customer import CustomerIntelligenceBundle
 from dds.domain import (
@@ -77,6 +81,98 @@ def _product_field(
     )
 
 
+def _structured_data_gaps(
+    sections: Mapping[str, SectionResult],
+    section_ids: Iterable[str],
+) -> list[dict[str, str]]:
+    gaps: list[dict[str, str]] = []
+    assessed_ids = {str(section_id) for section_id in section_ids}
+    for unit in REPORT_UNITS:
+        section_id = str(unit["section_id"])
+        if section_id == "CS" or section_id not in assessed_ids:
+            continue
+        section = sections.get(section_id)
+        for field_name in SECTION_REQUIREMENTS[section_id]:
+            field = (
+                section.data.get(field_name)
+                if isinstance(section, SectionResult)
+                else None
+            )
+            status = (
+                field.status
+                if isinstance(field, ResolvedField)
+                else ResolvedStatus.UNKNOWN
+            )
+            if status in {
+                ResolvedStatus.RESOLVED,
+                ResolvedStatus.NOT_APPLICABLE,
+            }:
+                continue
+            reason = (
+                str(field.reason).strip()
+                if isinstance(field, ResolvedField) and str(field.reason).strip()
+                else str(section.gaps[0]).strip()
+                if isinstance(section, SectionResult) and section.gaps
+                else f"{section_id}.{field_name} 尚未解决"
+            )
+            gaps.append(
+                {
+                    "section_id": section_id,
+                    "field": field_name,
+                    "status": status.value,
+                    "reason": reason,
+                }
+            )
+    return gaps
+
+
+def _structured_confidence_gaps(
+    sections: Mapping[str, SectionResult],
+    section_ids: Iterable[str],
+) -> list[dict[str, str]]:
+    assessed_ids = {str(section_id) for section_id in section_ids}
+    gaps: list[dict[str, str]] = []
+    for unit in REPORT_UNITS:
+        section_id = str(unit["section_id"])
+        if section_id == "CS" or section_id not in assessed_ids:
+            continue
+        section = sections.get(section_id)
+        if isinstance(section, SectionResult) and section.confidence is not None:
+            continue
+        gaps.append(
+            {
+                "section_id": section_id,
+                "status": "not_assessed",
+                "reason": (
+                    str(section.gaps[0]).strip()
+                    if isinstance(section, SectionResult) and section.gaps
+                    else "尚未形成可追溯的证据派生置信度"
+                ),
+            }
+        )
+    return gaps
+
+
+def _cs_is_ready(section: SectionResult) -> bool:
+    fields = [
+        section.data.get(field_name)
+        for field_name in SECTION_REQUIREMENTS["CS"]
+    ]
+    if not all(
+        isinstance(field, ResolvedField)
+        and field.status is ResolvedStatus.RESOLVED
+        for field in fields
+    ):
+        return False
+    sources = section.data["sources"]
+    methods = section.data["methods"]
+    confidence_gaps = section.data["confidence_gaps"]
+    data_gaps = section.data["data_gaps"]
+    return bool(sources.value) and bool(methods.value) and not (
+        confidence_gaps.value or data_gaps.value
+    )
+
+
 class ReportService:
     """Build structure and visible gaps; it never authors new evidence or numbers."""
 
@@ -117,6 +213,9 @@ class ReportService:
                 assumptions=list(result.assumptions),
                 confidence=None,
                 reason="; ".join(result.gaps),
+            ),
+            "future_demand_event_scan": _unknown(
+                "尚未扫描重大产业、总部、交通与公共服务投用事件。"
             ),
             "customer_segments": _unknown("尚未接入真实客户研究证据。"),
             "positive_cases": _unknown("尚未完成设计标杆的独立证据建模。"),
@@ -924,11 +1023,46 @@ class ReportService:
             str, Iterable[str]
         ] | None = None,
         analysis_profile: Mapping[str, Any] | None = None,
+        section_results: Mapping[str, SectionResult] | None = None,
         requirements: Iterable[Mapping[str, Any]] = (),
         customer_intelligence: CustomerIntelligenceBundle | None = None,
     ) -> ReportRun:
         sections = self.empty_sections()
+        for raw_section_id, result in (section_results or {}).items():
+            section_id = str(raw_section_id)
+            if (
+                section_id == "CS"
+                or section_id not in sections
+                or not isinstance(result, SectionResult)
+                or result.section_id != section_id
+            ):
+                raise ValueError(
+                    "section_results must contain registered non-CS "
+                    "SectionResult values keyed by their own section_id"
+                )
+            sections[section_id] = deepcopy(result)
         evidence_records = list(evidence)
+        profile = dict(analysis_profile or {})
+        if profile and not profile.get("schema_version"):
+            profile = resolve_intervention_profile(
+                profile
+                or project_context.extra.get("input_profile")
+                or project_context.to_dict(),
+                selected_mode=profile.get("selected_mode") if profile else None,
+                confirmed=(
+                    profile.get("mode_status") == "confirmed"
+                    if profile
+                    else None
+                ),
+            )
+        assessed_unit_ids = (
+            required_units_from_metadata({"analysis_profile": profile})
+            if profile.get("mode_status") == "confirmed"
+            else tuple(
+                str(unit["section_id"])
+                for unit in REPORT_UNITS
+            )
+        )
         if market is not None:
             sections["SC2"] = self.market_section(market)
         if product is not None:
@@ -1010,6 +1144,55 @@ class ReportService:
                     "SC2 customer segments require observed or social evidence: "
                     f"{invalid_refs}"
                 )
+            event_refs = tuple(
+                dict.fromkeys(
+                    ref
+                    for event in customer_intelligence.demand_driver_events
+                    for ref in event.evidence_refs
+                )
+            )
+            missing_event_refs = [
+                ref for ref in event_refs if ref not in evidence_by_id
+            ]
+            if missing_event_refs:
+                raise ValueError(
+                    "future demand events reference missing evidence: "
+                    f"{missing_event_refs}"
+                )
+            invalid_event_refs = [
+                ref
+                for ref in event_refs
+                if evidence_by_id[ref].evidence_type
+                is not EvidenceType.OBSERVED_FACT
+            ]
+            if invalid_event_refs:
+                raise ValueError(
+                    "future demand events require observed evidence: "
+                    f"{invalid_event_refs}"
+                )
+            scenario_refs = tuple(
+                dict.fromkeys(
+                    ref
+                    for scenario in customer_intelligence.future_customer_scenarios
+                    for ref in scenario.evidence_refs
+                )
+            )
+            missing_scenario_refs = [
+                ref for ref in scenario_refs if ref not in evidence_by_id
+            ]
+            if missing_scenario_refs:
+                raise ValueError(
+                    "future customer scenarios reference missing evidence: "
+                    f"{missing_scenario_refs}"
+                )
+            if (
+                customer_intelligence.future_demand_scan_status
+                == "material_events_found"
+                and not customer_intelligence.future_customer_scenarios
+            ):
+                raise ValueError(
+                    "material future demand events require future customer scenarios"
+                )
             sc2 = sections["SC2"]
             sc2.data["customer_segments"] = ResolvedField(
                 status=ResolvedStatus.RESOLVED,
@@ -1023,12 +1206,50 @@ class ReportService:
                 reason="",
             )
             sc2.evidence_refs = list(dict.fromkeys(sc2.evidence_refs + list(segment_refs)))
+            if customer_intelligence.future_demand_scan_status != "not_assessed":
+                sc2.data["future_demand_event_scan"] = ResolvedField(
+                    status=ResolvedStatus.RESOLVED,
+                    value={
+                        "scan_status": (
+                            customer_intelligence.future_demand_scan_status
+                        ),
+                        "events": [
+                            item.to_dict()
+                            for item in customer_intelligence.demand_driver_events
+                        ],
+                    },
+                    evidence_refs=list(event_refs),
+                    assumptions=[
+                        "当前在岗、规划容量与可转化客群必须分层表达。",
+                        "就业人口不得直接换算为本项目购房人数或销量。",
+                    ],
+                    confidence=None,
+                    reason="",
+                )
+                sc2.evidence_refs = list(
+                    dict.fromkeys(sc2.evidence_refs + list(event_refs))
+                )
             if sc2.status is ResolvedStatus.UNKNOWN:
                 sc2.status = ResolvedStatus.PARTIAL
             customer_payload = customer_intelligence.to_dict()
-            simulation_refs = list(customer_intelligence.evidence_refs)
+            simulation_refs = list(
+                dict.fromkeys(
+                    list(customer_intelligence.evidence_refs)
+                    + list(event_refs)
+                    + list(scenario_refs)
+                )
+            )
             simulation_value = {
                 "evidence_level": customer_payload["evidence_level"],
+                "future_demand_scan_status": customer_payload[
+                    "future_demand_scan_status"
+                ],
+                "demand_driver_events": customer_payload[
+                    "demand_driver_events"
+                ],
+                "future_customer_scenarios": customer_payload[
+                    "future_customer_scenarios"
+                ],
                 "synthetic_cohort": customer_payload.get("synthetic_cohort"),
                 "choice_simulation": customer_payload.get("choice_simulation"),
                 "persona_experiment": customer_payload.get("persona_experiment"),
@@ -1075,12 +1296,18 @@ class ReportService:
                 ),
                 "confidence_gaps": ResolvedField(
                     status=ResolvedStatus.RESOLVED,
-                    value=[gap for section in sections.values() for gap in section.gaps],
+                    value=_structured_confidence_gaps(
+                        sections,
+                        assessed_unit_ids,
+                    ),
                     evidence_refs=[],
                 ),
                 "data_gaps": ResolvedField(
                     status=ResolvedStatus.RESOLVED,
-                    value=[gap for section in sections.values() for gap in section.gaps],
+                    value=_structured_data_gaps(
+                        sections,
+                        assessed_unit_ids,
+                    ),
                     evidence_refs=[],
                 ),
             },
@@ -1103,10 +1330,14 @@ class ReportService:
                         f"{customer_payload['local_population']['weighting_method']}"
                     ),
                     "persona_results=aggregated_model_simulation",
+                    (
+                        "future_demand_scan="
+                        f"{customer_payload['future_demand_scan_status']}"
+                    ),
                 ]
                 cs_methods.evidence_refs = list(
                     dict.fromkeys(
-                        cs_methods.evidence_refs + customer_payload["evidence_refs"]
+                        cs_methods.evidence_refs + simulation_refs
                     )
                 )
             cs_assumptions = sections["CS"].data["assumptions"]
@@ -1117,24 +1348,31 @@ class ReportService:
                 ]
             sections["CS"].evidence_refs = list(
                 dict.fromkeys(
-                    sections["CS"].evidence_refs
-                    + customer_payload["evidence_refs"]
+                    sections["CS"].evidence_refs + simulation_refs
                 )
             )
-        profile = dict(analysis_profile or {})
-        if profile and not profile.get("schema_version"):
-            profile = resolve_intervention_profile(
-                profile or project_context.extra.get("input_profile") or project_context.to_dict(),
-                selected_mode=profile.get("selected_mode") if profile else None,
-                confirmed=profile.get("mode_status") == "confirmed" if profile else None,
+        cs_section = sections["CS"]
+        cs_section.status = (
+            ResolvedStatus.RESOLVED
+            if _cs_is_ready(cs_section)
+            else ResolvedStatus.PARTIAL
+        )
+        report_status = (
+            ResolvedStatus.RESOLVED
+            if all(
+                isinstance(sections.get(section_id), SectionResult)
+                and sections[section_id].status is ResolvedStatus.RESOLVED
+                for section_id in assessed_unit_ids
             )
+            else ResolvedStatus.PARTIAL
+        )
         return ReportRun(
             run_id=run_id,
             project_context=project_context,
             sections=sections,
             evidence_records=evidence_records,
             requirements=list(requirements),
-            status=ResolvedStatus.PARTIAL,
+            status=report_status,
             gate_status={},
             metadata={
                 "assembled_from_engine_results": True,

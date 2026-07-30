@@ -130,6 +130,17 @@ class ResearchPlannerAgent(BaseAgent):
             field_name = requirement.field_name or metric_id.rsplit(".", 1)[-1]
             allowed_types = tuple(requirement.evidence_types) or (EvidenceType.OBSERVED_FACT,)
             allowed_values = tuple(sorted(item.value for item in allowed_types))
+            requirement_metadata = dict(requirement.metadata)
+            raw_source_roles = requirement_metadata.get("allowed_source_roles", ())
+            if isinstance(raw_source_roles, str):
+                raw_source_roles = (raw_source_roles,)
+            allowed_source_roles = tuple(
+                sorted(
+                    str(item)
+                    for item in raw_source_roles
+                    if str(item).strip()
+                )
+            )
             available = [
                 item
                 for item in traceable_by_metric.get(metric_id, [])
@@ -155,11 +166,13 @@ class ResearchPlannerAgent(BaseAgent):
                 "as_of": as_of,
                 "max_age_days": requirement.max_age_days,
                 "allowed_evidence_types": list(allowed_values),
+                "allowed_source_roles": list(allowed_source_roles),
                 "source_classes": source_classes,
                 "required_count": required_count,
                 "available_count": len(available),
                 "missing_count": missing_count,
                 "status": "satisfied" if missing_count == 0 else "planned",
+                "metadata": requirement_metadata,
             }
             source_plan.append(item)
 
@@ -176,6 +189,7 @@ class ResearchPlannerAgent(BaseAgent):
                         "as_of": as_of,
                         "max_age_days": requirement.max_age_days,
                         "evidence_types": list(allowed_values),
+                        "source_roles": list(allowed_source_roles),
                         "requires_source_ref_or_hash": True,
                     },
                     "status": "pending",
@@ -186,6 +200,7 @@ class ResearchPlannerAgent(BaseAgent):
                     as_of,
                     requirement.max_age_days,
                     allowed_values,
+                    allowed_source_roles,
                     tuple(source_classes),
                 )
                 pending_batches[batch_key].append(item)
@@ -195,7 +210,14 @@ class ResearchPlannerAgent(BaseAgent):
             sorted(pending_batches.items(), key=lambda pair: repr(pair[0])),
             start=1,
         ):
-            geography, as_of, max_age_days, evidence_types, source_classes = scope
+            (
+                geography,
+                as_of,
+                max_age_days,
+                evidence_types,
+                allowed_source_roles,
+                source_classes,
+            ) = scope
             batches.append(
                 {
                     "batch_id": f"research-batch-{index:03d}",
@@ -203,6 +225,7 @@ class ResearchPlannerAgent(BaseAgent):
                     "as_of": as_of,
                     "max_age_days": max_age_days,
                     "evidence_types": list(evidence_types),
+                    "allowed_source_roles": list(allowed_source_roles),
                     "source_classes": list(source_classes),
                     "metric_ids": [item["metric_id"] for item in items],
                     "status": "planned",

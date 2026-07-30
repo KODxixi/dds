@@ -1,0 +1,56 @@
+{
+  "profile_id": "dds.liquid-glass-v4",
+  "profile_version": "1.0.0",
+  "canonical_template": "templates/dds_report_liquid_glass_v4.html",
+  "framework_version": "dds.report-framework/sc-ad-va-cs/1.0",
+  "design_system": {
+    "id": "gary-ui",
+    "recipe": "decision-report",
+    "recipe_version": "1.0.0",
+    "integration_mode": "approved-template-origin",
+    "compiled_template_hash": "5ae75f40d52f6d82aa6a124c41a16dd67e89fba17fb7558f6173405341c6ca39",
+    "projection_hash": "d87cb7a893de229d7da460ab6b30df37e53e06a8168093314f1f8b240dc62f65",
+    "source": "gary-ui://patterns/recipes/decision-report"
+  },
+  "viewport_policy": {
+    "default_mode": "continuous_reading",
+    "presentation_aspect_ratio": "16:9",
+    "acceptance_viewports": [
+      "1280x720",
+      "1440x900",
+      "1920x1080"
+    ]
+  },
+  "layout": {
+    "report_max_width": 1480,
+    "primary_content_max_width": 840,
+    "decision_card_width_range": [
+      440,
+      460
+    ],
+    "one_primary_visual": true,
+    "internal_card_scroll": false
+  },
+  "materials": {
+    "navigation": "UltraThin",
+    "decision_card": "Thick",
+    "dense_data": "SolidPlate",
+    "glass_hue": "neutral_k_only",
+    "global_scene_count": 1,
+    "global_mask_count": 1
+  },
+  "navigation": {
+    "default_mode": "reading",
+    "required_unit_top_control": true,
+    "single_presentation_mode": true,
+    "presentation_autoplay": false
+  },
+  "runtime": {
+    "max_mounted_pages": 7,
+    "max_live_dom": 1500,
+    "max_interactive_charts": 3,
+    "max_decoded_images": 12,
+    "offline_runtime": true,
+    "readable_failure_fallback": true
+  }
+}

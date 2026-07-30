@@ -15,15 +15,28 @@ from typing import Any
 
 try:
     from .assets import AssetResolver
+    from .report_delivery_evidence import (
+        ReportDeliveryEvidenceError,
+        verify_report_delivery_validation,
+    )
     from .report_document import build_report_document, sanitize_portable_value
+    from .ui_recipe import (
+        load_decision_report_recipe,
+        recipe_component_paths,
+    )
 except ImportError:  # pragma: no cover - top-level V1 compatibility import
     from assets import AssetResolver
+    from report_delivery_evidence import (
+        ReportDeliveryEvidenceError,
+        verify_report_delivery_validation,
+    )
     from report_document import build_report_document, sanitize_portable_value
+    from ui_recipe import load_decision_report_recipe, recipe_component_paths
 
 
 EVIDENCE_PACKAGE_SCHEMA = "dds.evidence-package/1.0"
 REPORT_COMPILER_INPUT_VERSION = "dds.report-seed/1.0"
-SUPPORTED_PROFILE = "dds.apple-dark-16x9/1.1.0"
+SUPPORTED_PROFILE = "dds.liquid-glass-v4/1.0.0"
 
 PACKAGE_REQUIRED_FIELDS = (
     "package_id",
@@ -51,8 +64,8 @@ _LOCATOR_FIELDS = (
 )
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
-TEMPLATE_PATH = PACKAGE_ROOT / "templates" / "dds_report_apple_16x9.html"
-PROFILE_PATH = PACKAGE_ROOT / "profiles" / "report_template_profile_v1.json"
+TEMPLATE_PATH = PACKAGE_ROOT / "templates" / "dds_report_liquid_glass_v4.html"
+PROFILE_PATH = PACKAGE_ROOT / "profiles" / "report_template_profile_v4.json"
 
 
 class ProjectReportError(RuntimeError):
@@ -122,6 +135,22 @@ def load_template_profile() -> dict[str, Any]:
     runtime = profile.get("runtime")
     if not isinstance(runtime, Mapping) or runtime.get("offline_runtime") is not True:
         raise ProjectReportError("report profile must require an offline runtime")
+    recipe = load_decision_report_recipe()
+    recipe_profile = recipe["profile"]
+    design_system = profile.get("design_system")
+    expected_design_system = {
+        "id": "gary-ui",
+        "recipe": "decision-report",
+        "recipe_version": recipe_profile["version"],
+        "integration_mode": recipe["integration_mode"],
+        "compiled_template_hash": recipe["compiled_template_hash"],
+        "projection_hash": recipe["projection_hash"],
+        "source": "gary-ui://patterns/recipes/decision-report",
+    }
+    if design_system != expected_design_system:
+        raise ProjectReportError(
+            "report profile design_system does not match the vendored Gary recipe"
+        )
     return profile
 
 
@@ -132,15 +161,16 @@ def compiler_component_paths() -> dict[str, Path]:
         "assets.py": PACKAGE_ROOT / "assets.py",
         "compiler.py": PACKAGE_ROOT / "compiler.py",
         "dds_cinematic_deck.py": PACKAGE_ROOT / "dds_cinematic_deck.py",
-        "dds_report_apple_16x9.html": TEMPLATE_PATH,
+        "dds_report_liquid_glass_v4.html": TEMPLATE_PATH,
         "evidence_contract.py": contracts / "evidence_contract.py",
         "report_chart_contract.py": contracts / "report_chart_contract.py",
         "report_diagram_contract.py": contracts / "report_diagram_contract.py",
         "report_document.py": PACKAGE_ROOT / "report_document.py",
         "report_structure_contract.py": contracts / "report_structure_contract.py",
-        "report_template_profile_v1.json": PROFILE_PATH,
+        "report_template_profile_v4.json": PROFILE_PATH,
         "renderer.py": PACKAGE_ROOT / "renderer.py",
-        "runtime_compat.py": PACKAGE_ROOT / "runtime_compat.py",
+        "ui_recipe.py": PACKAGE_ROOT / "ui_recipe.py",
+        **recipe_component_paths(),
     }
 
 
@@ -167,11 +197,165 @@ def compute_package_hash(package: Mapping[str, Any]) -> str:
     """Return the V1-compatible semantic package hash."""
     if not isinstance(package, Mapping):
         raise TypeError("package must be a mapping")
-    volatile = {"package_hash", "created_at", "updated_at", "audit"}
+    volatile = {
+        "package_hash",
+        "created_at",
+        "updated_at",
+        "audit",
+        "report_delivery_validation",
+    }
     payload = {
         key: deepcopy(value) for key, value in package.items() if key not in volatile
     }
     return _contract_hash(payload)
+
+
+def _sha256_token(value: Any) -> str:
+    token = str(value or "").strip().lower().removeprefix("sha256:")
+    return token if re.fullmatch(r"[0-9a-f]{64}", token) else ""
+
+
+def _mapping_rows(value: Any) -> list[Mapping[str, Any]]:
+    if not isinstance(value, Sequence) or isinstance(
+        value, (str, bytes, bytearray)
+    ):
+        return []
+    return [row for row in value if isinstance(row, Mapping)]
+
+
+def evaluate_evidence_delivery_status(package: Mapping[str, Any]) -> dict[str, Any]:
+    """Verify the frozen evidence attestation required only for formal delivery."""
+    reasons: list[str] = []
+    validation = package.get("report_delivery_validation")
+    if not isinstance(validation, Mapping):
+        return {"ready": False, "reason_codes": ["evidence_attestation_missing"]}
+
+    sources = _mapping_rows(package.get("source_registry"))
+    claims = _mapping_rows(package.get("claims"))
+    source_attestations = _mapping_rows(validation.get("source_attestations"))
+    claim_attestations = _mapping_rows(validation.get("claim_attestations"))
+    source_attestation_by_id = {
+        str(row.get("source_id") or ""): row
+        for row in source_attestations
+        if str(row.get("source_id") or "")
+    }
+    claim_attestation_by_id = {
+        str(row.get("claim_id") or ""): row
+        for row in claim_attestations
+        if str(row.get("claim_id") or "")
+    }
+
+    if not sources:
+        reasons.append("qualified_sources_missing")
+    if not claims:
+        reasons.append("closed_claims_missing")
+
+    qualified_source_ids: set[str] = set()
+    source_ids: list[str] = []
+    for source in sources:
+        source_id = str(source.get("source_id") or "").strip() or "<unknown>"
+        source_ids.append(source_id)
+        qualification = str(source.get("qualification_status") or "").strip()
+        if not qualification:
+            reasons.append(f"source_qualification_missing:{source_id}")
+        elif qualification != "qualified":
+            reasons.append(f"source_not_qualified:{source_id}")
+        else:
+            qualified_source_ids.add(source_id)
+
+        declared_hashes = {
+            token
+            for field in (
+                "raw_hash",
+                "source_hash",
+                "sha256",
+                "content_hash",
+                "snapshot_hash",
+            )
+            if (token := _sha256_token(source.get(field)))
+        }
+        if not declared_hashes:
+            reasons.append(f"source_hash_missing:{source_id}")
+
+        attestation = source_attestation_by_id.get(source_id)
+        if attestation is None:
+            reasons.append(f"source_attestation_missing:{source_id}")
+            continue
+        content_hash = _sha256_token(attestation.get("content_hash"))
+        if not content_hash:
+            reasons.append(f"source_attestation_hash_invalid:{source_id}")
+        elif declared_hashes and content_hash not in declared_hashes:
+            reasons.append(f"source_hash_attestation_mismatch:{source_id}")
+
+    if (
+        len(source_ids) != len(set(source_ids))
+        or set(source_attestation_by_id) != set(source_ids)
+        or len(source_attestations) != len(source_ids)
+    ):
+        reasons.append("source_attestation_coverage_mismatch")
+
+    claim_ids: list[str] = []
+    allowed_counter_statuses = {
+        "searched_none_found",
+        "counter_evidence_found",
+        "not_applicable_with_reason",
+    }
+    for claim in claims:
+        claim_id = str(
+            claim.get("claim_id") or claim.get("record_id") or ""
+        ).strip() or "<unknown>"
+        claim_ids.append(claim_id)
+        attestation = claim_attestation_by_id.get(claim_id)
+        support_key = (
+            "support_source_refs"
+            if "support_source_refs" in claim
+            else "source_refs"
+        )
+        support = {
+            str(item).strip()
+            for item in claim.get(support_key) or []
+            if str(item).strip()
+        }
+        counter = {
+            str(item).strip()
+            for item in claim.get("counter_source_refs") or []
+            if str(item).strip()
+        }
+        closed = (
+            str(claim.get("status") or "").strip() == "qualified"
+            and attestation is not None
+            and str(attestation.get("claim_status") or "").strip() == "qualified"
+            and bool(support)
+            and set(attestation.get("support_source_refs") or []) == support
+            and set(attestation.get("counter_source_refs") or []) == counter
+            and support.issubset(qualified_source_ids)
+            and counter.issubset(qualified_source_ids)
+            and attestation.get("counter_evidence_status")
+            in allowed_counter_statuses
+            and _sha256_token(attestation.get("counter_evidence_note_hash"))
+            and _sha256_token(attestation.get("limitations_hash"))
+            and isinstance(attestation.get("limitation_count"), int)
+            and attestation.get("limitation_count", 0) > 0
+            and attestation.get("decision_eligibility") is False
+        )
+        if not closed:
+            reasons.append(f"claim_not_closed:{claim_id}")
+
+    if (
+        len(claim_ids) != len(set(claim_ids))
+        or set(claim_attestation_by_id) != set(claim_ids)
+        or len(claim_attestations) != len(claim_ids)
+    ):
+        reasons.append("claim_attestation_coverage_mismatch")
+
+    try:
+        verify_report_delivery_validation(validation, package)
+    except ReportDeliveryEvidenceError as exc:
+        reasons.append(f"evidence_attestation_invalid:{exc}")
+    return {
+        "ready": not reasons,
+        "reason_codes": list(dict.fromkeys(reasons)),
+    }
 
 
 def validate_frozen_package(
@@ -432,6 +616,7 @@ def build_frozen_package(
     )
     normalized_seed = frozen_seed if isinstance(frozen_seed, Mapping) else None
     sources = _sequence_field(normalized_seed, "source_registry")
+    claims = _sequence_field(normalized_seed, "claims")
     gaps = _sequence_field(normalized_seed, "evidence_gaps")
     package: dict[str, Any] = {
         "schema_version": EVIDENCE_PACKAGE_SCHEMA,
@@ -445,7 +630,7 @@ def build_frozen_package(
         "compiler_fingerprint": compiler_fingerprint(profile),
         "sources": sources,
         "source_registry": deepcopy(sources),
-        "claims": [],
+        "claims": claims,
         "module_inputs": {"report_seed": frozen_seed},
         "gaps": gaps,
         "errors": [],
@@ -593,6 +778,7 @@ __all__ = [
     "compiler_fingerprint",
     "compute_package_hash",
     "compute_report_document_hash",
+    "evaluate_evidence_delivery_status",
     "evaluate_delivery_status",
     "freeze_evidence_package",
     "freeze_report_seed_assets",
@@ -600,5 +786,3 @@ __all__ = [
     "render_frozen_package",
     "validate_frozen_package",
 ]
-
-

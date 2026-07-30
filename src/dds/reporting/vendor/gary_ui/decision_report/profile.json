@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "recipeId": "gary-ui.decision-report",
+  "version": "1.0.0",
+  "status": "canonical-recipe",
+  "visualRoute": {
+    "schemaVersion": 1,
+    "skill": "gary-liquidglass-ui",
+    "application": "scroll-report",
+    "page": "data-page",
+    "theme": "dark",
+    "material": "regular",
+    "density": "balanced"
+  },
+  "composition": {
+    "reportMaxWidth": 1480,
+    "primaryVisualMaxWidth": 840,
+    "decisionCardWidthRange": [440, 460],
+    "readingMode": "continuous",
+    "presentationAspectRatio": "16:9",
+    "printAspectRatio": "16:9",
+    "singleContentSource": true,
+    "onePrimaryVisualPerPage": true,
+    "internalCardScroll": false
+  },
+  "pageValueGate": [
+    "specific-question",
+    "supported-conclusion",
+    "primary-evidence-or-design-expression",
+    "decision-impact-or-action"
+  ],
+  "materials": {
+    "navigation": "ultrathin",
+    "primaryAnalysis": "regular",
+    "decisionCard": "thick",
+    "denseData": "solid-plate",
+    "conclusionBar": "solid-plate",
+    "sceneCount": 1,
+    "globalMaskCount": 1,
+    "opaquePrimaryCardsAllowed": false
+  },
+  "distribution": {
+    "entrypoints": {
+      "shell": "shell.html",
+      "styles": "decision-report.bundle.css",
+      "controller": "decision-report.bundle.js"
+    },
+    "files": {
+      "shell.html": {
+        "mediaType": "text/html",
+        "sha256": "42063abe0b31d63d1a22e59b59584c90f1fac9baf45e4163aadcb61e6999c32a"
+      },
+      "decision-report.bundle.css": {
+        "mediaType": "text/css",
+        "sha256": "38dcf4420df91ba81e3ecc4b792d24ae5a715d2d268bdb636d354a03bfeaf04a"
+      },
+      "decision-report.bundle.js": {
+        "mediaType": "text/javascript",
+        "sha256": "27ffcce7fe6422d479cc894bba5884ee2a6fdddbc6e4ab93e3821b62799fb7c8"
+      }
+    },
+    "projectionHash": "d87cb7a893de229d7da460ab6b30df37e53e06a8168093314f1f8b240dc62f65",
+    "offline": true,
+    "externalDependencies": []
+  },
+  "runtime": {
+    "offline": true,
+    "sourceDrawer": true,
+    "keyboardPresentationNavigation": true,
+    "readableFailureFallbackRequiredForConsumers": true
+  },
+  "origin": {
+    "sourceId": "approved-decision-report-baseline",
+    "integrationMode": "approved-template-origin",
+    "templateSha256": "5ae75f40d52f6d82aa6a124c41a16dd67e89fba17fb7558f6173405341c6ca39",
+    "sourceProfileSha256": "b3627ca32c4489116b997f2cd9611c199edb3a2a373b742ae199600bb928766e",
+    "verifiedReportSha256": "bc757a66ce77bd5ebb0cc6499db1c7541d28054c4db2c49d561b37258bfbc75d",
+    "promotion": "user-directed deterministic sync for future reuse",
+    "garyApprovalId": null
+  },
+  "exampleContainsProjectData": false
+}

@@ -36,6 +36,34 @@ class FixtureSource:
         )
 
 
+class RecordingSource:
+    source_id = "recording-api"
+
+    def __init__(self):
+        self.queries = []
+
+    def availability(self) -> dict[str, object]:
+        return {"source_id": self.source_id, "available": True, "kind": "test"}
+
+    def search(self, query):
+        self.queries.append(query)
+        return ResearchResult(
+            source_id=self.source_id,
+            query=query.query,
+            candidates=(
+                ResearchCandidate(
+                    source_id=self.source_id,
+                    source_ref=f"https://data.example.test/{len(self.queries)}",
+                    title="分指标候选",
+                    snippet="仅供检索召回，尚未完成来源资格复核",
+                    source_hash=f"{len(self.queries):064x}",
+                    metric_ids=("SC2.competitors", "SC2.customer_segments"),
+                    published_at=date.today().isoformat(),
+                ),
+            ),
+        )
+
+
 def _broken_workbook_bytes() -> bytes:
     stream = BytesIO()
     with ZipFile(stream, "w", ZIP_DEFLATED) as archive:
@@ -99,7 +127,7 @@ def test_non_technical_api_creates_runs_uploads_and_performs_research(tmp_path):
     result = executed.json()
     assert result["status"] == "research_completed"
     assert result["candidate_count"] > 0
-    assert result["qualified_candidate_count"] > 0
+    assert result["qualified_candidate_count"] == 0
     assert result["evidence_status"] == "evidence_gaps"
     assert result["decision_ready"] is False
     assert result["requirement_count"] > 0
@@ -116,6 +144,28 @@ def test_non_technical_api_creates_runs_uploads_and_performs_research(tmp_path):
         "candidates_qualified",
         "research_completed",
     ]
+
+
+def test_confirmed_intervention_returns_job_bound_frozen_brief_hash(tmp_path):
+    client = TestClient(
+        create_app(ProductSettings(root=tmp_path), research_sources=())
+    )
+    job_id = client.post(
+        "/api/research-jobs",
+        json={
+            "project_name": "冻结任务",
+            "city": "深圳",
+            "address": "深圳市测试路 1 号",
+        },
+    ).json()["job_id"]
+
+    confirmed = client.post(
+        f"/api/research-jobs/{job_id}/intervention",
+        json={"selected_mode": 1, "user_goal": "独立研判项目机会"},
+    )
+
+    assert confirmed.status_code == 200
+    assert len(confirmed.json()["intervention_brief_hash"]) == 64
 
 
 def test_upload_rejects_traversal_and_oversize(tmp_path):
@@ -141,7 +191,7 @@ def test_upload_rejects_traversal_and_oversize(tmp_path):
     )
     assert uploaded.status_code == 201
     refreshed = client.get(f"/api/research-jobs/{job_id}").json()
-    assert refreshed["analysis_profile"]["recommended_mode"] == 3
+    assert refreshed["analysis_profile"]["recommended_mode"] == 1
     assert refreshed["analysis_profile"]["selected_mode"] is None
 
 
@@ -269,6 +319,51 @@ def test_api_runs_input_profiles(
     assert result["decision_scope"] == decision_scope
 
 
+def test_confirmed_intervention_brief_is_immutable_but_same_project_can_use_new_job(
+    tmp_path,
+):
+    client = TestClient(
+        create_app(ProductSettings(root=tmp_path), research_sources=())
+    )
+    project = {
+        "project_name": "同一项目",
+        "city": "深圳",
+        "address": "深圳市宝安中心区 A002-0113 宗地",
+    }
+    first_job = client.post("/api/research-jobs", json=project).json()
+    second_job = client.post("/api/research-jobs", json=project).json()
+
+    first_confirmation = client.post(
+        f"/api/research-jobs/{first_job['job_id']}/intervention",
+        json={"selected_mode": 1, "user_goal": "独立研判市场与客群机会"},
+    )
+    second_confirmation = client.post(
+        f"/api/research-jobs/{second_job['job_id']}/intervention",
+        json={"selected_mode": 3, "user_goal": "审查两个已提交方案"},
+    )
+    overwrite_attempt = client.post(
+        f"/api/research-jobs/{first_job['job_id']}/intervention",
+        json={"selected_mode": 3, "user_goal": "覆盖第一次确认"},
+    )
+
+    assert first_confirmation.status_code == 200
+    assert second_confirmation.status_code == 200
+    assert overwrite_attempt.status_code == 409
+    persisted_first = client.get(
+        f"/api/research-jobs/{first_job['job_id']}"
+    ).json()
+    persisted_second = client.get(
+        f"/api/research-jobs/{second_job['job_id']}"
+    ).json()
+    assert persisted_first["analysis_profile"]["selected_mode"] == 1
+    assert persisted_first["intervention_brief"]["selected_mode"] == 1
+    assert persisted_first["intervention_brief"]["user_goal"] == (
+        "独立研判市场与客群机会"
+    )
+    assert persisted_second["analysis_profile"]["selected_mode"] == 3
+    assert persisted_second["intervention_brief"]["selected_mode"] == 3
+
+
 def test_api_profile_run_blocks_missing_location(tmp_path):
     client = TestClient(
         create_app(ProductSettings(root=tmp_path), research_sources=())
@@ -297,3 +392,59 @@ def test_api_profile_run_blocks_missing_location(tmp_path):
     assert result["analysis_profile"]["missing_inputs"] == [
         "address_or_coordinates"
     ]
+
+
+def test_product_researches_each_metric_and_targets_future_demand_events(tmp_path):
+    source = RecordingSource()
+    client = TestClient(
+        create_app(
+            ProductSettings(root=tmp_path),
+            research_sources=(source,),
+        )
+    )
+    created = client.post(
+        "/api/research-jobs",
+        json={
+            "project_name": "企鹅岛邻近住宅项目",
+            "city": "深圳",
+            "district": "宝安",
+            "address": "宝安中心滨海片区",
+            "project_type": "住宅",
+            "decision_question": "未来三至五年的新增客群来自哪里？",
+        },
+    ).json()
+    client.post(
+        f"/api/research-jobs/{created['job_id']}/intervention",
+        json={"selected_mode": 1, "user_goal": "独立判断未来客群与产品机会"},
+    )
+
+    result = client.post(
+        f"/api/research-jobs/{created['job_id']}/run"
+    )
+    assert result.status_code == 200
+    detail = client.get(
+        f"/api/research-jobs/{created['job_id']}"
+    ).json()
+
+    planned_metric_ids = {
+        item["metric_id"]
+        for item in detail["research_plan"]["source_plan"]
+        if item["status"] == "planned"
+    }
+    assert {query.metric_ids[0] for query in source.queries} == planned_metric_ids
+    assert all(len(query.metric_ids) == 1 for query in source.queries)
+    assert all(len(candidate["metric_ids"]) == 1 for candidate in detail["candidates"])
+    assert {
+        candidate["metric_ids"][0] for candidate in detail["candidates"]
+    } == planned_metric_ids
+
+    future_query = next(
+        query
+        for query in source.queries
+        if query.metric_ids == ("SC2.future_demand_event_scan",)
+    )
+    assert "企鹅岛邻近住宅项目" in future_query.query
+    assert "宝安中心滨海片区" in future_query.query
+    assert "重大雇主" in future_query.query
+    assert "轨道交通" in future_query.query
+    assert "未来五年" in future_query.query

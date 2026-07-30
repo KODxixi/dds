@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 
 
 from dds.reporting.renderer import render_cinematic_deck_html
@@ -16,7 +17,7 @@ def test_renderer_hash_is_stable_and_output_is_self_contained() -> None:
 
     assert rendered == repeated
     assert hashlib.sha256(rendered.encode("utf-8")).hexdigest() == (
-        "37534e6cc0ddcc04a2d847981573b03c3ea742df7baed294995a691db38e6c82"
+        "f9d511011ba5f5fb12c1585d6f954dc5b15c2eec92b1499b584284a642ea2042"
     )
     assert 'src="https://' not in rendered
     assert 'src="http://' not in rendered
@@ -27,7 +28,24 @@ def test_renderer_hash_is_stable_and_output_is_self_contained() -> None:
     assert "window.DDSReportModes" in rendered
     assert "preparePrint" in rendered
     assert 'stage.dataset.runtimeReady = "true"' in rendered
-    assert 'root.setAttribute("data-section-nav", "")' in rendered
+    assert 'sectionNav.setAttribute("data-section-nav","")' in rendered
+    assert '"id":"gary-ui"' in rendered
+    assert '"recipe":"decision-report"' in rendered
+    assert '"integration_mode":"approved-template-origin"' in rendered
+    assert '"compiled_template_hash":"5ae75f40d52f6d82aa6a124c41a16dd67e89fba17fb7558f6173405341c6ca39"' in rendered
+    assert '"projection_hash":"d87cb7a893de229d7da460ab6b30df37e53e06a8168093314f1f8b240dc62f65"' in rendered
+    assert "C:\\AI" not in rendered
+
+
+def test_renderer_html_is_stable_after_document_json_round_trip() -> None:
+    document = build_report_document(report_seed())
+    persisted = json.loads(
+        json.dumps(document, ensure_ascii=False, sort_keys=True)
+    )
+
+    assert render_cinematic_deck_html({"report_document": document}) == (
+        render_cinematic_deck_html({"report_document": persisted})
+    )
 
 
 

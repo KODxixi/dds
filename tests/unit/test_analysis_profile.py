@@ -20,14 +20,14 @@ def test_system_recommends_but_does_not_select_a_mode() -> None:
     assert profile["eligible"] is False
 
 
-def test_scheme_material_recommends_input_3_without_selecting_it() -> None:
+def test_scheme_named_material_recommends_input_2_without_explicit_schemes() -> None:
     profile = resolve_intervention_profile(
         {
             "address": "测试城测试路 1 号",
             "materials": [{"filename": "三方案比选.pptx"}],
         }
     )
-    assert profile["recommended_mode"] == 3
+    assert profile["recommended_mode"] == 2
     assert profile["selected_mode"] is None
     assert profile["mode_status"] == "awaiting_confirmation"
 
@@ -73,6 +73,29 @@ def test_input_1_stays_selected_even_when_complete_schemes_exist() -> None:
     assert profile["recommended_mode"] == 3
     assert profile["selected_mode"] == 1
     assert profile["decision_scope"] == "independent_opportunity_research"
+
+
+@pytest.mark.parametrize(
+    "future_demand_input",
+    [
+        {"future_demand_sources": [{"source_ref": "official://penguin-island"}]},
+        {"future_demand_events": [{"event_id": "penguin-island-operation"}]},
+    ],
+)
+def test_future_demand_readiness_is_independent_from_customer_readiness(
+    future_demand_input: dict[str, list[dict[str, str]]],
+) -> None:
+    profile = resolve_intervention_profile(
+        {
+            "address": "测试城测试路 1 号",
+            **future_demand_input,
+        },
+        selected_mode=1,
+        confirmed=True,
+    )
+
+    assert profile["data_readiness"]["future_demand_evidence"] == "ready"
+    assert profile["data_readiness"]["customer_evidence"] == "not_assessed"
 
 
 @pytest.mark.asyncio

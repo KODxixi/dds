@@ -41,6 +41,10 @@ async def test_research_planner_only_returns_batches_and_gap_actions():
         evidence_types=("observed_fact",),
         min_evidence_count=2,
         geography="Beijing",
+        metadata={
+            "allowed_source_roles": ["government_record"],
+            "purpose": "同口径竞品核验",
+        },
     )
     result = await ResearchPlannerAgent().run(
         AgentTask(
@@ -53,6 +57,13 @@ async def test_research_planner_only_returns_batches_and_gap_actions():
     assert result.data["collection_performed"] is False
     assert result.data["batches"][0]["collection_performed"] is False
     assert result.data["source_plan"][0]["missing_count"] == 2
+    assert result.data["source_plan"][0]["allowed_source_roles"] == [
+        "government_record"
+    ]
+    assert result.data["source_plan"][0]["metadata"]["purpose"] == "同口径竞品核验"
+    assert result.data["batches"][0]["allowed_source_roles"] == [
+        "government_record"
+    ]
     assert result.data["supplement_actions"][0]["status"] == "pending"
     assert "records" not in result.data
 

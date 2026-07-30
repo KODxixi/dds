@@ -75,8 +75,8 @@ REPORT_UNITS = (
         "section_id": "SC2",
         "group_id": "SC",
         "title": "市场机会、客群洞察与竞品实证",
-        "question": "市场真正缺什么，哪些正反案例能够证明机会与风险？",
-        "gap": "尚未形成宏观、板块、面积段、客群、竞品和正反案例的交叉证据。",
+        "question": "现状与未来事件将产生什么需求，哪些正反案例能够证明机会与风险？",
+        "gap": "尚未形成宏观、板块、未来需求事件、客群、竞品和正反案例的交叉证据。",
     },
     {
         "section_id": "SC3",
@@ -157,7 +157,14 @@ VALID_SECTION_IDS = tuple(item["section_id"] for item in REPORT_UNITS)
 
 SECTION_REQUIREMENTS = {
     "SC1": ["project_id", "decision_question", "evidence_boundary", "base_date"],
-    "SC2": ["macro_indicators", "competitors", "customer_segments", "positive_cases", "negative_cases"],
+    "SC2": [
+        "macro_indicators",
+        "competitors",
+        "future_demand_event_scan",
+        "customer_segments",
+        "positive_cases",
+        "negative_cases",
+    ],
     "SC3": ["redline", "regulations", "engineering_constraints"],
     "AD1": ["option_1", "option_2", "option_3", "comparison_matrix"],
     "AD2": ["recommended_option", "elimination_reasons", "validation_thresholds"],
@@ -738,6 +745,7 @@ FIELD_DESCRIPTIONS = {
     "macro_indicators": "宏观经济指标",
     "competitors": "竞品分析",
     "customer_segments": "客群细分",
+    "future_demand_event_scan": "未来需求事件扫描",
     "positive_cases": "正面案例",
     "negative_cases": "负面案例",
     "redline": "红线条件",
@@ -820,5 +828,4 @@ __all__ = [
     "FALLBACK_STRATEGIES",
     "FIELD_DESCRIPTIONS",
 ]
-
 

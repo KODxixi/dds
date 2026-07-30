@@ -1,4 +1,4 @@
-"""Manifest-driven, self-contained Apple Dark 16:9 DDS report renderer.
+"""Manifest-driven, self-contained DDS v4 Liquid Glass report renderer.
 
 The Python side only serializes bounded page chunks.  Page DOM is created by
 the embedded runtime on demand, so a 500-page report does not create 500 page
@@ -20,13 +20,10 @@ from typing import Any
 
 try:
     from .assets import AssetResolver
+    from .ui_recipe import load_decision_report_recipe
 except ImportError:  # pragma: no cover - top-level V1 compatibility import
     from assets import AssetResolver
-
-try:
-    from .runtime_compat import inject_browser_qa_runtime
-except ImportError:  # pragma: no cover - top-level V1 compatibility import
-    from runtime_compat import inject_browser_qa_runtime
+    from ui_recipe import load_decision_report_recipe
 
 try:  # Existing app.py imports modules from ``scripts`` as top-level modules.
     from .report_document import (
@@ -50,243 +47,12 @@ PAGE_CHUNK_SIZE = 24
 # Portable reports must not silently drop the 33rd referenced image.  Runtime
 # virtualization limits decoded media; it does not limit embedded asset count.
 ASSET_EMBED_LIMIT: int | None = None
-TEMPLATE_PATH = Path(__file__).resolve().parent / "templates" / "dds_report_apple_16x9.html"
+TEMPLATE_PATH = (
+    Path(__file__).resolve().parent
+    / "templates"
+    / "dds_report_liquid_glass_v4.html"
+)
 
-
-_BROWSER_QA_LAYOUT_CSS = r"""
-    /* DDS_BROWSER_QA_LAYOUT_V2
-       Browser-verified desktop composition for compact summary charts,
-       spatial pages and page-level frozen evidence visuals. */
-    @media screen {
-      .page-surface.is-summary .chart-block {
-        min-width:0;
-        overflow:hidden;
-        grid-template-columns:minmax(0,1fr);
-        grid-template-rows:auto minmax(0,1fr);
-        align-items:stretch;
-        gap:8px;
-      }
-      .page-surface.is-summary .chart-intro {
-        min-width:0;
-        align-self:auto;
-        display:grid;
-        grid-template-columns:minmax(0,1fr) auto;
-        align-items:end;
-        gap:4px 8px;
-      }
-      .page-surface.is-summary .chart-intro p { display:none; }
-      .page-surface.is-summary .chart-unit { white-space:nowrap; }
-      .page-surface.is-summary .chart-rows {
-        min-width:0;
-        align-content:center;
-      }
-      .page-surface.is-summary .chart-row {
-        min-width:0;
-        grid-template-columns:minmax(56px,.72fr) minmax(0,1.7fr) minmax(36px,.34fr);
-        gap:7px;
-      }
-      .page-surface.is-summary .chart-note { display:none; }
-
-      .page-content > .media-block {
-        min-width:0;
-        min-height:0;
-        align-self:stretch;
-        padding:0;
-        overflow:hidden;
-        border:1px solid rgba(255,255,255,.075);
-        border-radius:16px;
-        background:#0b0d0e;
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 18px 46px rgba(0,0,0,.22);
-      }
-      .page-content > .media-block .embedded-media {
-        width:100%;
-        height:100%;
-        min-height:0;
-        object-fit:contain;
-        object-position:center;
-        border-radius:15px;
-        background:#0b0d0e;
-      }
-
-      .page-surface.is-summary:has(.page-content > .media-block) .page-content {
-        grid-template-rows:minmax(0,1.08fr) minmax(0,.92fr);
-        overflow:hidden;
-      }
-      .page-surface.is-summary:has(.page-content > .media-block) .summary-judgment {
-        grid-column:1 / span 8;
-        grid-row:1 / span 2;
-      }
-      .page-surface.is-summary:has(.page-content > .media-block) .page-content > .media-block {
-        grid-column:9 / -1;
-        grid-row:1;
-      }
-      .page-surface.is-summary.has-chart:has(.page-content > .media-block) .page-content > .chart-block,
-      .page-surface.is-summary.has-chart:has(.page-content > .media-block) .page-content > .svg-chart-block {
-        grid-column:9 / -1;
-        grid-row:2;
-      }
-      .page-surface.is-summary:not(.has-chart):has(.page-content > .media-block) .page-content > .media-block {
-        grid-row:1 / span 2;
-      }
-      .page-surface.is-summary.has-chart:has(.page-content > .media-block) .chart-intro p,
-      .page-surface.is-summary.has-chart:has(.page-content > .media-block) .chart-unit {
-        display:none;
-      }
-
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .page-content {
-        grid-template-columns:minmax(250px,.42fr) minmax(0,.58fr);
-        grid-template-rows:minmax(0,.58fr) minmax(100px,.42fr);
-        align-items:stretch;
-        overflow:hidden;
-      }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .page-content > .chart-block,
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .page-content > .svg-chart-block {
-        grid-column:1;
-        grid-row:1;
-        min-width:0;
-        min-height:0;
-        overflow:hidden;
-        grid-template-columns:minmax(0,1fr);
-        grid-template-rows:auto minmax(0,1fr);
-        align-items:stretch;
-        gap:6px;
-      }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .page-content > .narrative-block {
-        grid-column:1;
-        grid-row:2;
-      }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .page-content > .media-block {
-        grid-column:2;
-        grid-row:1 / span 2;
-      }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .chart-intro {
-        min-width:0;
-        align-self:auto;
-        display:grid;
-        grid-template-columns:minmax(0,1fr) auto;
-        align-items:end;
-        gap:4px 8px;
-      }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .chart-intro p,
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .chart-unit {
-        display:none;
-      }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .chart-rows,
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .spatial-chart-rows {
-        min-width:0;
-        align-content:center;
-        padding:2px 0 0;
-        gap:4px;
-      }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .chart-row {
-        min-width:0;
-        grid-template-columns:minmax(56px,.72fr) minmax(0,1.7fr) minmax(36px,.34fr);
-        gap:7px;
-      }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .chart-note { display:none; }
-      .page-surface.has-chart:not(.is-summary):has(.page-content > .media-block) .spatial-chart-row {
-        grid-template-columns:24px minmax(64px,.66fr) minmax(0,1fr) 34px;
-        gap:5px;
-      }
-
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .page-content {
-        grid-template-columns:minmax(250px,.38fr) minmax(0,.62fr);
-        grid-template-rows:minmax(0,.58fr) minmax(100px,.42fr);
-        align-items:stretch;
-        overflow:hidden;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .page-content > .chart-spatial-diagram {
-        grid-column:1;
-        grid-row:1;
-        min-width:0;
-        min-height:0;
-        overflow:hidden;
-        grid-template-columns:minmax(0,1fr);
-        grid-template-rows:auto minmax(0,1fr);
-        align-items:stretch;
-        gap:6px;
-        padding:11px 12px;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .page-content > .narrative-block {
-        grid-column:1;
-        grid-row:2;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .page-content > .spatial-diagram-block {
-        grid-column:2;
-        grid-row:1 / span 2;
-        min-width:0;
-        min-height:0;
-        height:auto;
-        overflow:hidden;
-        grid-template-columns:minmax(0,1.7fr) minmax(180px,.6fr);
-        gap:10px;
-        padding:9px;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .chart-intro {
-        min-width:0;
-        align-self:auto;
-        display:grid;
-        grid-template-columns:minmax(0,1fr) auto;
-        align-items:end;
-        gap:4px 8px;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .chart-intro p,
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .chart-unit {
-        display:none;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .spatial-chart-rows {
-        min-width:0;
-        align-content:center;
-        padding:2px 0 0;
-        gap:4px;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .spatial-chart-row {
-        grid-template-columns:24px minmax(64px,.66fr) minmax(0,1fr) 34px;
-        gap:5px;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .spatial-section-canvas {
-        min-height:0;
-        height:100%;
-        align-content:center;
-        gap:2px;
-        padding:6px 8px;
-        overflow:hidden;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .section-layer {
-        min-height:0;
-        grid-template-columns:92px 70px minmax(0,1fr);
-        gap:6px;
-        padding:5px 8px;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .spatial-callout-rail {
-        min-height:0;
-        height:auto;
-        overflow:hidden;
-        gap:5px;
-        padding:0;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .spatial-callout-rail header {
-        padding:0 2px 5px;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .spatial-callout {
-        grid-template-columns:24px minmax(0,1fr);
-        gap:6px;
-        padding:7px;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .spatial-callout span {
-        margin-top:1px;
-        line-height:1.25;
-        display:-webkit-box;
-        -webkit-box-orient:vertical;
-        -webkit-line-clamp:2;
-        overflow:hidden;
-      }
-      .page-surface[data-visual-language="spatial_diagram"].has-chart:not(:has(.page-content > .media-block)) .spatial-boundary {
-        padding:6px 7px;
-        line-height:1.25;
-      }
-    }
-"""
 
 _RAW_PAGE_MARKER = re.compile(r"(?:raw[\s_-]*json|json[\s_-]*dump|原始\s*json)", re.I)
 _SENSITIVE_KEY = re.compile(
@@ -301,7 +67,9 @@ def _safe_json(value: Any) -> str:
     serialized = json.dumps(
         value,
         ensure_ascii=False,
+        sort_keys=True,
         separators=(",", ":"),
+        allow_nan=False,
         default=str,
     )
     return (
@@ -414,97 +182,6 @@ def _materialize_page_asset_blocks(
         page["blocks"] = implicit_media + blocks
         materialized.append(page)
     return materialized
-
-
-def _fit_dense_mixed_pages(
-    manifest: Sequence[Mapping[str, Any]], *, table_only_rows: int = 6,
-) -> list[dict[str, Any]]:
-    """Split tables to a 1280x720-safe density without local scrollbars."""
-    fitted: list[dict[str, Any]] = []
-    for source_page in manifest:
-        page = deepcopy(dict(source_page))
-        blocks = page.get("blocks")
-        if not isinstance(blocks, Sequence) or isinstance(
-            blocks, (str, bytes, bytearray)
-        ):
-            fitted.append(page)
-            continue
-        tables = [
-            block
-            for block in blocks
-            if isinstance(block, Mapping) and str(block.get("type") or "") == "table"
-        ]
-        other_blocks = [
-            block
-            for block in blocks
-            if not (isinstance(block, Mapping) and str(block.get("type") or "") == "table")
-        ]
-        max_rows = max(
-            (
-                len(block.get("rows") or [])
-                for block in tables
-                if isinstance(block.get("rows") or [], Sequence)
-                and not isinstance(block.get("rows") or [], (str, bytes, bytearray))
-            ),
-            default=0,
-        )
-        if tables and other_blocks:
-            narrative_page = deepcopy(page)
-            narrative_page["blocks"] = deepcopy(other_blocks)
-            fitted.append(narrative_page)
-            offset = 0
-            sequence = 1
-            while offset < max_rows:
-                split_page = deepcopy(page)
-                split_page["blocks"] = []
-                for table in tables:
-                    table_copy = deepcopy(dict(table))
-                    table_copy["rows"] = list(
-                        table.get("rows") or []
-                    )[offset : offset + table_only_rows]
-                    if table_copy["rows"]:
-                        split_page["blocks"].append(table_copy)
-                split_page["page_id"] = (
-                    f"{page.get('page_id')}-table-continuation-{sequence + 1}"
-                )
-                split_page["title"] = (
-                    f"{page.get('title') or '证据矩阵'}（表续 {sequence + 1}）"
-                )
-                split_page["load_priority"] = "deferred"
-                if split_page["blocks"]:
-                    fitted.append(split_page)
-                offset += table_only_rows
-                sequence += 1
-            continue
-        first_limit = table_only_rows
-        if max_rows <= first_limit:
-            fitted.append(page)
-            continue
-
-        offset = 0
-        sequence = 0
-        while offset < max_rows:
-            limit = first_limit if sequence == 0 else table_only_rows
-            split_page = deepcopy(page)
-            split_page["blocks"] = deepcopy(other_blocks) if sequence == 0 else []
-            for table in tables:
-                table_copy = deepcopy(dict(table))
-                table_copy["rows"] = list(table.get("rows") or [])[offset : offset + limit]
-                if table_copy["rows"] or (sequence == 0 and not table.get("rows")):
-                    split_page["blocks"].append(table_copy)
-            if sequence:
-                split_page["page_id"] = (
-                    f"{page.get('page_id')}-table-continuation-{sequence + 1}"
-                )
-                split_page["title"] = (
-                    f"{page.get('title') or '证据矩阵'}（表续 {sequence + 1}）"
-                )
-                split_page["load_priority"] = "deferred"
-            if split_page["blocks"]:
-                fitted.append(split_page)
-            offset += limit
-            sequence += 1
-    return fitted
 
 
 def _project_from_legacy(report: Mapping[str, Any]) -> dict[str, Any]:
@@ -710,7 +387,7 @@ def _resolve_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
     document["page_manifest"] = manifest
     document.setdefault("schema_version", "dds.report-document/1.0")
     document.setdefault("template_id", "dds-intelligence-report-v1")
-    document.setdefault("template_profile_version", "dds.apple-dark-16x9/1.1.0")
+    document.setdefault("template_profile_version", "dds.liquid-glass-v4/1.0.0")
     document.setdefault("meta", {})
     document.setdefault("project", _project_from_legacy(report_json))
     document.setdefault("report_framework", framework_manifest())
@@ -723,9 +400,8 @@ def _resolve_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
 def compile_cinematic_manifest(
     page_source: Sequence[Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
-    """Compile the exact desktop 16:9 page density budget, idempotently."""
+    """Compile adaptive report units without imposing a fixed-slide density."""
     manifest = compile_page_manifest(page_source)
-    manifest = compile_page_manifest(_fit_dense_mixed_pages(manifest))
     return [page for page in manifest if not _looks_raw_page(page)]
 
 
@@ -941,12 +617,14 @@ def render_cinematic_deck_html(
     index = _page_index(manifest)
     chapters = _chapter_index(index)
     sections = _section_index(index)
+    recipe = load_decision_report_recipe()
+    recipe_profile = recipe["profile"]
     metadata = {
         "schema_version": str(document.get("schema_version") or "dds.report-document/1.0"),
         "template_id": str(document.get("template_id") or "dds-intelligence-report-v1"),
         "template_profile_version": str(
             document.get("template_profile_version")
-            or "dds.apple-dark-16x9/1.1.0"
+            or "dds.liquid-glass-v4/1.0.0"
         ),
         "meta": _sanitized(document.get("meta") or {}),
         "project": _sanitized(document.get("project") or {}),
@@ -963,6 +641,15 @@ def render_cinematic_deck_html(
             document, asset_resolver=asset_resolver
         ),
         "headline": _legacy_headline(report_json, document),
+        "design_system": {
+            "id": "gary-ui",
+            "recipe": "decision-report",
+            "recipe_version": recipe_profile["version"],
+            "integration_mode": recipe["integration_mode"],
+            "compiled_template_hash": recipe["compiled_template_hash"],
+            "projection_hash": recipe["projection_hash"],
+            "source": "gary-ui://patterns/recipes/decision-report",
+        },
     }
     if _contains_redaction_marker(report_json):
         metadata["meta"] = dict(metadata["meta"])
@@ -987,10 +674,7 @@ def render_cinematic_deck_html(
     rendered = template
     for marker, value in replacements.items():
         rendered = rendered.replace(marker, value)
-    rendered = rendered.replace(
-        "</style>", f"{_BROWSER_QA_LAYOUT_CSS}\n  </style>", 1
-    )
-    return inject_browser_qa_runtime(rendered)
+    return rendered
 
 
 __all__ = [

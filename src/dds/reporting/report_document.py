@@ -1,8 +1,8 @@
 """Renderer-neutral DDS ReportDocument and PageManifest compiler.
 
-The compiler creates bounded 16:9 page units while imposing no total report
-page limit.  It does not render HTML, mutate the legacy report, or connect to
-Flask.  Existing renderers can adopt this contract in a later task.
+The compiler creates adaptive decision units for continuous reading and one
+optional 16:9 presentation surface.  It does not render HTML, mutate the
+legacy report, or connect to Flask.
 """
 
 from __future__ import annotations
@@ -15,6 +15,11 @@ from collections.abc import Mapping, Sequence
 from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Any
+
+try:  # Decision-page value is part of the core compile gate.
+    from .edition import page_value_errors
+except ImportError:  # pragma: no cover - existing app.py import convention
+    from edition import page_value_errors
 
 try:  # Support package and existing top-level script imports.
     from .evidence_contract import (
@@ -85,7 +90,7 @@ except ImportError:  # pragma: no cover - existing app.py import convention
 
 SCHEMA_VERSION = "dds.report-document/1.2"
 TEMPLATE_ID = "dds-intelligence-report-v1"
-TEMPLATE_PROFILE_VERSION = "dds.apple-dark-16x9/1.1.0"
+TEMPLATE_PROFILE_VERSION = "dds.liquid-glass-v4/1.0.0"
 TABLE_ROWS_PER_PAGE = 10
 
 TABLE_TITLES = {
@@ -398,9 +403,7 @@ _SAFE_OBJECT_SCHEMES = {
 }
 _FILE_URI_RE = re.compile(r"(?i)\bfile:(?://)?[^\s\"'<>]+")
 _WINDOWS_ABSOLUTE_RE = re.compile(r"(?i)[a-z]:[\\/][^\s\"'<>|]+")
-_UNC_PATH_RE = re.compile(
-    r"(?i)(?<![:/\\])(?:\\\\|//)[a-z0-9._$-]+[\\/][^\s\"'<>|]+"
-)
+_UNC_PATH_RE = re.compile(r"(?i)(?<![:/\\])(?:\\\\|//)[a-z0-9._$-]+[\\/][^\s\"'<>|]+")
 _IMAGE_DATA_URI_RE = re.compile(
     r"data:image/[a-z0-9.+-]+;base64,[A-Za-z0-9+/=\r\n]+",
     re.I,
@@ -450,9 +453,7 @@ _ROLE_EFFECTS = {
     "risk_trust_agent": "decision_gate",
 }
 
-_CORE_DECISION_UNIT_IDS = frozenset(
-    unit_id for unit_id in VALID_SECTION_IDS if unit_id != "CS"
-)
+_CORE_DECISION_UNIT_IDS = frozenset(unit_id for unit_id in VALID_SECTION_IDS if unit_id != "CS")
 _SUPPORTING_UNIT_ROLES = frozenset(
     {"decision_chain_support", "market_outcome_case", "design_intent_case"}
 )
@@ -739,33 +740,78 @@ _ROLE_ACTION_FALLBACK = {
 }
 
 _ACTION_ACCEPTANCE_RULES = (
-    ("锁定一句设计 thesis", "提交1页设计thesis，包含目标客群、场地矛盾、核心机制、反证和3项量化指标，由建筑总监签字。"),
-    ("把 thesis 拆成", "提交总图、户型、立面、会所和营销5份任务书；每份含输入、输出、责任人、成本边界、截止时间和验收人。"),
-    ("低置信节点补来源", "所有证据置信度低于0.55的节点均新增独立来源或完成降级记录，风险审计人签字。"),
-    ("补控规/红线/出入口条件", "取得带版本号和来源的红线、控规、真北及法定出入口文件，并由投拓／规划复核。"),
-    ("绘制资源面与噪声面", "提交同一坐标基准下的资源、噪声、道路、高差和消防叠合图，标注量化阈值与数据日期。"),
-    ("总图策略假设", "至少提交2个总图方案，按日照、消防、资源面、货值、土方和分期形成可复算比选矩阵。"),
-    ("竞品面积段与总价", "补齐不少于5个有效住宅竞品的面积、总价、成交与去化时序，记录来源、日期和异常值处理。"),
-    ("定义主力/利润/形象户型", "形成主力／利润／形象户型定义表，明确面积、套数、总价、目标客群、货值和退出条件。"),
-    ("户型动作转成货值影响", "提交户型动作前后可售面积、单套总价、总货值与成本变化表，并由产品和财务复核。"),
-    ("材质与节点词典", "形成材料、分格、节点、供应商、成本上限、耐久和维护周期词典，至少完成1个样板节点。"),
-    ("筛掉无法落地", "全部意向图标注采纳／否决、尺寸、材料、节点、成本和非迁移原因，未标注项不得进入主报告。"),
+    (
+        "锁定一句设计 thesis",
+        "提交1页设计thesis，包含目标客群、场地矛盾、核心机制、反证和3项量化指标，由建筑总监签字。",
+    ),
+    (
+        "把 thesis 拆成",
+        "提交总图、户型、立面、会所和营销5份任务书；每份含输入、输出、责任人、成本边界、截止时间和验收人。",
+    ),
+    (
+        "低置信节点补来源",
+        "所有证据置信度低于0.55的节点均新增独立来源或完成降级记录，风险审计人签字。",
+    ),
+    (
+        "补控规/红线/出入口条件",
+        "取得带版本号和来源的红线、控规、真北及法定出入口文件，并由投拓／规划复核。",
+    ),
+    (
+        "绘制资源面与噪声面",
+        "提交同一坐标基准下的资源、噪声、道路、高差和消防叠合图，标注量化阈值与数据日期。",
+    ),
+    (
+        "总图策略假设",
+        "至少提交2个总图方案，按日照、消防、资源面、货值、土方和分期形成可复算比选矩阵。",
+    ),
+    (
+        "竞品面积段与总价",
+        "补齐不少于5个有效住宅竞品的面积、总价、成交与去化时序，记录来源、日期和异常值处理。",
+    ),
+    (
+        "定义主力/利润/形象户型",
+        "形成主力／利润／形象户型定义表，明确面积、套数、总价、目标客群、货值和退出条件。",
+    ),
+    (
+        "户型动作转成货值影响",
+        "提交户型动作前后可售面积、单套总价、总货值与成本变化表，并由产品和财务复核。",
+    ),
+    (
+        "材质与节点词典",
+        "形成材料、分格、节点、供应商、成本上限、耐久和维护周期词典，至少完成1个样板节点。",
+    ),
+    (
+        "筛掉无法落地",
+        "全部意向图标注采纳／否决、尺寸、材料、节点、成本和非迁移原因，未标注项不得进入主报告。",
+    ),
     ("卖点绑定一张证据图", "每个卖点绑定已核验图片、图纸节点、来源、权利状态与交付责任人。"),
     ("候选案例分为", "案例板完成主证明／辅助证明／氛围参考三级分类，并给出进入与退出规则。"),
     ("记录采纳和否决", "每个候选案例写入采纳或否决事件，包含理由、责任人、时间和后续检索调整。"),
     ("补充同尺度", "至少补1个同城同类案例和1个反例，并核验尺度、客群、气候、成本与权属。"),
     ("有效竞品", "有效住宅竞品不少于5个，30／90／180天价格、供应、促销、库存和去化序列可复现。"),
     ("拆分价格带", "提交价格带×面积段×总价×去化矩阵，明确样本半径、异常值、数据期与置信度。"),
-    ("乐观/中性/保守", "三档情景分别列出价格、月均流速、总套数、触发条件、反证和失效点，禁止单点承诺。"),
+    (
+        "乐观/中性/保守",
+        "三档情景分别列出价格、月均流速、总套数、触发条件、反证和失效点，禁止单点承诺。",
+    ),
     ("一页价值地图", "提交1页价值地图，每个价值点绑定物理事实、设计动作、客户利益和禁用边界。"),
     ("写 5 条", "提交5条卖点；每条均有来源、可交付节点、反证、禁用词和设计／法务双签。"),
     ("禁止外宣", "形成禁止外宣清单，覆盖无来源溢价、唯一性、健康财富承诺及未交付设计内容。"),
     ("48 小时", "48小时补证清单写明任务、依赖、责任人、截止时间、交付物和验收人，并回填状态。"),
     ("人审通过条件", "形成角色级人审清单，逐项写明通过／拒绝阈值、签字人和证据留存位置。"),
     ("可交付物目录", "输出版本化交付物目录，列明文件名、格式、负责人、依赖、状态和验收日期。"),
-    ("blocking gaps", "阻断缺口清单覆盖全部blocking项，逐项给出责任人、截止时间、关闭证据和复核人。"),
-    ("低置信 claim 降级", "所有低于0.55的claim均补证或降级为假设，并记录对页面、模型和对外口径的影响。"),
-    ("learning_events", "人审意见写入可追溯learning_event，包含原结论、修改、理由、证据和回测触发条件。"),
+    (
+        "blocking gaps",
+        "阻断缺口清单覆盖全部blocking项，逐项给出责任人、截止时间、关闭证据和复核人。",
+    ),
+    (
+        "低置信 claim 降级",
+        "所有低于0.55的claim均补证或降级为假设，并记录对页面、模型和对外口径的影响。",
+    ),
+    (
+        "learning_events",
+        "人审意见写入可追溯learning_event，包含原结论、修改、理由、证据和回测触发条件。",
+    ),
 )
 
 
@@ -794,9 +840,7 @@ def _has_data(value: Any) -> bool:
         return False
     if isinstance(value, str):
         return bool(value.strip())
-    if isinstance(value, (Mapping, Sequence)) and not isinstance(
-        value, (str, bytes, bytearray)
-    ):
+    if isinstance(value, (Mapping, Sequence)) and not isinstance(value, (str, bytes, bytearray)):
         if not value:
             return False
         if isinstance(value, Mapping) and str(value.get("status") or "").lower() in {
@@ -917,7 +961,7 @@ def _safe_text(value: Any, default: str = "") -> str:
     return default
 
 
-def _compact_display_title(value: Any, explicit: Any = "", *, limit: int = 18) -> str:
+def _compact_display_title(value: Any, explicit: Any = "", *, limit: int = 24) -> str:
     preferred = _safe_text(explicit).strip()
     if preferred:
         return preferred[:limit] + ("…" if len(preferred) > limit else "")
@@ -948,9 +992,7 @@ def _extract_modules(report: Mapping[str, Any]) -> dict[str, Any]:
             value = report.get(module_id)
         if not _has_data(value):
             explicit_status = (
-                str(value.get("status") or "").lower()
-                if isinstance(value, Mapping)
-                else ""
+                str(value.get("status") or "").lower() if isinstance(value, Mapping) else ""
             )
             if explicit_status not in {"missing", "blocked", "not_assessable"}:
                 value = None
@@ -1002,13 +1044,9 @@ def _apply_confidence_gates(
     else:
         evidence_actionable = score_actionable
 
-    eligibility = str(
-        decision_eligibility or result.get("decision_eligibility") or ""
-    ).strip()
+    eligibility = str(decision_eligibility or result.get("decision_eligibility") or "").strip()
     eligibility_marker = re.sub(r"[_\s]+", "-", eligibility.lower())
-    evidence_marker = str(
-        evidence_type or result.get("evidence_type") or ""
-    ).strip().lower()
+    evidence_marker = str(evidence_type or result.get("evidence_type") or "").strip().lower()
     real_evidence_gate = bool(
         result.get("real_evidence_gate") or result.get("empirical_evidence_gate")
     )
@@ -1016,9 +1054,7 @@ def _apply_confidence_gates(
         evidence_marker == "traditional_interpretation"
         or eligibility_marker in {"not-applicable-demo", "model-only"}
     )
-    explicit_actionable = (
-        bool(result.get("actionable")) if "actionable" in result else True
-    )
+    explicit_actionable = bool(result.get("actionable")) if "actionable" in result else True
     actionable = (
         score_actionable
         and evidence_actionable
@@ -1027,9 +1063,7 @@ def _apply_confidence_gates(
     )
 
     result["evidence_actionable"] = evidence_actionable
-    result["decision_eligibility"] = eligibility or (
-        "eligible" if actionable else "not_eligible"
-    )
+    result["decision_eligibility"] = eligibility or ("eligible" if actionable else "not_eligible")
     result["actionable"] = actionable
     return result
 
@@ -1143,8 +1177,10 @@ def _scalar_metrics(module: Mapping[str, Any]) -> list[dict[str, Any]]:
     for key, value in module.items():
         if key in ignored or _SENSITIVE_KEY_RE.search(str(key)):
             continue
-        if isinstance(value, (str, int, float, bool)) and not isinstance(value, str) or (
-            isinstance(value, str) and len(value) <= 80
+        if (
+            isinstance(value, (str, int, float, bool))
+            and not isinstance(value, str)
+            or (isinstance(value, str) and len(value) <= 80)
         ):
             metrics.append({"label": str(key), "value": deepcopy(value)})
         elif isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
@@ -1295,14 +1331,10 @@ def _resolve_chain_target_unit(role: Mapping[str, Any]) -> tuple[str, str, str]:
 
 def _normalize_case_role(candidate: Mapping[str, Any], *, is_archlib: bool) -> str:
     raw = _safe_text(
-        candidate.get("case_role")
-        or candidate.get("evidence_role")
-        or candidate.get("case_kind")
+        candidate.get("case_role") or candidate.get("evidence_role") or candidate.get("case_kind")
     ).strip()
     if raw:
-        role = _CASE_ROLE_ALIASES.get(raw.lower()) or _CASE_ROLE_ALIASES.get(
-            _semantic_marker(raw)
-        )
+        role = _CASE_ROLE_ALIASES.get(raw.lower()) or _CASE_ROLE_ALIASES.get(_semantic_marker(raw))
         if role:
             return role
     return "design_intent" if is_archlib else "market_outcome"
@@ -1332,9 +1364,7 @@ def _normalize_outcome_metrics(value: Any) -> list[dict[str, Any]]:
                     candidates.append({"metric": str(key), **dict(item)})
                 elif isinstance(item, (str, int, float, bool)) or item is None:
                     candidates.append({"metric": str(key), "value": item})
-    elif isinstance(value, Sequence) and not isinstance(
-        value, (str, bytes, bytearray)
-    ):
+    elif isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
         candidates = [dict(item) for item in value if isinstance(item, Mapping)]
 
     result: list[dict[str, Any]] = []
@@ -1357,9 +1387,7 @@ def _normalize_outcome_metrics(value: Any) -> list[dict[str, Any]]:
         }
         if metric.get("confidence") is not None:
             normalized["confidence"] = _score_dict(metric.get("confidence"))
-        normalized["metric_id"] = _safe_text(
-            metric.get("metric_id"), f"outcome-metric-{index + 1}"
-        )
+        normalized["metric_id"] = _safe_text(metric.get("metric_id"), f"outcome-metric-{index + 1}")
         result.append(normalized)
     return result
 
@@ -1472,7 +1500,9 @@ def _compile_case_evidence(
         source_path = _safe_text(
             visual.get("path") or candidate.get("source_path") or candidate.get("asset")
         )
-        is_archlib = bool(visual) or "archlib" in strategy.lower() or "archlib" in source_path.lower()
+        is_archlib = (
+            bool(visual) or "archlib" in strategy.lower() or "archlib" in source_path.lower()
+        )
         case_role = _normalize_case_role(candidate, is_archlib=is_archlib)
         project_name = _safe_text(
             candidate.get("Selected case")
@@ -1482,16 +1512,16 @@ def _compile_case_evidence(
             f"案例 {index + 1}",
         )
         case_id = _safe_text(
-            candidate.get("case_id")
-            or candidate.get("evidence_id")
-            or visual.get("asset_id"),
+            candidate.get("case_id") or candidate.get("evidence_id") or visual.get("asset_id"),
             _stable_id("case", f"{project_name}|{source_path}|{index}"),
         )
         if case_id in seen_cases:
             continue
         seen_cases.add(case_id)
         role = _safe_text(candidate.get("image_role") or visual.get("image_role"), "evidence_image")
-        fit_score = _numeric(candidate.get("Score") or candidate.get("score") or candidate.get("fit_score"))
+        fit_score = _numeric(
+            candidate.get("Score") or candidate.get("score") or candidate.get("fit_score")
+        )
         fit_score = round(max(0.0, min(100.0, fit_score if fit_score is not None else 0.0)), 1)
         fit = _safe_text(candidate.get("Fit") or candidate.get("fit"), "待复核")
         why = _safe_text(
@@ -1582,9 +1612,7 @@ def _compile_case_evidence(
                 outcome_source_refs.extend(_normalize_refs(metric.get("source_refs")))
             outcome_source_refs.extend(source_refs)
             outcome_source_refs = list(dict.fromkeys(outcome_source_refs))
-            outcome_boundary_note = (
-                "市场结果案例只证明指定周期、地域与产品口径下的真实结果；不得把单例直接外推为本项目售价或去化承诺。"
-            )
+            outcome_boundary_note = "市场结果案例只证明指定周期、地域与产品口径下的真实结果；不得把单例直接外推为本项目售价或去化承诺。"
         else:
             outcome_polarity = "not_applicable"
             outcome_metrics = []
@@ -1609,12 +1637,16 @@ def _compile_case_evidence(
                         "source_ref": source_refs[0] if source_refs else "",
                         "mime": _safe_text(visual.get("mime") or candidate.get("mime")),
                         "width": _safe_scalar(visual.get("width") or candidate.get("width"), None),
-                        "height": _safe_scalar(visual.get("height") or candidate.get("height"), None),
+                        "height": _safe_scalar(
+                            visual.get("height") or candidate.get("height"), None
+                        ),
                         "rights_status": _safe_text(
                             visual.get("rights_status") or candidate.get("rights_status"),
                             "internal_reference",
                         ),
-                        "embed_status": "embedded" if data_uri.startswith("data:image/") else "pending",
+                        "embed_status": "embedded"
+                        if data_uri.startswith("data:image/")
+                        else "pending",
                         "data_uri": data_uri if data_uri.startswith("data:image/") else "",
                         "data_or_object_ref": source_path,
                     }
@@ -1645,9 +1677,7 @@ def _compile_case_evidence(
                 else "partial"
             )
             decision_eligibility = (
-                "market_outcome_evidence"
-                if status == "ready"
-                else "evidence_gap_only"
+                "market_outcome_evidence" if status == "ready" else "evidence_gap_only"
             )
         else:
             status = (
@@ -1741,17 +1771,12 @@ def _compile_decision_chains(
         if chain_id in seen:
             continue
         seen.add(chain_id)
-        target_unit_id, target_resolution, target_inference_basis = (
-            _resolve_chain_target_unit(role)
-        )
+        target_unit_id, target_resolution, target_inference_basis = _resolve_chain_target_unit(role)
         refs = _sequence_of_mappings(role.get("case_refs"))
         all_case_refs = _normalize_refs(
             role.get("case_refs")
             if all(not isinstance(item, Mapping) for item in role.get("case_refs", []))
-            else [
-                item.get("evidence_id") or item.get("case_id")
-                for item in refs
-            ]
+            else [item.get("evidence_id") or item.get("case_id") for item in refs]
         )
         market_outcome_case_refs = [
             case_id
@@ -1769,9 +1794,7 @@ def _compile_decision_chains(
             case_refs = design_intent_case_refs
         else:
             case_refs = list(all_case_refs)
-        excluded_case_refs = [
-            case_id for case_id in all_case_refs if case_id not in case_refs
-        ]
+        excluded_case_refs = [case_id for case_id in all_case_refs if case_id not in case_refs]
         case_mechanisms: list[str] = []
         for case_id in case_refs:
             case = case_lookup.get(case_id, {})
@@ -1800,11 +1823,7 @@ def _compile_decision_chains(
         evidence_refs = _normalize_refs(
             role.get("evidence_refs") or role.get("observed_evidence_refs")
         )
-        evidence_nodes = [
-            evidence_lookup[ref]
-            for ref in evidence_refs
-            if ref in evidence_lookup
-        ]
+        evidence_nodes = [evidence_lookup[ref] for ref in evidence_refs if ref in evidence_lookup]
         observed_evidence = _string_list(role.get("observed_evidence"))
         if not observed_evidence:
             observed_evidence = [
@@ -1816,9 +1835,7 @@ def _compile_decision_chains(
             ]
         if not observed_evidence:
             observed_evidence = _string_list(role.get("why"))
-        counter_evidence = _string_list(
-            role.get("counter_evidence") or role.get("conflicts")
-        )
+        counter_evidence = _string_list(role.get("counter_evidence") or role.get("conflicts"))
         if not counter_evidence:
             for node in evidence_nodes:
                 claim_type = _safe_text(node.get("claim_type")).lower()
@@ -1839,9 +1856,7 @@ def _compile_decision_chains(
             excluded_case_source_refs = {
                 source_ref
                 for case_id in excluded_case_refs
-                for source_ref in _normalize_refs(
-                    case_lookup.get(case_id, {}).get("source_refs")
-                )
+                for source_ref in _normalize_refs(case_lookup.get(case_id, {}).get("source_refs"))
             }
             included_case_source_refs = {
                 source_ref
@@ -1870,9 +1885,7 @@ def _compile_decision_chains(
         evidence_actionable = bool(confidence.get("evidence_actionable"))
         decision_eligible = bool(confidence.get("actionable"))
         chain_status = (
-            "partial"
-            if validation_gaps or human_review or not decision_eligible
-            else "ready"
+            "partial" if validation_gaps or human_review or not decision_eligible else "ready"
         )
         confidence["evidence_actionable"] = evidence_actionable
         confidence["actionable"] = chain_status == "ready"
@@ -1886,9 +1899,7 @@ def _compile_decision_chains(
                 "target_resolution": target_resolution,
                 "target_inference_basis": target_inference_basis,
                 "question": _safe_text(
-                    role.get("question")
-                    or role.get("decision_question")
-                    or role.get("role_label"),
+                    role.get("question") or role.get("decision_question") or role.get("role_label"),
                     role_id,
                 ),
                 "observed_evidence": observed_evidence,
@@ -1979,9 +1990,7 @@ def _compile_action_register(
                 "action": action,
                 "decision_refs": _normalize_refs(item.get("decision_refs")),
                 "case_refs": _normalize_refs(item.get("case_refs")),
-                "evidence_refs": _normalize_refs(
-                    item.get("evidence_refs") or item.get("gap_ref")
-                ),
+                "evidence_refs": _normalize_refs(item.get("evidence_refs") or item.get("gap_ref")),
                 "owner": owner,
                 "stage": _safe_text(item.get("stage"), "decision_hook"),
                 "trigger": _safe_text(item.get("trigger"), "条件触发"),
@@ -1989,9 +1998,7 @@ def _compile_action_register(
                     item.get("acceptance") or item.get("target"),
                     "动作完成并留存复核证据。",
                 ),
-                "fallback": _safe_text(
-                    item.get("fallback"), "未满足时暂停对应决策。"
-                ),
+                "fallback": _safe_text(item.get("fallback"), "未满足时暂停对应决策。"),
                 "source_refs": _normalize_refs(item.get("source_refs")),
                 "status": _safe_text(item.get("status"), "open"),
             }
@@ -2114,7 +2121,10 @@ def _module_takeaway(module_id: str, module: Mapping[str, Any]) -> str:
 def _module_title(module_id: str, module: Mapping[str, Any], fallback: str) -> str:
     if module_id == "macro" and str(module.get("status") or "") == "partial":
         return "宏观结构性分化与资料缺口"
-    if module_id == "competitor_series" and str(module.get("series_status") or "") == "snapshot_only":
+    if (
+        module_id == "competitor_series"
+        and str(module.get("series_status") or "") == "snapshot_only"
+    ):
         return "竞品价格锚点与时序缺口"
     return fallback
 
@@ -2204,7 +2214,9 @@ def _module_blocks(module_id: str, module: Mapping[str, Any]) -> list[dict[str, 
     return blocks
 
 
-def _module_appendix_pages(module_id: str, module: Mapping[str, Any], spec: Mapping[str, Any]) -> list[dict[str, Any]]:
+def _module_appendix_pages(
+    module_id: str, module: Mapping[str, Any], spec: Mapping[str, Any]
+) -> list[dict[str, Any]]:
     """Keep raw evidence tables available without letting them consume the deck."""
     pages: list[dict[str, Any]] = []
     for key in _TABLE_KEYS[module_id]:
@@ -2287,42 +2299,40 @@ def _framework_unit_ready(unit_id: str, module: Mapping[str, Any]) -> bool:
     if unit_id == "concept_options":
         return len(_sequence_of_mappings(module.get("options") or module.get("schemes"))) >= 3
     if unit_id == "recommended_scheme":
-        rejected = _string_list(
-            module.get("rejected_options") or module.get("eliminated_options")
-        )
-        return bool(
-            module.get("recommendation") or module.get("recommended_scheme")
-        ) and len(rejected) >= 2 and bool(module.get("decision_gate")) and bool(
-            module.get("fallback") or module.get("fallback_scheme")
+        rejected = _string_list(module.get("rejected_options") or module.get("eliminated_options"))
+        return (
+            bool(module.get("recommendation") or module.get("recommended_scheme"))
+            and len(rejected) >= 2
+            and bool(module.get("decision_gate"))
+            and bool(module.get("fallback") or module.get("fallback_scheme"))
         )
     if unit_id == "architecture_design":
         required = bool(module.get("masterplan")) and bool(
             module.get("unit_plan") or module.get("unit_strategy")
         )
         expression = sum(
-            bool(module.get(key))
-            for key in ("facade", "landscape", "clubhouse", "demo_zone")
+            bool(module.get(key)) for key in ("facade", "landscape", "clubhouse", "demo_zone")
         )
         return required and expression >= 2
     if unit_id == "design_value_premium":
         upstream = set(_normalize_refs(module.get("upstream_refs")))
-        return {"SC2", "AD2", "AD3", "AD4"}.issubset(upstream) and bool(
-            module.get("design_actions")
-        ) and bool(module.get("value_mechanisms")) and bool(
-            module.get("investment_tiers") or module.get("incremental_costs")
+        return (
+            {"SC2", "AD2", "AD3", "AD4"}.issubset(upstream)
+            and bool(module.get("design_actions"))
+            and bool(module.get("value_mechanisms"))
+            and bool(module.get("investment_tiers") or module.get("incremental_costs"))
         )
     if unit_id == "confidence_state":
-        return bool(module.get("source_refs") or module.get("source_registry")) and bool(
-            module.get("methods") or module.get("method_registry")
-        ) and bool(module.get("assumptions")) and bool(
-            module.get("confidence") or module.get("claim_states")
+        return (
+            bool(module.get("source_refs") or module.get("source_registry"))
+            and bool(module.get("methods") or module.get("method_registry"))
+            and bool(module.get("assumptions"))
+            and bool(module.get("confidence") or module.get("claim_states"))
         )
     return False
 
 
-def _framework_unit_contract_snapshot(
-    unit_id: str, module: Mapping[str, Any]
-) -> dict[str, Any]:
+def _framework_unit_contract_snapshot(unit_id: str, module: Mapping[str, Any]) -> dict[str, Any]:
     """Expose the minimal fields needed to independently re-check readiness."""
     if unit_id == "concept_options":
         return {
@@ -2336,9 +2346,7 @@ def _framework_unit_contract_snapshot(
                 module.get("recommendation") or module.get("recommended_scheme")
             ),
             "rejected_options_count": len(
-                _string_list(
-                    module.get("rejected_options") or module.get("eliminated_options")
-                )
+                _string_list(module.get("rejected_options") or module.get("eliminated_options"))
             ),
             "decision_gate": bool(module.get("decision_gate")),
             "fallback": bool(module.get("fallback") or module.get("fallback_scheme")),
@@ -2348,8 +2356,7 @@ def _framework_unit_contract_snapshot(
             "masterplan": bool(module.get("masterplan")),
             "unit_plan": bool(module.get("unit_plan") or module.get("unit_strategy")),
             "expression_count": sum(
-                bool(module.get(key))
-                for key in ("facade", "landscape", "clubhouse", "demo_zone")
+                bool(module.get(key)) for key in ("facade", "landscape", "clubhouse", "demo_zone")
             ),
         }
     if unit_id == "design_value_premium":
@@ -2357,9 +2364,7 @@ def _framework_unit_contract_snapshot(
             "upstream_refs": _normalize_refs(module.get("upstream_refs")),
             "design_actions": bool(module.get("design_actions")),
             "value_mechanisms": bool(module.get("value_mechanisms")),
-            "investment": bool(
-                module.get("investment_tiers") or module.get("incremental_costs")
-            ),
+            "investment": bool(module.get("investment_tiers") or module.get("incremental_costs")),
         }
     if unit_id == "confidence_state":
         return {
@@ -2383,8 +2388,10 @@ def _framework_input_pages(report: Mapping[str, Any]) -> list[dict[str, Any]]:
         ready = _framework_unit_ready(spec["id"], module)
         blocks = _block_candidates(module.get("blocks"))
         options = module.get("options") or module.get("schemes")
-        if not blocks and isinstance(options, Sequence) and not isinstance(
-            options, (str, bytes, bytearray)
+        if (
+            not blocks
+            and isinstance(options, Sequence)
+            and not isinstance(options, (str, bytes, bytearray))
         ):
             table = _table_from_items("方案1／2／3", options)
             if table:
@@ -2415,7 +2422,9 @@ def _framework_input_pages(report: Mapping[str, Any]) -> list[dict[str, Any]]:
                 "section_id": spec["section_id"],
                 "unit_role": spec["id"],
                 "unit_contract": _framework_unit_contract_snapshot(spec["id"], module),
-                "unit_status": "ready" if ready else ("blocked" if status == "blocked" else "partial"),
+                "unit_status": "ready"
+                if ready
+                else ("blocked" if status == "blocked" else "partial"),
                 "unit_contract_validated": ready,
                 "layout": _safe_text(module.get("layout"), "module_summary"),
                 "title": _safe_text(module.get("title"), spec["title"]),
@@ -2472,9 +2481,7 @@ def _knowledge_pages(
                         "type": "reasoning_chain",
                         "target_unit_id": _safe_text(chain.get("target_unit_id"), "SC1"),
                         "target_resolution": _safe_text(chain.get("target_resolution")),
-                        "target_inference_basis": _safe_text(
-                            chain.get("target_inference_basis")
-                        ),
+                        "target_inference_basis": _safe_text(chain.get("target_inference_basis")),
                         "question": _safe_text(chain.get("question")),
                         "observed_evidence": _safe_copy(chain.get("observed_evidence") or []),
                         "counter_evidence": _safe_copy(chain.get("counter_evidence") or []),
@@ -2495,9 +2502,7 @@ def _knowledge_pages(
                         "design_intent_case_refs": _safe_copy(
                             chain.get("design_intent_case_refs") or []
                         ),
-                        "excluded_case_refs": _safe_copy(
-                            chain.get("excluded_case_refs") or []
-                        ),
+                        "excluded_case_refs": _safe_copy(chain.get("excluded_case_refs") or []),
                         "evidence_refs": _safe_copy(chain.get("evidence_refs") or []),
                     }
                 ],
@@ -2533,12 +2538,8 @@ def _knowledge_pages(
                 "outcome_claim": _safe_text(case.get("outcome_claim")),
                 "outcome_period": _safe_text(case.get("outcome_period")),
                 "outcome_metrics": _safe_copy(case.get("outcome_metrics") or []),
-                "outcome_source_refs": _normalize_refs(
-                    case.get("outcome_source_refs")
-                ),
-                "outcome_boundary_note": _safe_text(
-                    case.get("outcome_boundary_note")
-                ),
+                "outcome_source_refs": _normalize_refs(case.get("outcome_source_refs")),
+                "outcome_boundary_note": _safe_text(case.get("outcome_boundary_note")),
                 "decision_eligibility": _safe_text(case.get("decision_eligibility")),
             }
         ]
@@ -2604,9 +2605,7 @@ def _knowledge_pages(
                 "confidence_note": _safe_text(case.get("confidence_note")),
                 "why_selected": _safe_text(case.get("why_selected")),
                 "mechanism": _safe_text(case.get("mechanism")),
-                "matched_project_features": _safe_copy(
-                    case.get("matched_project_features") or []
-                ),
+                "matched_project_features": _safe_copy(case.get("matched_project_features") or []),
                 "transfer_actions": _safe_copy(transfer_actions),
                 "transfer_conditions": _safe_copy(case.get("transfer_conditions") or []),
                 "conflicts": _safe_copy(case.get("conflicts") or []),
@@ -2617,8 +2616,7 @@ def _knowledge_pages(
                 "decision_eligibility": _safe_text(case.get("decision_eligibility")),
                 "asset_ref": (
                     str(case.get("asset_refs", [""])[0])
-                    if isinstance(case.get("asset_refs"), Sequence)
-                    and case.get("asset_refs")
+                    if isinstance(case.get("asset_refs"), Sequence) and case.get("asset_refs")
                     else ""
                 ),
             }
@@ -2955,9 +2953,7 @@ def _normalize_diagram_specs(
 ) -> list[dict[str, Any]]:
     if isinstance(value, Mapping):
         candidates = [value]
-    elif isinstance(value, Sequence) and not isinstance(
-        value, (str, bytes, bytearray)
-    ):
+    elif isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
         candidates = list(value)
     else:
         candidates = []
@@ -3091,7 +3087,7 @@ def _normalize_page(page: Mapping[str, Any], fallback_index: int) -> dict[str, A
         )
     )
 
-    return {
+    normalized_page = {
         "page_id": page_id,
         "chapter_id": chapter_id,
         "source_chapter_id": chapter_id,
@@ -3118,12 +3114,8 @@ def _normalize_page(page: Mapping[str, Any], fallback_index: int) -> dict[str, A
         "display_code": _safe_text(page.get("display_code") or page.get("page_code")),
         "layout": layout,
         "title": full_title,
-        "display_title": _compact_display_title(
-            full_title, page.get("display_title")
-        ),
-        "takeaway": _safe_text(
-            page.get("takeaway"), "本页结论需与来源和置信度同时阅读。"
-        ),
+        "display_title": _compact_display_title(full_title, page.get("display_title")),
+        "takeaway": _safe_text(page.get("takeaway"), "本页结论需与来源和置信度同时阅读。"),
         "decision_question": _safe_text(page.get("decision_question"), full_title),
         "decision_impact": _safe_text(page.get("decision_impact")),
         "observed_evidence_refs": _normalize_refs(page.get("observed_evidence_refs")),
@@ -3147,6 +3139,12 @@ def _normalize_page(page: Mapping[str, Any], fallback_index: int) -> dict[str, A
         "visual_evidence": _safe_text(page.get("visual_evidence"), "text"),
         "visual_language": visual_language,
     }
+    value_errors = page_value_errors(normalized_page)
+    normalized_page["value_gate"] = {
+        "status": "failed" if value_errors else "passed",
+        "errors": value_errors,
+    }
+    return normalized_page
 
 
 def _slug(value: Any) -> str:
@@ -3186,9 +3184,7 @@ def _deduplicate_pages(pages: Sequence[Mapping[str, Any]]) -> list[dict[str, Any
             "diagram_specs": page.get("diagram_specs"),
         }
         signature = hashlib.sha256(
-            json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str).encode(
-                "utf-8"
-            )
+            json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")
         ).hexdigest()
         position = seen.get(signature)
         if position is None:
@@ -3260,18 +3256,12 @@ def compile_page_manifest(
             raw_pages = [report_or_pages]
         else:
             resolved_modules = dict(modules or _extract_modules(report_or_pages))
-            case_evidence, archlib_cases, _asset_registry = _compile_case_evidence(
-                report_or_pages
-            )
+            case_evidence, archlib_cases, _asset_registry = _compile_case_evidence(report_or_pages)
             market_outcome_cases = [
-                case
-                for case in case_evidence
-                if str(case.get("case_role")) == "market_outcome"
+                case for case in case_evidence if str(case.get("case_role")) == "market_outcome"
             ]
             design_intent_cases = [
-                case
-                for case in case_evidence
-                if str(case.get("case_role")) == "design_intent"
+                case for case in case_evidence if str(case.get("case_role")) == "design_intent"
             ]
             gaps = _knowledge_gaps(report_or_pages)
             chains = _compile_decision_chains(report_or_pages, case_evidence, gaps)
@@ -3287,9 +3277,7 @@ def compile_page_manifest(
                 open_questions,
                 gaps,
             )
-            raw_pages = _compose_report_pages(
-                _module_pages(resolved_modules), knowledge
-            )
+            raw_pages = _compose_report_pages(_module_pages(resolved_modules), knowledge)
             raw_pages.extend(_framework_input_pages(report_or_pages))
             custom = report_or_pages.get("pages") or report_or_pages.get("page_manifest") or []
             if isinstance(custom, Mapping):
@@ -3472,7 +3460,10 @@ def _compile_evidence_graph(
                     "needs_human_review": page["confidence"].get("score", 0) < 0.55,
                 }
             )
-    def add_node(node_id: str, node_type: str, claim: str, source_refs: Any, confidence: Any) -> None:
+
+    def add_node(
+        node_id: str, node_type: str, claim: str, source_refs: Any, confidence: Any
+    ) -> None:
         if not node_id or node_id in seen:
             return
         seen.add(node_id)
@@ -3582,12 +3573,30 @@ def _meta(report: Mapping[str, Any]) -> dict[str, Any]:
     return meta
 
 
+def _selected_intervention_mode(report: Mapping[str, Any]) -> int | None:
+    supplied = report.get("meta") if isinstance(report.get("meta"), Mapping) else {}
+    profile = (
+        supplied.get("analysis_profile")
+        if isinstance(supplied.get("analysis_profile"), Mapping)
+        else report.get("analysis_profile")
+    )
+    if not isinstance(profile, Mapping):
+        return None
+    try:
+        selected_mode = int(profile.get("selected_mode"))
+    except (TypeError, ValueError):
+        return None
+    return selected_mode if selected_mode in {1, 2, 3} else None
+
+
 def _compile_unit_data(
     manifest: Sequence[Mapping[str, Any]],
     qa: Mapping[str, Any],
+    *,
+    selected_mode: int | None = None,
 ) -> list[dict[str, Any]]:
     """Summarize the twelve report units without renaming evidence modules."""
-    contract = framework_manifest()
+    contract = framework_manifest(selected_mode)
     readiness = qa.get("unit_readiness") if isinstance(qa, Mapping) else {}
     if not isinstance(readiness, Mapping):
         readiness = {}
@@ -3665,8 +3674,7 @@ def _case_role_contract_valid(case: Mapping[str, Any]) -> bool:
             in {"positive", "negative", "mixed", "neutral", "unknown"}
             and isinstance(case.get("outcome_metrics"), list)
             and isinstance(case.get("outcome_source_refs"), list)
-            and case.get("decision_eligibility")
-            in {"market_outcome_evidence", "evidence_gap_only"}
+            and case.get("decision_eligibility") in {"market_outcome_evidence", "evidence_gap_only"}
         )
         if str(case.get("status") or "") != "ready":
             return structurally_valid
@@ -3719,7 +3727,22 @@ def _qa(
     first_appendix = min(appendix_positions) if appendix_positions else len(manifest)
     section_ids = [str(page.get("section_id") or "") for page in manifest]
     page_codes = [str(page.get("page_code") or "") for page in manifest]
-    section_positions = [SECTION_ORDER.get(section_id, len(SECTION_ORDER)) for section_id in section_ids]
+    section_positions = [
+        SECTION_ORDER.get(section_id, len(SECTION_ORDER)) for section_id in section_ids
+    ]
+    page_value_failures = []
+    for page in manifest:
+        errors = page_value_errors(page)
+        if errors:
+            page_value_failures.append(
+                {
+                    "page_id": str(page.get("page_id") or ""),
+                    "unit_id": str(
+                        page.get("unit_id") or page.get("section_id") or ""
+                    ),
+                    "errors": errors,
+                }
+            )
     unit_readiness: dict[str, str] = {}
     for unit_id in VALID_SECTION_IDS:
         unit_pages = [
@@ -3728,16 +3751,13 @@ def _qa(
             if str(page.get("unit_id") or page.get("section_id") or "") == unit_id
             and str(page.get("unit_role") or "") not in _SUPPORTING_UNIT_ROLES
         ]
-        statuses = {
-            str(page.get("unit_status") or "partial").lower() for page in unit_pages
-        }
+        statuses = {str(page.get("unit_status") or "partial").lower() for page in unit_pages}
         has_gap = any(
             page.get("chapter_id") == "framework_gap"
             or page.get("layout") == "gap"
             or status in {"missing", "not_assessable", "not_available"}
             for page, status in (
-                (page, str(page.get("unit_status") or "partial").lower())
-                for page in unit_pages
+                (page, str(page.get("unit_status") or "partial").lower()) for page in unit_pages
             )
         )
         if "blocked" in statuses:
@@ -3774,16 +3794,16 @@ def _qa(
         ),
         "table_rows_bounded": all(count <= TABLE_ROWS_PER_PAGE for count in table_row_counts),
         "no_opaque_payload_pages": all(not _is_raw_page(page) for page in manifest),
+        "page_value_gate_passed": not page_value_failures,
         # An authoritative PageManifest may deliberately distil multiple
         # evidence modules into one decision page. Requiring one visible page
         # per raw module would re-introduce the repetitive report this mode is
         # designed to avoid; the twelve SC/AD/VA/CS units remain mandatory.
-        "required_chapters_present": authoritative_manifest or {
-            spec["id"] for spec in MODULE_SPECS
-        }.issubset({str(page["chapter_id"]) for page in manifest}),
-        "required_framework_units_present": set(required).issubset(
-            set(section_ids)
+        "required_chapters_present": authoritative_manifest
+        or {spec["id"] for spec in MODULE_SPECS}.issubset(
+            {str(page["chapter_id"]) for page in manifest}
         ),
+        "required_framework_units_present": set(required).issubset(set(section_ids)),
         "framework_order_valid": section_positions == sorted(section_positions),
         "framework_metadata_complete": all(
             page.get("framework_version") == FRAMEWORK_VERSION
@@ -3830,14 +3850,10 @@ def _qa(
             if isinstance(diagram, Mapping)
         ),
         "presentation_before_appendix": all(
-            page.get("story_role") == "evidence_appendix"
-            for page in manifest[first_appendix:]
+            page.get("story_role") == "evidence_appendix" for page in manifest[first_appendix:]
         ),
-        "knowledge_chain_fields_valid": len(structurally_complete_chains)
-        == len(decision_chains),
-        "case_roles_partitioned": all(
-            _case_role_contract_valid(case) for case in case_evidence
-        ),
+        "knowledge_chain_fields_valid": len(structurally_complete_chains) == len(decision_chains),
+        "case_roles_partitioned": all(_case_role_contract_valid(case) for case in case_evidence),
         "archlib_case_fields_valid": all(
             bool(case.get("case_id"))
             and bool(case.get("mechanism"))
@@ -3878,15 +3894,9 @@ def _qa(
         if decision_chains
         else 0.0
     )
-    closure_rate = (
-        round(len(complete_chains) / len(decision_chains), 4)
-        if decision_chains
-        else 0.0
-    )
+    closure_rate = round(len(complete_chains) / len(decision_chains), 4) if decision_chains else 0.0
     structural_passed = all(checks.values())
-    missing_required_units = [
-        unit for unit in required if unit_readiness.get(unit) == "missing"
-    ]
+    missing_required_units = [unit for unit in required if unit_readiness.get(unit) == "missing"]
     decision_ready = structural_passed and all(
         unit_readiness.get(unit) == "ready" for unit in required
     )
@@ -3900,6 +3910,7 @@ def _qa(
         "presentation_page_count": first_appendix,
         "evidence_appendix_page_count": len(appendix_positions),
         "missing_modules": missing_modules,
+        "page_value_failures": page_value_failures,
         "framework_gap_units": sorted(
             {
                 str(page.get("section_id"))
@@ -3924,14 +3935,10 @@ def _qa(
         "knowledge_closure": {
             "decision_chain_count": len(decision_chains),
             "market_outcome_case_count": sum(
-                1
-                for case in case_evidence
-                if str(case.get("case_role")) == "market_outcome"
+                1 for case in case_evidence if str(case.get("case_role")) == "market_outcome"
             ),
             "design_intent_case_count": sum(
-                1
-                for case in case_evidence
-                if str(case.get("case_role")) == "design_intent"
+                1 for case in case_evidence if str(case.get("case_role")) == "design_intent"
             ),
             "archlib_case_count": len(archlib_cases),
             "action_count": len(actions),
@@ -3950,6 +3957,8 @@ def build_report_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(report_json, Mapping):
         raise TypeError("report_json must be a mapping")
     report = dict(report_json)
+    selected_mode = _selected_intervention_mode(report)
+    report_framework = framework_manifest(selected_mode)
     modules = _extract_modules(report)
     case_evidence, archlib_cases, asset_registry = _compile_case_evidence(report)
     declared_assets = report.get("asset_registry")
@@ -3975,27 +3984,19 @@ def build_report_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
             asset_registry.append(safe)
             seen_asset_ids.add(asset_id)
     market_outcome_cases = [
-        case
-        for case in case_evidence
-        if str(case.get("case_role")) == "market_outcome"
+        case for case in case_evidence if str(case.get("case_role")) == "market_outcome"
     ]
     design_intent_cases = [
-        case
-        for case in case_evidence
-        if str(case.get("case_role")) == "design_intent"
+        case for case in case_evidence if str(case.get("case_role")) == "design_intent"
     ]
     evidence_gaps = _knowledge_gaps(report)
-    decision_chains = _compile_decision_chains(
-        report, case_evidence, evidence_gaps
-    )
+    decision_chains = _compile_decision_chains(report, case_evidence, evidence_gaps)
     action_register = _compile_action_register(report, decision_chains)
     assumptions = _compile_audit_list(report, "assumptions")
     open_questions = _compile_audit_list(report, "open_questions")
     panorama = _safe_copy(report.get("project_panorama") or {})
     required_units = (
-        list(panorama.get("required_units") or [])
-        if isinstance(panorama, Mapping)
-        else []
+        list(panorama.get("required_units") or []) if isinstance(panorama, Mapping) else []
     )
     included_units = (
         list(panorama.get("included_units") or required_units)
@@ -4022,6 +4023,25 @@ def build_report_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
             included_units=included_units,
         )
         manifest = adaptive["pages"]
+    if selected_mode == 2:
+        input_2_ad_label = next(
+            (
+                str(group.get("label") or "")
+                for group in report_framework["groups"]
+                if group.get("group_id") == "AD"
+            ),
+            "",
+        )
+        if input_2_ad_label:
+            manifest = [
+                {
+                    **page,
+                    "section_group_label": input_2_ad_label,
+                }
+                if str(page.get("group_id") or page.get("section_group")) == "AD"
+                else page
+                for page in manifest
+            ]
     source_registry = _compile_source_registry(report)
     registered_source_ids = {
         str(item.get("source_id"))
@@ -4051,7 +4071,11 @@ def build_report_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
         actions=action_register,
         required_units=required_units or VALID_SECTION_IDS,
     )
-    unit_data = _compile_unit_data(manifest, qa)
+    unit_data = _compile_unit_data(
+        manifest,
+        qa,
+        selected_mode=selected_mode,
+    )
     macro_context = _safe_copy(report.get("macro_context") or modules["macro"])
     social_intelligence = _safe_copy(
         report.get("social_intelligence") or modules["social_intelligence"]
@@ -4071,23 +4095,20 @@ def build_report_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
         "diagram_contract_version": DIAGRAM_CONTRACT_VERSION,
         "template_id": TEMPLATE_ID,
         "template_profile_version": TEMPLATE_PROFILE_VERSION,
-        "report_framework": framework_manifest(),
+        "report_framework": report_framework,
         "project_panorama": panorama,
         "unit_data": unit_data,
         "meta": _meta(report),
         "project": _project(report),
         "macro_context": macro_context,
         "social_intelligence": social_intelligence,
-        "professional_intelligence": _safe_copy(
-            report.get("professional_intelligence") or {}
-        ),
+        "professional_intelligence": _safe_copy(report.get("professional_intelligence") or {}),
         "persona_evidence_profiles": _safe_copy(persona_profiles),
         "synthetic_personas": _safe_copy(
             report.get("synthetic_personas") or modules["synthetic_personas"]
         ),
         "traditional_spatial_culture": _safe_copy(
-            report.get("traditional_spatial_culture")
-            or modules["traditional_spatial_culture"]
+            report.get("traditional_spatial_culture") or modules["traditional_spatial_culture"]
         ),
         "competitor_series": _safe_copy(
             report.get("competitor_series") or modules["competitor_series"]
@@ -4098,15 +4119,11 @@ def build_report_document(report_json: Mapping[str, Any]) -> dict[str, Any]:
         "absorption_forecast": _safe_copy(
             report.get("absorption_forecast") or modules["absorption_forecast"]
         ),
-        "investment_case": _safe_copy(
-            report.get("investment_case") or modules["investment_case"]
-        ),
+        "investment_case": _safe_copy(report.get("investment_case") or modules["investment_case"]),
         "concept_options": _safe_copy(report.get("concept_options") or {}),
         "recommended_scheme": _safe_copy(report.get("recommended_scheme") or {}),
         "architecture_design": _safe_copy(report.get("architecture_design") or {}),
-        "design_value_premium": _safe_copy(
-            report.get("design_value_premium") or {}
-        ),
+        "design_value_premium": _safe_copy(report.get("design_value_premium") or {}),
         "confidence_state": _safe_copy(report.get("confidence_state") or {}),
         "decision_chains": _safe_copy(decision_chains),
         "case_evidence": _safe_copy(case_evidence),

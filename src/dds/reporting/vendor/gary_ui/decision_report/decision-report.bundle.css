@@ -1,0 +1,493 @@
+.gary-decision-report {
+  --gary-text-primary: rgba(255, 255, 255, 0.94);
+  --gary-text-secondary: rgba(255, 255, 255, 0.68);
+  --gary-text-tertiary: rgba(255, 255, 255, 0.48);
+  --gary-surface-page: #080808;
+  --gary-surface-sunken: rgba(0, 0, 0, 0.34);
+  --gary-glass-ultrathin: rgba(15, 15, 15, 0.18);
+  --gary-glass-regular: rgba(15, 15, 15, 0.30);
+  --gary-glass-thick: rgba(20, 20, 20, 0.42);
+  --gary-solid-plate: rgba(14, 14, 14, 0.86);
+  --gary-border-highlight: rgba(255, 255, 255, 0.18);
+  --gary-border-shadow: rgba(0, 0, 0, 0.42);
+  --gary-focus-ring: #2e8dff;
+  --gary-shadow-contact: 0 2px 5px rgba(0, 0, 0, 0.46);
+  --gary-shadow-environment: 0 28px 72px rgba(0, 0, 0, 0.38);
+  --gary-shadow-inset:
+    inset 0 1px 1px rgba(255, 255, 255, 0.24),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.30),
+    inset 0 0 30px rgba(255, 255, 255, 0.05);
+  --gary-radius-control: 18px;
+  --gary-radius-card: 28px;
+  --gary-radius-panel: 36px;
+  --gary-radius-pill: 999px;
+  --gary-duration-fast: 150ms;
+  --gary-duration-base: 250ms;
+  --gary-duration-slow: 350ms;
+  --gary-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --gary-font-sans:
+    "SF Pro SC", "PingFang SC", "Microsoft YaHei UI", "Noto Sans SC",
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --gary-font-weight-semibold: 650;
+  --gary-font-weight-bold: 720;
+  --gary-line-height-body: 1.68;
+  --gary-control-height: 44px;
+  --gary-scene-mask: rgba(8, 8, 10, 0.58);
+  --gary-glass-fill: var(--gary-glass-regular);
+  --gary-glass-blur: 24px;
+  --gary-decision-report-max: 1480px;
+  --gary-decision-report-primary: 840px;
+  --gary-decision-report-aside: 460px;
+  --gary-decision-report-accent: #77d7ee;
+
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--gary-text-primary);
+  background:
+    radial-gradient(circle at 18% 8%, #3d4143 0, #202224 32%, #101112 68%, #080809 100%);
+  font-family: var(--gary-font-sans);
+}
+
+.gary-decision-report,
+.gary-decision-report * {
+  box-sizing: border-box;
+}
+
+.gary-decision-report::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(7, 7, 8, 0.56), rgba(7, 7, 8, 0.76)),
+    var(--gary-scene-mask);
+  content: "";
+}
+
+.gary-decision-report button {
+  min-height: var(--gary-control-height);
+  color: inherit;
+  border: 0;
+  font: inherit;
+}
+
+.gary-decision-report button:focus-visible {
+  outline: 3px solid var(--gary-focus-ring);
+  outline-offset: 2px;
+}
+
+.gary-decision-report .gary-glass,
+.gary-decision-report .gary-web-bar {
+  position: relative;
+  border: 1px solid var(--gary-border-highlight);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.09), transparent 42%),
+    var(--gary-glass-fill);
+  box-shadow:
+    var(--gary-shadow-inset),
+    var(--gary-shadow-contact),
+    var(--gary-shadow-environment);
+  -webkit-backdrop-filter: blur(var(--gary-glass-blur)) saturate(108%);
+  backdrop-filter: blur(var(--gary-glass-blur)) saturate(108%);
+}
+
+.gary-decision-report .gary-ultrathin {
+  --gary-glass-fill: var(--gary-glass-ultrathin);
+  --gary-glass-blur: 16px;
+}
+
+.gary-decision-report .gary-regular {
+  --gary-glass-fill: var(--gary-glass-regular);
+  --gary-glass-blur: 24px;
+}
+
+.gary-decision-report .gary-thick {
+  --gary-glass-fill: var(--gary-glass-thick);
+  --gary-glass-blur: 32px;
+}
+
+.gary-decision-report .gary-solid-plate {
+  border: 1px solid color-mix(in srgb, var(--gary-border-highlight) 55%, transparent);
+  background: var(--gary-solid-plate);
+  box-shadow: var(--gary-shadow-contact);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.gary-decision-report__nav {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  z-index: 50;
+  width: min(calc(100vw - 32px), var(--gary-decision-report-max));
+  min-height: 58px;
+  padding: 7px 12px 7px 18px;
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+  align-items: center;
+  gap: 20px;
+  transform: translateX(-50%);
+}
+
+.gary-decision-report__brand {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: var(--gary-font-weight-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gary-decision-report__chapters,
+.gary-decision-report__mode-switch {
+  min-width: 0;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-radius: var(--gary-radius-control);
+  background: var(--gary-surface-sunken);
+}
+
+.gary-decision-report__chapters {
+  justify-self: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.gary-decision-report__chapters::-webkit-scrollbar {
+  display: none;
+}
+
+.gary-decision-report__actions {
+  min-width: 0;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gary-decision-report__nav button {
+  min-height: 36px;
+  padding: 0 13px;
+  border-radius: 15px;
+  color: var(--gary-text-tertiary);
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: var(--gary-font-weight-semibold);
+  transition:
+    color var(--gary-duration-fast) var(--gary-ease),
+    background-color var(--gary-duration-base) var(--gary-ease),
+    transform var(--gary-duration-base) var(--gary-ease);
+}
+
+.gary-decision-report__nav button:hover {
+  color: var(--gary-text-primary);
+  transform: translateY(-1px);
+}
+
+.gary-decision-report__nav button.is-active {
+  color: var(--gary-text-primary);
+  background: var(--gary-glass-thick);
+  box-shadow: inset 1px 1px 0 var(--gary-border-highlight), var(--gary-shadow-contact);
+}
+
+.gary-decision-report__deck {
+  width: min(calc(100vw - 32px), var(--gary-decision-report-max));
+  margin: 0 auto;
+  padding: 104px 0 100px;
+}
+
+.gary-decision-report__page {
+  min-height: max(760px, calc(100svh - 84px));
+  padding: 42px 0 70px;
+  display: grid;
+  grid-template-columns:
+    minmax(0, var(--gary-decision-report-primary))
+    minmax(440px, var(--gary-decision-report-aside));
+  grid-template-areas:
+    "primary decision"
+    "conclusion conclusion"
+    "footer footer";
+  justify-content: space-between;
+  align-items: center;
+  gap: 26px clamp(52px, 6vw, 100px);
+  scroll-margin-top: 94px;
+}
+
+.gary-decision-report__primary {
+  grid-area: primary;
+  min-width: 0;
+}
+
+.gary-decision-report__decision {
+  grid-area: decision;
+  min-width: 0;
+  padding: 28px;
+  border-radius: var(--gary-radius-panel);
+}
+
+.gary-decision-report__conclusion {
+  grid-area: conclusion;
+  min-width: 0;
+  padding: 17px 21px;
+  border-radius: 20px;
+}
+
+.gary-decision-report__footer {
+  grid-area: footer;
+  min-width: 0;
+  color: var(--gary-text-tertiary);
+  font-size: 0.75rem;
+}
+
+.gary-decision-report__sources {
+  position: fixed;
+  top: 18px;
+  right: 16px;
+  bottom: 18px;
+  z-index: 80;
+  width: min(460px, calc(100vw - 32px));
+  padding: 22px;
+  border-radius: var(--gary-radius-card);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(calc(100% + 32px));
+  transition:
+    transform var(--gary-duration-slow) var(--gary-ease),
+    opacity var(--gary-duration-base) var(--gary-ease);
+}
+
+.gary-decision-report__sources[hidden] {
+  display: block;
+  visibility: hidden;
+}
+
+.gary-decision-report__sources.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.gary-decision-report__sources > header {
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.gary-decision-report__sources h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.gary-decision-report__sources button {
+  width: var(--gary-control-height);
+  padding: 0;
+  border-radius: var(--gary-radius-control);
+  background: var(--gary-surface-sunken);
+  cursor: pointer;
+}
+
+.gary-decision-report__source-list {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+}
+
+.gary-decision-report[data-gary-report-mode="presentation"] {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__deck {
+  position: fixed;
+  top: 92px;
+  left: 50%;
+  width: min(calc(100vw - 32px), calc((100vh - 108px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--gary-border-highlight);
+  border-radius: 26px;
+  background: rgba(16, 16, 17, 0.30);
+  box-shadow: var(--gary-shadow-contact), var(--gary-shadow-environment);
+  transform: translateX(-50%);
+}
+
+.gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__page {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 26px 30px 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  align-items: stretch;
+  gap: 14px 24px;
+  overflow: hidden;
+}
+
+.gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__page[hidden] {
+  display: none;
+}
+
+.gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__decision {
+  min-height: 0;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__conclusion {
+  padding: 10px 14px;
+}
+
+@media (max-width: 1120px) {
+  .gary-decision-report__nav {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .gary-decision-report__chapters {
+    display: none;
+  }
+
+  .gary-decision-report__page {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "primary"
+      "decision"
+      "conclusion"
+      "footer";
+  }
+}
+
+@media (max-width: 720px) {
+  .gary-decision-report__nav {
+    top: 8px;
+    width: calc(100vw - 16px);
+    padding-left: 12px;
+  }
+
+  .gary-decision-report__actions > [data-gary-report-open-sources],
+  .gary-decision-report [data-gary-report-mode-target="presentation"] {
+    display: none;
+  }
+
+  .gary-decision-report__deck,
+  .gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__deck {
+    position: static;
+    width: calc(100vw - 24px);
+    aspect-ratio: auto;
+    margin: 0 auto;
+    padding: 82px 0 60px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .gary-decision-report[data-gary-report-mode="presentation"] {
+    height: auto;
+    overflow: visible;
+  }
+
+  .gary-decision-report__page,
+  .gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__page,
+  .gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__page[hidden] {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 26px 0 48px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "primary"
+      "decision"
+      "conclusion"
+      "footer";
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gary-decision-report *,
+  .gary-decision-report *::before,
+  .gary-decision-report *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .gary-decision-report .gary-glass,
+  .gary-decision-report .gary-web-bar {
+    background: var(--gary-solid-plate);
+  }
+}
+
+@media print {
+  @page {
+    size: 13.333in 7.5in;
+    margin: 0;
+  }
+
+  .gary-decision-report {
+    width: 13.333in;
+    min-width: 13.333in;
+    background: var(--gary-surface-page);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .gary-decision-report__nav,
+  .gary-decision-report__sources {
+    display: none !important;
+  }
+
+  .gary-decision-report__deck,
+  .gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__deck {
+    position: static;
+    width: 13.333in;
+    aspect-ratio: auto;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .gary-decision-report__page,
+  .gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__page,
+  .gary-decision-report[data-gary-report-mode="presentation"] .gary-decision-report__page[hidden] {
+    width: 13.333in;
+    height: 7.5in;
+    min-height: 7.5in;
+    padding: 0.28in 0.34in 0.18in;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 3.45in;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "primary decision"
+      "conclusion conclusion"
+      "footer footer";
+    gap: 0.13in 0.24in;
+    break-after: page;
+    page-break-after: always;
+    overflow: hidden;
+  }
+}

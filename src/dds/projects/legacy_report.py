@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 import json
 from pathlib import Path
+import re
 from typing import Any, Mapping, Sequence
 
 from dds.analysis_profile import resolve_intervention_profile
@@ -33,6 +34,53 @@ _SUPPORTED_DECISION_CHARTS = {
     "tornado",
     "waterfall",
 }
+_CHAPTER_PREVIEW_MARKER = """
+<style>
+  [data-dds-artifact="chapter-preview"] {
+    position: fixed;
+    right: 20px;
+    bottom: 18px;
+    z-index: 2147483647;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(15, 18, 22, 0.58);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.24);
+    color: rgba(255, 255, 255, 0.92);
+    font: 600 12px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.04em;
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+@media print {
+  [data-dds-artifact="chapter-preview"] {
+    display: none !important;
+  }
+  .print-page {
+    position: relative;
+  }
+  .print-page::after {
+    content: "章节工作稿 · 非正式交付";
+    position: absolute;
+    right: 14px;
+    bottom: 10px;
+    z-index: 2147483647;
+    padding: 4px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    background: rgba(15, 18, 22, 0.42);
+    color: rgba(255, 255, 255, 0.74);
+    font: 600 9px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.04em;
+  }
+}
+</style>
+<div
+  data-dds-artifact="chapter-preview"
+  role="status"
+  aria-label="章节工作稿，非正式交付"
+>章节工作稿 · 非正式交付</div>
+""".strip()
 
 
 def discover_v1_source_materials(source_root: Path) -> tuple[Path, ...]:
@@ -51,13 +99,47 @@ def discover_v1_source_materials(source_root: Path) -> tuple[Path, ...]:
     return tuple(sorted(selected))
 
 
+def _render_chapter_preview(frozen_package: Mapping[str, Any]) -> str:
+    rendered = render_frozen_package(frozen_package)
+    return rendered.replace(
+        "</body>",
+        f"{_CHAPTER_PREVIEW_MARKER}\n</body>",
+        1,
+    )
+
+
 def _source_admission(source: Mapping[str, Any]) -> tuple[str, list[str], list[str]]:
     source_type = str(source.get("source_type") or "")
-    if source_type == "official_web":
+    if source_type in {
+        "official_web",
+        "government_web",
+        "official_planning_document",
+    }:
         return (
             "qualified",
-            ["statutory_or_geographic_boundary"],
-            ["Only the cited geography, version, and effective date are supported."],
+            [
+                "statutory_or_geographic_boundary",
+                "public_project_status",
+                "public_planning_scale",
+                "future_demand_event",
+            ],
+            [
+                "Only the cited geography, version, status date, and published "
+                "scale are supported; residential conversion remains an inference."
+            ],
+        )
+    if source_type == "corporate_official":
+        return (
+            "qualified",
+            [
+                "company_project_status",
+                "company_operational_statement",
+                "future_demand_event",
+            ],
+            [
+                "A company statement cannot independently establish residential "
+                "demand, purchase power, or conversion."
+            ],
         )
     if source_type == "internal_case_library":
         return (
@@ -78,34 +160,109 @@ def _source_admission(source: Mapping[str, Any]) -> tuple[str, list[str], list[s
     )
 
 
+def _supplemental_registry(
+    sources: Sequence[Mapping[str, Any]],
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+    registry: list[dict[str, Any]] = []
+    snapshots: dict[str, dict[str, Any]] = {}
+    for raw in sources:
+        item = deepcopy(dict(raw))
+        source_id = str(item.get("source_id") or "").strip()
+        if not re.fullmatch(r"[A-Za-z0-9_-]+", source_id):
+            raise ValueError("supplemental source_id must be a portable identifier")
+        canonical_url = str(
+            item.get("canonical_url")
+            or item.get("url")
+            or item.get("canonical_ref")
+            or ""
+        ).strip()
+        if not canonical_url.startswith(("https://", "http://")):
+            raise ValueError(
+                f"supplemental source {source_id} requires an http(s) URL"
+            )
+        excerpt = str(
+            item.get("snapshot_excerpt")
+            or item.get("memo_excerpt")
+            or ""
+        ).strip()
+        if not excerpt:
+            raise ValueError(
+                f"supplemental source {source_id} requires a frozen excerpt"
+            )
+        snapshot = {
+            "source_id": source_id,
+            "title": str(item.get("title") or item.get("name") or source_id),
+            "publisher": str(item.get("publisher") or ""),
+            "canonical_url": canonical_url,
+            "published_at": str(item.get("published_at") or ""),
+            "captured_at": str(item.get("captured_at") or ""),
+            "snapshot_excerpt": excerpt,
+        }
+        snapshot_hash = sha256(
+            json.dumps(
+                snapshot,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        status, allowed_uses, policy_limitations = _source_admission(item)
+        item.update(
+            {
+                "source_id": source_id,
+                "name": snapshot["title"],
+                "canonical_url": canonical_url,
+                "canonical_ref": canonical_url,
+                "snapshot_ref": f"web-source-snapshots/{source_id}.json",
+                "snapshot_hash": snapshot_hash,
+                "sha256": snapshot_hash,
+                "memo_excerpt": excerpt,
+                "status": status,
+                "qualification_status": status,
+                "allowed_uses": allowed_uses,
+                "limitations": list(item.get("limitations") or [])
+                + policy_limitations,
+            }
+        )
+        item.pop("snapshot_excerpt", None)
+        snapshot["snapshot_hash"] = snapshot_hash
+        registry.append(item)
+        snapshots[source_id] = snapshot
+    return registry, snapshots
+
+
 def _asset_registry_item(asset: SourceAsset) -> dict[str, Any]:
-    status = (
-        "rejected"
-        if asset.extraction_status == "unsupported"
-        else "needs_review"
-        if asset.extraction_status != "extracted"
-        else "qualified"
-    )
-    allowed_uses = ["project_goal", "scheme_state", "project_constraint"]
-    if asset.original_name.lower().endswith(".pptx"):
-        allowed_uses = ["scheme_state", "design_expression"]
-    if asset.original_name.lower().endswith(".dwg"):
-        allowed_uses = []
+    if asset.extraction_status == "unsupported":
+        status = "rejected"
+        qualification_reasons = ["unsupported_material_format"]
+    else:
+        status = "needs_review"
+        qualification_reasons = (
+            ["evidence_admission_pending"]
+            if asset.extraction_status == "extracted"
+            else ["extraction_or_human_review_pending"]
+        )
     return {
         "source_id": asset.source_id,
         "name": asset.original_name,
         "source_type": "client_provided_material",
         "trust_tier": "project_input",
         "status": status,
+        "qualification_status": status,
+        "qualification_reasons": qualification_reasons,
         "canonical_ref": f"dds:project-asset/{asset.source_id}",
         "sha256": asset.sha256,
         "snapshot_ref": asset.snapshot_ref,
         "relative_source_path": asset.relative_source_path,
         "rights_status": asset.rights_status,
         "extraction_status": asset.extraction_status,
-        "allowed_uses": allowed_uses,
+        "allowed_uses": [],
         "limitations": list(asset.limitations)
-        + ["Client-provided material does not independently establish market facts."],
+        + [
+            "Client-provided material does not independently establish market facts.",
+            "Project identity and geography are unverified; the asset cannot "
+            "support decision fields until evidence admission is completed.",
+        ],
     }
 
 
@@ -240,10 +397,20 @@ class LegacyProjectReportMigrator:
         legacy_seed_path: Path,
         evidence_batch_path: Path,
         include_paths: Sequence[Path] | None = None,
+        page_manifest_override: Sequence[Mapping[str, Any]] | None = None,
+        supplemental_sources: Sequence[Mapping[str, Any]] | None = None,
+        supplemental_claims: Sequence[Mapping[str, Any]] | None = None,
     ) -> LegacyMigrationResult:
         if not bool(intervention_brief.get("confirmed_at")):
             raise ValueError("confirmed intervention brief is required")
         output = target_root.resolve()
+        legacy_report_path = output / "report.html"
+        archived_report_path = output / "invalid-legacy-report.html"
+        if legacy_report_path.exists() and archived_report_path.exists():
+            raise FileExistsError(
+                "cannot archive report.html because "
+                "invalid-legacy-report.html already exists"
+            )
         manifest = V1ProjectImporter().import_project(
             source_root,
             output / "source_snapshot",
@@ -269,16 +436,48 @@ class LegacyProjectReportMigrator:
         seed = json.loads(legacy_seed_path.read_text(encoding="utf-8"))
         batch = json.loads(evidence_batch_path.read_text(encoding="utf-8"))
         source_registry = _legacy_registry(batch, manifest)
+        supplemental_registry, supplemental_snapshots = _supplemental_registry(
+            supplemental_sources or ()
+        )
+        existing_source_ids = {
+            str(item.get("source_id") or "") for item in source_registry
+        }
+        duplicate_source_ids = existing_source_ids & set(supplemental_snapshots)
+        if duplicate_source_ids:
+            raise ValueError(
+                "supplemental source ids already exist: "
+                + ", ".join(sorted(duplicate_source_ids))
+            )
+        source_registry.extend(supplemental_registry)
         registry_by_id = {
             str(item["source_id"]): item for item in source_registry
         }
+        supplemental_claim_items = [
+            deepcopy(dict(item)) for item in supplemental_claims or ()
+        ]
+        unknown_claim_sources = {
+            str(source_ref)
+            for claim in supplemental_claim_items
+            for source_ref in claim.get("source_refs") or ()
+            if str(source_ref) not in registry_by_id
+        }
+        if unknown_claim_sources:
+            raise ValueError(
+                "supplemental claims reference unknown sources: "
+                + ", ".join(sorted(unknown_claim_sources))
+            )
         pages: list[dict[str, Any]] = []
-        for raw in seed.get("page_manifest") or []:
+        source_pages = (
+            page_manifest_override
+            if page_manifest_override is not None
+            else seed.get("page_manifest") or []
+        )
+        for raw in source_pages:
             page = deepcopy(dict(raw))
             section_id = str(page.get("section_id") or "")
             page["chapter_id"] = section_id.lower()
-            page["decision_question"] = _decision_question(section_id)
-            page["decision_impact"] = _decision_impact(section_id)
+            page.setdefault("decision_question", _decision_question(section_id))
+            page.setdefault("decision_impact", _decision_impact(section_id))
             page["confidence"] = _page_confidence(
                 page.get("source_refs") or [],
                 registry_by_id,
@@ -313,13 +512,16 @@ class LegacyProjectReportMigrator:
             "name": project_name,
         }
         decision_seed["project_panorama"] = {
-            "required_units": included,
+            "required_units": list(profile["required_units"]),
             "included_units": included,
             "intervention_required_units": profile["required_units"],
             "unit_policy": profile["unit_policy"],
         }
         decision_seed["page_manifest"] = pages
         decision_seed["source_registry"] = source_registry
+        decision_seed["claims"] = list(decision_seed.get("claims") or []) + (
+            supplemental_claim_items
+        )
         decision_seed["evidence_gaps"] = []
         frozen_package = build_frozen_package(
             decision_seed,
@@ -335,7 +537,8 @@ class LegacyProjectReportMigrator:
             "intervention_brief": brief,
             "project_manifest": manifest.to_dict(),
             "source_registry": decision_seed["source_registry"],
-            "claim_candidates": list(batch.get("candidates") or []),
+            "claim_candidates": list(batch.get("candidates") or [])
+            + supplemental_claim_items,
             "conflicts": [
                 item
                 for item in batch.get("candidates") or []
@@ -356,6 +559,20 @@ class LegacyProjectReportMigrator:
             },
         }
         output.mkdir(parents=True, exist_ok=True)
+        snapshot_root = output / "web-source-snapshots"
+        if supplemental_snapshots:
+            snapshot_root.mkdir(parents=True, exist_ok=True)
+        for source_id, snapshot in supplemental_snapshots.items():
+            (snapshot_root / f"{source_id}.json").write_text(
+                json.dumps(
+                    snapshot,
+                    ensure_ascii=False,
+                    indent=2,
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
         artifacts: dict[str, Any] = {
             "intervention-brief.json": brief,
             "decision-report-seed.json": decision_seed,
@@ -363,15 +580,21 @@ class LegacyProjectReportMigrator:
             "report-document.json": report_document,
             "evidence-workbook.json": evidence_workbook,
         }
+        if legacy_report_path.exists():
+            if archived_report_path.exists():
+                raise FileExistsError(
+                    "cannot archive report.html because "
+                    "invalid-legacy-report.html already exists"
+                )
+            legacy_report_path.rename(archived_report_path)
         for filename, payload in artifacts.items():
             (output / filename).write_text(
                 json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)
                 + "\n",
                 encoding="utf-8",
             )
-        (output / "report.html").write_text(
-            render_frozen_package(frozen_package),
-            encoding="utf-8",
+        (output / "chapter-preview.html").write_bytes(
+            _render_chapter_preview(frozen_package).encode("utf-8")
         )
         return LegacyMigrationResult(
             manifest=manifest,

@@ -43,6 +43,23 @@ def page_value_errors(page: Mapping[str, Any]) -> list[str]:
         errors.append("source_refs_missing")
     if not decision_impact:
         errors.append("decision_impact_or_action_missing")
+    if str(page.get("page_role") or "") == "future_customer_outlook":
+        chain = page.get("future_customer_chain")
+        if not isinstance(chain, Mapping):
+            errors.append("future_customer_chain_missing")
+        else:
+            for stage in ("event", "customer", "behavior", "product_action"):
+                value = chain.get(stage)
+                if (
+                    value is None
+                    or value == ""
+                    or (
+                        isinstance(value, Sequence)
+                        and not isinstance(value, (str, bytes))
+                        and not value
+                    )
+                ):
+                    errors.append(f"future_customer_{stage}_missing")
     return errors
 
 

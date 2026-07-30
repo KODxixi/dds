@@ -37,7 +37,14 @@ where = ["src"]
 include = ["dds*"]
 
 [tool.setuptools.package-data]
-"dds.reporting" = ["templates/*.html", "profiles/*.json"]
+"dds.reporting" = [
+    "templates/*.html",
+    "profiles/*.json",
+    "vendor/gary_ui/decision_report/*.html",
+    "vendor/gary_ui/decision_report/*.css",
+    "vendor/gary_ui/decision_report/*.js",
+    "vendor/gary_ui/decision_report/*.json",
+]
 "dds.web" = ["*.html"]
 
 [tool.pytest.ini_options]

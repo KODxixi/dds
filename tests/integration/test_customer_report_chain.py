@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import json
 
 import pytest
@@ -9,12 +10,14 @@ from dds.customer import (
     CustomerEvidenceLevel,
     CustomerIntelligenceBundle,
     CustomerSegment,
+    DemandDriverEvent,
+    FutureCustomerScenario,
     LocalPopulationPrior,
     PersonaExperimentResult,
     SyntheticCohortManifest,
 )
 from dds.domain import EvidenceRecord, EvidenceType, ProjectContext, ResolvedField
-from dds.reporting import render_frozen_package
+from dds.reporting import compile_frozen_package, render_frozen_package
 from dds.services import ReportService
 from dds.services.report_compiler_adapter import ReportCompilerAdapter
 
@@ -168,6 +171,104 @@ def bundle() -> CustomerIntelligenceBundle:
     )
 
 
+def future_evidence() -> list[EvidenceRecord]:
+    return [
+        EvidenceRecord(
+            evidence_id="e-headquarters-operating",
+            metric_id="SC2.future_demand_event_scan",
+            value={"status": "current_operation"},
+            evidence_type=EvidenceType.OBSERVED_FACT,
+            source_id="source-headquarters-operating",
+            source_ref="https://example.gov.cn/headquarters-operating",
+            source_hash="sha256:headquarters-operating",
+            as_of="2026-07-23",
+            geography="武汉/汉阳区",
+            method="government operation bulletin",
+        ),
+        EvidenceRecord(
+            evidence_id="e-headquarters-plan",
+            metric_id="SC2.future_demand_event_scan",
+            value={"status": "planned_capacity"},
+            evidence_type=EvidenceType.OBSERVED_FACT,
+            source_id="source-headquarters-plan",
+            source_ref="https://example.gov.cn/headquarters-plan",
+            source_hash="sha256:headquarters-plan",
+            as_of="2026-07-23",
+            geography="武汉/汉阳区",
+            method="statutory planning document",
+        ),
+        EvidenceRecord(
+            evidence_id="e-future-customer-model",
+            metric_id="AD3.customer_response",
+            value={"scenario": "headquarters-family-improver"},
+            evidence_type=EvidenceType.MODEL_SIMULATION,
+            source_id="source-future-customer-model",
+            source_ref="dds:model/future-customer",
+            source_hash="sha256:future-customer-model",
+            as_of="2026-07-23",
+            geography="武汉/汉阳区",
+            method="bounded future customer scenario",
+        ),
+    ]
+
+
+def future_event() -> DemandDriverEvent:
+    return DemandDriverEvent(
+        event_id="local-tech-headquarters",
+        label="本地科技总部投入运营",
+        event_type="major_employer_or_headquarters",
+        geography="武汉/汉阳区",
+        status="current_operation",
+        time_window="2026—2028",
+        observed_facts=(
+            "总部已投入运营并形成稳定通勤人口。",
+            "后续容量仍属于规划边界，不能视为当前人口。",
+        ),
+        evidence_refs=("e-headquarters-operating", "e-headquarters-plan"),
+        counter_factors=("园区宿舍与租赁住房会分流部分居住需求。",),
+        allowed_uses=("future_customer_scenario",),
+        prohibited_uses=("direct_buyer_count",),
+    )
+
+
+def future_scenario() -> FutureCustomerScenario:
+    return FutureCustomerScenario(
+        scenario_id="headquarters-family-improver",
+        event_ids=("local-tech-headquarters",),
+        segment_label="总部管理层与成家型核心员工",
+        time_horizon="0—3 年",
+        entry_trigger="总部稳定运营、家庭形成并产生改善需求",
+        housing_path="先租住或园区居住，家庭稳定后比较周边改善住宅",
+        behavior_changes=("通勤半径收窄", "更重视私密性与家庭配套"),
+        product_implications=("验证大户型总价", "强化归家私密性与会所效率"),
+        exit_conditions=("园区住房充分吸收需求", "总价超过客群承受上限"),
+        evidence_refs=("e-headquarters-operating", "e-future-customer-model"),
+        prohibited_uses=("headcount_or_conversion_rate_as_fact",),
+    )
+
+
+def future_bundle(*, include_scenario: bool = True) -> CustomerIntelligenceBundle:
+    current = bundle()
+    return replace(
+        current,
+        future_demand_scan_status="material_events_found",
+        demand_driver_events=(future_event(),),
+        future_customer_scenarios=(
+            (future_scenario(),) if include_scenario else ()
+        ),
+        evidence_refs=(
+            *current.evidence_refs,
+            "e-headquarters-operating",
+            "e-headquarters-plan",
+            *(
+                ("e-future-customer-model",)
+                if include_scenario
+                else ()
+            ),
+        ),
+    )
+
+
 def profile(level: int) -> dict:
     raw: dict[str, object] = {"address": "武汉市汉阳区测试路 1 号"}
     if level >= 2:
@@ -259,6 +360,187 @@ def test_customer_bundle_projects_to_each_input_profile(
     assert "transcript" not in html.lower()
 
 
+def test_customer_confidence_uses_evidence_level_not_intervention_mode() -> None:
+    scores_by_mode: dict[int, set[float]] = {}
+    for mode in (1, 2, 3):
+        run = ReportService().assemble(
+            run_id=f"customer-confidence-input-{mode}",
+            project_context=ProjectContext(
+                project_id=f"customer-confidence-{mode}",
+                project_name=f"Customer Confidence Input {mode}",
+                city="武汉",
+                district="汉阳区",
+                base_date="2026-07-23",
+            ),
+            evidence=evidence(),
+            analysis_profile=profile(mode),
+            customer_intelligence=bundle(),
+        )
+        pages = [
+            page
+            for page in ReportCompilerAdapter().build_report_seed(run)["page_manifest"]
+            if page["page_id"].endswith("-customer-intelligence")
+        ]
+        scores_by_mode[mode] = {
+            float(page["confidence"]["score"]) for page in pages
+        }
+
+    assert scores_by_mode == {
+        1: {0.65},
+        2: {0.65},
+        3: {0.65},
+    }
+
+
+def test_c1_customer_baseline_cannot_make_input_2_va3_or_cs_ready() -> None:
+    baseline = replace(
+        bundle(),
+        evidence_level=CustomerEvidenceLevel.LOCAL_BASELINE,
+        synthetic_cohort=None,
+        choice_simulation=None,
+        persona_experiment=None,
+        artifact_hashes=("sha256:baseline",),
+        allowed_uses=("product_direction",),
+    )
+    run = ReportService().assemble(
+        run_id="customer-c1-input-2",
+        project_context=ProjectContext(
+            project_id="customer-c1-input-2",
+            project_name="Customer C1 Input 2",
+            city="武汉",
+            district="汉阳区",
+            base_date="2026-07-23",
+        ),
+        evidence=evidence(),
+        analysis_profile=profile(2),
+        customer_intelligence=baseline,
+    )
+    adapter = ReportCompilerAdapter()
+    seed = adapter.build_report_seed(run)
+    customer_pages = [
+        page
+        for page in seed["page_manifest"]
+        if page.get("story_role") == "customer_intelligence"
+    ]
+    document = compile_frozen_package(adapter.build_frozen_compiler_package(run))
+    serialized = json.dumps(customer_pages, ensure_ascii=False, sort_keys=True)
+    data_gaps = run.sections["CS"].data["data_gaps"].value
+
+    assert not [
+        page for page in customer_pages if page["section_id"] == "VA3"
+    ]
+    assert all(
+        page["unit_role"] == "decision_chain_support"
+        for page in customer_pages
+    )
+    assert "证据等级 C1" in serialized
+    assert "当前为 C2 方案比较证据" not in serialized
+    assert data_gaps
+    assert all(
+        {
+            "section_id",
+            "field",
+            "status",
+            "reason",
+        }.issubset(item)
+        for item in data_gaps
+    )
+    assert {
+        (item["section_id"], item["field"])
+        for item in data_gaps
+    }.issuperset(
+        {
+            ("VA3", "risks"),
+            ("VA3", "owners"),
+            ("VA3", "triggers"),
+            ("VA3", "acceptance_criteria"),
+        }
+    )
+    assert document["qa"]["unit_readiness"]["VA3"] != "ready"
+    assert document["qa"]["unit_readiness"]["CS"] != "ready"
+    assert document["qa"]["delivery_ready"] is False
+
+
+def test_customer_model_pages_support_but_do_not_resolve_core_units() -> None:
+    run = ReportService().assemble(
+        run_id="customer-supporting-input-2",
+        project_context=ProjectContext(
+            project_id="customer-supporting-input-2",
+            project_name="Customer Supporting Input 2",
+            city="武汉",
+            district="汉阳区",
+            base_date="2026-07-23",
+        ),
+        evidence=evidence(),
+        analysis_profile=profile(2),
+        customer_intelligence=bundle(),
+    )
+    seed = ReportCompilerAdapter().build_report_seed(run)
+    pages = [
+        page
+        for page in seed["page_manifest"]
+        if page.get("story_role") == "customer_intelligence"
+    ]
+
+    assert pages
+    assert all(page["unit_role"] == "decision_chain_support" for page in pages)
+    assert {
+        page["section_id"]: page["unit_status"]
+        for page in pages
+        if page["section_id"] in {"AD3", "VA2", "VA3", "CS"}
+    } == {
+        "AD3": "partial",
+        "VA2": "partial",
+        "VA3": "partial",
+        "CS": "partial",
+    }
+
+
+def test_empty_persona_objections_do_not_create_va3_page() -> None:
+    customer_bundle = bundle()
+    empty_persona = replace(
+        customer_bundle.persona_experiment,
+        aggregate_results={
+            "first-home": {
+                "choice_reasons": ["通勤"],
+                "objections": [],
+                "triggers": ["  "],
+                "validation_questions": [],
+            },
+            "improver": {
+                "choice_reasons": ["三房"],
+                "objections": None,
+                "triggers": [],
+                "validation_questions": [""],
+            },
+        },
+    )
+    run = ReportService().assemble(
+        run_id="customer-empty-objections-input-2",
+        project_context=ProjectContext(
+            project_id="customer-empty-objections-input-2",
+            project_name="Customer Empty Objections Input 2",
+            city="武汉",
+            district="汉阳区",
+            base_date="2026-07-23",
+        ),
+        evidence=evidence(),
+        analysis_profile=profile(2),
+        customer_intelligence=replace(
+            customer_bundle,
+            persona_experiment=empty_persona,
+        ),
+    )
+    pages = ReportCompilerAdapter().build_report_seed(run)["page_manifest"]
+
+    assert not [
+        page
+        for page in pages
+        if page.get("story_role") == "customer_intelligence"
+        and page["section_id"] == "VA3"
+    ]
+
+
 def test_customer_segments_cannot_be_resolved_from_model_simulation() -> None:
     records = evidence()
     records[1].evidence_type = EvidenceType.MODEL_SIMULATION
@@ -275,3 +557,87 @@ def test_customer_segments_cannot_be_resolved_from_model_simulation() -> None:
             analysis_profile=profile(1),
             customer_intelligence=bundle(),
         )
+
+
+def test_future_demand_events_project_to_fact_and_behavior_action_pages() -> None:
+    run = ReportService().assemble(
+        run_id="future-customer-input-2",
+        project_context=ProjectContext(
+            project_id="future-customer-2",
+            project_name="Future Customer Input 2",
+            city="武汉",
+            district="汉阳区",
+            base_date="2026-07-23",
+        ),
+        evidence=[*evidence(), *future_evidence()],
+        analysis_profile=profile(2),
+        customer_intelligence=future_bundle(),
+    )
+
+    seed = ReportCompilerAdapter().build_report_seed(run)
+    pages = {page["page_id"]: page for page in seed["page_manifest"]}
+    event_page = pages["sc2-future-demand-events"]
+    assert event_page["page_role"] == "future_demand_event"
+    assert event_page["evidence_type"] == "observed_fact"
+    assert event_page["diagram_specs"][0]["diagram_type"] == "phasing"
+    assert "本地科技总部投入运营" in json.dumps(
+        event_page, ensure_ascii=False
+    )
+    assert "园区宿舍与租赁住房会分流" in json.dumps(
+        event_page, ensure_ascii=False
+    )
+
+    outlook_page = pages["sc2-future-customer-actions"]
+    assert outlook_page["page_role"] == "future_customer_outlook"
+    assert outlook_page["evidence_type"] == "model_simulation"
+    assert outlook_page["future_customer_chain"] == {
+        "event": ["本地科技总部投入运营"],
+        "customer": ["总部管理层与成家型核心员工"],
+        "behavior": ["通勤半径收窄", "更重视私密性与家庭配套"],
+        "product_action": ["验证大户型总价", "强化归家私密性与会所效率"],
+    }
+    serialized = json.dumps(outlook_page, ensure_ascii=False)
+    assert "先租住或园区居住" in serialized
+    assert "园区住房充分吸收需求" in serialized
+    assert "不得把园区人数或规划容量直接写成项目客户" in serialized
+
+
+def test_material_future_demand_event_without_scenario_is_blocked() -> None:
+    with pytest.raises(
+        ValueError,
+        match="material future demand events require future customer scenarios",
+    ):
+        ReportService().assemble(
+            run_id="future-customer-missing-scenario",
+            project_context=ProjectContext(
+                project_id="future-customer-missing-scenario",
+                city="武汉",
+                district="汉阳区",
+                base_date="2026-07-23",
+            ),
+            evidence=[*evidence(), *future_evidence()[:2]],
+            analysis_profile=profile(2),
+            customer_intelligence=future_bundle(include_scenario=False),
+        )
+
+
+def test_compiler_rejects_material_event_when_scenario_was_dropped() -> None:
+    run = ReportService().assemble(
+        run_id="future-customer-compiler-guard",
+        project_context=ProjectContext(
+            project_id="future-customer-compiler-guard",
+            city="武汉",
+            district="汉阳区",
+            base_date="2026-07-23",
+        ),
+        evidence=[*evidence(), *future_evidence()],
+        analysis_profile=profile(2),
+        customer_intelligence=future_bundle(),
+    )
+    run.metadata["customer_intelligence"]["future_customer_scenarios"] = []
+
+    with pytest.raises(
+        ValueError,
+        match="the event-to-customer chain cannot be omitted",
+    ):
+        ReportCompilerAdapter().build_report_seed(run)

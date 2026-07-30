@@ -44,3 +44,29 @@ def test_decision_report_omits_empty_gaps_but_keeps_explicit_gate():
     ]
     kept = decision_pages([missing], blocking_page_ids=("ad1-gap",))
     assert kept[0]["layout"] == "gap"
+
+
+def test_future_customer_page_requires_complete_decision_chain():
+    incomplete = _page(
+        page_role="future_customer_outlook",
+        future_customer_chain={
+            "event": ["企鹅岛一期投入运营"],
+            "customer": ["家庭化核心骨干"],
+            "behavior": ["园区公寓后进入改善置业"],
+            "product_action": [],
+        },
+    )
+    assert page_value_errors(incomplete) == [
+        "future_customer_product_action_missing"
+    ]
+
+    complete = _page(
+        page_role="future_customer_outlook",
+        future_customer_chain={
+            "event": ["企鹅岛一期投入运营"],
+            "customer": ["家庭化核心骨干"],
+            "behavior": ["园区公寓后进入改善置业"],
+            "product_action": ["验证总价、双人办公与门到门通勤"],
+        },
+    )
+    assert page_value_errors(complete) == []

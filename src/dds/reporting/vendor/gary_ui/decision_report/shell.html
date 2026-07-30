@@ -1,0 +1,68 @@
+<section
+  class="gary-decision-report gary-scene"
+  data-gary-recipe="decision-report"
+  data-gary-application-mode="scroll-report"
+  data-gary-page-mode="data-page"
+  data-gary-theme="dark"
+  data-gary-material="regular"
+  data-gary-density="balanced"
+  data-gary-report-mode="reading"
+>
+  <header
+    class="gary-decision-report__nav gary-web-bar gary-ultrathin"
+    aria-label="报告导航"
+  >
+    <div class="gary-decision-report__brand" data-gary-report-brand></div>
+    <nav
+      class="gary-decision-report__chapters"
+      data-gary-report-chapters
+      aria-label="报告章节"
+    ></nav>
+    <div class="gary-decision-report__actions">
+      <button
+        type="button"
+        data-gary-report-open-sources
+        aria-expanded="false"
+      >来源</button>
+      <div class="gary-decision-report__mode-switch" role="group" aria-label="查看方式">
+        <button
+          class="is-active"
+          type="button"
+          data-gary-report-mode-target="reading"
+          aria-pressed="true"
+        >阅读</button>
+        <button
+          type="button"
+          data-gary-report-mode-target="presentation"
+          aria-pressed="false"
+        >演示</button>
+      </div>
+    </div>
+  </header>
+
+  <main
+    class="gary-decision-report__deck"
+    data-gary-report-deck
+  ></main>
+
+  <aside
+    class="gary-decision-report__sources gary-glass gary-thick"
+    data-gary-report-sources
+    aria-hidden="true"
+    aria-labelledby="gary-decision-report-sources-title"
+    hidden
+  >
+    <header>
+      <h2 id="gary-decision-report-sources-title">来源索引</h2>
+      <button
+        type="button"
+        data-gary-report-close-sources
+        aria-label="关闭来源索引"
+      >×</button>
+    </header>
+    <div
+      class="gary-decision-report__source-list"
+      data-gary-report-source-list
+    ></div>
+  </aside>
+</section>

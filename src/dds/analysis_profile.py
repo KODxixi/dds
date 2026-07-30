@@ -104,22 +104,31 @@ def recommend_intervention_mode(
         str(item.get("filename") if isinstance(item, Mapping) else item).lower()
         for item in materials
     ]
-    if any(
-        name.endswith(".pptx")
-        or any(keyword in name for keyword in ("方案", "总图", "强排", "户配"))
-        for name in material_names
-    ):
-        return InterventionMode.INPUT_3, [
-            "scheme_material_detected_requires_comparability_review"
-        ]
     constraints = raw.get("constraint_sources") or raw.get("constraints") or []
     if isinstance(constraints, (list, tuple)) and constraints:
         return InterventionMode.INPUT_2, ["constraint_material_supplied"]
     if any(
-        any(keyword in name for keyword in ("规划", "任务书", "成本", "条件"))
+        any(
+            keyword in name
+            for keyword in (
+                "规划",
+                "任务书",
+                "成本",
+                "条件",
+                "招标",
+                "审查",
+                "红线",
+                "方案",
+                "总图",
+                "强排",
+                "户配",
+            )
+        )
         for name in material_names
     ):
-        return InterventionMode.INPUT_2, ["constraint_material_detected"]
+        return InterventionMode.INPUT_2, [
+            "project_material_detected_requires_constraint_collaboration"
+        ]
     return InterventionMode.INPUT_1, ["site_or_project_question_supplied"]
 
 
@@ -137,6 +146,11 @@ def _data_readiness(raw: Mapping[str, Any]) -> dict[str, str]:
     constraints = raw.get("constraint_sources") or raw.get("constraints") or []
     schemes = raw.get("schemes") or raw.get("scheme_inputs") or []
     materials = raw.get("materials") or raw.get("available_materials") or []
+    future_demand = (
+        raw.get("future_demand_sources")
+        or raw.get("future_demand_events")
+        or []
+    )
     return {
         "location": "ready" if _has_location(raw) else "missing",
         "constraints": "ready" if constraints else "missing",
@@ -148,6 +162,7 @@ def _data_readiness(raw: Mapping[str, Any]) -> dict[str, str]:
         "project_materials": "ready" if materials else "missing",
         "market_evidence": "not_assessed",
         "customer_evidence": "not_assessed",
+        "future_demand_evidence": "ready" if future_demand else "not_assessed",
         "cost_and_finance": "not_assessed",
     }
 

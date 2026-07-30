@@ -344,6 +344,91 @@ class PersonaExperimentResult:
 
 
 @dataclass(frozen=True, slots=True)
+class DemandDriverEvent:
+    """Observed future-facing event that may reshape local housing demand."""
+
+    event_id: str
+    label: str
+    event_type: str
+    geography: str
+    status: str
+    time_window: str
+    observed_facts: tuple[str, ...]
+    evidence_refs: tuple[str, ...]
+    counter_factors: tuple[str, ...]
+    allowed_uses: tuple[str, ...]
+    prohibited_uses: tuple[str, ...]
+    scale_metrics: Mapping[str, Any] | None = None
+    schema_version: str = "dds.demand-driver-event/1.0"
+
+    def __post_init__(self) -> None:
+        for value, name in (
+            (self.event_id, "event_id"),
+            (self.label, "label"),
+            (self.event_type, "event_type"),
+            (self.geography, "geography"),
+            (self.status, "status"),
+            (self.time_window, "time_window"),
+        ):
+            _text(value, name)
+        _strings(self.observed_facts, "observed_facts")
+        _strings(self.evidence_refs, "evidence_refs")
+        _strings(self.counter_factors, "counter_factors")
+        _strings(self.allowed_uses, "allowed_uses")
+        _strings(self.prohibited_uses, "prohibited_uses")
+        _assert_no_raw(self.scale_metrics or {}, "scale_metrics")
+
+    def to_dict(self) -> dict[str, Any]:
+        return _serialise(asdict(self))
+
+
+@dataclass(frozen=True, slots=True)
+class FutureCustomerScenario:
+    """Bounded behavioral scenario linked to one or more observed events."""
+
+    scenario_id: str
+    event_ids: tuple[str, ...]
+    segment_label: str
+    time_horizon: str
+    entry_trigger: str
+    housing_path: str
+    behavior_changes: tuple[str, ...]
+    product_implications: tuple[str, ...]
+    exit_conditions: tuple[str, ...]
+    evidence_refs: tuple[str, ...]
+    prohibited_uses: tuple[str, ...]
+    quantification_status: str = "not_calibrated"
+    evidence_type: str = "model_simulation"
+    schema_version: str = "dds.future-customer-scenario/1.0"
+
+    def __post_init__(self) -> None:
+        for value, name in (
+            (self.scenario_id, "scenario_id"),
+            (self.segment_label, "segment_label"),
+            (self.time_horizon, "time_horizon"),
+            (self.entry_trigger, "entry_trigger"),
+            (self.housing_path, "housing_path"),
+            (self.quantification_status, "quantification_status"),
+        ):
+            _text(value, name)
+        _strings(self.event_ids, "event_ids")
+        _strings(self.behavior_changes, "behavior_changes")
+        _strings(self.product_implications, "product_implications")
+        _strings(self.exit_conditions, "exit_conditions")
+        _strings(self.evidence_refs, "evidence_refs")
+        prohibited = set(_strings(self.prohibited_uses, "prohibited_uses"))
+        if "headcount_or_conversion_rate_as_fact" not in prohibited:
+            raise ValueError(
+                "future customer scenarios must forbid headcount or conversion rate as fact"
+            )
+        if self.evidence_type != "model_simulation":
+            raise ValueError("future customer scenarios must remain model_simulation")
+
+    def to_dict(self) -> dict[str, Any]:
+        return _serialise(asdict(self))
+
+
+@dataclass(frozen=True, slots=True)
 class CustomerIntelligenceBundle:
     bundle_id: str
     city: str
@@ -357,6 +442,9 @@ class CustomerIntelligenceBundle:
     rights_status: str
     allowed_uses: tuple[str, ...]
     prohibited_uses: tuple[str, ...]
+    future_demand_scan_status: str = "not_assessed"
+    demand_driver_events: tuple[DemandDriverEvent, ...] = ()
+    future_customer_scenarios: tuple[FutureCustomerScenario, ...] = ()
     synthetic_cohort: SyntheticCohortManifest | None = None
     choice_simulation: Mapping[str, Any] | None = None
     persona_experiment: PersonaExperimentResult | None = None
@@ -404,6 +492,34 @@ class CustomerIntelligenceBundle:
                 raise ValueError("C3 bundles require funnel_calibration")
         elif self.funnel_calibration is not None:
             raise ValueError("only C3 bundles may contain funnel_calibration")
+        if self.future_demand_scan_status not in {
+            "not_assessed",
+            "completed_no_material_event",
+            "material_events_found",
+        }:
+            raise ValueError("unknown future_demand_scan_status")
+        if (
+            self.future_demand_scan_status == "material_events_found"
+            and not self.demand_driver_events
+        ):
+            raise ValueError("material future demand scan requires at least one event")
+        if (
+            self.future_demand_scan_status != "material_events_found"
+            and self.demand_driver_events
+        ):
+            raise ValueError("future demand events require material_events_found status")
+        event_ids = {item.event_id for item in self.demand_driver_events}
+        unknown_event_ids = {
+            event_id
+            for scenario in self.future_customer_scenarios
+            for event_id in scenario.event_ids
+            if event_id not in event_ids
+        }
+        if unknown_event_ids:
+            raise ValueError(
+                "future customer scenarios reference unknown demand events: "
+                + ", ".join(sorted(unknown_event_ids))
+            )
         _assert_no_raw(self.to_dict(), "customer_intelligence")
 
     def to_dict(self) -> dict[str, Any]:
@@ -418,6 +534,13 @@ class CustomerIntelligenceBundle:
             "evidence_level_name": self.evidence_level.name.lower(),
             "local_population": self.local_population.to_dict(),
             "segments": [item.to_dict() for item in self.segments],
+            "future_demand_scan_status": self.future_demand_scan_status,
+            "demand_driver_events": [
+                item.to_dict() for item in self.demand_driver_events
+            ],
+            "future_customer_scenarios": [
+                item.to_dict() for item in self.future_customer_scenarios
+            ],
             "synthetic_cohort": (
                 self.synthetic_cohort.to_dict() if self.synthetic_cohort else None
             ),
@@ -498,12 +621,39 @@ def customer_intelligence_from_mapping(
             persona_values.get("evidence_refs") or ()
         )
         persona = PersonaExperimentResult(**persona_values)
+    event_items = []
+    for item in raw.pop("demand_driver_events", ()):
+        event_raw = dict(item)
+        for field_name in (
+            "observed_facts",
+            "evidence_refs",
+            "counter_factors",
+            "allowed_uses",
+            "prohibited_uses",
+        ):
+            event_raw[field_name] = tuple(event_raw.get(field_name) or ())
+        event_items.append(DemandDriverEvent(**event_raw))
+    scenario_items = []
+    for item in raw.pop("future_customer_scenarios", ()):
+        scenario_raw = dict(item)
+        for field_name in (
+            "event_ids",
+            "behavior_changes",
+            "product_implications",
+            "exit_conditions",
+            "evidence_refs",
+            "prohibited_uses",
+        ):
+            scenario_raw[field_name] = tuple(scenario_raw.get(field_name) or ())
+        scenario_items.append(FutureCustomerScenario(**scenario_raw))
     raw.pop("evidence_level_name", None)
     raw["evidence_level"] = _evidence_level(raw.get("evidence_level"))
     raw["local_population"] = local
     raw["segments"] = tuple(segment_items)
     raw["synthetic_cohort"] = cohort
     raw["persona_experiment"] = persona
+    raw["demand_driver_events"] = tuple(event_items)
+    raw["future_customer_scenarios"] = tuple(scenario_items)
     for field_name in (
         "evidence_refs",
         "artifact_hashes",
@@ -519,6 +669,8 @@ __all__ = [
     "CustomerEvidenceLevel",
     "CustomerIntelligenceBundle",
     "CustomerSegment",
+    "DemandDriverEvent",
+    "FutureCustomerScenario",
     "LocalPopulationPrior",
     "PersonaExperimentResult",
     "PersonaExperimentSpec",

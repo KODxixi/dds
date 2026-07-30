@@ -55,6 +55,7 @@ _ABM_SUPPORTED = (
 _REQUIREMENT_EVIDENCE_TYPES: dict[str, tuple[EvidenceType, ...]] = {
     "SC2.macro_indicators": _OBSERVED_ONLY,
     "SC2.competitors": _OBSERVED_ONLY,
+    "SC2.future_demand_event_scan": _OBSERVED_AND_INFERENCE,
     "SC2.customer_segments": (
         EvidenceType.OBSERVED_FACT,
         EvidenceType.SOCIAL_OBSERVATION,
@@ -271,11 +272,19 @@ class RequirementAgent(BaseAgent):
                 minimum_sample = (
                     5
                     if section_id == "SC2" and field_name == "competitors"
+                    else 2
+                    if section_id == "SC2"
+                    and field_name == "future_demand_event_scan"
                     else 1
                 )
                 decision_use = (
                     f"{_REQUIREMENT_DECISION_USE.get(section_id, 'Resolve the unit evidence requirement.')} "
                     f"Required field: {field_name}."
+                )
+                field_max_age_days = (
+                    730
+                    if field_name == "future_demand_event_scan"
+                    else max_age_days
                 )
                 requirement = DataRequirement(
                     metric_id=f"{section_id}.{field_name}",
@@ -289,14 +298,51 @@ class RequirementAgent(BaseAgent):
                     min_evidence_count=minimum_sample,
                     geography=geography,
                     as_of=as_of,
-                    max_age_days=max_age_days,
+                    max_age_days=field_max_age_days,
                     metadata={
                         "purpose": decision_use,
                         "minimum_sample_size": minimum_sample,
                         "time_window": {
                             "as_of": as_of,
-                            "lookback_days": max_age_days,
+                            "lookback_days": field_max_age_days,
                         },
+                        **(
+                            {
+                                "allowed_source_roles": [
+                                    "government_record",
+                                    "official_planning_document",
+                                    "statutory_document",
+                                    "corporate_official",
+                                    "verified_first_party_document",
+                                    "documented_analysis",
+                                    "public_web_candidate",
+                                    "web_search_candidate",
+                                ],
+                                "future_event_scan": {
+                                    "event_classes": [
+                                        "major_employer_or_headquarters",
+                                        "industrial_cluster",
+                                        "transport_infrastructure",
+                                        "public_service_investment",
+                                        "regulatory_or_supply_change",
+                                    ],
+                                    "time_horizons": [
+                                        "current_operation",
+                                        "0_to_3_years",
+                                        "3_to_5_years",
+                                    ],
+                                    "must_separate": [
+                                        "current_observed_population",
+                                        "planned_capacity",
+                                        "addressable_customer_hypothesis",
+                                    ],
+                                    "requires_counter_factors": True,
+                                    "minimum_observed_evidence_count": 1,
+                                }
+                            }
+                            if field_name == "future_demand_event_scan"
+                            else {}
+                        ),
                         "depends_on_sections": list(
                             _REQUIREMENT_DEPENDENCIES.get(section_id, ())
                         ),

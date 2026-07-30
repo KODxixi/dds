@@ -19,6 +19,7 @@ from dds.reporting import (
     evaluate_delivery_status,
     render_frozen_package,
 )
+from dds.reporting.compiler import evaluate_evidence_delivery_status
 
 
 class DeliveryGateError(RuntimeError):
@@ -27,7 +28,10 @@ class DeliveryGateError(RuntimeError):
 
 _BROWSER_QA_SCHEMA = "dds.browser-qa/1.0"
 _PRINT_QA_SCHEMA = "dds.print-browser-qa/1.0"
-_BROWSER_QA_RUNNER = "playwright-python-sync-api"
+_BROWSER_QA_RUNNERS = {
+    "playwright-python-sync-api",
+    "playwright-node-system-chrome",
+}
 _REQUIRED_VIEWPORTS = ((1280, 720), (1440, 900), (1920, 1080))
 _BROWSER_CHECKS = (
     "console_error_free",
@@ -148,10 +152,170 @@ def _nonnegative_int(
     return value
 
 
+def _array_field(
+    payload: Mapping[str, Any], key: str, *, label: str, errors: list[str]
+) -> Sequence[Any]:
+    value = payload.get(key)
+    if isinstance(value, (str, bytes)) or not isinstance(value, Sequence):
+        errors.append(f"{label}.{key} must be an array")
+        return ()
+    return value
+
+
+def _positive_int(
+    payload: Mapping[str, Any], key: str, *, label: str, errors: list[str]
+) -> int | None:
+    value = _nonnegative_int(payload, key, label=label, errors=errors)
+    if value is not None and value <= 0:
+        errors.append(f"{label}.{key} must be positive")
+        return None
+    return value
+
+
+def _require_exact_zero(
+    payload: Mapping[str, Any], key: str, *, label: str, errors: list[str]
+) -> bool:
+    value = payload.get(key)
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(float(value))
+        or float(value) != 0
+    ):
+        errors.append(f"{label}.{key} must show exactly 0px clipped overflow")
+        return False
+    return True
+
+
+def _validate_layout_probe(
+    value: Any, *, label: str, errors: list[str]
+) -> None:
+    if not isinstance(value, Mapping):
+        errors.append(f"{label} must be an object")
+        return
+    if value.get("exists") is not True:
+        errors.append(f"{label}.exists must be true")
+    if value.get("passed") is not True:
+        errors.append(f"{label}.passed must be true")
+    _require_exact_zero(value, "overflow_x_px", label=label, errors=errors)
+    _require_exact_zero(value, "overflow_y_px", label=label, errors=errors)
+    for key in ("hidden_overflow", "out_of_bounds"):
+        rows = _array_field(value, key, label=label, errors=errors)
+        if rows:
+            errors.append(f"{label}.{key} contains clipped overflow evidence")
+
+
+def _validate_browser_layout_evidence(
+    row: Mapping[str, Any],
+    *,
+    expected_pages: int | None,
+    label: str,
+    errors: list[str],
+) -> None:
+    evidence = _mapping_field(row, "evidence", label=label, errors=errors)
+    page_checks = _array_field(
+        evidence, "page_checks", label=f"{label}.evidence", errors=errors
+    )
+    if expected_pages is not None and len(page_checks) != expected_pages:
+        errors.append(
+            f"{label}.evidence.page_checks must contain exactly {expected_pages} pages"
+        )
+    for index, value in enumerate(page_checks):
+        page_label = f"{label}.evidence.page_checks[{index}]"
+        if not isinstance(value, Mapping):
+            errors.append(f"{page_label} must be an object")
+            continue
+        if value.get("passed") is not True:
+            errors.append(f"{page_label}.passed must be true")
+        if value.get("frame_within_viewport") is not True:
+            errors.append(f"{page_label}.frame_within_viewport must be true")
+        for key in (
+            "body_horizontal_overflow_px",
+            "html_horizontal_overflow_px",
+            "frame_horizontal_overflow_px",
+            "article_horizontal_overflow_px",
+        ):
+            _require_exact_zero(value, key, label=page_label, errors=errors)
+        for key in ("primary_visual", "decision_card"):
+            _validate_layout_probe(
+                value.get(key), label=f"{page_label}.{key}", errors=errors
+            )
+
+
+def _validate_print_layout_evidence(
+    printed: Mapping[str, Any],
+    *,
+    expected_pages: int | None,
+    errors: list[str],
+) -> None:
+    evidence = _mapping_field(
+        printed, "evidence", label="print_report", errors=errors
+    )
+    if evidence.get("clipped_overflow_tolerance_px") != 0:
+        errors.append(
+            "print_report.evidence.clipped_overflow_tolerance_px must be exactly 0"
+        )
+    print_expected_pages = _positive_int(
+        evidence,
+        "expected_page_count",
+        label="print_report.evidence",
+        errors=errors,
+    )
+    prepared_pages = _positive_int(
+        evidence,
+        "prepared_page_count",
+        label="print_report.evidence",
+        errors=errors,
+    )
+    layout = _mapping_field(
+        evidence, "layout", label="print_report.evidence", errors=errors
+    )
+    layout_expected = _positive_int(
+        layout,
+        "expected_page_count",
+        label="print_report.evidence.layout",
+        errors=errors,
+    )
+    dom_pages = _positive_int(
+        layout,
+        "dom_page_count",
+        label="print_report.evidence.layout",
+        errors=errors,
+    )
+    pages = _array_field(
+        layout, "pages", label="print_report.evidence.layout", errors=errors
+    )
+    counts = (
+        print_expected_pages,
+        prepared_pages,
+        layout_expected,
+        dom_pages,
+        len(pages),
+    )
+    if expected_pages is not None and any(
+        count is not None and count != expected_pages for count in counts
+    ):
+        errors.append(
+            "print_report evidence page counts must match browser expected_page_count"
+        )
+    for index, value in enumerate(pages):
+        page_label = f"print_report.evidence.layout.pages[{index}]"
+        if not isinstance(value, Mapping):
+            errors.append(f"{page_label} must be an object")
+            continue
+        if value.get("passed") is not True:
+            errors.append(f"{page_label}.passed must be true")
+        for key in ("article", "primary_visual", "decision_card"):
+            _validate_layout_probe(
+                value.get(key), label=f"{page_label}.{key}", errors=errors
+            )
+
+
 @dataclass(frozen=True, slots=True)
 class BrowserQAResult:
     html_hash: str
     viewports_checked: tuple[str, ...]
+    report_document_hash: str = ""
     console_errors: tuple[str, ...] = ()
     page_errors: tuple[str, ...] = ()
     dependency_requests: tuple[str, ...] = ()
@@ -177,10 +341,9 @@ class BrowserQAResult:
         printed = _load_report(
             print_report, label="print_report", errors=validation_errors
         )
-
         if browser.get("schema_version") != _BROWSER_QA_SCHEMA:
             validation_errors.append("browser_report.schema_version is unsupported")
-        if browser.get("runner") != _BROWSER_QA_RUNNER:
+        if browser.get("runner") not in _BROWSER_QA_RUNNERS:
             validation_errors.append(
                 "browser_report.runner is not the official Playwright runner"
             )
@@ -191,7 +354,7 @@ class BrowserQAResult:
             label="browser_report.html_hash",
             errors=validation_errors,
         )
-        _normalized_hash(
+        report_document_hash = _normalized_hash(
             browser.get("report_document_hash"),
             label="browser_report.report_document_hash",
             errors=validation_errors,
@@ -224,6 +387,23 @@ class BrowserQAResult:
         if dependency_count != 0:
             validation_errors.append(
                 "browser_report.metrics.dependency_request_count must be zero"
+            )
+        browser_evidence = _mapping_field(
+            browser,
+            "evidence",
+            label="browser_report",
+            errors=validation_errors,
+        )
+        expected_pages = _positive_int(
+            browser_evidence,
+            "expected_page_count",
+            label="browser_report.evidence",
+            errors=validation_errors,
+        )
+        if browser_evidence.get("clipped_overflow_tolerance_px") != 0:
+            validation_errors.append(
+                "browser_report.evidence.clipped_overflow_tolerance_px "
+                "must be exactly 0"
             )
 
         console_errors: list[str] = []
@@ -292,6 +472,12 @@ class BrowserQAResult:
                 validation_errors.append(
                     f"{label}.metrics.runtime_error_visible must be false"
                 )
+            _validate_browser_layout_evidence(
+                row,
+                expected_pages=expected_pages,
+                label=label,
+                errors=validation_errors,
+            )
 
         if len(rows) != len(_REQUIRED_VIEWPORTS) or set(checked) != set(
             _REQUIRED_VIEWPORTS
@@ -386,6 +572,11 @@ class BrowserQAResult:
         )
         if print_viewport.get("width") != 1920 or print_viewport.get("height") != 1080:
             validation_errors.append("print_report.viewport must be exactly 1920x1080")
+        _validate_print_layout_evidence(
+            printed,
+            expected_pages=expected_pages,
+            errors=validation_errors,
+        )
 
         ordered_viewports = tuple(
             f"{width}x{height}"
@@ -395,6 +586,7 @@ class BrowserQAResult:
         return cls(
             html_hash=browser_hash,
             viewports_checked=ordered_viewports,
+            report_document_hash=report_document_hash,
             console_errors=tuple(console_errors),
             page_errors=tuple(page_errors),
             dependency_requests=tuple(dict.fromkeys(dependency_requests)),
@@ -473,6 +665,16 @@ class DeliveryService:
             raise DeliveryGateError(
                 "browser QA belongs to different rendered HTML bytes"
             )
+        if browser_qa.report_document_hash != document_hash:
+            raise DeliveryGateError(
+                "browser QA belongs to a different ReportDocument"
+            )
+        evidence_gate = evaluate_evidence_delivery_status(package)
+        if not evidence_gate["ready"]:
+            raise DeliveryGateError(
+                "formal delivery evidence qualification failed: "
+                + ", ".join(evidence_gate["reason_codes"])
+            )
 
         relative = Path(relative_path)
         if relative.is_absolute() or relative.drive or ".." in relative.parts:
@@ -514,5 +716,3 @@ __all__ = [
     "DeliveryGateError",
     "DeliveryService",
 ]
-
-

@@ -9,13 +9,14 @@ from enum import Enum
 from hashlib import sha256
 from typing import Any, Mapping, Sequence
 
-from dds.contracts import UNIT_BY_ID, VALID_SECTION_IDS
+from dds.contracts import VALID_SECTION_IDS
 from dds.analysis_profile import (
     optional_units_from_metadata,
     required_units_from_metadata,
 )
 from dds.domain import ReportRun, ResolvedField, ResolvedStatus, SectionResult
 from dds.reporting import AssetResolver, build_frozen_package
+from dds.reporting.contracts.report_structure_contract import framework_manifest
 from dds.reporting.edition import ReportEdition, decision_pages
 
 
@@ -384,28 +385,365 @@ def _customer_page(
     *,
     section_id: str,
     level: int,
+    evidence_level: int,
     blocks: list[dict[str, Any]],
     source_refs: list[str],
     evidence_type: str,
     takeaway: str,
+    page_id: str | None = None,
+    page_title: str | None = None,
+    decision_question: str | None = None,
+    decision_impact: str | None = None,
+    confidence_score: float | None = None,
+    story_role: str = "customer_intelligence",
+    unit_status: str = "partial",
+    unit_role: str = "decision_chain_support",
+    page_role: str | None = None,
+    future_customer_chain: Mapping[str, Sequence[str]] | None = None,
+    diagram_specs: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    title = _CUSTOMER_PAGE_TITLES[level][section_id]
-    return {
-        "page_id": f"{section_id.lower()}-customer-intelligence",
+    title = page_title or _CUSTOMER_PAGE_TITLES[level][section_id]
+    page = {
+        "page_id": page_id or f"{section_id.lower()}-customer-intelligence",
         "chapter_id": section_id.lower(),
         "section_id": section_id,
         "unit_id": section_id,
-        "unit_status": "ready",
+        "unit_status": unit_status,
+        "unit_role": unit_role,
         "layout": "summary",
         "title": title,
-        "decision_question": _decision_question(section_id),
+        "decision_question": decision_question or _decision_question(section_id),
         "takeaway": takeaway,
-        "decision_impact": _decision_impact(section_id),
+        "decision_impact": decision_impact or _decision_impact(section_id),
         "blocks": _portable(blocks),
         "source_refs": source_refs,
-        "confidence": {"score": {1: 0.45, 2: 0.65, 3: 0.8}[level]},
+        "confidence": {
+            "score": (
+                confidence_score
+                if confidence_score is not None
+                else {1: 0.45, 2: 0.65, 3: 0.8}[evidence_level]
+            )
+        },
         "evidence_type": evidence_type,
+        "story_role": story_role,
     }
+    if diagram_specs:
+        page["diagram_specs"] = _portable(diagram_specs)
+        page["visual_evidence"] = "diagram"
+    if page_role:
+        page["page_role"] = page_role
+    if future_customer_chain is not None:
+        page["future_customer_chain"] = _portable(future_customer_chain)
+    return page
+
+
+def _future_customer_pages(
+    bundle: Mapping[str, Any],
+    source_id_map: Mapping[str, str],
+    *,
+    input_level: int,
+    evidence_level: int,
+) -> list[dict[str, Any]]:
+    scan_status = str(bundle.get("future_demand_scan_status") or "not_assessed")
+    events = [
+        dict(item)
+        for item in bundle.get("demand_driver_events") or ()
+        if isinstance(item, Mapping)
+    ]
+    scenarios = [
+        dict(item)
+        for item in bundle.get("future_customer_scenarios") or ()
+        if isinstance(item, Mapping)
+    ]
+    if scan_status != "material_events_found":
+        return []
+    if not events:
+        raise ValueError(
+            "material future demand events require at least one demand_driver_event"
+        )
+    if not scenarios:
+        raise ValueError(
+            "material future demand events require a future customer scenario; "
+            "the event-to-customer chain cannot be omitted"
+        )
+
+    event_by_id = {
+        str(item.get("event_id") or ""): item
+        for item in events
+        if str(item.get("event_id") or "")
+    }
+    unknown_event_ids = {
+        str(event_id)
+        for scenario in scenarios
+        for event_id in scenario.get("event_ids") or ()
+        if str(event_id) not in event_by_id
+    }
+    if unknown_event_ids:
+        raise ValueError(
+            "future customer scenarios reference unknown demand events: "
+            + ", ".join(sorted(unknown_event_ids))
+        )
+
+    raw_event_refs = list(
+        dict.fromkeys(
+            str(ref)
+            for event in events
+            for ref in event.get("evidence_refs") or ()
+        )
+    )
+    event_refs = _mapped_source_refs(raw_event_refs, source_id_map)
+    event_rows = [
+        {
+            "需求事件": item.get("label"),
+            "事件类型": item.get("event_type"),
+            "状态与时窗": " · ".join(
+                value
+                for value in (
+                    str(item.get("status") or "").strip(),
+                    str(item.get("time_window") or "").strip(),
+                )
+                if value
+            ),
+            "已核验事实": _joined(item.get("observed_facts")),
+            "反向分流因素": _joined(item.get("counter_factors")),
+        }
+        for item in events
+    ]
+    event_diagram = {
+        "diagram_type": "phasing",
+        "title": "未来需求事件时间轴",
+        "program_blocks": [
+            {
+                "code": f"E{index:02d}",
+                "label": item.get("label"),
+                "details": [
+                    " · ".join(
+                        value
+                        for value in (
+                            str(item.get("status") or "").strip(),
+                            str(item.get("time_window") or "").strip(),
+                        )
+                        if value
+                    ),
+                    *[
+                        str(value)
+                        for value in (item.get("observed_facts") or ())[:2]
+                    ],
+                    *[
+                        f"反向因素：{value}"
+                        for value in (item.get("counter_factors") or ())[:1]
+                    ],
+                ],
+            }
+            for index, item in enumerate(events, start=1)
+        ],
+        "relations": [
+            {"from": f"E{index:02d}", "to": f"E{index + 1:02d}"}
+            for index in range(1, len(events))
+        ],
+        "source_refs": event_refs,
+        "source_note": "仅呈现已登记事实、时间边界和反向分流因素，不把规划容量当作购房人数。",
+    }
+    confidence_score = {1: 0.45, 2: 0.65, 3: 0.8}[evidence_level]
+    pages = [
+        _customer_page(
+            section_id="SC2",
+            level=input_level,
+            evidence_level=evidence_level,
+            page_id="sc2-future-demand-events",
+            page_title="未来需求事件与客群影响边界",
+            decision_question="哪些已发生或已明确排期的事件会重塑本项目未来客群？",
+            takeaway=(
+                f"已识别 {len(events)} 个可追溯需求事件；"
+                "事件规模只能用于建立客群情景，不能直接换算项目买家数量。"
+            ),
+            decision_impact=(
+                "据此确定未来客群推演的时间窗、人口入口和分流因素，"
+                "再进入支付能力与产品响应验证。"
+            ),
+            blocks=[
+                {
+                    "type": "table",
+                    "title": "事件事实、状态与反向因素",
+                    "columns": [
+                        "需求事件",
+                        "事件类型",
+                        "状态与时窗",
+                        "已核验事实",
+                        "反向分流因素",
+                    ],
+                    "rows": event_rows,
+                    "source_refs": event_refs,
+                }
+            ],
+            source_refs=event_refs,
+            confidence_score=confidence_score,
+            evidence_type="observed_fact",
+            story_role="future_demand_event",
+            unit_status="ready",
+            page_role="future_demand_event",
+            diagram_specs=[event_diagram],
+        )
+    ]
+
+    raw_scenario_refs = list(
+        dict.fromkeys(
+            [
+                *raw_event_refs,
+                *[
+                    str(ref)
+                    for scenario in scenarios
+                    for ref in scenario.get("evidence_refs") or ()
+                ],
+            ]
+        )
+    )
+    scenario_refs = _mapped_source_refs(raw_scenario_refs, source_id_map)
+    scenario_rows = [
+        {
+            "未来客群": item.get("segment_label"),
+            "触发事件": _joined(
+                [
+                    event_by_id[str(event_id)].get("label")
+                    for event_id in item.get("event_ids") or ()
+                ]
+            ),
+            "进入条件": item.get("entry_trigger"),
+            "居住与置业路径": item.get("housing_path"),
+            "行为变化": _joined(item.get("behavior_changes")),
+            "产品动作": _joined(item.get("product_implications")),
+            "退出条件": _joined(item.get("exit_conditions")),
+        }
+        for item in scenarios
+    ]
+    chain_diagram = {
+        "diagram_type": "phasing",
+        "title": "需求事件到产品动作的推演链",
+        "program_blocks": [
+            {
+                "code": "01",
+                "label": "需求事件",
+                "details": [str(item.get("label")) for item in events[:3]],
+            },
+            {
+                "code": "02",
+                "label": "未来客群",
+                "details": [
+                    str(item.get("segment_label")) for item in scenarios[:3]
+                ],
+            },
+            {
+                "code": "03",
+                "label": "行为变化",
+                "details": list(
+                    dict.fromkeys(
+                        str(value)
+                        for item in scenarios
+                        for value in item.get("behavior_changes") or ()
+                    )
+                )[:3],
+            },
+            {
+                "code": "04",
+                "label": "产品动作",
+                "details": list(
+                    dict.fromkeys(
+                        str(value)
+                        for item in scenarios
+                        for value in item.get("product_implications") or ()
+                    )
+                )[:3],
+            },
+        ],
+        "relations": [
+            {"from": "01", "to": "02"},
+            {"from": "02", "to": "03"},
+            {"from": "03", "to": "04"},
+        ],
+        "source_refs": scenario_refs,
+        "source_note": "本页为有证据边界的情景模拟；人数、转化率和成交量仍需项目级客研校准。",
+    }
+    prohibited_uses = list(
+        dict.fromkeys(
+            str(value)
+            for item in scenarios
+            for value in item.get("prohibited_uses") or ()
+        )
+    )
+    pages.append(
+        _customer_page(
+            section_id="SC2",
+            level=input_level,
+            evidence_level=evidence_level,
+            page_id="sc2-future-customer-actions",
+            page_title="未来客群行为与产品动作",
+            decision_question="重大需求事件将吸引谁，他们的行为会如何改变产品任务？",
+            takeaway=(
+                f"已形成 {len(scenarios)} 类未来客群情景；"
+                "每类情景均由事件入口、行为变化、产品动作和退出条件共同约束。"
+            ),
+            decision_impact=(
+                "据此把未来客群假设转成户型、私密性、会所、通勤和交付节奏的"
+                "可验证任务，并设置失效后的回退条件。"
+            ),
+            blocks=[
+                {
+                    "type": "table",
+                    "title": "未来客群行为与产品响应",
+                    "columns": [
+                        "未来客群",
+                        "触发事件",
+                        "进入条件",
+                        "居住与置业路径",
+                        "行为变化",
+                        "产品动作",
+                        "退出条件",
+                    ],
+                    "rows": scenario_rows,
+                    "source_refs": scenario_refs,
+                },
+                {
+                    "type": "narrative",
+                    "text": (
+                        "模型禁止用途："
+                        + _joined(prohibited_uses)
+                        + "；不得把园区人数或规划容量直接写成项目客户或转化率事实。"
+                    ),
+                    "source_refs": scenario_refs,
+                },
+            ],
+            source_refs=scenario_refs,
+            confidence_score=confidence_score,
+            evidence_type="model_simulation",
+            story_role="future_customer_chain",
+            page_role="future_customer_outlook",
+            future_customer_chain={
+                "event": [
+                    str(item.get("label") or item.get("event_id"))
+                    for item in events
+                ],
+                "customer": [
+                    str(item.get("segment_label")) for item in scenarios
+                ],
+                "behavior": list(
+                    dict.fromkeys(
+                        str(value)
+                        for item in scenarios
+                        for value in item.get("behavior_changes") or ()
+                    )
+                ),
+                "product_action": list(
+                    dict.fromkeys(
+                        str(value)
+                        for item in scenarios
+                        for value in item.get("product_implications") or ()
+                    )
+                ),
+            },
+            diagram_specs=[chain_diagram],
+        )
+    )
+    return pages
 
 
 def _customer_pages(
@@ -493,9 +831,11 @@ def _customer_pages(
             _customer_page(
                 section_id="SC2",
                 level=input_level,
+                evidence_level=level,
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="observed_fact",
+                unit_status="ready",
                 takeaway=(
                     "、".join(
                         f"{row['客群']}占{row['样本占比']}"
@@ -503,6 +843,14 @@ def _customer_pages(
                     )
                     + "；不同客群的需求与支付约束必须分开判断。"
                 ),
+            )
+        )
+        pages.extend(
+            _future_customer_pages(
+                bundle,
+                source_id_map,
+                input_level=input_level,
+                evidence_level=level,
             )
         )
 
@@ -565,6 +913,7 @@ def _customer_pages(
             _customer_page(
                 section_id="AD3",
                 level=input_level,
+                evidence_level=level,
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="model_simulation",
@@ -629,6 +978,7 @@ def _customer_pages(
             _customer_page(
                 section_id="VA2",
                 level=input_level,
+                evidence_level=level,
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="model_simulation",
@@ -651,11 +1001,15 @@ def _customer_pages(
         ):
             for segment_id, item in persona["aggregate_results"].items():
                 if isinstance(item, Mapping):
+                    objection = _joined(item.get("objections")).strip("、 \t\r\n")
+                    trigger = _joined(item.get("triggers")).strip("、 \t\r\n")
+                    if not objection and not trigger:
+                        continue
                     objections.append(
                         {
                             "客群": segment_labels.get(str(segment_id), segment_id),
-                            "主要异议": _joined(item.get("objections")),
-                            "切换触发": _joined(item.get("triggers")),
+                            "主要异议": objection,
+                            "切换触发": trigger,
                         }
                     )
         blocks = [
@@ -678,16 +1032,21 @@ def _customer_pages(
                     "source_refs": portable_refs,
                 }
             )
-        pages.append(
-            _customer_page(
-                section_id="VA3",
-                level=input_level,
-                blocks=blocks,
-                source_refs=portable_refs,
-                evidence_type="analysis_inference",
-                takeaway="客群异议与切换触发必须转化为产品、价格和到访验证任务，不能写成成交承诺。",
+        if objections:
+            pages.append(
+                _customer_page(
+                    section_id="VA3",
+                    level=input_level,
+                    evidence_level=level,
+                    blocks=blocks,
+                    source_refs=portable_refs,
+                    evidence_type="analysis_inference",
+                    takeaway=(
+                        "客群异议与切换触发必须转化为产品、价格和到访验证任务，"
+                        "不能写成成交承诺。"
+                    ),
+                )
             )
-        )
 
     if "CS" in included_units:
         cohort = bundle.get("synthetic_cohort")
@@ -728,10 +1087,24 @@ def _customer_pages(
             _customer_page(
                 section_id="CS",
                 level=input_level,
+                evidence_level=level,
                 blocks=blocks,
                 source_refs=portable_refs,
                 evidence_type="analysis_inference",
-                takeaway="当前为 C2 方案比较证据：可观察相对偏好，不可推导月销量或输出个人数据。",
+                takeaway={
+                    1: (
+                        "当前为 C1 本地客群基线：可用于客群与产品方向研判，"
+                        "不可推导方案选择份额、月销量或个人结论。"
+                    ),
+                    2: (
+                        "当前为 C2 选择校准证据：可观察相对偏好，"
+                        "不可推导月销量或输出个人数据。"
+                    ),
+                    3: (
+                        "当前为 C3 漏斗校准证据：仍须在冻结地域、时点、"
+                        "样本和渠道口径内使用。"
+                    ),
+                }[level],
             )
         )
     return pages
@@ -756,22 +1129,34 @@ class ReportCompilerAdapter:
         unknown = [item for item in required if item not in VALID_SECTION_IDS]
         if unknown:
             raise ValueError(f"unknown required units: {unknown}")
+        profile = run.metadata.get("analysis_profile")
+        selected_mode = (
+            profile.get("selected_mode")
+            if isinstance(profile, Mapping)
+            else None
+        )
+        unit_specs = {
+            str(item["unit_id"]): item
+            for item in framework_manifest(selected_mode=selected_mode)["units"]
+        }
         source_id_map = _source_id_map(run)
         pages: list[dict[str, Any]] = []
         for section_id in required:
+            unit_spec = unit_specs[section_id]
             section = run.sections.get(section_id)
             if not isinstance(section, SectionResult):
                 section = SectionResult(
                     section_id=section_id,
                     data={},
-                    gaps=[UNIT_BY_ID[section_id]["gap"]],
+                    gaps=[unit_spec["gap"]],
                     status=ResolvedStatus.UNKNOWN,
                 )
             status = _section_status(section)
-            title = UNIT_BY_ID[section_id]["title"]
             takeaway = (
                 str(section.conclusions[0])
                 if section.conclusions
+                else str(unit_spec["gap"])
+                if status in {"missing", "blocked"}
                 else str(section.gaps[0])
                 if section.gaps
                 else "本单元尚未形成有证据支持的结论。"
@@ -781,6 +1166,16 @@ class ReportCompilerAdapter:
                 if section_id == "SC2"
                 else "analysis_inference"
             )
+            blocks = _section_blocks(section, source_id_map)
+            if status in {"missing", "blocked"}:
+                blocks = [
+                    (
+                        {**block, "text": str(unit_spec["gap"])}
+                        if block.get("type") == "gap"
+                        else block
+                    )
+                    for block in blocks
+                ]
             pages.append(
                 {
                     "page_id": f"{section_id.lower()}-primary",
@@ -789,11 +1184,11 @@ class ReportCompilerAdapter:
                     "unit_id": section_id,
                     "unit_status": status,
                     "layout": "gap" if status in {"missing", "blocked"} else "summary",
-                    "title": title,
-                    "decision_question": _decision_question(section_id),
+                    "title": unit_spec["title"],
+                    "decision_question": unit_spec["question"],
                     "takeaway": takeaway,
                     "decision_impact": _decision_impact(section_id),
-                    "blocks": _section_blocks(section, source_id_map),
+                    "blocks": blocks,
                     "source_refs": _mapped_source_refs(
                         section.evidence_refs,
                         source_id_map,
@@ -823,7 +1218,6 @@ class ReportCompilerAdapter:
             for item in sorted(run.evidence_records, key=lambda value: value.evidence_id)
         ]
         context = run.project_context
-        profile = run.metadata.get("analysis_profile")
         included = list(required)
         for section_id in optional_units_from_metadata(run.metadata):
             section = run.sections.get(str(section_id))
@@ -835,6 +1229,7 @@ class ReportCompilerAdapter:
             for section_id in included:
                 if section_id in pages_by_unit:
                     continue
+                unit_spec = unit_specs[section_id]
                 section = run.sections[section_id]
                 pages.append({
                     "page_id": f"{section_id.lower()}-primary",
@@ -843,8 +1238,8 @@ class ReportCompilerAdapter:
                     "unit_id": section_id,
                     "unit_status": _section_status(section),
                     "layout": "summary",
-                    "title": UNIT_BY_ID[section_id]["title"],
-                    "decision_question": _decision_question(section_id),
+                    "title": unit_spec["title"],
+                    "decision_question": unit_spec["question"],
                     "takeaway": str(section.conclusions[0]) if section.conclusions else "条件单元已有实质内容。",
                     "decision_impact": _decision_impact(section_id),
                     "blocks": _section_blocks(section, source_id_map),
@@ -866,11 +1261,20 @@ class ReportCompilerAdapter:
             included = list(
                 dict.fromkeys(str(page["section_id"]) for page in pages)
             )
-        report_required = (
-            included
-            if report_edition is ReportEdition.DECISION_REPORT
-            else list(required)
-        )
+        evidence_gaps: list[dict[str, str]] = []
+        if report_edition is ReportEdition.EVIDENCE_WORKBOOK:
+            for section_id in required:
+                section = run.sections.get(section_id)
+                gaps = (
+                    [str(unit_specs[section_id]["gap"])]
+                    if not isinstance(section, SectionResult)
+                    or _section_status(section) in {"missing", "blocked"}
+                    else [str(gap) for gap in section.gaps]
+                )
+                evidence_gaps.extend(
+                    {"section_id": section_id, "gap": gap}
+                    for gap in gaps
+                )
         return {
             "meta": {
                 "as_of": _portable(context.base_date),
@@ -888,7 +1292,7 @@ class ReportCompilerAdapter:
                 "project_type": context.project_type,
             },
             "project_panorama": {
-                "required_units": report_required,
+                "required_units": list(required),
                 "included_units": included,
                 "intervention_required_units": list(required),
                 "unit_policy": profile.get("unit_policy", {}) if isinstance(profile, Mapping) else {},
@@ -896,14 +1300,7 @@ class ReportCompilerAdapter:
             "page_manifest_authoritative": True,
             "page_manifest": pages,
             "source_registry": source_registry,
-            "evidence_gaps": [
-                {
-                    "section_id": section_id,
-                    "gap": str(gap),
-                }
-                for section_id in required
-                for gap in getattr(run.sections.get(section_id), "gaps", [])
-            ] if report_edition is ReportEdition.EVIDENCE_WORKBOOK else [],
+            "evidence_gaps": evidence_gaps,
         }
 
     def build_frozen_compiler_package(

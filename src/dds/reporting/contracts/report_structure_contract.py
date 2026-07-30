@@ -55,8 +55,8 @@ REPORT_UNITS = (
         "section_id": "SC2",
         "group_id": "SC",
         "title": "市场机会、客群洞察与竞品实证",
-        "question": "市场真正缺什么，哪些正反案例能够证明机会与风险？",
-        "gap": "尚未形成宏观、板块、面积段、客群、竞品和正反案例的交叉证据。",
+        "question": "现状与未来事件将产生什么需求，哪些正反案例能够证明机会与风险？",
+        "gap": "尚未形成宏观、板块、未来需求事件、客群、竞品和正反案例的交叉证据。",
     },
     {
         "section_id": "SC3",
@@ -236,6 +236,72 @@ _SPECIAL_UNIT_ROLES = {
     "CS": "confidence_state",
 }
 
+_INPUT1_AD_UNIT_OVERRIDES = {
+    "AD1": {
+        "title": "定位与概念路线",
+        "question": "哪些市场、客群与场地机会应转化为可验证的产品定位和概念路线？",
+        "gap": "尚未把机会、客群和场地判断转成可验证的定位与概念路线。",
+    },
+    "AD2": {
+        "title": "方向选择与验证闸门",
+        "question": "当前优先探索哪个方向，什么证据会支持、切换或否定它？",
+        "gap": "尚未形成优先方向、验证条件、切换触发与回退机制。",
+    },
+    "AD3": {
+        "title": "客群假设与产品参数",
+        "question": "目标客群假设如何转成待验证的面积、总价、功能和产品参数？",
+        "gap": "尚未把客群与需求假设转成可验证的产品参数。",
+    },
+    "AD4": {
+        "title": "概念空间机制与设计假设",
+        "question": "产品方向如何转成可验证的总图、户型、立面、景观与公共空间机制？",
+        "gap": "尚未形成概念空间机制、设计假设及其验证任务。",
+    },
+    "AD5": {
+        "title": "文化线索与市场感知边界",
+        "question": "哪些文化与空间线索值得纳入概念探索，哪些解释不得越权成为市场结论？",
+        "gap": "尚未登记可用于概念探索的文化线索、证据等级与禁止用途。",
+    },
+}
+
+_INPUT2_AD_UNIT_OVERRIDES = {
+    "AD1": {
+        "title": "定位、容量与可建包络",
+        "question": "哪些市场、客群与场地输入有资格进入设计，完整容量和可建包络如何建立？",
+        "gap": "尚未把已确认的市场、客群、功能指标与法定边界转成定位、容量和可建包络。",
+    },
+    "AD2": {
+        "title": "约束驱动策略与评价基线",
+        "question": "哪些约束必须同时求解，后续候选路线应按什么统一口径检验？",
+        "gap": "尚未形成约束驱动的策略任务、统一评价维度、验证门槛与回退条件。",
+    },
+    "AD3": {
+        "title": "未来客群与产品参数",
+        "question": "未来客群假设如何转成待校准的面积、总价、功能与货量参数？",
+        "gap": "尚未把未来客群、家庭阶段与支付边界转成可校准的产品参数。",
+    },
+    "AD4": {
+        "title": "空间机制与技术闭环",
+        "question": "空间机制如何转成可校核的设计动作、技术接口与阶段闸门？",
+        "gap": "尚未形成空间机制、设计动作、技术接口与验收条件的闭环。",
+    },
+    "AD5": {
+        "title": "设计任务书与阶段边界",
+        "question": "本轮向设计团队交付什么，哪些判断必须等待候选方案或补证？",
+        "gap": "尚未冻结本轮设计任务、探索边界、禁止结论与下一阶段触发条件。",
+    },
+}
+
+_MODE_AD_GROUP_LABELS = {
+    1: "产品方向与概念路线",
+    2: "产品定位与设计任务",
+}
+
+_MODE_AD_UNIT_OVERRIDES = {
+    1: _INPUT1_AD_UNIT_OVERRIDES,
+    2: _INPUT2_AD_UNIT_OVERRIDES,
+}
+
 
 def _marker(value: Any) -> str:
     return re.sub(r"[^0-9a-z]+", "", str(value or "").lower())
@@ -246,20 +312,32 @@ def _explicit_section(value: Any) -> str:
     return candidate if candidate in UNIT_BY_ID else ""
 
 
-def framework_manifest() -> dict[str, Any]:
+def framework_manifest(selected_mode: Any = None) -> dict[str, Any]:
     """Return a JSON-safe copy of the visible directory contract."""
+    try:
+        mode = int(selected_mode) if selected_mode is not None else None
+    except (TypeError, ValueError):
+        mode = None
+    groups = [{**deepcopy(item), "units": list(item["units"])} for item in REPORT_GROUPS]
+    units = [{**deepcopy(item), "unit_id": str(item["section_id"])} for item in REPORT_UNITS]
+    group_label = _MODE_AD_GROUP_LABELS.get(mode)
+    unit_overrides = _MODE_AD_UNIT_OVERRIDES.get(mode, {})
+    if group_label:
+        for group in groups:
+            if group["group_id"] == "AD":
+                group["label"] = group_label
+                break
+    if unit_overrides:
+        for unit in units:
+            override = unit_overrides.get(str(unit["section_id"]))
+            if override:
+                unit.update(deepcopy(override))
     return {
         "framework_id": FRAMEWORK_ID,
         "framework_version": FRAMEWORK_VERSION,
         "version": FRAMEWORK_VERSION,
-        "groups": [
-            {**deepcopy(item), "units": list(item["units"])}
-            for item in REPORT_GROUPS
-        ],
-        "units": [
-            {**deepcopy(item), "unit_id": str(item["section_id"])}
-            for item in REPORT_UNITS
-        ],
+        "groups": groups,
+        "units": units,
         "page_contract": {
             "stable_id": "page_id",
             "group_field": "group_id",
@@ -315,9 +393,11 @@ def section_metadata(page: Mapping[str, Any]) -> dict[str, str]:
                     section_id = max(matches, key=lambda item: item[0])[1]
                     break
         section_id = section_id or "CS"
-        classification = "mapped" if section_id != "CS" or any(
-            item in _CHAPTER_TO_SECTION for item in markers
-        ) else "fallback"
+        classification = (
+            "mapped"
+            if section_id != "CS" or any(item in _CHAPTER_TO_SECTION for item in markers)
+            else "fallback"
+        )
 
     unit = UNIT_BY_ID[section_id]
     group = GROUP_BY_ID[unit["group_id"]]
@@ -337,18 +417,22 @@ def section_metadata(page: Mapping[str, Any]) -> dict[str, str]:
 def apply_section_metadata(page: Mapping[str, Any]) -> dict[str, Any]:
     result = deepcopy(dict(page))
     existing_classification = str(result.get("section_classification") or "")
+    existing_section_title = str(result.get("section_title") or "").strip()
+    existing_group_label = str(result.get("section_group_label") or "").strip()
     result.update(section_metadata(result))
     if existing_classification:
         result["section_classification"] = existing_classification
+    if existing_group_label:
+        result["section_group_label"] = existing_group_label
+    if existing_section_title:
+        result["section_title"] = existing_section_title
     return result
 
 
 def framework_gap_page(section_id: str) -> dict[str, Any]:
     """Create an explicit gap page instead of silently omitting a unit."""
     unit = UNIT_BY_ID[section_id]
-    evidence_type = (
-        "traditional_interpretation" if section_id == "AD5" else "analysis_inference"
-    )
+    evidence_type = "traditional_interpretation" if section_id == "AD5" else "analysis_inference"
     return {
         "page_id": f"{section_id.lower()}-framework-gap",
         "chapter_id": "framework_gap",
@@ -403,6 +487,7 @@ def unit_contract_satisfied(
     required_role = _SPECIAL_UNIT_ROLES.get(unit_id)
     if not required_role:
         return True
+
     def contract_valid(page: Mapping[str, Any]) -> bool:
         contract = page.get("unit_contract")
         if not isinstance(contract, Mapping):
@@ -410,15 +495,18 @@ def unit_contract_satisfied(
         if unit_id == "AD1":
             return int(contract.get("options_count") or 0) >= 3
         if unit_id == "AD2":
-            return bool(contract.get("recommendation")) and int(
-                contract.get("rejected_options_count") or 0
-            ) >= 2 and bool(contract.get("decision_gate")) and bool(
-                contract.get("fallback")
+            return (
+                bool(contract.get("recommendation"))
+                and int(contract.get("rejected_options_count") or 0) >= 2
+                and bool(contract.get("decision_gate"))
+                and bool(contract.get("fallback"))
             )
         if unit_id == "AD4":
-            return bool(contract.get("masterplan")) and bool(
-                contract.get("unit_plan")
-            ) and int(contract.get("expression_count") or 0) >= 2
+            return (
+                bool(contract.get("masterplan"))
+                and bool(contract.get("unit_plan"))
+                and int(contract.get("expression_count") or 0) >= 2
+            )
         if unit_id == "VA1":
             upstream = {str(item) for item in contract.get("upstream_refs") or []}
             return {"SC2", "AD2", "AD3", "AD4"}.issubset(upstream) and all(
@@ -488,13 +576,8 @@ def compile_adaptive_manifest(
     unknown_included = [unit for unit in included if unit not in VALID_SECTION_IDS]
     if unknown_included:
         raise ValueError(f"unknown included units: {unknown_included}")
-    omitted_required = [unit for unit in required if unit not in included]
-    if omitted_required:
-        raise ValueError(f"included_units omit required units: {omitted_required}")
     normalized = [apply_section_metadata(page) for page in pages]
-    visible = [
-        page for page in normalized if page.get("section_id") in included
-    ]
+    visible = [page for page in normalized if page.get("section_id") in included]
     visible = sort_and_number_pages(visible)
     present = {str(page.get("section_id")) for page in visible}
     missing = [unit for unit in required if unit not in present]

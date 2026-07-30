@@ -17,6 +17,7 @@ from dds.reporting.compiler import (
     compiler_fingerprint,
     compute_package_hash,
     compute_report_document_hash,
+    validate_frozen_package,
 )
 from test_reporting_document import report_seed
 
@@ -51,15 +52,19 @@ def test_compiler_fingerprint_covers_every_runtime_semantic_component() -> None:
         "assets.py",
         "compiler.py",
         "dds_cinematic_deck.py",
-        "dds_report_apple_16x9.html",
+        "dds_report_liquid_glass_v4.html",
         "evidence_contract.py",
+        "gary-ui/decision-report/decision-report.bundle.css",
+        "gary-ui/decision-report/decision-report.bundle.js",
+        "gary-ui/decision-report/profile.json",
+        "gary-ui/decision-report/shell.html",
         "report_chart_contract.py",
         "report_diagram_contract.py",
         "report_document.py",
         "report_structure_contract.py",
-        "report_template_profile_v1.json",
+        "report_template_profile_v4.json",
         "renderer.py",
-        "runtime_compat.py",
+        "ui_recipe.py",
     }
     assert len(fingerprint["fingerprint"]) == 64
 
@@ -83,7 +88,7 @@ def test_compile_frozen_package_is_offline_and_matches_v1_document_hash(
         repeated
     )
     assert compute_report_document_hash(v1_semantics) == (
-        "7a325ea78cefd259626f950d2ab0d4eb39b04765ef37e0d86a2d6303f1aab950"
+        "456a3043cb34e8a64fa3320cb65a9490edd533cdc66e284dc740a4c9763b839b"
     )
     assert document["template_profile_version"] == SUPPORTED_PROFILE
 
@@ -132,5 +137,18 @@ def test_compile_rejects_fingerprint_drift() -> None:
 
     with pytest.raises(FrozenEvidencePackageError, match="fingerprint"):
         compile_frozen_package(package)
+
+
+def test_report_delivery_validation_attaches_without_changing_frozen_package_hash() -> None:
+    package = _package()
+    frozen_hash = package["package_hash"]
+
+    package["report_delivery_validation"] = {
+        "schema_version": "dds.report-delivery-validation/1.0",
+        "validation_hash": "a" * 64,
+    }
+
+    assert compute_package_hash(package) == frozen_hash
+    validate_frozen_package(package)
 
 

@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from hmac import compare_digest
 from typing import Any, Mapping
+from typing import Protocol
 
 from dds.analysis_profile import resolve_intervention_profile
 from dds.customer import (
@@ -30,6 +32,7 @@ from dds.engines.scheme_comparison import (
     SchemeComparisonEngine,
     SchemeScenarioMetrics,
 )
+from dds.product.service import intervention_brief_hash as hash_intervention_brief
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,24 +61,43 @@ def _sequence(value: Any, field: str) -> list[dict[str, Any]]:
     return [_mapping(item, field) for item in value]
 
 
+class InterventionJobStore(Protocol):
+    def get(self, job_id: str) -> dict[str, Any]: ...
+
+
 class ScenarioService:
     """Dispatch only to the engine selected and confirmed by the user."""
+
+    def __init__(self, jobs: InterventionJobStore) -> None:
+        self._jobs = jobs
 
     def run(
         self,
         *,
-        selected_mode: int,
-        mode_confirmed: bool,
-        input_profile: Mapping[str, Any],
+        job_id: str,
+        intervention_brief_hash: str,
         payload: Mapping[str, Any],
         customer_intelligence: (
             Mapping[str, Any] | CustomerIntelligenceBundle | None
         ) = None,
     ) -> ScenarioRun:
+        job = self._jobs.get(job_id)
+        brief = job.get("intervention_brief")
+        stored_hash = str(job.get("intervention_brief_hash") or "")
+        if not isinstance(brief, dict) or not stored_hash:
+            raise ValueError("confirmed frozen intervention brief is required")
+        actual_hash = hash_intervention_brief(job_id, brief)
+        if not compare_digest(stored_hash, actual_hash):
+            raise ValueError("stored intervention brief hash is invalid")
+        if not compare_digest(intervention_brief_hash, stored_hash):
+            raise ValueError("intervention brief hash does not match the job")
+        stored_profile = _mapping(job.get("analysis_profile"), "analysis_profile")
+        selected_mode = int(stored_profile.get("selected_mode") or 0)
+        input_profile = _mapping(job.get("project_context"), "project_context")
         profile = resolve_intervention_profile(
             input_profile,
             selected_mode=selected_mode,
-            confirmed=mode_confirmed,
+            confirmed=bool(stored_profile.get("mode_confirmed")),
         )
         if not profile["eligible"]:
             raise ValueError(

@@ -178,6 +178,85 @@ def input_3_payload() -> dict:
     }
 
 
+def confirmed_job(
+    client: TestClient,
+    *,
+    level: int,
+    profile: dict,
+) -> dict:
+    created = client.post(
+        "/api/research-jobs",
+        json={
+            "project_name": f"Input {level} simulation",
+            "city": "Test City",
+            **profile,
+        },
+    )
+    assert created.status_code == 201, created.text
+    job_id = created.json()["job_id"]
+    confirmed = client.post(
+        f"/api/research-jobs/{job_id}/intervention",
+        json={
+            "selected_mode": level,
+            "user_goal": f"Run confirmed Input {level} simulation",
+        },
+    )
+    assert confirmed.status_code == 200, confirmed.text
+    return confirmed.json()
+
+
+def test_simulation_api_rejects_self_reported_mode_without_frozen_job(tmp_path):
+    client = TestClient(
+        create_app(ProductSettings(root=tmp_path), research_sources=())
+    )
+
+    response = client.post(
+        "/api/analysis/simulate",
+        json={
+            "selected_mode": 1,
+            "mode_confirmed": True,
+            "input_profile": {"address": "Test City Road 1"},
+            "payload": input_1_payload(),
+        },
+    )
+
+    assert response.status_code == 422
+
+
+def test_simulation_api_runs_only_with_job_bound_frozen_brief_hash(tmp_path):
+    client = TestClient(
+        create_app(ProductSettings(root=tmp_path), research_sources=())
+    )
+    job = confirmed_job(
+        client,
+        level=1,
+        profile={"address": "Test City Road 1"},
+    )
+
+    response = client.post(
+        "/api/analysis/simulate",
+        json={
+            "job_id": job["job_id"],
+            "intervention_brief_hash": job["intervention_brief_hash"],
+            "payload": input_1_payload(),
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    assert response.json()["analysis_profile"]["selected_mode"] == 1
+
+    rejected = client.post(
+        "/api/analysis/simulate",
+        json={
+            "job_id": job["job_id"],
+            "intervention_brief_hash": "0" * 64,
+            "payload": input_1_payload(),
+        },
+    )
+    assert rejected.status_code == 400
+    assert "does not match" in rejected.json()["detail"]
+
+
 @pytest.mark.parametrize(
     ("level", "profile", "payload", "kind"),
     [
@@ -223,12 +302,12 @@ def test_simulation_api_runs_each_input_level(
     client = TestClient(
         create_app(ProductSettings(root=tmp_path), research_sources=())
     )
+    job = confirmed_job(client, level=level, profile=profile)
     response = client.post(
         "/api/analysis/simulate",
         json={
-            "selected_mode": level,
-            "mode_confirmed": True,
-            "input_profile": profile,
+            "job_id": job["job_id"],
+            "intervention_brief_hash": job["intervention_brief_hash"],
             "payload": payload,
         },
     )
@@ -247,12 +326,16 @@ def test_simulation_api_keeps_input_3_blocked_when_schemes_are_missing(tmp_path)
     client = TestClient(
         create_app(ProductSettings(root=tmp_path), research_sources=())
     )
+    job = confirmed_job(
+        client,
+        level=3,
+        profile={"address": "Test City Road 1"},
+    )
     response = client.post(
         "/api/analysis/simulate",
         json={
-            "selected_mode": 3,
-            "mode_confirmed": True,
-            "input_profile": {"address": "Test City Road 1"},
+            "job_id": job["job_id"],
+            "intervention_brief_hash": job["intervention_brief_hash"],
             "payload": input_3_payload(),
         },
     )
@@ -306,15 +389,19 @@ def test_simulation_api_accepts_only_valid_aggregate_customer_bundle(tmp_path):
     client = TestClient(
         create_app(ProductSettings(root=tmp_path), research_sources=())
     )
+    job = confirmed_job(
+        client,
+        level=1,
+        profile={
+            "city": "Test City",
+            "address": "Test City Road 1",
+        },
+    )
     response = client.post(
         "/api/analysis/simulate",
         json={
-            "selected_mode": 1,
-            "mode_confirmed": True,
-            "input_profile": {
-                "city": "Test City",
-                "address": "Test City Road 1",
-            },
+            "job_id": job["job_id"],
+            "intervention_brief_hash": job["intervention_brief_hash"],
             "payload": input_1_payload(),
             "customer_intelligence": customer,
         },
@@ -328,12 +415,8 @@ def test_simulation_api_accepts_only_valid_aggregate_customer_bundle(tmp_path):
     rejected = client.post(
         "/api/analysis/simulate",
         json={
-            "selected_mode": 1,
-            "mode_confirmed": True,
-            "input_profile": {
-                "city": "Test City",
-                "address": "Test City Road 1",
-            },
+            "job_id": job["job_id"],
+            "intervention_brief_hash": job["intervention_brief_hash"],
             "payload": input_1_payload(),
             "customer_intelligence": customer,
         },

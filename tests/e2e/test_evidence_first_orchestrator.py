@@ -81,6 +81,38 @@ async def test_requirement_agent_graph_is_complete_ordered_and_field_scoped():
         "social_observation",
     ]
 
+    future_demand = next(
+        item
+        for item in nodes
+        if item["metric_id"] == "SC2.future_demand_event_scan"
+    )
+    assert future_demand["required"] is True
+    assert future_demand["min_evidence_count"] == 2
+    assert future_demand["max_age_days"] == 730
+    assert future_demand["evidence_types"] == [
+        "observed_fact",
+        "analysis_inference",
+    ]
+    event_scan = future_demand["metadata"]["future_event_scan"]
+    assert future_demand["metadata"]["allowed_source_roles"] == [
+        "government_record",
+        "official_planning_document",
+        "statutory_document",
+        "corporate_official",
+        "verified_first_party_document",
+        "documented_analysis",
+        "public_web_candidate",
+        "web_search_candidate",
+    ]
+    assert event_scan["minimum_observed_evidence_count"] == 1
+    assert event_scan["requires_counter_factors"] is True
+    assert event_scan["must_separate"] == [
+        "current_observed_population",
+        "planned_capacity",
+        "addressable_customer_hypothesis",
+    ]
+    assert "major_employer_or_headquarters" in event_scan["event_classes"]
+
     for field_name in SECTION_REQUIREMENTS["AD4"]:
         ad4_field = next(
             item for item in nodes if item["metric_id"] == f"AD4.{field_name}"
