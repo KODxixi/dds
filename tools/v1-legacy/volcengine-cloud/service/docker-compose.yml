@@ -1,0 +1,55 @@
+# DDS 云端单服务部署 — GarchOS/Caddy 后方的内网 Flask API
+# 运行：先注入已验收 DDS_IMAGE_REPOSITORY + DDS_IMAGE_DIGEST，再执行 docker compose up -d --pull never
+# 停止：docker compose down
+#
+x-dds-image: &dds-image "${DDS_IMAGE_REPOSITORY:?set the DDS image repository}@${DDS_IMAGE_DIGEST:?set the immutable sha256 digest}"
+
+services:
+  dds-app:
+    image: *dds-image
+    container_name: dds-app
+    restart: unless-stopped
+    env_file:
+      - ./.env.dds-cloud
+    # 只绑定 ECS loopback；公网唯一入口由同机 GarchOS/Caddy 提供。
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      # TOS 数据缓存（query_local.py 从 TOS 下载到本地）
+      - dds-cache:/app/cache
+      # Vault 持久化（容器重启不丢本地楼盘数据；云端模式优先 TOS，本地数据作热缓存）
+      - dds-vault:/app/Vault
+      # 报告、项目、学习与指标等动态产物；由云端同步任务增量写回 TOS。
+      - dds-data-out:/app/data_out
+    healthcheck:
+      test: ["CMD", "python", "-B", "/app/cloud/volcengine/service/healthcheck.py"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+
+  dds-sync:
+    image: *dds-image
+    container_name: dds-sync
+    restart: unless-stopped
+    depends_on:
+      dds-app:
+        condition: service_healthy
+    env_file:
+      - ./.env.dds-cloud
+    command:
+      - python
+      - -B
+      - /app/cloud/volcengine/dynamic_sync_worker.py
+      - --root
+      - /app/data_out
+      - --execute
+      - --interval-seconds
+      - "900"
+    volumes:
+      - dds-data-out:/app/data_out
+
+volumes:
+  dds-cache:
+  dds-vault:
+  dds-data-out:

@@ -1,0 +1,6 @@
+# DDS Volcengine TOS cloud-deploy dependencies.
+# Install after user approval: pip install -r cloud/volcengine/requirements.volcengine.txt
+tos>=2.8.0
+python-dotenv>=1.0.1
+requests>=2.31
+duckdb>=1.0.0

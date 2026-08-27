@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#101412">
+    <meta name="color-scheme" content="dark">
+    <title>DDS 项目决策报告</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2393503f' d='M32 4 60 32 32 60 4 32Z'/%3E%3Cpath fill='%230b0f0e' d='M32 18 46 32 32 46 18 32Z'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="/dds/assets/styles/app-v2.css?v=20260714-2">
+  </head>
+  <body class="report-page">
+    <div id="reportRoot" class="report-app report-document" data-surface="document" data-state="loading">
+      <header class="report-topbar">
+        <a class="field-brand" href="/dds/" aria-label="返回 DDS Decision Field">
+          <span class="field-brand__mark" aria-hidden="true"></span>
+          <span>DDS</span>
+          <span class="field-brand__mode">Live Report</span>
+        </a>
+        <div class="report-project-title">
+          <span>项目研判</span>
+          <strong id="reportProjectName">读取项目中</strong>
+        </div>
+        <div class="report-actions" aria-label="报告命令">
+          <button type="button" class="text-button" data-slot="button" data-variant="ghost" data-action="present">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"></path></svg>
+            演示
+          </button>
+          <button type="button" class="text-button" data-slot="button" data-variant="ghost" data-action="export-html" aria-label="导出单文件 HTML">
+            <span class="action-label action-label--full">单文件 HTML</span>
+            <span class="action-label action-label--compact" aria-hidden="true">HTML</span>
+          </button>
+          <button type="button" class="text-button" data-slot="button" data-variant="ghost" data-action="export-json" aria-label="导出 JSON">
+            <span class="action-label">JSON</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="report-document-head" aria-labelledby="reportDecisionSummary">
+          <div class="report-document-head__meta">
+            <span id="reportSceneLabel">DECISION REVISION</span>
+            <a id="reportMapLink" class="text-button" href="#">打开空间研判</a>
+          </div>
+          <h1 id="reportDecisionSummary">正在组装联席判断</h1>
+          <p>本页只呈现已固化的决策、参数与证据。地图数据在独立空间研判页维护。</p>
+        </section>
+
+        <nav id="reportNav" class="report-nav" aria-label="报告章节">
+          <button type="button" data-section-target="decision" aria-current="true">Decision</button>
+          <button type="button" data-section-target="site">Site</button>
+          <button type="button" data-section-target="market">Market</button>
+          <button type="button" data-section-target="customer">Customer</button>
+          <button type="button" data-section-target="product">Product</button>
+          <button type="button" data-section-target="design">Design</button>
+          <button type="button" data-section-target="finance">Finance</button>
+          <button type="button" data-section-target="risk">Risk</button>
+          <button type="button" data-section-target="provenance">Provenance</button>
+        </nav>
+
+        <article id="reportContent" class="report-content" aria-busy="true">
+          <section id="section-decision" class="report-band report-band--decision" data-report-section="decision" tabindex="-1">
+            <header><span>01</span><h1>Decision</h1><p>进入结论、边界与置信度</p></header>
+            <div class="report-band__body" data-section-content="decision"><p class="loading-line">读取决策修订…</p></div>
+          </section>
+          <section id="section-site" class="report-band" data-report-section="site" tabindex="-1">
+            <header><span>02</span><h2>Site</h2><p>位置、交通、资源与法定约束</p></header>
+            <div class="report-band__body" data-section-content="site"></div>
+          </section>
+          <section id="section-market" class="report-band" data-report-section="market" tabindex="-1">
+            <header><span>03</span><h2>Market</h2><p>竞品、价格带、去化与缺口</p></header>
+            <div class="report-band__body" data-section-content="market"></div>
+          </section>
+          <section id="section-customer" class="report-band" data-report-section="customer" tabindex="-1">
+            <header><span>04</span><h2>Customer</h2><p>客群、支付意愿与购买阻力</p></header>
+            <div class="report-band__body" data-section-content="customer"></div>
+          </section>
+          <section id="section-product" class="report-band" data-report-section="product" tabindex="-1">
+            <header><span>05</span><h2>Product</h2><p>面积段、户配、总价与错配风险</p></header>
+            <div class="report-band__body" data-section-content="product"></div>
+          </section>
+          <section id="section-design" class="report-band" data-report-section="design" tabindex="-1">
+            <header><span>06</span><h2>Design</h2><p>总图、户型、立面、会所与景观任务</p></header>
+            <div class="report-band__body" data-section-content="design"></div>
+          </section>
+          <section id="section-finance" class="report-band" data-report-section="finance" tabindex="-1">
+            <header><span>07</span><h2>Finance</h2><p>地价边界、地货比、IRR 与敏感性</p></header>
+            <div class="report-band__body" data-section-content="finance"></div>
+          </section>
+          <section id="section-risk" class="report-band report-band--risk" data-report-section="risk" tabindex="-1">
+            <header><span>08</span><h2>Risk</h2><p>Hard stop、冲突、待补证据与人审项</p></header>
+            <div class="report-band__body" data-section-content="risk"></div>
+          </section>
+          <section id="section-provenance" class="report-band" data-report-section="provenance" tabindex="-1">
+            <header><span>09</span><h2>Provenance</h2><p>来源等级、时间、样本与方法</p></header>
+            <div class="report-band__body" data-section-content="provenance"></div>
+          </section>
+        </article>
+      </main>
+
+      
+
+      <div id="presentationOverlay" class="presentation-overlay" aria-hidden="true">
+        <div class="presentation-overlay__topline">
+          <span>DDS / PRESENTATION</span>
+          <span>ESC 退出</span>
+        </div>
+        <div class="presentation-caption">
+          <span id="presentationIndex">01 / 09</span>
+          <h2 id="presentationTitle">Decision</h2>
+          <p id="presentationText">进入结论、边界与置信度</p>
+        </div>
+        <div class="presentation-controls">
+          <button type="button" data-action="previous-slide" aria-label="上一章节">←</button>
+          <button type="button" data-action="next-slide" aria-label="下一章节">→</button>
+        </div>
+      </div>
+
+      <div id="reportLiveRegion" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+    </div>
+
+    <noscript>需要启用 JavaScript 才能查看 DDS 项目报告。</noscript>
+    <script type="module" src="/dds/assets/js/report-main.js?v=20260714-9"></script>
+  </body>
+</html>

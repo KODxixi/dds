@@ -1,0 +1,775 @@
+/*
+ * Project-local Gary-UI composition for the L-9 decision report.
+ * This layer is intentionally appended after the generic DDS shell styles.
+ * Reading mode is a natural-height document: no analytical card or table is
+ * allowed to become a fixed-height viewport.
+ */
+
+body[data-gary-ui] {
+  --report-width: 1480px;
+  --gary-report-gutter: clamp(18px, 4vw, 60px);
+  --gary-ink-strong: var(--gary-text-primary, rgba(255,255,255,.94));
+  --gary-ink: var(--gary-text-secondary, rgba(255,255,255,.68));
+  --gary-muted: var(--gary-text-tertiary, rgba(255,255,255,.48));
+  color: var(--gary-ink-strong);
+  background: var(--gary-surface-page, #080808);
+  font-family: var(--gary-font-sans, "Noto Sans SC", "Microsoft YaHei UI", sans-serif);
+}
+
+body[data-gary-ui] .scene {
+  background:
+    radial-gradient(ellipse at 14% 12%, rgba(205, 216, 222, .18), transparent 32%),
+    radial-gradient(ellipse at 84% 72%, rgba(73, 112, 124, .16), transparent 42%),
+    linear-gradient(145deg, #050607 0%, #11181b 50%, #1e292c 100%);
+}
+
+body[data-gary-ui] .report-nav.webbar {
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(12, 16, 18, .54);
+  box-shadow: inset 0 1px rgba(255,255,255,.16), 0 18px 54px rgba(0,0,0,.30);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
+  backdrop-filter: blur(24px) saturate(120%);
+}
+
+/* The page canvas remains 1920×1080 in presentation mode, but is a normal
+   flow element in reading mode. */
+.gary-report-page {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  color: var(--gary-ink-strong);
+  background: #0a0d0f;
+}
+
+.gary-report-page > .page-backdrop {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  min-height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 72% 18%, rgba(102, 151, 161, .16), transparent 34%),
+    linear-gradient(135deg, #121a1d, #080a0b 72%);
+}
+
+.gary-report-page > .page-backdrop::after {
+  background:
+    linear-gradient(90deg, rgba(4,6,7,.84), rgba(4,6,7,.52) 52%, rgba(4,6,7,.74)),
+    radial-gradient(circle at 20% 48%, transparent 0 20%, rgba(0,0,0,.34) 78%);
+}
+
+.gary-page-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(calc(100% - 120px), var(--report-width));
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 126px 0 52px;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 430px);
+  grid-template-areas:
+    "primary decision"
+    "conclusion conclusion"
+    "footer footer";
+  gap: 26px 40px;
+  align-items: start;
+}
+
+.gary-page-primary {
+  grid-area: primary;
+  min-width: 0;
+}
+
+.gary-page-head {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.gary-kicker,
+.gary-block-eyebrow,
+.gary-decision-label,
+.gary-conclusion-bar > span,
+.gary-page-footer,
+.gary-prompt-source {
+  color: var(--gary-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.45;
+}
+
+.gary-kicker {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.gary-kicker span {
+  color: rgba(255,255,255,.38);
+  letter-spacing: .04em;
+  text-transform: none;
+}
+
+.gary-page-title-group h1 {
+  max-width: 100%;
+  margin: 10px 0 0;
+  color: var(--gary-ink-strong);
+  font-size: clamp(32px, 3.1vw, 58px);
+  font-weight: 760;
+  line-height: 1.12;
+  letter-spacing: -.045em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  text-shadow: 0 5px 28px rgba(0,0,0,.38);
+}
+
+.gary-page-question {
+  max-width: 900px;
+  margin: 0;
+  color: var(--gary-ink);
+  font-size: clamp(16px, 1.35vw, 21px);
+  line-height: 1.68;
+  overflow-wrap: anywhere;
+}
+
+.gary-visual-frame {
+  display: grid;
+  min-width: 0;
+  min-height: 360px;
+  padding: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 30px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.08), transparent 42%),
+    rgba(7, 11, 13, .66);
+  box-shadow: inset 0 1px rgba(255,255,255,.15), inset 0 -1px rgba(0,0,0,.32), 0 24px 70px rgba(0,0,0,.28);
+}
+
+.gary-visual-frame.no-visual {
+  min-height: 132px;
+  align-content: center;
+}
+
+.gary-visual-frame > .asset-gallery,
+.gary-visual-frame > .page-runtime-visuals,
+.gary-visual-frame > .gary-visual-empty {
+  min-width: 0;
+  min-height: 0;
+  grid-column: 1 / -1;
+}
+
+.gary-visual-frame > .asset-gallery:not(:only-child),
+.gary-visual-frame > .page-runtime-visuals:not(:only-child) {
+  grid-column: auto;
+}
+
+.gary-visual-frame > .asset-gallery:only-child,
+.gary-visual-frame > .page-runtime-visuals:only-child {
+  min-height: 330px;
+}
+
+.gary-asset-gallery {
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gary-asset-gallery.asset-count-1 {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.gary-asset-gallery > * {
+  min-width: 0;
+  min-height: 280px;
+}
+
+.gary-visual-frame .asset-visual {
+  height: 100%;
+  min-height: 280px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  background: rgba(4,7,9,.78);
+}
+
+.gary-visual-frame .asset-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gary-visual-frame .asset-visual figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 10px 12px;
+  color: var(--gary-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.gary-visual-frame .page-runtime-visuals {
+  display: grid;
+  min-height: 330px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* The runtime keeps both mount points so its canonical API remains stable,
+   but a chart-only or diagram-only page should use the whole visual board.
+   Without these spans the populated stage occupies half the board and the
+   SVG is letterboxed into a misleadingly small thumbnail. */
+.gary-visual-frame .page-runtime-visuals.has-charts:not(.has-diagrams),
+.gary-visual-frame .page-runtime-visuals.has-diagrams:not(.has-charts) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.gary-visual-frame .page-runtime-visuals.has-charts:not(.has-diagrams) [data-chart-stage],
+.gary-visual-frame .page-runtime-visuals.has-diagrams:not(.has-charts) [data-diagram-stage] {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.gary-visual-frame .page-runtime-visuals.has-charts:not(.has-diagrams) [data-diagram-stage],
+.gary-visual-frame .page-runtime-visuals.has-diagrams:not(.has-charts) [data-chart-stage] {
+  display: none;
+}
+
+.gary-visual-frame .page-runtime-visuals > *,
+.gary-visual-frame [data-chart-stage],
+.gary-visual-frame [data-diagram-stage],
+.gary-visual-frame .runtime-visual {
+  min-width: 0;
+  min-height: 320px;
+  height: auto;
+  overflow: visible;
+}
+
+.gary-visual-frame .page-runtime-visuals > :only-child,
+.gary-visual-frame [data-chart-stage]:only-child,
+.gary-visual-frame [data-diagram-stage]:only-child {
+  grid-column: 1 / -1;
+}
+
+.gary-visual-frame .dds-chart-argument-card {
+  min-height: 320px;
+  height: auto;
+  overflow: visible;
+  border-radius: 20px;
+}
+
+.gary-visual-frame .dds-chart-main {
+  min-height: 230px;
+  height: 230px;
+}
+
+.gary-visual-frame .runtime-diagram svg {
+  width: 100%;
+  height: 320px;
+  min-height: 320px;
+  border-radius: 20px;
+}
+
+.gary-visual-empty {
+  display: grid;
+  min-height: 96px;
+  align-content: center;
+  gap: 5px;
+  padding: 18px 20px;
+  border: 1px dashed rgba(255,255,255,.20);
+  border-radius: 20px;
+  background: rgba(255,255,255,.035);
+}
+
+.gary-visual-empty span {
+  color: var(--gary-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+.gary-visual-empty strong {
+  color: var(--gary-ink-strong);
+  font-size: 17px;
+}
+
+.gary-visual-empty p {
+  margin: 0;
+  color: var(--gary-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.gary-metric-grid {
+  display: grid;
+  min-width: 0;
+  margin-top: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gary-metric-grid .metric-plate {
+  min-width: 0;
+  min-height: 116px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 18px;
+  background: rgba(8,11,13,.82);
+}
+
+.gary-metric-grid .metric-plate strong {
+  font-size: clamp(22px, 2vw, 32px);
+  overflow-wrap: anywhere;
+}
+
+.gary-evidence-grid {
+  display: grid;
+  min-width: 0;
+  margin-top: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.gary-evidence-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gary-evidence-grid > .report-table,
+.gary-evidence-grid > .report-case,
+.gary-evidence-grid > .asset-reference,
+.gary-evidence-grid > .gary-prompt-block {
+  grid-column: 1 / -1;
+}
+
+.gary-evidence-grid .report-block,
+.gary-evidence-grid .report-table,
+.gary-evidence-grid .report-case,
+.gary-evidence-grid .asset-reference {
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0;
+  overflow: visible !important;
+}
+
+.gary-evidence-grid .report-block {
+  padding: 22px 24px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 20px;
+  background: rgba(11,14,16,.78);
+}
+
+.gary-evidence-grid .report-block h3,
+.gary-evidence-grid .report-table figcaption,
+.gary-evidence-grid .report-case h3 {
+  max-width: 100%;
+  margin: 0 0 12px;
+  color: var(--gary-ink-strong);
+  font-size: 18px;
+  line-height: 1.38;
+  overflow-wrap: anywhere;
+}
+
+.gary-evidence-grid .report-block p,
+.gary-evidence-grid .report-block li,
+.gary-evidence-grid .report-case p,
+.gary-evidence-grid .report-case dd {
+  color: var(--gary-ink);
+  font-size: 15px;
+  line-height: 1.72;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.gary-evidence-grid .report-table,
+.gary-evidence-grid .report-case,
+.gary-evidence-grid .asset-reference {
+  padding: 20px 22px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 20px;
+  background: rgba(8,11,13,.88);
+}
+
+.gary-evidence-grid .report-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: thin;
+}
+
+.gary-evidence-grid .report-table table {
+  width: 100%;
+  min-width: 720px;
+  table-layout: auto;
+  border-collapse: collapse;
+}
+
+.gary-evidence-grid .report-table th,
+.gary-evidence-grid .report-table td {
+  min-width: 84px;
+  padding: 10px 11px;
+  color: var(--gary-ink);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  font-size: 13px;
+  line-height: 1.55;
+  text-align: left;
+  vertical-align: top;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.gary-evidence-grid .report-table th {
+  color: var(--gary-ink-strong);
+  font-weight: 700;
+}
+
+.gary-decision-panel {
+  grid-area: decision;
+  min-width: 0;
+  align-self: start;
+  padding: 26px 28px;
+  border-radius: 30px;
+  overflow: visible;
+  background-color: rgba(24, 29, 31, .58);
+  box-shadow: inset 0 1px rgba(255,255,255,.18), inset 0 -1px rgba(0,0,0,.28), 0 28px 72px rgba(0,0,0,.34);
+}
+
+.gary-decision-label {
+  margin-top: 18px;
+  letter-spacing: .14em;
+}
+
+.gary-decision-label:first-child {
+  margin-top: 0;
+}
+
+.gary-decision-panel p {
+  margin: 8px 0 0;
+  color: var(--gary-ink);
+  font-size: 15px;
+  line-height: 1.72;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.gary-decision-panel .gary-decision-question {
+  color: var(--gary-ink-strong);
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.gary-decision-panel .gary-decision-takeaway {
+  color: var(--gary-ink-strong);
+  font-size: 20px;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.gary-gate {
+  margin-top: 22px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--gary-state-caution, #ffd60a);
+  border-radius: 0 16px 16px 0;
+  background: rgba(255,214,10,.07);
+}
+
+.gary-gate span,
+.gary-owner span {
+  color: var(--gary-state-caution, #ffd60a);
+  font-size: 11px;
+  font-weight: 720;
+  letter-spacing: .12em;
+}
+
+.gary-gate p {
+  margin-top: 6px;
+  color: var(--gary-ink-strong);
+}
+
+.gary-owner {
+  margin-top: 20px !important;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+.gary-owner span {
+  margin-right: 10px;
+  color: var(--gary-muted);
+}
+
+.gary-conclusion-bar {
+  display: grid;
+  min-width: 0;
+  grid-area: conclusion;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 20px 24px;
+  border-radius: 20px;
+  background: rgba(17,20,21,.92);
+}
+
+.gary-conclusion-bar > span {
+  padding-top: 4px;
+}
+
+.gary-conclusion-bar strong {
+  color: var(--gary-ink-strong);
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.gary-page-footer {
+  display: flex;
+  flex-wrap: wrap;
+  grid-area: footer;
+  gap: 8px 18px;
+  padding-top: 2px;
+  letter-spacing: .06em;
+}
+
+.gary-page-footer span:first-child {
+  color: var(--gary-ink-strong);
+}
+
+.gary-prompt-block {
+  background: rgba(14, 19, 21, .94) !important;
+}
+
+.gary-prompt-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.gary-copy-button {
+  min-height: 36px;
+  padding: 7px 13px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  color: var(--gary-ink-strong);
+  background: rgba(255,255,255,.08);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 150ms cubic-bezier(.32,.72,0,1), transform 150ms cubic-bezier(.32,.72,0,1);
+}
+
+.gary-copy-button:hover {
+  background: rgba(255,255,255,.16);
+}
+
+.gary-copy-button:active {
+  transform: scale(.97);
+}
+
+.gary-prompt-block pre {
+  max-width: 100%;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 14px;
+  color: rgba(255,255,255,.82);
+  background: rgba(0,0,0,.26);
+  font: 13px/1.72 var(--gary-font-mono, Consolas, monospace);
+  white-space: pre-wrap;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.gary-prompt-meta {
+  margin: 12px 0 0;
+  padding-left: 1.2em;
+}
+
+.gary-prompt-meta li {
+  color: var(--gary-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.55 !important;
+}
+
+.gary-prompt-source {
+  margin: 12px 0 0 !important;
+  font-size: 11px !important;
+  letter-spacing: .02em;
+}
+
+.gary-report-page .page-sources.source-index {
+  position: relative;
+  z-index: 1;
+  width: min(calc(100% - 120px), var(--report-width));
+  margin: 0 auto 42px;
+  padding: 16px 20px;
+  border-radius: 18px;
+  background: rgba(7,9,10,.78);
+}
+
+/* Reading mode is the authoritative full-data view. */
+body[data-report-mode="reading"] .gary-report-page,
+body[data-report-mode="reading"] .gary-page-layout,
+body[data-report-mode="reading"] .gary-page-primary,
+body[data-report-mode="reading"] .gary-evidence-grid,
+body[data-report-mode="reading"] .gary-decision-panel,
+body[data-report-mode="reading"] .gary-visual-frame,
+body[data-report-mode="reading"] .gary-conclusion-bar {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+body[data-report-mode="reading"] .gary-page-layout {
+  min-height: 0 !important;
+}
+
+body[data-report-mode="reading"] .gary-decision-panel {
+  position: relative;
+  top: auto;
+}
+
+body[data-report-mode="reading"] .gary-report-page .page-sources.source-index {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Presentation remains a concise 16:9 executive frame; the same page source
+   is available in reading mode for the complete tables and prompts. */
+body[data-report-mode="presentation"] .gary-evidence-grid,
+body[data-report-mode="presentation"] .gary-report-page .source-index,
+body[data-report-mode="presentation"] .gary-page-footer {
+  display: none !important;
+}
+
+body[data-report-mode="presentation"] .gary-page-layout {
+  width: min(calc(100% - 120px), var(--report-width));
+  grid-template-areas:
+    "primary decision"
+    "conclusion conclusion";
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding-top: 112px;
+  padding-bottom: 44px;
+}
+
+body[data-report-mode="presentation"] .gary-visual-frame {
+  min-height: 410px;
+}
+
+body[data-report-mode="presentation"] .gary-decision-panel {
+  max-height: 540px;
+  overflow: hidden;
+}
+
+@media (max-width: 1120px) {
+  .gary-page-layout {
+    width: min(calc(100% - 56px), var(--report-width));
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+    gap: 22px;
+  }
+
+  .gary-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gary-visual-frame .page-runtime-visuals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .gary-page-layout {
+    width: calc(100% - 28px);
+    padding: 96px 0 34px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "primary"
+      "decision"
+      "conclusion"
+      "footer";
+    gap: 18px;
+  }
+
+  .gary-page-title-group h1 {
+    font-size: clamp(28px, 8vw, 42px);
+  }
+
+  .gary-visual-frame {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 250px;
+    padding: 10px;
+    border-radius: 22px;
+  }
+
+  .gary-visual-frame > .asset-gallery:not(:only-child),
+  .gary-visual-frame > .page-runtime-visuals:not(:only-child) {
+    grid-column: 1;
+  }
+
+  .gary-visual-frame .page-runtime-visuals {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 250px;
+  }
+
+  .gary-visual-frame .page-runtime-visuals > *,
+  .gary-visual-frame [data-chart-stage],
+  .gary-visual-frame [data-diagram-stage] {
+    min-height: 260px;
+  }
+
+  .gary-visual-frame .runtime-diagram svg {
+    height: 260px;
+    min-height: 260px;
+  }
+
+  .gary-evidence-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gary-evidence-grid > * {
+    grid-column: 1 / -1 !important;
+  }
+
+  .gary-conclusion-bar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    padding: 18px;
+  }
+
+  .gary-report-page .page-sources.source-index {
+    width: calc(100% - 28px);
+  }
+
+  .gary-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gary-metric-grid .metric-plate {
+    min-height: 102px;
+    padding: 13px;
+  }
+
+  .gary-decision-panel {
+    padding: 22px;
+    border-radius: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gary-copy-button {
+    transition: none;
+  }
+}

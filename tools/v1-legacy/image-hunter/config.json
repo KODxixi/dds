@@ -1,0 +1,109 @@
+{
+  "_comment": "Image Hunter 每日自动猎取配置。修改后下次运行即生效。",
+  "daily_max_total": 15,
+  "daily_max_per_source": 5,
+  "discover_cap_per_source": 10,
+  "min_score": 3.5,
+  "request_timeout": 30,
+  "max_workers": 4,
+  "polite_delay_sec": 1.5,
+  "sources": {
+    "archdaily_cn": {
+      "enabled": true,
+      "list_url": "https://www.archdaily.cn/cn"
+    },
+    "gooood": {
+      "enabled": true,
+      "list_url": "https://www.gooood.cn/category/type/architecture"
+    },
+    "archiposition": {
+      "enabled": true,
+      "list_url": "https://www.archiposition.com/category/1675"
+    },
+    "mooool": {
+      "enabled": true,
+      "list_url": "https://mooool.com/feed"
+    },
+    "inbox": {
+      "enabled": true,
+      "note": "处理 _inbox.txt 中粘贴的小红书/公众号链接（每行一个），处理后移入 _inbox_done.txt"
+    }
+  },
+  "mooool_residential": {
+    "_comment": "mooool 公寓住宅/售楼展示区全量抓取，命中即抓、不走阈值，归档到 taxonomy 业态目录（11_公寓住宅 / 31_售楼中心展示区）。日常 pages=2，初次全量 run_daily.bat --backfill。",
+    "enabled": true,
+    "archive_root": "D:\\ArchLib",
+    "pages": 2,
+    "backfill_pages": 30,
+    "max_per_run": 200,
+    "targets": [
+      {
+        "space": "apartments",
+        "cat": "10_居住/11_公寓住宅"
+      },
+      {
+        "space": "sales-center",
+        "cat": "30_营销空间/31_售楼中心展示区"
+      }
+    ]
+  },
+  "interest_weights": {
+    "_comment": "命中关键词加分，贴合海棠湾五大IP与商业/文体题材。",
+    "商业": 3,
+    "综合体": 3,
+    "商业街": 3,
+    "购物中心": 3,
+    "非标商业": 3,
+    "潮流": 3,
+    "零售": 3,
+    "买手店": 2,
+    "体育": 3,
+    "电竞": 3,
+    "音乐": 3,
+    "音乐厅": 3,
+    "艺术": 3,
+    "美术馆": 3,
+    "博物馆": 3,
+    "文化": 2,
+    "剧院": 2,
+    "展览": 2,
+    "酒店": 3,
+    "度假": 2,
+    "民宿": 1,
+    "示范区": 2,
+    "售楼": 2,
+    "城市设计": 2,
+    "更新": 1,
+    "改造": 1,
+    "总部": 2,
+    "办公": 1,
+    "别墅": 1,
+    "住宅": 1,
+    "豪宅": 1
+  },
+  "noise_keywords": [
+    "招聘",
+    "求职",
+    "竞赛资讯",
+    "竞赛公告",
+    "讲座",
+    "出版",
+    "图书",
+    "日历",
+    "招标",
+    "征集",
+    "访谈预告",
+    "直播预告"
+  ],
+  "notable_firm_bonus": 2,
+  "llm": {
+    "_comment": "可选：默认 off → 纯启发式零配置。本地 Qwen/Ollama 填 http://localhost:11434/v1。",
+    "enabled": false,
+    "base_url": "http://localhost:11434/v1",
+    "api_key": "ollama",
+    "model": "qwen2.5:32b",
+    "select_top": 12
+  },
+  "archive_root": "D:\\ArchLib",
+  "write_daily_digest": true
+}

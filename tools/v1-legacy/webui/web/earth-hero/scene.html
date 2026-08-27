@@ -1,0 +1,5000 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="/reports/interactive/dds-earth-hero-demos/">
+  <meta name="description" content="DDS 地产投拓决策入口，从城市、地块和关注条件直接生成完整研判报告。">
+  <title>Digital Decision System | 地产决策入口</title>
+  <script>
+    (function () {
+      var embed = new URLSearchParams(window.location.search).get("embed") || "";
+      if (!embed) return;
+      document.documentElement.dataset.embed = embed;
+      document.addEventListener("DOMContentLoaded", function () {
+        ["reportForm", "formStatus", "toast", "navRevealPanel"].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.hidden = true;
+          el.style.setProperty("display", "none", "important");
+          el.style.setProperty("visibility", "hidden", "important");
+          el.style.setProperty("pointer-events", "none", "important");
+        });
+        document.querySelectorAll(".liquid-nav,.coordinate-console,.nav-reveal-panel,.toast").forEach(function (el) {
+          el.hidden = true;
+          el.style.setProperty("display", "none", "important");
+          el.style.setProperty("visibility", "hidden", "important");
+          el.style.setProperty("pointer-events", "none", "important");
+        });
+      });
+    })();
+  </script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%2303060a'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23f6f8ff' fill-opacity='.8'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020306;
+      --ink: rgba(250, 250, 246, .95);
+      --muted: rgba(250, 250, 246, .58);
+      --line: rgba(255, 255, 255, .13);
+      --line-strong: rgba(255, 255, 255, .28);
+      --glass: rgba(6, 8, 13, .62);
+      --gold: #d8c083;
+      --mint: #8fe1bd;
+      --blue: #8cc7ff;
+      --danger: #ee806c;
+      --shadow: 0 28px 90px rgba(0, 0, 0, .52), inset 0 1px 0 rgba(255, 255, 255, .12);
+      font-family: "SF Pro SC", "PingFang SC", "Microsoft YaHei UI", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); letter-spacing: 0; }
+    body { overflow: hidden; }
+    button, input, select, textarea { font: inherit; }
+
+    .hero-shell {
+      position: relative;
+      min-height: 100svh;
+      overflow: hidden;
+      isolation: isolate;
+      background: #000;
+    }
+
+    .hero-shell::before,
+    .hero-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-shell::before {
+      background:
+        radial-gradient(circle at 50% 42%, rgba(50, 115, 255, .18), transparent 30%),
+        linear-gradient(180deg, rgba(0, 0, 0, .05), rgba(0, 0, 0, .72));
+    }
+
+    .hero-shell::after {
+      opacity: .24;
+      background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .014) 0 1px, transparent 1px 6px);
+      mix-blend-mode: screen;
+    }
+
+    .globe-card {
+      position: relative;
+      width: 100vw;
+      height: 100svh;
+      overflow: hidden;
+      background: #000;
+    }
+
+
+    .globe-card::before {
+      content: "";
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: min(32vh, 250px);
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.34) 48%, rgba(0,0,0,0));
+    }    .hero-copy {
+      position: absolute;
+      z-index: 6;
+      left: 0;
+      right: 0;
+      top: 0;
+      display: grid;
+      justify-items: center;
+      gap: 16px;
+      padding-top: clamp(30px, 4.4vh, 52px);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .access-badge {
+      display: inline-block;
+      width: fit-content;
+      border: 1px solid #3273ff;
+      border-radius: 999px;
+      background: #0f1c35;
+      color: rgba(237, 239, 253, .92);
+      padding: 4px 12px;
+      font-size: 13px;
+      line-height: 1.2;
+      box-shadow: 0 0 32px rgba(50, 115, 255, .22), inset 0 1px 0 rgba(255, 255, 255, .1);
+    }
+
+    .master-title {
+      margin: 0;
+      max-width: min(1120px, calc(100vw - 48px));
+      text-align: center;
+      font-size: clamp(34px, 3.2vw, 52px);
+      line-height: 1;
+      font-weight: 650;
+      letter-spacing: 0;
+      color: transparent;
+      background: linear-gradient(180deg, #edeffd 0%, #7b9cda 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      text-wrap: balance;
+    }
+
+    canvas {
+      position: absolute;
+      display: block;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    #starfieldCanvas {
+      z-index: 0;
+    }
+
+    #earthCanvas,
+    #globeFxCanvas {
+      inset: auto;
+      left: 50%;
+      top: 50%;
+      width: min(70vw, 800px, 80vh);
+      height: min(70vw, 800px, 80vh);
+      transform: translate(-50%, -50%);
+    }
+
+    #earthCanvas {
+      z-index: 2;
+      cursor: pointer;
+      touch-action: manipulation;
+      filter: saturate(1.08) contrast(1.04) drop-shadow(0 0 24px rgba(91, 161, 255, .2));
+    }
+
+    #globeFxCanvas {
+      z-index: 3;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      filter: blur(.12px) saturate(1.08);
+    }
+
+    .sparkle-horizon {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      bottom: -7vh;
+      width: 100vw;
+      height: min(38vh, 340px);
+      transform: translateX(-50%);
+      overflow: hidden;
+      pointer-events: none;
+      mask-image: radial-gradient(50% 50% at 50% 50%, white 0 44%, transparent 86%);
+      -webkit-mask-image: radial-gradient(50% 50% at 50% 50%, white 0 44%, transparent 86%);
+    }
+
+    .sparkle-horizon::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at bottom center, rgba(50, 115, 255, .86), transparent 68%),
+        radial-gradient(circle at 50% 74%, rgba(123, 156, 218, .22), transparent 42%);
+      opacity: .44;
+    }
+
+    .sparkle-horizon::after {
+      content: "";
+      position: absolute;
+      left: -50%;
+      top: 50%;
+      width: 200%;
+      aspect-ratio: 1 / .7;
+      border-radius: 10%;
+      border-top: 1px solid #163474;
+      background: #08132b;
+      box-shadow: 0 -40px 120px rgba(50, 115, 255, .22);
+    }
+
+    .sparkle-field {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(circle, rgba(237, 239, 253, .85) 0 1px, transparent 1.4px) 0 0 / 21px 21px,
+        radial-gradient(circle, rgba(123, 156, 218, .9) 0 1px, transparent 1.5px) 8px 14px / 31px 31px,
+        radial-gradient(circle, rgba(50, 115, 255, .9) 0 1.2px, transparent 1.7px) 18px 4px / 47px 47px;
+      opacity: .46;
+      transform: translateY(18px);
+      animation: sparkleDrift 9s linear infinite;
+    }
+
+    @keyframes sparkleDrift {
+      from { transform: translate3d(0, 18px, 0); }
+      to { transform: translate3d(-47px, 18px, 0); }
+    }
+    .sparkle-horizon {
+      display: none !important;
+    }
+
+    .coordinate-console {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      bottom: 28px;
+      width: min(900px, calc(100% - 80px));
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: 108px minmax(260px, 1fr) minmax(300px, 1fr) 84px;
+      gap: 6px;
+      padding: 10px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      border-top-color: var(--line-strong);
+      background: linear-gradient(135deg, rgba(255, 255, 255, .11), rgba(255, 255, 255, .045)), rgba(5, 7, 12, .68);
+      box-shadow: 0 22px 72px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255, 255, 255, .12);
+      backdrop-filter: blur(22px) saturate(1.12);
+      -webkit-backdrop-filter: blur(22px) saturate(1.12);
+      transition: transform .24s cubic-bezier(.32, .72, 0, 1), border-color .24s, background .24s;
+    }
+
+    html[data-variant="texture"] .coordinate-console {
+      width: min(900px, calc(100% - 80px));
+      border-color: rgba(255, 255, 255, .14);
+      border-top-color: rgba(255, 255, 255, .32);
+      background: linear-gradient(135deg, rgba(255, 255, 255, .105), rgba(255, 255, 255, .04)), rgba(4, 6, 10, .70);
+    }
+
+    html[data-variant="radar"] .coordinate-console {
+      width: min(900px, calc(100% - 80px));
+      border-color: rgba(142, 225, 189, .16);
+      border-top-color: rgba(142, 225, 189, .36);
+      background: linear-gradient(135deg, rgba(142, 225, 189, .1), rgba(255, 255, 255, .035)), rgba(4, 10, 12, .66);
+    }
+
+    html[data-variant="silent"] .coordinate-console {
+      width: min(900px, calc(100% - 80px));
+      border-color: rgba(216, 192, 131, .13);
+      border-top-color: rgba(216, 192, 131, .34);
+      background: linear-gradient(135deg, rgba(216, 192, 131, .09), rgba(255, 255, 255, .035)), rgba(4, 4, 5, .72);
+    }
+
+    .coordinate-console:focus-within {
+      border-color: rgba(216, 192, 131, .42);
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    .coordinate-console.running {
+      border-color: rgba(142, 225, 189, .48);
+    }
+
+    .coordinate-console.done {
+      border-color: rgba(216, 192, 131, .52);
+    }
+
+    .coordinate-console.error {
+      border-color: rgba(238, 128, 108, .62);
+      animation: shake .28s ease both;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(-50%); }
+      25% { transform: translateX(calc(-50% - 8px)); }
+      75% { transform: translateX(calc(-50% + 8px)); }
+    }
+
+    select,
+    input,
+    textarea,
+    button {
+      min-width: 0;
+      border: 1px solid rgba(255, 255, 255, .11);
+      color: var(--ink);
+      background: rgba(0, 0, 0, .26);
+      outline: none;
+      border-radius: 14px;
+    }
+
+    select,
+    input {
+      height: 52px;
+      padding: 0 12px;
+    }
+
+    select {
+      appearance: none;
+      cursor: pointer;
+      color: rgba(250, 250, 246, .78);
+      background:
+        linear-gradient(45deg, transparent 50%, rgba(250, 250, 246, .72) 50%) calc(100% - 16px) 22px / 6px 6px no-repeat,
+        linear-gradient(135deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .025)),
+        rgba(0, 0, 0, .26);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(250, 250, 246, .38);
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(216, 192, 131, .46);
+      box-shadow: 0 0 0 4px rgba(216, 192, 131, .08);
+    }
+
+    textarea {
+      grid-column: 3;
+      grid-row: 1;
+      min-height: 52px;
+      max-height: 52px;
+      resize: none;
+      padding: 13px 14px;
+      line-height: 1.35;
+    }
+
+    html[data-variant="silent"] textarea {
+      display: none;
+    }
+
+    button {
+      height: 52px;
+      cursor: pointer;
+      font-weight: 850;
+      border-top-color: rgba(255, 255, 255, .28);
+      background: linear-gradient(135deg, rgba(216, 192, 131, .96), rgba(255, 255, 255, .32));
+      color: #050604;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 14px 34px rgba(0, 0, 0, .28);
+    }
+
+    #submitBtn {
+      grid-column: 4;
+      grid-row: 1;
+    }
+
+    html[data-variant="texture"] button {
+      background: linear-gradient(135deg, rgba(244, 239, 221, .94), rgba(216, 192, 131, .36));
+      color: #050604;
+    }
+
+    html[data-variant="radar"] button {
+      background: linear-gradient(135deg, rgba(142, 225, 189, .96), rgba(255, 255, 255, .28));
+      color: #03100b;
+    }
+
+    button:disabled {
+      opacity: .54;
+      cursor: wait;
+    }
+
+    .status-line {
+      position: absolute;
+      left: 50%;
+      top: -12px;
+      width: 72px;
+      height: 3px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      overflow: hidden;
+      background: transparent;
+      color: transparent;
+      pointer-events: none;
+    }
+
+    .coordinate-console.running .status-line {
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .coordinate-console.running .status-line::before {
+      content: "";
+      display: block;
+      width: 38%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, transparent, var(--mint), transparent);
+      animation: loading 1s linear infinite;
+    }
+
+    @keyframes loading {
+      from { transform: translateX(-130%); }
+      to { transform: translateX(280%); }
+    }
+
+    .toast {
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      bottom: calc(max(22px, env(safe-area-inset-bottom)) + 124px);
+      max-width: min(520px, calc(100vw - 32px));
+      transform: translateX(-50%) translateY(12px);
+      opacity: 0;
+      pointer-events: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(0, 0, 0, .66);
+      color: rgba(250, 250, 246, .84);
+      box-shadow: 0 18px 54px rgba(0, 0, 0, .4);
+      backdrop-filter: blur(18px);
+      transition: opacity .22s, transform .22s;
+      font-size: 13px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    @media (max-width: 760px) {
+      .hero-shell {
+        padding: 8px;
+      }
+
+      .globe-card {
+        width: calc(100vw - 16px);
+        height: calc(100svh - 16px);
+        min-height: 620px;
+        aspect-ratio: auto;
+        border-radius: 12px;
+      }
+
+      .master-title {
+        top: 24px;
+        width: calc(100% - 14px);
+        font-size: clamp(30px, 9.2vw, 40px);
+        line-height: .9;
+      }
+
+      .coordinate-console,
+      html[data-variant="texture"] .coordinate-console,
+      html[data-variant="radar"] .coordinate-console,
+      html[data-variant="silent"] .coordinate-console {
+        width: min(100% - 18px, 456px);
+        bottom: max(10px, env(safe-area-inset-bottom));
+        grid-template-columns: 82px minmax(0, 1fr) 58px;
+        gap: 7px;
+        padding: 8px;
+        border-radius: 18px;
+      }
+
+      select,
+      input,
+      #submitBtn {
+        height: 44px;
+        border-radius: 16px;
+      }
+
+      input,
+      select {
+        padding: 0 11px;
+      }
+
+      #vision {
+        grid-column: 1 / -1;
+        grid-row: auto;
+        min-height: 38px;
+        max-height: 58px;
+        padding: 10px 12px;
+      }
+
+      #submitBtn {
+        grid-column: 3;
+        grid-row: 1;
+      }
+
+      #submitBtn span {
+        display: none;
+      }
+
+      #submitBtn::before {
+        content: ">";
+        font-size: 18px;
+        line-height: 1;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .coordinate-console,
+      html[data-variant="texture"] .coordinate-console,
+      html[data-variant="radar"] .coordinate-console,
+      html[data-variant="silent"] .coordinate-console {
+        grid-template-columns: 76px minmax(0, 1fr) 52px;
+      }
+
+      .master-title {
+        font-size: clamp(28px, 8.6vw, 36px);
+      }
+    }
+
+    /* DDS hero title: no backing glass, just centered cinematic type over the globe. */
+    .hero-copy {
+      display: grid !important;
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      right: auto;
+      top: clamp(34px, 5.2vh, 58px);
+      width: min(1080px, calc(100vw - 48px));
+      transform: translateX(-50%);
+      justify-items: center;
+      gap: 10px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .access-badge {
+      display: none !important;
+    }
+
+    .master-title {
+      margin: 0;
+      max-width: none;
+      font-size: clamp(42px, 5.1vw, 86px);
+      line-height: .94;
+      font-weight: 720;
+      letter-spacing: 0;
+      color: rgba(248, 251, 255, .97);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(196, 218, 255, .92) 58%, rgba(126, 168, 226, .86));
+      -webkit-background-clip: text;
+      background-clip: text;
+      text-shadow:
+        0 18px 46px rgba(28, 98, 205, .32),
+        0 3px 18px rgba(0, 0, 0, .55);
+      text-wrap: balance;
+      white-space: normal;
+    }
+
+    .shuffle-char {
+      display: inline-block;
+      min-width: .18em;
+      will-change: transform, opacity, filter;
+      transform: translate3d(0, 0, 0);
+      transition:
+        transform .34s cubic-bezier(.16, 1, .3, 1),
+        opacity .24s cubic-bezier(.32, .72, 0, 1),
+        filter .34s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .shuffle-char.is-shuffling {
+      opacity: .56;
+      filter: blur(.6px);
+      transform: translate3d(0, -.08em, 0);
+    }
+
+    .shuffle-char.is-set {
+      opacity: 1;
+      filter: none;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .hero-subtitle {
+      margin: 0;
+      font-size: clamp(15px, 1.35vw, 22px);
+      line-height: 1.45;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: rgba(235, 242, 252, .74);
+      text-shadow: 0 5px 22px rgba(0, 0, 0, .44);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: subtitleRise .72s .68s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    @keyframes subtitleRise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bottom DDS condition box, adapted from the referenced animated dark-border input. */
+    .coordinate-console,
+    html[data-variant="texture"] .coordinate-console,
+    html[data-variant="radar"] .coordinate-console,
+    html[data-variant="silent"] .coordinate-console {
+      display: grid !important;
+      position: absolute;
+      z-index: 7;
+      left: 50%;
+      bottom: clamp(24px, 4vh, 38px);
+      width: min(930px, calc(100vw - 64px));
+      min-height: 70px;
+      transform: translateX(-50%);
+      grid-template-columns: 96px minmax(250px, 1.1fr) minmax(240px, .88fr) 88px;
+      gap: 8px;
+      padding: 8px;
+      isolation: isolate;
+      overflow: visible;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-top-color: rgba(255, 255, 255, .18);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.042), rgba(255,255,255,.014)),
+        rgba(1, 2, 4, .82);
+      box-shadow:
+        0 18px 58px rgba(0, 0, 0, .56),
+        inset 0 1px 0 rgba(255, 255, 255, .12),
+        inset 0 -1px 0 rgba(0, 0, 0, .72);
+      backdrop-filter: blur(16px) saturate(1.08) brightness(1.02);
+      -webkit-backdrop-filter: blur(16px) saturate(1.08) brightness(1.02);
+      transition:
+        transform .28s cubic-bezier(.32, .72, 0, 1),
+        border-color .28s cubic-bezier(.32, .72, 0, 1),
+        box-shadow .28s cubic-bezier(.32, .72, 0, 1);
+    }
+
+    .coordinate-console::before,
+    .coordinate-console::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 20px;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .coordinate-console::before {
+      opacity: .68;
+      filter: blur(12px);
+      background: conic-gradient(from 75deg,
+        rgba(0,0,0,0) 0deg,
+        rgba(83, 113, 255, .28) 38deg,
+        rgba(0,0,0,0) 92deg,
+        rgba(0,0,0,0) 210deg,
+        rgba(212, 184, 255, .2) 260deg,
+        rgba(0,0,0,0) 322deg);
+      animation: inputAuraRotate 8s linear infinite;
+    }
+
+    .coordinate-console::after {
+      inset: -1px;
+      z-index: -1;
+      opacity: .86;
+      filter: blur(.35px);
+      background: conic-gradient(from 68deg,
+        rgba(255,255,255,.18),
+        rgba(63, 73, 112, .34) 18%,
+        rgba(0,0,0,0) 38%,
+        rgba(0,0,0,0) 54%,
+        rgba(190, 174, 222, .2) 67%,
+        rgba(0,0,0,0) 82%,
+        rgba(255,255,255,.12));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      padding: 1px;
+      animation: inputAuraRotate 10s linear infinite reverse;
+    }
+
+    .coordinate-console:focus-within {
+      transform: translateX(-50%) translateY(-2px);
+      border-color: rgba(230, 235, 255, .22);
+      box-shadow:
+        0 22px 76px rgba(0, 0, 0, .62),
+        0 0 46px rgba(92, 128, 255, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .16),
+        inset 0 -1px 0 rgba(0, 0, 0, .72);
+    }
+
+    @keyframes inputAuraRotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .coordinate-console select,
+    .coordinate-console input,
+    .coordinate-console textarea,
+    .coordinate-console button {
+      position: relative;
+      z-index: 1;
+      height: 54px;
+      min-width: 0;
+      border-radius: 13px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(4, 7, 12, .76);
+      color: rgba(248, 251, 255, .92);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.075), inset 0 -1px 0 rgba(0,0,0,.52);
+      outline: none;
+      transition:
+        border-color .22s cubic-bezier(.32, .72, 0, 1),
+        background-color .22s cubic-bezier(.32, .72, 0, 1),
+        box-shadow .22s cubic-bezier(.32, .72, 0, 1),
+        transform .22s cubic-bezier(.32, .72, 0, 1);
+    }
+
+    .coordinate-console input,
+    .coordinate-console textarea {
+      padding: 0 16px;
+    }
+
+    .coordinate-console select {
+      padding: 0 28px 0 14px;
+      appearance: none;
+      background:
+        linear-gradient(45deg, transparent 50%, rgba(235,242,252,.7) 50%) right 15px center / 6px 6px no-repeat,
+        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.015)),
+        rgba(8, 10, 15, .86);
+    }
+
+    .coordinate-console textarea {
+      resize: none;
+      line-height: 1.35;
+      padding-top: 16px;
+      overflow: hidden;
+    }
+    #city {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    #address {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    #vision {
+      grid-column: 3;
+      grid-row: 1;
+      min-height: 54px;
+      max-height: 54px;
+    }
+
+    #submitBtn {
+      grid-column: 4;
+      grid-row: 1;
+    }
+
+    .coordinate-console input::placeholder,
+    .coordinate-console textarea::placeholder {
+      color: rgba(205, 208, 218, .58);
+    }
+
+    .coordinate-console input:focus,
+    .coordinate-console textarea:focus,
+    .coordinate-console select:focus {
+      border-color: rgba(226, 232, 255, .2);
+      background-color: rgba(8, 11, 17, .92);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.11),
+        inset 0 -1px 0 rgba(0,0,0,.54),
+        0 0 0 1px rgba(255,255,255,.035);
+    }
+
+    #submitBtn {
+      display: grid;
+      place-items: center;
+      border: 0;
+      color: rgba(8, 10, 12, .96);
+      font-weight: 700;
+      background: linear-gradient(180deg, rgba(247, 241, 219, .95), rgba(181, 172, 148, .92));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.74),
+        inset 0 -1px 0 rgba(0,0,0,.24),
+        0 10px 28px rgba(0,0,0,.42);
+      cursor: pointer;
+    }
+
+    #submitBtn:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.78),
+        inset 0 -1px 0 rgba(0,0,0,.24),
+        0 14px 34px rgba(0,0,0,.46);
+    }
+
+    .status-line {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: -24px;
+      min-height: 18px;
+      text-align: center;
+      color: rgba(235,242,252,.62);
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    @media (max-width: 760px) {
+      #earthCanvas,
+      #globeFxCanvas {
+        top: 72%;
+        width: min(116vw, 620px, 82vh);
+        height: min(116vw, 620px, 82vh);
+      }
+
+      .hero-copy {
+        top: max(28px, env(safe-area-inset-top));
+        width: min(370px, calc(100vw - 28px));
+      }
+
+      .master-title {
+        font-size: clamp(29px, 8.4vw, 38px);
+      }
+
+      .hero-subtitle {
+        font-size: 13px;
+      }
+
+      .coordinate-console,
+      html[data-variant="texture"] .coordinate-console,
+      html[data-variant="radar"] .coordinate-console,
+      html[data-variant="silent"] .coordinate-console {
+        width: min(356px, calc(100vw - 28px));
+        bottom: max(16px, env(safe-area-inset-bottom));
+        min-height: auto;
+        grid-template-columns: 76px minmax(0, 1fr) 54px;
+        gap: 7px;
+        padding: 7px;
+        border-radius: 17px;
+      }
+
+      .coordinate-console select,
+      .coordinate-console input,
+      .coordinate-console textarea,
+      .coordinate-console button {
+        height: 46px;
+        border-radius: 12px;
+        font-size: 13px;
+      }
+
+      #vision {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        height: 44px;
+        min-height: 44px;
+        padding-top: 13px;
+      }
+
+      #submitBtn {
+        grid-column: 3;
+        grid-row: 1;
+      }
+
+      #submitBtn span {
+        display: none;
+      }
+
+      #submitBtn::before {
+        content: ">";
+        font-size: 18px;
+        line-height: 1;
+      }
+    }
+    /* Premium hero direction: immersive globe first, fine orbital framing, compact glass input. */
+    #earthCanvas,
+    #globeFxCanvas {
+      top: 84%;
+      width: min(92vw, 1120px, 124vh);
+      height: min(92vw, 1120px, 124vh);
+      transform: translate(-50%, -50%);
+    }
+
+    .orbital-frame {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      top: 84%;
+      width: min(98vw, 1190px, 130vh);
+      height: min(98vw, 1190px, 130vh);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: .9;
+    }
+
+    .orbital-frame::before {
+      content: "";
+      position: absolute;
+      inset: -5%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 58%, rgba(126, 181, 255, .12) 64%, transparent 72%),
+        radial-gradient(circle at 50% 50%, transparent 49%, rgba(255, 255, 255, .045) 50%, transparent 51%);
+      mask-image: radial-gradient(circle at 50% 50%, transparent 35%, white 52%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 35%, white 52%, transparent 75%);
+    }
+
+    .orbit {
+      position: absolute;
+      inset: 6%;
+      border: 1px solid rgba(176, 213, 255, .16);
+      border-radius: 50%;
+      box-shadow: 0 0 26px rgba(93, 151, 255, .08), inset 0 0 22px rgba(255, 255, 255, .026);
+      mask-image: linear-gradient(90deg, transparent 0 12%, white 30% 70%, transparent 88% 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0 12%, white 30% 70%, transparent 88% 100%);
+      animation: orbitBreath 8s ease-in-out infinite;
+    }
+
+    .orbit-a { transform: rotate(-13deg) scaleX(1.1) scaleY(.34); }
+    .orbit-b { transform: rotate(34deg) scaleX(.7) scaleY(1.04); opacity: .38; animation-delay: -2.6s; }
+    .orbit-c { inset: 14%; transform: rotate(8deg) scaleX(1.18) scaleY(.46); opacity: .32; animation-delay: -5.2s; }
+
+    @keyframes orbitBreath {
+      0%, 100% { opacity: .28; filter: blur(.2px); }
+      48% { opacity: .72; filter: blur(0); }
+    }
+
+    .hero-copy {
+      top: clamp(34px, 5.2vh, 54px);
+      left: 50%;
+      right: auto;
+      z-index: 12;
+      width: min(860px, calc(100vw - 48px));
+      gap: 7px;
+      padding-top: 0;
+      opacity: 1;
+      transform: translateX(-50%);
+      animation: none;
+    }
+
+    .hero-copy::before {
+      content: "";
+      width: min(420px, 72vw);
+      height: 1px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, transparent, rgba(196, 225, 255, .42), rgba(255, 255, 255, .72), rgba(196, 225, 255, .42), transparent);
+      opacity: 0;
+      transform: translateY(18px) scaleX(.62);
+      animation: titleTraceIn 1.55s .18s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .master-title {
+      font-size: clamp(38px, 4.35vw, 76px);
+      line-height: .96;
+      font-weight: 560;
+      color: transparent;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(209, 224, 246, .86) 42%, rgba(107, 145, 194, .62) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      text-shadow: 0 24px 72px rgba(52, 113, 213, .32), 0 4px 24px rgba(0, 0, 0, .76);
+      opacity: 0;
+      transform: translateY(26px);
+      filter: blur(10px);
+      animation: titleLiftIn 1.35s .22s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(13px, 1vw, 17px);
+      font-weight: 420;
+      color: rgba(226, 237, 250, .72);
+      opacity: 0;
+      transform: translateY(20px);
+      filter: blur(8px);
+      animation: titleLiftIn 1.25s .44s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    @keyframes titleTraceIn {
+      to { opacity: .92; transform: translateY(0) scaleX(1); }
+    }
+
+    @keyframes titleLiftIn {
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+    @keyframes titleButtonIn {
+      to { opacity: 1; transform: translate3d(-50%, 0, 0); }
+    }
+
+    .shuffle-char,
+    .shuffle-char.is-shuffling,
+    .shuffle-char.is-set {
+      display: inline;
+      min-width: 0;
+      opacity: 1;
+      filter: none;
+      transform: none;
+      transition: none;
+    }
+
+    .power-toggle {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .power-switch {
+      --mx: 50%;
+      --my: 50%;
+      --tilt-x: 0deg;
+      --tilt-y: 0deg;
+      position: absolute;
+      z-index: 10;
+      left: 50%;
+      bottom: clamp(28px, 4.6vh, 44px);
+      width: 228px;
+      height: 68px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+      overflow: hidden;
+      border: 1px solid rgba(205, 234, 255, .26);
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, .34), rgba(155, 216, 255, .12) 18%, transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .035)),
+        rgba(5, 9, 15, .58);
+      box-shadow:
+        0 24px 86px rgba(0, 0, 0, .7),
+        0 0 42px rgba(96, 173, 255, .16),
+        inset 0 1px 0 rgba(255, 255, 255, .38),
+        inset 0 -24px 38px rgba(0, 0, 0, .5);
+      backdrop-filter: blur(30px) saturate(1.28) brightness(1.08);
+      -webkit-backdrop-filter: blur(30px) saturate(1.28) brightness(1.08);
+      transition:
+        transform .18s cubic-bezier(.2, .8, .2, 1),
+        border-color .18s cubic-bezier(.2, .8, .2, 1),
+        box-shadow .18s cubic-bezier(.2, .8, .2, 1),
+        background .18s cubic-bezier(.2, .8, .2, 1);
+      will-change: transform;
+    }
+
+    .power-switch::before {
+      content: "";
+      position: absolute;
+      inset: -28px;
+      z-index: -3;
+      border-radius: inherit;
+      background:
+        conic-gradient(from 140deg, transparent 0 18%, rgba(151, 243, 255, .82), rgba(255, 246, 210, .62), rgba(97, 154, 255, .74), transparent 64% 100%);
+      opacity: .72;
+      filter: blur(.2px);
+      animation: capsuleBorderFlow 7s linear infinite;
+    }
+
+    .power-switch::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      z-index: -2;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.16), transparent 32%),
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.2), transparent 28%),
+        radial-gradient(circle at 82% 86%, rgba(71, 137, 203, .24), transparent 34%),
+        linear-gradient(180deg, rgba(20, 27, 38, .9), rgba(3, 7, 13, .9));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -16px 26px rgba(0,0,0,.5),
+        inset 0 0 30px rgba(77, 144, 210, .08);
+    }
+
+    .capsule-flow {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        linear-gradient(112deg, transparent 0 18%, rgba(255, 255, 255, .36), rgba(151, 243, 255, .2), transparent 52% 100%),
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.18), transparent 28%);
+      transform: translateX(-84%);
+      opacity: .72;
+      animation: capsuleSheen 5.2s cubic-bezier(.5, 0, .2, 1) infinite;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .capsule-pulse {
+      position: absolute;
+      left: var(--mx);
+      top: var(--my);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(.22);
+      opacity: 0;
+      background: radial-gradient(circle, rgba(255,255,255,.42), rgba(151,243,255,.18) 45%, transparent 72%);
+      mix-blend-mode: screen;
+    }
+
+    .power-switch.is-pressing .capsule-pulse {
+      animation: capsulePulse .42s cubic-bezier(.16, 1, .3, 1) both;
+    }
+
+    .capsule-core {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: calc(100% - 13px);
+      height: calc(100% - 13px);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(238, 246, 255, .88);
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.14), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.018));
+      transform: perspective(520px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+      transition: transform .18s cubic-bezier(.2, .8, .2, 1), border-color .18s, background .18s;
+    }
+
+    .capsule-core::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.22), transparent 26%),
+        linear-gradient(180deg, rgba(255,255,255,.07), transparent 38%, rgba(0,0,0,.22));
+      opacity: .82;
+      pointer-events: none;
+    }
+
+    .capsule-core::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 8px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(151,243,255,.42), rgba(255,246,210,.34), transparent);
+      opacity: .74;
+      pointer-events: none;
+    }
+
+    .power-switch:hover {
+      transform: translateX(-50%) translateY(-3px) scale(1.012);
+      border-color: rgba(220, 244, 255, .42);
+      box-shadow:
+        0 28px 96px rgba(0, 0, 0, .74),
+        0 0 72px rgba(101, 184, 255, .22),
+        inset 0 1px 0 rgba(255, 255, 255, .42),
+        inset 0 -24px 38px rgba(0, 0, 0, .5);
+    }
+
+    .power-switch:active,
+    .power-switch.is-pressing {
+      transform: translateX(-50%) translateY(-1px) scale(.985);
+    }
+
+    .power-icon {
+      position: relative;
+      z-index: 1;
+      width: 22px;
+      height: 22px;
+      flex: 0 0 auto;
+      overflow: visible;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.48));
+    }
+
+    .scan-ring,
+    .scan-core-dot {
+      fill: none;
+      stroke: rgba(225, 241, 255, .78);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 34 18;
+      transform-origin: 32px 32px;
+      animation: scanRing 7s linear infinite;
+    }
+
+    .scan-arrow {
+      fill: rgba(232, 242, 255, .86);
+      stroke: rgba(255, 255, 255, .34);
+      stroke-width: 1;
+      transform-origin: 32px 32px;
+      transition: transform .18s cubic-bezier(.2, .8, .2, 1), fill .18s;
+    }
+
+    .scan-core-dot {
+      fill: rgba(151, 243, 255, .86);
+      stroke: none;
+      animation: scanCore 2.8s ease-in-out infinite;
+    }
+
+    .capsule-label {
+      position: relative;
+      z-index: 1;
+      font-size: 15px;
+      line-height: 1;
+      font-weight: 560;
+      color: rgba(238, 246, 255, .9);
+      text-shadow: 0 0 18px rgba(122, 190, 255, .28);
+      white-space: nowrap;
+    }
+
+    .power-switch:hover .scan-arrow {
+      transform: scale(1.08) rotate(8deg);
+      fill: rgba(255, 255, 255, .96);
+    }
+
+    .power-toggle:focus-visible + .power-switch {
+      outline: 2px solid rgba(151, 243, 255, .58);
+      outline-offset: 4px;
+    }
+
+    .power-toggle:checked + .power-switch {
+      border-color: rgba(255, 255, 255, .52);
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.38), rgba(151,243,255,.14) 22%, transparent 44%),
+        linear-gradient(180deg, rgba(255, 255, 255, .23), rgba(255, 255, 255, .055)),
+        rgba(9, 18, 27, .62);
+      box-shadow:
+        0 0 30px rgba(151, 243, 255, .45),
+        0 0 102px rgba(92, 169, 255, .3),
+        0 24px 82px rgba(0,0,0,.66),
+        inset 0 1px 1px rgba(255,255,255,.48),
+        inset 0 0 28px rgba(151, 243, 255, .2);
+    }
+
+    .power-toggle:checked + .power-switch::before {
+      opacity: .96;
+      animation-duration: 3.4s;
+    }
+
+    .power-toggle:checked + .power-switch .capsule-core {
+      color: rgba(255, 255, 255, .98);
+      border-color: rgba(255,255,255,.18);
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.18), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.028));
+    }
+
+    .power-toggle:checked + .power-switch .scan-ring {
+      stroke: rgba(151, 243, 255, .96);
+      animation-duration: 3.8s;
+    }
+
+    .power-toggle:checked + .power-switch .scan-arrow {
+      fill: rgba(255, 255, 255, .98);
+      filter: drop-shadow(0 0 8px rgba(151, 243, 255, .72));
+    }
+
+    .power-toggle:checked + .power-switch .capsule-label {
+      color: rgba(255,255,255,.98);
+      text-shadow: 0 0 20px rgba(151, 243, 255, .46);
+    }
+
+    @keyframes capsuleBorderFlow {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes capsuleSheen {
+      0%, 18% { transform: translateX(-86%); opacity: 0; }
+      34% { opacity: .78; }
+      62%, 100% { transform: translateX(86%); opacity: 0; }
+    }
+
+    @keyframes capsulePulse {
+      0% { opacity: .72; transform: translate(-50%, -50%) scale(.18); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(4.4); }
+    }
+
+    @keyframes scanRing {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes scanCore {
+      0%, 100% { opacity: .7; transform: scale(.82); }
+      50% { opacity: 1; transform: scale(1.18); }
+    }
+    .title-launch.power-switch {
+      top: clamp(28px, 4.6vh, 44px);
+      bottom: auto;
+      width: min(1180px, calc(100vw - 64px));
+      height: auto;
+      min-height: 128px;
+      padding: 8px;
+      border-radius: 36px;
+      text-align: center;
+      pointer-events: auto;
+      opacity: 0;
+      transform: translate3d(-50%, 20px, 0);
+      animation: titleButtonIn 1.2s .16s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .title-launch.power-switch::before {
+      inset: -38%;
+      opacity: .52;
+      background: conic-gradient(from 160deg, transparent 0 20%, rgba(151, 243, 255, .56), rgba(255, 246, 210, .36), rgba(96, 154, 255, .5), transparent 65% 100%);
+    }
+
+    .title-launch.power-switch::after {
+      inset: 2px;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.18), transparent 30%),
+        radial-gradient(circle at 50% 0, rgba(107, 169, 255, .18), transparent 46%),
+        linear-gradient(180deg, rgba(20, 27, 38, .66), rgba(3, 7, 13, .48));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -18px 30px rgba(0,0,0,.42),
+        0 0 42px rgba(92,169,255,.1);
+    }
+
+    .title-launch.power-switch:hover {
+      transform: translateX(-50%) translateY(-2px) scale(1.006);
+    }
+
+    .title-launch.power-switch:active,
+    .title-launch.power-switch.is-pressing {
+      transform: translateX(-50%) scale(.99);
+    }
+
+    .title-launch .capsule-flow {
+      background:
+        linear-gradient(108deg, transparent 0 18%, rgba(255,255,255,.2), rgba(151,243,255,.12), transparent 54% 100%),
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.2), transparent 30%);
+      animation-duration: 6.8s;
+    }
+
+    .title-launch .title-launch-core {
+      width: 100%;
+      min-height: 112px;
+      height: auto;
+      padding: 16px 22px;
+      border-radius: 29px;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.13), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.02));
+    }
+
+    .title-system-row {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .title-launch .power-icon {
+      width: 34px;
+      height: 34px;
+      justify-self: center;
+    }
+
+    .title-copy {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      justify-items: center;
+    }
+
+    .title-launch .master-title {
+      display: block;
+      max-width: 100%;
+      font-size: clamp(36px, 3.8vw, 64px);
+      line-height: .94;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .title-launch .hero-subtitle {
+      display: block;
+      font-size: clamp(13px, .98vw, 17px);
+    }
+
+    .launch-badge {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 76px;
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.15);
+      color: rgba(239, 247, 255, .9);
+      background: rgba(5, 10, 16, .38);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 0 24px rgba(122,190,255,.12);
+      font-size: 13px;
+      font-weight: 560;
+      white-space: nowrap;
+      text-shadow: 0 0 16px rgba(151, 243, 255, .24);
+    }
+
+    .power-toggle:checked + .title-launch.power-switch {
+      border-color: rgba(255,255,255,.46);
+      box-shadow:
+        0 0 34px rgba(151, 243, 255, .34),
+        0 0 112px rgba(92, 169, 255, .2),
+        0 24px 86px rgba(0,0,0,.68),
+        inset 0 1px 1px rgba(255,255,255,.46),
+        inset 0 0 28px rgba(151, 243, 255, .16);
+    }
+
+    .power-toggle:checked + .title-launch .launch-badge {
+      color: #fff;
+      border-color: rgba(151,243,255,.4);
+      background: rgba(13, 24, 32, .52);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 0 28px rgba(151,243,255,.24);
+    }
+    .coordinate-console,
+    html[data-variant="texture"] .coordinate-console,
+    html[data-variant="radar"] .coordinate-console,
+    html[data-variant="silent"] .coordinate-console {
+      z-index: 9;
+      left: 50%;
+      top: auto;
+      bottom: clamp(108px, 13.2vh, 132px);
+      width: min(640px, calc(100vw - 48px));
+      min-height: 0;
+      display: grid !important;
+      grid-template-columns: 96px minmax(0, 1fr) 58px;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 28px 28px 22px 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-top-color: rgba(255,255,255,.34);
+      border-left-color: rgba(255,255,255,.2);
+      background:
+        linear-gradient(140deg, rgba(255,255,255,.16), rgba(255,255,255,.04) 42%, rgba(99, 143, 188, .06)),
+        radial-gradient(circle at 50% 0, rgba(168, 209, 255, .14), transparent 58%),
+        rgba(3, 6, 11, .6);
+      box-shadow:
+        0 28px 100px rgba(0,0,0,.62),
+        0 0 78px rgba(81, 151, 255, .11),
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -1px 0 rgba(0,0,0,.46);
+      backdrop-filter: blur(28px) saturate(1.16) brightness(1.05);
+      -webkit-backdrop-filter: blur(28px) saturate(1.16) brightness(1.05);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate3d(-50%, 30px, 0) scale(.965);
+      transition:
+        opacity .38s cubic-bezier(.16, 1, .3, 1),
+        transform .38s cubic-bezier(.16, 1, .3, 1),
+        border-color .28s cubic-bezier(.32, .72, 0, 1),
+        box-shadow .28s cubic-bezier(.32, .72, 0, 1);
+    }
+
+    .coordinate-console::before,
+    .coordinate-console::after {
+      content: "";
+      display: block;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .coordinate-console::before {
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.12), transparent 52%);
+      opacity: .54;
+      mask-image: linear-gradient(180deg, white, transparent 64%);
+      -webkit-mask-image: linear-gradient(180deg, white, transparent 64%);
+    }
+
+    .coordinate-console::after {
+      left: 18%;
+      right: 18%;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(244, 239, 221, .82), transparent);
+      opacity: .82;
+    }
+
+    .power-toggle:checked ~ .coordinate-console,
+    .coordinate-console:focus-within {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate3d(-50%, 0, 0) scale(1);
+    }
+
+    .coordinate-console select,
+    .coordinate-console input,
+    .coordinate-console textarea,
+    .coordinate-console button {
+      height: 50px;
+      border-radius: 16px;
+      border-color: rgba(255, 255, 255, .115);
+      background: rgba(2, 5, 11, .58);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07);
+    }
+
+    .coordinate-console input,
+    .coordinate-console textarea {
+      color: rgba(246, 250, 255, .92);
+    }
+
+    #city { grid-column: 1; grid-row: 1; }
+    #address { grid-column: 2; grid-row: 1; }
+    #vision {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      min-height: 58px;
+      max-height: 76px;
+      height: 58px;
+      padding-top: 13px;
+    }
+    #submitBtn {
+      grid-column: 3;
+      grid-row: 1;
+      height: 50px;
+      border-radius: 17px 20px 17px 20px;
+      background:
+        radial-gradient(circle at 36% 22%, rgba(255,255,255,.82), transparent 30%),
+        linear-gradient(135deg, rgba(244, 239, 221, .96), rgba(184, 167, 122, .72));
+      color: #050604;
+      font-weight: 760;
+    }
+
+    #submitBtn span {
+      display: none;
+    }
+
+    #submitBtn::before {
+      content: ">";
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .status-line {
+      top: -7px;
+      bottom: auto;
+      width: 86px;
+    }
+
+    @media (max-width: 760px) {
+      #earthCanvas,
+      #globeFxCanvas {
+        top: 72%;
+        width: min(116vw, 620px, 82vh);
+        height: min(116vw, 620px, 82vh);
+      }
+
+      .orbital-frame {
+        top: 72%;
+        width: min(124vw, 670px, 88vh);
+        height: min(124vw, 670px, 88vh);
+      }
+
+      .hero-copy {
+        top: max(28px, env(safe-area-inset-top));
+        width: min(370px, calc(100vw - 28px));
+      }
+
+      .hero-copy::before {
+        width: min(250px, 68vw);
+        margin-bottom: 8px;
+      }
+
+      .master-title {
+        font-size: clamp(30px, 8.8vw, 42px);
+      }
+
+      .hero-subtitle {
+        font-size: 13px;
+      }
+
+      .power-switch {
+        width: 188px;
+        height: 58px;
+        bottom: max(22px, env(safe-area-inset-bottom));
+      }
+
+      .capsule-label {
+        font-size: 13px;
+      }
+
+      .power-icon {
+        width: 20px;
+        height: 20px;
+      }
+      .title-launch.power-switch {
+        top: max(22px, env(safe-area-inset-top));
+        bottom: auto;
+        width: min(368px, calc(100vw - 24px));
+        min-height: 116px;
+        padding: 7px;
+        border-radius: 30px;
+      }
+
+      .title-launch .title-launch-core {
+        min-height: 102px;
+        padding: 14px 14px;
+        border-radius: 24px;
+      }
+
+      .title-system-row {
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .title-launch .power-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .title-launch .master-title {
+        font-size: clamp(28px, 8.1vw, 40px);
+      }
+
+      .launch-badge {
+        grid-column: 1 / -1;
+        height: 30px;
+        min-width: 76px;
+        padding: 0 12px;
+        font-size: 12px;
+        justify-self: center;
+      }
+
+      .coordinate-console,
+      html[data-variant="texture"] .coordinate-console,
+      html[data-variant="radar"] .coordinate-console,
+      html[data-variant="silent"] .coordinate-console {
+        width: min(356px, calc(100vw - 28px));
+        bottom: max(104px, calc(env(safe-area-inset-bottom) + 96px));
+        grid-template-columns: 82px minmax(0, 1fr) 50px;
+        padding: 10px;
+        gap: 7px;
+        border-radius: 24px 24px 20px 20px;
+      }
+
+      .coordinate-console select,
+      .coordinate-console input,
+      .coordinate-console textarea,
+      .coordinate-console button {
+        height: 44px;
+        border-radius: 14px;
+        font-size: 13px;
+      }
+
+      #vision {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-height: 52px;
+        height: 52px;
+      }
+
+      #submitBtn {
+        grid-column: 3;
+        grid-row: 1;
+        height: 44px;
+      }
+
+      #submitBtn span {
+        display: none;
+      }
+
+      #submitBtn::before {
+        content: ">";
+        font-size: 20px;
+      }
+    }
+
+    /* DDS final shell: Apple Liquid Glass top nav + bottom-centered Agent Dock. */
+    .liquid-nav {
+      --nav-edge: rgba(255,255,255,.16);
+      position: absolute;
+      z-index: 16;
+      left: 50%;
+      top: clamp(14px, 2.6vh, 24px);
+      width: min(1180px, calc(100vw - 56px));
+      min-height: 62px;
+      transform: translate3d(-50%, 0, 0);
+      display: grid;
+      grid-template-columns: minmax(236px, auto) minmax(360px, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 10px 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-top-color: rgba(255,255,255,.22);
+      border-left-color: rgba(255,255,255,.14);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.028)),
+        rgba(5, 7, 10, .46);
+      box-shadow:
+        0 18px 64px rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.16),
+        inset 0 -1px 0 rgba(0,0,0,.48);
+      backdrop-filter: blur(22px) saturate(1.12) brightness(1.04);
+      -webkit-backdrop-filter: blur(22px) saturate(1.12) brightness(1.04);
+      color: rgba(247,250,255,.9);
+      opacity: 0;
+      animation: navMembraneIn .85s .12s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .liquid-nav::before,
+    .liquid-nav::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .liquid-nav::before {
+      inset: 1px;
+      background: linear-gradient(112deg, rgba(255,255,255,.12), transparent 34%, transparent 70%, rgba(255,255,255,.035));
+      opacity: .64;
+    }
+
+    .liquid-nav::after {
+      left: 28px;
+      right: 28px;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.62), transparent);
+      opacity: .72;
+    }
+
+    @keyframes navMembraneIn {
+      from { opacity: 0; transform: translate3d(-50%, -14px, 0); filter: blur(8px); }
+      to { opacity: 1; transform: translate3d(-50%, 0, 0); filter: blur(0); }
+    }
+
+    .nav-brand,
+    .nav-links,
+    .nav-status {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-brand {
+      display: inline-grid;
+      grid-template-columns: 34px auto;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 37% 26%, rgba(255,255,255,.9), rgba(255,255,255,.18) 28%, transparent 52%),
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04)),
+        rgba(8,10,13,.62);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.3),
+        inset 0 -9px 14px rgba(0,0,0,.5),
+        0 8px 20px rgba(0,0,0,.34);
+    }
+
+    .nav-brand {
+      border: 0;
+      height: auto;
+      padding: 0;
+      border-radius: 999px;
+      background: transparent;
+      box-shadow: none;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .nav-brand:hover .brand-mark {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.36),
+        inset 0 -9px 14px rgba(0,0,0,.5),
+        0 10px 26px rgba(142,198,255,.16);
+    }
+    .brand-copy {
+      display: grid;
+      gap: 1px;
+      min-width: 0;
+      line-height: 1.05;
+    }
+
+    .brand-copy strong {
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 15px;
+      font-weight: 680;
+      color: rgba(250,252,255,.94);
+    }
+
+    .brand-copy small {
+      font-size: 11px;
+      color: rgba(232,238,246,.58);
+    }
+
+    .nav-links {
+      justify-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.24);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07), inset 0 -1px 0 rgba(0,0,0,.45);
+    }
+
+    .nav-links button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      padding: 0 15px;
+      border-radius: 999px;
+      color: rgba(232,238,246,.68);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 520;
+      white-space: nowrap;
+      transition:
+        color .22s cubic-bezier(.32, .72, 0, 1),
+        background-color .22s cubic-bezier(.32, .72, 0, 1),
+        transform .22s cubic-bezier(.32, .72, 0, 1),
+        box-shadow .22s cubic-bezier(.32, .72, 0, 1);
+    }
+
+    .nav-links button:hover,
+    .nav-links button[aria-current="page"],
+    .nav-links button.is-active {
+      color: rgba(255,255,255,.94);
+      background: rgba(255,255,255,.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 8px 18px rgba(0,0,0,.2);
+    }
+
+    .nav-links button:hover { transform: translateY(-1px); }
+
+    .nav-status {
+      justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: rgba(235,241,248,.72);
+      background: rgba(255,255,255,.045);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      font-size: 12px;
+      font-weight: 540;
+      white-space: nowrap;
+    }
+
+    .agent-dock.coordinate-console,
+    html[data-variant="texture"] .agent-dock.coordinate-console,
+    html[data-variant="radar"] .agent-dock.coordinate-console,
+    html[data-variant="silent"] .agent-dock.coordinate-console {
+      --mx: 50%;
+      --my: 18%;
+      z-index: 17;
+      left: 50%;
+      top: auto;
+      bottom: clamp(22px, 4.4vh, 44px);
+      width: min(1060px, calc(100vw - 72px));
+      min-height: 78px;
+      display: grid !important;
+      grid-template-columns: 108px minmax(260px, 1.15fr) minmax(260px, .92fr) 126px;
+      gap: 9px;
+      padding: 10px;
+      border-radius: 26px;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: translate3d(-50%, 0, 0) !important;
+      overflow: visible;
+      border: 1px solid rgba(255,255,255,.08);
+      border-top-color: rgba(255,255,255,.24);
+      border-left-color: rgba(255,255,255,.13);
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.12), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.022)),
+        rgba(3, 5, 8, .58);
+      box-shadow:
+        0 28px 90px rgba(0,0,0,.58),
+        0 0 64px rgba(255,255,255,.035),
+        inset 0 1px 0 rgba(255,255,255,.17),
+        inset 0 -1px 0 rgba(0,0,0,.64);
+      backdrop-filter: blur(28px) saturate(1.1) brightness(1.04);
+      -webkit-backdrop-filter: blur(28px) saturate(1.1) brightness(1.04);
+      transition:
+        transform .28s cubic-bezier(.32, .72, 0, 1),
+        border-color .28s cubic-bezier(.32, .72, 0, 1),
+        box-shadow .28s cubic-bezier(.32, .72, 0, 1),
+        background-color .28s cubic-bezier(.32, .72, 0, 1);
+    }
+
+    .agent-dock.coordinate-console::before {
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      opacity: .86;
+      filter: none;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.16), transparent 24%, transparent 76%, rgba(255,255,255,.04)),
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 48%);
+      animation: none;
+      mask: none;
+      -webkit-mask: none;
+    }
+
+    .agent-dock.coordinate-console::after {
+      left: 24px;
+      right: 24px;
+      top: 0;
+      inset-block-end: auto;
+      height: 1px;
+      border-radius: 999px;
+      opacity: .74;
+      filter: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.68), transparent);
+      animation: none;
+      mask: none;
+      -webkit-mask: none;
+      padding: 0;
+    }
+
+    .agent-dock.coordinate-console:focus-within {
+      transform: translate3d(-50%, -3px, 0) !important;
+      border-color: rgba(255,255,255,.16);
+      box-shadow:
+        0 34px 106px rgba(0,0,0,.64),
+        0 0 72px rgba(255,255,255,.052),
+        inset 0 1px 0 rgba(255,255,255,.21),
+        inset 0 -1px 0 rgba(0,0,0,.66);
+    }
+
+    .agent-dock.coordinate-console select,
+    .agent-dock.coordinate-console input,
+    .agent-dock.coordinate-console textarea,
+    .agent-dock.coordinate-console button {
+      height: 56px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.075);
+      color: rgba(248,250,255,.92);
+      background: rgba(2,4,7,.56);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.075), inset 0 -1px 0 rgba(0,0,0,.58);
+      font-size: 14px;
+    }
+
+    .agent-dock.coordinate-console select {
+      grid-column: 1;
+      grid-row: 1;
+      color: rgba(238,244,250,.78);
+      background:
+        linear-gradient(45deg, transparent 50%, rgba(238,244,250,.7) 50%) right 17px center / 6px 6px no-repeat,
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.012)),
+        rgba(2,4,7,.62);
+    }
+
+    .agent-dock.coordinate-console #address {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .agent-dock.coordinate-console #vision {
+      grid-column: 3;
+      grid-row: 1;
+      min-height: 56px;
+      max-height: 56px;
+      height: 56px;
+      padding-top: 17px;
+      line-height: 1.35;
+    }
+
+    .agent-dock.coordinate-console #submitBtn {
+      grid-column: 4;
+      grid-row: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-top-color: rgba(255,255,255,.34);
+      color: rgba(255,255,255,.94);
+      background:
+        radial-gradient(circle at 38% 18%, rgba(255,255,255,.34), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.042)),
+        rgba(14,16,20,.66);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.24),
+        inset 0 -16px 24px rgba(0,0,0,.34),
+        0 12px 34px rgba(0,0,0,.38);
+      font-weight: 690;
+      text-shadow: 0 1px 10px rgba(0,0,0,.36);
+    }
+
+    .agent-dock.coordinate-console #submitBtn::before {
+      content: "" !important;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.95) 0 2px, transparent 2.8px),
+        conic-gradient(from 0deg, rgba(255,255,255,.9), rgba(255,255,255,.12), rgba(255,255,255,.72));
+      box-shadow: 0 0 18px rgba(255,255,255,.24);
+    }
+
+    .agent-dock.coordinate-console #submitBtn span {
+      display: inline !important;
+    }
+
+    .agent-dock.coordinate-console #submitBtn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.24);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.28),
+        inset 0 -16px 24px rgba(0,0,0,.32),
+        0 16px 42px rgba(0,0,0,.44);
+    }
+
+    .agent-dock.coordinate-console #submitBtn.is-pressing::after {
+      content: "";
+      position: absolute;
+      inset: 50%;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.34);
+      animation: agentPressPulse .52s cubic-bezier(.16, 1, .3, 1) both;
+    }
+
+    @keyframes agentPressPulse {
+      from { opacity: .72; transform: translate(-50%, -50%) scale(.2); }
+      to { opacity: 0; transform: translate(-50%, -50%) scale(2.8); }
+    }
+
+    .agent-dock.coordinate-console .status-line {
+      left: 24px;
+      right: 24px;
+      top: auto;
+      bottom: -24px;
+      width: auto;
+      min-height: 18px;
+      transform: none;
+      color: rgba(230,236,244,.58);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .liquid-nav {
+        top: max(10px, env(safe-area-inset-top));
+        width: min(390px, calc(100vw - 20px));
+        min-height: 92px;
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+        gap: 7px;
+        padding: 9px;
+        border-radius: 24px;
+      }
+
+      .nav-brand {
+        grid-template-columns: 28px minmax(0, 1fr);
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+      }
+
+      .brand-copy strong {
+        max-width: 100%;
+        font-size: 13px;
+      }
+
+      .brand-copy small {
+        font-size: 10px;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .nav-links::-webkit-scrollbar { display: none; }
+
+      .nav-links button {
+        height: 30px;
+        padding: 0 11px;
+        font-size: 12px;
+      }
+
+      .nav-status { display: none; }
+
+      .agent-dock.coordinate-console,
+      html[data-variant="texture"] .agent-dock.coordinate-console,
+      html[data-variant="radar"] .agent-dock.coordinate-console,
+      html[data-variant="silent"] .agent-dock.coordinate-console {
+        width: min(370px, calc(100vw - 20px));
+        bottom: max(12px, env(safe-area-inset-bottom));
+        grid-template-columns: 82px minmax(0, 1fr) 54px;
+        gap: 7px;
+        padding: 8px;
+        border-radius: 22px;
+      }
+
+      .agent-dock.coordinate-console select,
+      .agent-dock.coordinate-console input,
+      .agent-dock.coordinate-console textarea,
+      .agent-dock.coordinate-console button {
+        height: 45px;
+        border-radius: 14px;
+        font-size: 13px;
+      }
+
+      .agent-dock.coordinate-console #vision {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-height: 45px;
+        max-height: 45px;
+        height: 45px;
+        padding-top: 13px;
+      }
+
+      .agent-dock.coordinate-console #submitBtn {
+        grid-column: 3;
+        grid-row: 1;
+        width: 54px;
+        padding: 0;
+      }
+
+      .agent-dock.coordinate-console #submitBtn span {
+        display: none !important;
+      }
+
+      .agent-dock.coordinate-console #submitBtn::before {
+        width: 17px;
+        height: 17px;
+      }
+    }
+    /* Premium polish pass: star-glint globe, transparent glass, usable nav, custom city menu. */
+    .globe-card::before {
+      height: min(25vh, 190px);
+      background: linear-gradient(180deg, rgba(0,0,0,.62), rgba(0,0,0,.22) 54%, rgba(0,0,0,0));
+    }
+
+    #earthCanvas {
+      filter: saturate(1.03) contrast(1.02) drop-shadow(0 0 18px rgba(108, 174, 255, .16));
+    }
+
+    #globeFxCanvas {
+      mix-blend-mode: screen;
+      filter: blur(.05px) saturate(1.18) brightness(1.08);
+    }
+
+    .liquid-nav {
+      min-height: 64px;
+      border-color: rgba(255,255,255,.14);
+      border-top-color: rgba(255,255,255,.36);
+      border-left-color: rgba(255,255,255,.22);
+      background:
+        radial-gradient(circle at 14% 0%, rgba(255,255,255,.18), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.035) 52%, rgba(255,255,255,.018)),
+        rgba(8, 10, 14, .34);
+      box-shadow:
+        0 24px 80px rgba(0,0,0,.46),
+        0 1px 0 rgba(255,255,255,.18),
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -1px 0 rgba(0,0,0,.52);
+      backdrop-filter: blur(34px) saturate(1.22) brightness(1.08);
+      -webkit-backdrop-filter: blur(34px) saturate(1.22) brightness(1.08);
+    }
+
+    .liquid-nav.is-live {
+      border-color: rgba(220,236,255,.26);
+      box-shadow:
+        0 28px 90px rgba(0,0,0,.5),
+        0 0 42px rgba(142,198,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.26),
+        inset 0 -1px 0 rgba(0,0,0,.54);
+    }
+
+    .brand-mark {
+      background:
+        radial-gradient(circle at 32% 22%, rgba(255,255,255,.96), rgba(255,255,255,.28) 25%, transparent 50%),
+        radial-gradient(circle at 64% 72%, rgba(145,190,255,.2), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.035)),
+        rgba(11,13,17,.48);
+    }
+
+    .brand-copy strong {
+      font-weight: 760;
+      color: rgba(255,255,255,.98);
+      text-shadow: 0 1px 16px rgba(255,255,255,.12);
+    }
+
+    .brand-copy small {
+      color: rgba(232,238,246,.5);
+      font-weight: 430;
+    }
+
+    .nav-links {
+      background: rgba(0,0,0,.2);
+      border: 1px solid rgba(255,255,255,.055);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.4);
+    }
+
+    .nav-links button {
+      border: 0;
+      cursor: pointer;
+      color: rgba(235,240,247,.62);
+    }
+
+    .nav-links button[aria-current="page"],
+    .nav-links button.is-active {
+      color: rgba(255,255,255,.96);
+      background:
+        radial-gradient(circle at 40% 0%, rgba(255,255,255,.22), transparent 45%),
+        linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.042));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -1px 0 rgba(0,0,0,.36),
+        0 12px 28px rgba(0,0,0,.28);
+    }
+
+    .nav-status {
+      color: rgba(245,248,255,.82);
+      background:
+        radial-gradient(circle at 35% 0%, rgba(255,255,255,.17), transparent 42%),
+        rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.055);
+    }
+
+    .agent-dock.coordinate-console,
+    html[data-variant="texture"] .agent-dock.coordinate-console,
+    html[data-variant="radar"] .agent-dock.coordinate-console,
+    html[data-variant="silent"] .agent-dock.coordinate-console {
+      width: min(1010px, calc(100vw - 86px));
+      grid-template-columns: 112px minmax(300px, 1.18fr) minmax(260px, .88fr) 128px;
+      gap: 10px;
+      border-radius: 30px;
+      border-color: rgba(255,255,255,.13);
+      border-top-color: rgba(255,255,255,.38);
+      border-left-color: rgba(255,255,255,.21);
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.18), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.028) 48%, rgba(255,255,255,.014)),
+        rgba(9, 12, 16, .36);
+      box-shadow:
+        0 32px 96px rgba(0,0,0,.58),
+        0 0 52px rgba(142,198,255,.045),
+        inset 0 1px 0 rgba(255,255,255,.25),
+        inset 0 -1px 0 rgba(0,0,0,.62);
+      backdrop-filter: blur(38px) saturate(1.25) brightness(1.08);
+      -webkit-backdrop-filter: blur(38px) saturate(1.25) brightness(1.08);
+    }
+
+    .agent-dock.coordinate-console::before {
+      background:
+        linear-gradient(112deg, rgba(255,255,255,.2), transparent 22%, transparent 74%, rgba(255,255,255,.06)),
+        radial-gradient(circle at 50% -15%, rgba(255,255,255,.16), transparent 38%);
+    }
+
+    .agent-dock.coordinate-console::after {
+      left: 30px;
+      right: 30px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.86), transparent);
+      opacity: .8;
+    }
+
+    .agent-dock.coordinate-console select,
+    .agent-dock.coordinate-console input,
+    .agent-dock.coordinate-console textarea,
+    .agent-dock.coordinate-console button,
+    .city-glass-trigger {
+      height: 56px;
+      border-radius: 20px;
+      border-color: rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.016)),
+        rgba(4,6,10,.54);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 -1px 0 rgba(0,0,0,.6);
+    }
+
+    .agent-dock.coordinate-console input,
+    .agent-dock.coordinate-console textarea {
+      color: rgba(249,251,255,.94);
+      font-weight: 520;
+    }
+
+    .agent-dock.coordinate-console input::placeholder,
+    .agent-dock.coordinate-console textarea::placeholder {
+      color: rgba(232,238,246,.38);
+      font-weight: 430;
+    }
+
+    .agent-dock.coordinate-console #city {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .city-glass-picker {
+      position: relative;
+      z-index: 5;
+      grid-column: 1;
+      grid-row: 1;
+      min-width: 0;
+    }
+
+    .city-glass-trigger {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 14px;
+      color: rgba(248,250,255,.92);
+      font-size: 14px;
+      font-weight: 620;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .city-glass-trigger::after {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-right: 1px solid rgba(248,250,255,.72);
+      border-bottom: 1px solid rgba(248,250,255,.72);
+      transform: translateY(-2px) rotate(45deg);
+      transition: transform .22s cubic-bezier(.32,.72,0,1);
+    }
+
+    .city-glass-picker.open .city-glass-trigger::after {
+      transform: translateY(2px) rotate(225deg);
+    }
+
+    .city-glass-menu {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(100% + 10px);
+      display: grid;
+      gap: 4px;
+      padding: 7px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-top-color: rgba(255,255,255,.36);
+      background:
+        radial-gradient(circle at 34% 0%, rgba(255,255,255,.18), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)),
+        rgba(9,11,15,.58);
+      box-shadow:
+        0 22px 70px rgba(0,0,0,.52),
+        inset 0 1px 0 rgba(255,255,255,.18);
+      backdrop-filter: blur(34px) saturate(1.18);
+      -webkit-backdrop-filter: blur(34px) saturate(1.18);
+      opacity: 0;
+      transform: translateY(10px) scale(.985);
+      pointer-events: none;
+      transition: opacity .2s cubic-bezier(.32,.72,0,1), transform .2s cubic-bezier(.32,.72,0,1);
+    }
+
+    .city-glass-picker.open .city-glass-menu {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .city-glass-option {
+      height: 34px;
+      border: 0;
+      border-radius: 12px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(236,242,250,.72);
+      background: transparent;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 540;
+      text-align: left;
+    }
+
+    .city-glass-option:hover,
+    .city-glass-option[aria-selected="true"] {
+      color: rgba(255,255,255,.96);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.035));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.14);
+    }
+
+    .city-glass-option[aria-selected="true"]::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(228,242,255,.9);
+      box-shadow: 0 0 12px rgba(142,198,255,.55);
+    }
+    /* Apple-UI regroup final: one UltraThin nav, one Regular agent dock, no nested glass. */
+    .liquid-nav {
+      width: min(1120px, calc(100vw - 64px)) !important;
+      min-height: 58px !important;
+      grid-template-columns: minmax(230px, auto) minmax(320px, 1fr) auto !important;
+      padding: 8px 10px 8px 12px !important;
+      border-radius: 999px !important;
+      border: 1px solid rgba(255,255,255,.105) !important;
+      border-top-color: rgba(255,255,255,.28) !important;
+      border-left-color: rgba(255,255,255,.16) !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.088), rgba(255,255,255,.026)),
+        rgba(4, 6, 9, .34) !important;
+      box-shadow:
+        0 18px 56px rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.16),
+        inset 0 -1px 0 rgba(0,0,0,.52) !important;
+      backdrop-filter: blur(26px) saturate(1.14) brightness(1.04) !important;
+      -webkit-backdrop-filter: blur(26px) saturate(1.14) brightness(1.04) !important;
+    }
+
+    .liquid-nav::before {
+      background: linear-gradient(116deg, rgba(255,255,255,.12), transparent 30%, transparent 76%, rgba(255,255,255,.035)) !important;
+      opacity: .62 !important;
+    }
+
+    .nav-brand {
+      height: auto !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      color: inherit !important;
+      cursor: pointer !important;
+    }
+
+    .brand-mark {
+      width: 34px !important;
+      height: 34px !important;
+      background:
+        radial-gradient(circle at 34% 24%, rgba(255,255,255,.88), rgba(255,255,255,.22) 28%, transparent 52%),
+        linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.035)),
+        rgba(8,10,13,.52) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.28),
+        inset 0 -9px 15px rgba(0,0,0,.54),
+        0 8px 22px rgba(0,0,0,.32) !important;
+    }
+
+    .brand-copy strong {
+      color: rgba(250,252,255,.95) !important;
+      font-weight: 720 !important;
+      font-size: 15px !important;
+    }
+
+    .brand-copy small {
+      color: rgba(232,238,246,.52) !important;
+      font-size: 11px !important;
+      font-weight: 430 !important;
+    }
+
+    .nav-links {
+      position: relative !important;
+      isolation: isolate !important;
+      display: inline-flex !important;
+      gap: 3px !important;
+      padding: 4px !important;
+      border: 1px solid rgba(255,255,255,.045) !important;
+      border-radius: 999px !important;
+      background: rgba(0,0,0,.22) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06), inset 0 -1px 0 rgba(0,0,0,.44) !important;
+    }
+
+    .nav-links button {
+      position: relative !important;
+      z-index: 1 !important;
+      height: 34px !important;
+      padding: 0 14px !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      color: rgba(232,238,246,.62) !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      font-size: 13px !important;
+      font-weight: 520 !important;
+      cursor: pointer !important;
+      transition: color .22s cubic-bezier(.32,.72,0,1), background-color .22s cubic-bezier(.32,.72,0,1), transform .22s cubic-bezier(.32,.72,0,1) !important;
+    }
+
+    .nav-links button[aria-current="page"],
+    .nav-links button.is-active {
+      color: rgba(255,255,255,.94) !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(0,0,0,.32) !important;
+    }
+
+    .nav-status {
+      height: 32px !important;
+      color: rgba(235,241,248,.66) !important;
+      background: rgba(255,255,255,.04) !important;
+      border: 0 !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07) !important;
+      font-size: 12px !important;
+    }
+
+    .agent-dock.coordinate-console,
+    html[data-variant="texture"] .agent-dock.coordinate-console,
+    html[data-variant="radar"] .agent-dock.coordinate-console,
+    html[data-variant="silent"] .agent-dock.coordinate-console {
+      width: min(980px, calc(100vw - 96px)) !important;
+      min-height: 72px !important;
+      bottom: clamp(24px, 4.2vh, 42px) !important;
+      grid-template-columns: 112px minmax(300px, 1.2fr) minmax(250px, .86fr) 124px !important;
+      gap: 9px !important;
+      padding: 9px !important;
+      border-radius: 28px !important;
+      border: 1px solid rgba(255,255,255,.105) !important;
+      border-top-color: rgba(255,255,255,.28) !important;
+      border-left-color: rgba(255,255,255,.16) !important;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.115), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.086), rgba(255,255,255,.022)),
+        rgba(5, 7, 10, .42) !important;
+      box-shadow:
+        0 28px 86px rgba(0,0,0,.56),
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -1px 0 rgba(0,0,0,.6) !important;
+      backdrop-filter: blur(30px) saturate(1.12) brightness(1.05) !important;
+      -webkit-backdrop-filter: blur(30px) saturate(1.12) brightness(1.05) !important;
+    }
+
+    .agent-dock.coordinate-console select,
+    .agent-dock.coordinate-console input,
+    .agent-dock.coordinate-console textarea,
+    .agent-dock.coordinate-console button,
+    .city-glass-trigger {
+      height: 54px !important;
+      border-radius: 19px !important;
+      border: 1px solid rgba(255,255,255,.09) !important;
+      border-top-color: rgba(255,255,255,.16) !important;
+      color: rgba(247,250,255,.91) !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.058), rgba(255,255,255,.014)),
+        rgba(3,5,8,.52) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.1), inset 0 -1px 0 rgba(0,0,0,.56) !important;
+    }
+
+    .agent-dock.coordinate-console input::placeholder,
+    .agent-dock.coordinate-console textarea::placeholder {
+      color: rgba(232,238,246,.38) !important;
+      font-weight: 430 !important;
+    }
+
+    .agent-dock.coordinate-console #submitBtn {
+      color: rgba(255,255,255,.93) !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.035)),
+        rgba(10,12,15,.56) !important;
+      border-color: rgba(255,255,255,.13) !important;
+      border-top-color: rgba(255,255,255,.26) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -14px 22px rgba(0,0,0,.32),
+        0 12px 34px rgba(0,0,0,.36) !important;
+      font-weight: 700 !important;
+    }
+
+    .agent-dock.coordinate-console #submitBtn::before {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.92) 0 2px, transparent 2.8px),
+        conic-gradient(from 0deg, rgba(255,255,255,.82), rgba(255,255,255,.16), rgba(255,255,255,.62)) !important;
+      box-shadow: 0 0 14px rgba(255,255,255,.18) !important;
+    }
+
+    .city-glass-menu {
+      border-color: rgba(255,255,255,.12) !important;
+      border-top-color: rgba(255,255,255,.25) !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.026)),
+        rgba(8,10,13,.48) !important;
+      box-shadow: 0 22px 64px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.14) !important;
+    }
+
+    .city-glass-option {
+      color: rgba(235,241,248,.68) !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .city-glass-option:hover,
+    .city-glass-option[aria-selected="true"] {
+      color: rgba(255,255,255,.94) !important;
+      background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.03)) !important;
+    }
+
+
+    /* Web cinematic overdrive: macro-orbit DDS hero, desktop 16:9 only. */
+    .hero-shell {
+      background:
+        radial-gradient(ellipse 86% 76% at 50% 86%, rgba(73, 133, 188, .16), transparent 42%),
+        radial-gradient(ellipse 66% 38% at 50% 8%, rgba(255,255,255,.048), transparent 58%),
+        linear-gradient(180deg, #02050b 0%, #03070d 42%, #010204 100%) !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+    }
+
+    .hero-shell::before {
+      opacity: .78 !important;
+      background:
+        radial-gradient(ellipse 66% 54% at 50% 78%, rgba(103, 174, 255, .22), transparent 58%),
+        radial-gradient(ellipse 120% 78% at 50% 104%, rgba(95, 166, 255, .18), transparent 44%),
+        linear-gradient(180deg, rgba(255,255,255,.028), transparent 28%, rgba(0,0,0,.46) 100%) !important;
+      mix-blend-mode: screen !important;
+    }
+
+    .hero-shell::after {
+      opacity: .95 !important;
+      background:
+        radial-gradient(ellipse 60% 44% at 50% 40%, transparent 48%, rgba(1,2,4,.74) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.78), transparent 22%, transparent 78%, rgba(0,0,0,.78)) !important;
+      pointer-events: none !important;
+    }
+
+    .globe-card::before {
+      height: 36vh !important;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.74), rgba(0,0,0,.32) 52%, rgba(0,0,0,0)) !important;
+    }
+
+    .globe-card::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      top: 69%;
+      width: min(124vw, 1540px);
+      height: min(124vw, 1540px);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 55%, rgba(95, 171, 255, .07) 56.4%, transparent 58.6%),
+        radial-gradient(circle at 50% 50%, transparent 63%, rgba(255,255,255,.035) 63.4%, transparent 64.3%),
+        conic-gradient(from 228deg, transparent 0 15%, rgba(150, 208, 255, .18), rgba(255,255,255,.05), transparent 38% 100%);
+      mask-image: radial-gradient(circle at 50% 50%, transparent 35%, white 55%, transparent 73%);
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 35%, white 55%, transparent 73%);
+      filter: blur(.12px);
+      opacity: .76;
+      mix-blend-mode: screen;
+    }
+
+    #earthCanvas,
+    #globeFxCanvas {
+      top: 73.5% !important;
+      width: min(94vw, 1320px, 142vh) !important;
+      height: min(94vw, 1320px, 142vh) !important;
+      transform: translate(-50%, -50%) scale(1.035) !important;
+    }
+
+    #earthCanvas {
+      filter: saturate(1.1) contrast(1.08) brightness(.96) drop-shadow(0 0 34px rgba(91, 169, 255, .26)) !important;
+    }
+
+    #globeFxCanvas {
+      opacity: .98 !important;
+      filter: blur(.03px) saturate(1.38) brightness(1.18) !important;
+    }
+
+    .orbital-frame {
+      top: 73.5% !important;
+      width: min(112vw, 1510px, 160vh) !important;
+      height: min(112vw, 1510px, 160vh) !important;
+      opacity: .82 !important;
+      z-index: 3 !important;
+      transform: translate(-50%, -50%) rotate(-2deg) !important;
+    }
+
+    .orbital-frame::before {
+      inset: -8% !important;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 52%, rgba(113,190,255,.13) 58%, transparent 65%),
+        radial-gradient(circle at 50% 50%, transparent 69%, rgba(255,255,255,.04) 70%, transparent 71%) !important;
+      mask-image: radial-gradient(circle at 50% 50%, transparent 42%, white 56%, transparent 76%) !important;
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 42%, white 56%, transparent 76%) !important;
+    }
+
+    .orbit {
+      border-color: rgba(176, 220, 255, .12) !important;
+      box-shadow: 0 0 44px rgba(72, 149, 255, .09), inset 0 0 42px rgba(255,255,255,.024) !important;
+      animation-duration: 11s !important;
+    }
+
+    .orbit-a { transform: rotate(-12deg) scaleX(1.22) scaleY(.28) !important; }
+    .orbit-b { transform: rotate(31deg) scaleX(.74) scaleY(1.1) !important; opacity: .31 !important; }
+    .orbit-c { transform: rotate(7deg) scaleX(1.34) scaleY(.38) !important; opacity: .28 !important; }
+
+    .liquid-nav {
+      top: clamp(24px, 3.1vh, 36px) !important;
+      width: min(1180px, calc(100vw - 100px)) !important;
+      min-height: 60px !important;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255,255,255,.16), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,.104), rgba(255,255,255,.024)),
+        rgba(4, 6, 9, .30) !important;
+      border-color: rgba(255,255,255,.10) !important;
+      border-top-color: rgba(255,255,255,.31) !important;
+      border-left-color: rgba(255,255,255,.17) !important;
+      box-shadow:
+        0 22px 72px rgba(0,0,0,.46),
+        0 0 58px rgba(103,174,255,.045),
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -1px 0 rgba(0,0,0,.58) !important;
+    }
+
+    .brand-copy strong {
+      letter-spacing: .005em !important;
+      text-shadow: 0 0 18px rgba(220,238,255,.10) !important;
+    }
+
+    .nav-links button {
+      letter-spacing: 0 !important;
+    }
+
+    .agent-dock.coordinate-console,
+    html[data-variant="texture"] .agent-dock.coordinate-console,
+    html[data-variant="radar"] .agent-dock.coordinate-console,
+    html[data-variant="silent"] .agent-dock.coordinate-console {
+      width: min(1040px, calc(100vw - 140px)) !important;
+      bottom: clamp(30px, 5.1vh, 54px) !important;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.15), transparent 31%),
+        linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.024) 54%, rgba(255,255,255,.012)),
+        rgba(6, 9, 13, .39) !important;
+      border-color: rgba(255,255,255,.11) !important;
+      border-top-color: rgba(255,255,255,.33) !important;
+      border-left-color: rgba(255,255,255,.18) !important;
+      box-shadow:
+        0 34px 104px rgba(0,0,0,.62),
+        0 0 72px rgba(103,174,255,.06),
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -1px 0 rgba(0,0,0,.64) !important;
+      backdrop-filter: blur(34px) saturate(1.18) brightness(1.05) !important;
+      -webkit-backdrop-filter: blur(34px) saturate(1.18) brightness(1.05) !important;
+    }
+
+    .agent-dock.coordinate-console #submitBtn {
+      background:
+        radial-gradient(circle at 34% 0%, rgba(255,255,255,.19), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.035)),
+        rgba(9, 12, 16, .66) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.24),
+        inset 0 -14px 24px rgba(0,0,0,.34),
+        0 14px 38px rgba(0,0,0,.42),
+        0 0 22px rgba(164,215,255,.055) !important;
+    }
+
+    .city-glass-menu {
+      background:
+        radial-gradient(circle at 26% 0%, rgba(255,255,255,.18), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.112), rgba(255,255,255,.028)),
+        rgba(7,10,14,.62) !important;
+    }
+    /* Less-is-more refinement: neutral glass, expandable top controls, graphite globe light. */
+    .hero-shell {
+      background:
+        radial-gradient(ellipse 76% 68% at 50% 86%, rgba(210, 220, 226, .055), transparent 44%),
+        radial-gradient(ellipse 58% 34% at 50% 8%, rgba(255,255,255,.038), transparent 60%),
+        linear-gradient(180deg, #020305 0%, #05070a 48%, #010202 100%) !important;
+    }
+
+    .hero-shell::before {
+      background:
+        radial-gradient(ellipse 66% 54% at 50% 78%, rgba(205, 218, 224, .09), transparent 60%),
+        radial-gradient(ellipse 120% 78% at 50% 104%, rgba(196, 205, 210, .07), transparent 46%),
+        linear-gradient(180deg, rgba(255,255,255,.02), transparent 32%, rgba(0,0,0,.52) 100%) !important;
+      opacity: .72 !important;
+    }
+
+    .globe-card::after {
+      background:
+        radial-gradient(circle at 50% 50%, transparent 55%, rgba(214, 224, 230, .045) 56.4%, transparent 58.6%),
+        radial-gradient(circle at 50% 50%, transparent 63%, rgba(255,255,255,.028) 63.4%, transparent 64.3%),
+        conic-gradient(from 228deg, transparent 0 17%, rgba(222, 232, 236, .11), rgba(255,255,255,.038), transparent 37% 100%) !important;
+      opacity: .58 !important;
+    }
+
+    #earthCanvas {
+      filter: saturate(.82) contrast(1.16) brightness(.86) drop-shadow(0 0 28px rgba(220, 230, 236, .12)) !important;
+    }
+
+    #globeFxCanvas {
+      filter: blur(.02px) saturate(.9) brightness(1.12) contrast(1.08) !important;
+    }
+
+    .orbital-frame {
+      opacity: .48 !important;
+      mix-blend-mode: screen !important;
+    }
+
+    .orbital-frame::before {
+      background:
+        radial-gradient(circle at 50% 50%, transparent 52%, rgba(218,230,236,.055) 58%, transparent 65%),
+        radial-gradient(circle at 50% 50%, transparent 69%, rgba(255,255,255,.026) 70%, transparent 71%) !important;
+    }
+
+    .orbit {
+      border-color: rgba(226, 234, 238, .07) !important;
+      box-shadow: 0 0 38px rgba(220,230,236,.035), inset 0 0 40px rgba(255,255,255,.018) !important;
+    }
+
+    .liquid-nav {
+      width: min(1080px, calc(100vw - 132px)) !important;
+      min-height: 56px !important;
+      grid-template-columns: minmax(220px, auto) minmax(330px, 1fr) auto !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.096), rgba(255,255,255,.022)),
+        rgba(8, 9, 10, .34) !important;
+      border-color: rgba(255,255,255,.085) !important;
+      border-top-color: rgba(255,255,255,.24) !important;
+      border-left-color: rgba(255,255,255,.13) !important;
+      box-shadow:
+        0 22px 72px rgba(0,0,0,.5),
+        inset 0 1px 0 rgba(255,255,255,.17),
+        inset 0 -1px 0 rgba(0,0,0,.62) !important;
+      transition: border-color .28s cubic-bezier(.32,.72,0,1), box-shadow .28s cubic-bezier(.32,.72,0,1), transform .28s cubic-bezier(.32,.72,0,1) !important;
+    }
+
+    .liquid-nav.is-expanded {
+      border-color: rgba(255,255,255,.14) !important;
+      box-shadow:
+        0 30px 92px rgba(0,0,0,.58),
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -1px 0 rgba(0,0,0,.66) !important;
+    }
+
+    .brand-mark {
+      background:
+        radial-gradient(circle at 32% 22%, rgba(255,255,255,.92), rgba(255,255,255,.24) 25%, transparent 50%),
+        linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.032)),
+        rgba(11,12,13,.56) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.24),
+        inset 0 -9px 15px rgba(0,0,0,.62),
+        0 8px 20px rgba(0,0,0,.38) !important;
+    }
+
+    .nav-links {
+      background: rgba(0,0,0,.18) !important;
+      border-color: rgba(255,255,255,.04) !important;
+    }
+
+    .nav-links button[aria-current="page"],
+    .nav-links button.is-active {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.118), rgba(255,255,255,.032)) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(0,0,0,.38) !important;
+    }
+
+    .nav-status {
+      color: rgba(238,242,244,.62) !important;
+      background: rgba(255,255,255,.032) !important;
+    }
+
+    .nav-reveal-panel {
+      position: absolute;
+      z-index: 11;
+      top: clamp(90px, 10vh, 104px);
+      left: 50%;
+      width: min(620px, calc(100vw - 260px));
+      min-height: 0;
+      padding: 18px 22px 19px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-top-color: rgba(255,255,255,.25);
+      border-left-color: rgba(255,255,255,.14);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.092), rgba(255,255,255,.022)),
+        rgba(7,8,9,.38);
+      box-shadow:
+        0 26px 84px rgba(0,0,0,.52),
+        inset 0 1px 0 rgba(255,255,255,.17),
+        inset 0 -1px 0 rgba(0,0,0,.62);
+      backdrop-filter: blur(28px) saturate(1.02) brightness(1.03);
+      -webkit-backdrop-filter: blur(28px) saturate(1.02) brightness(1.03);
+      transform: translate3d(-50%, -12px, 0) scale(.975);
+      transform-origin: 50% 0;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        opacity .28s cubic-bezier(.16,1,.3,1),
+        transform .28s cubic-bezier(.16,1,.3,1),
+        border-color .28s cubic-bezier(.32,.72,0,1);
+    }
+
+    .nav-reveal-panel.is-open {
+      opacity: 1;
+      transform: translate3d(-50%, 0, 0) scale(1);
+      pointer-events: auto;
+    }
+
+    .nav-reveal-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: linear-gradient(118deg, rgba(255,255,255,.14), transparent 28%, transparent 76%, rgba(255,255,255,.035));
+      opacity: .66;
+    }
+
+    .nav-reveal-kicker {
+      position: relative;
+      color: rgba(238,242,244,.56);
+      font-size: 12px;
+      font-weight: 560;
+      line-height: 1.4;
+      margin-bottom: 7px;
+    }
+
+    .nav-reveal-panel strong {
+      position: relative;
+      display: block;
+      color: rgba(249,250,250,.94);
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 730;
+      letter-spacing: 0;
+    }
+
+    .nav-reveal-panel p {
+      position: relative;
+      margin: 8px 0 0;
+      color: rgba(232,236,238,.62);
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 430;
+      letter-spacing: 0;
+    }
+
+    .agent-dock.coordinate-console,
+    html[data-variant="texture"] .agent-dock.coordinate-console,
+    html[data-variant="radar"] .agent-dock.coordinate-console,
+    html[data-variant="silent"] .agent-dock.coordinate-console {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.092), rgba(255,255,255,.022) 54%, rgba(255,255,255,.012)),
+        rgba(7,8,9,.40) !important;
+      border-color: rgba(255,255,255,.095) !important;
+      border-top-color: rgba(255,255,255,.27) !important;
+      box-shadow:
+        0 34px 104px rgba(0,0,0,.64),
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -1px 0 rgba(0,0,0,.66) !important;
+    }
+
+    .agent-dock.coordinate-console select,
+    .agent-dock.coordinate-console input,
+    .agent-dock.coordinate-console textarea,
+    .agent-dock.coordinate-console button,
+    .city-glass-trigger {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.014)),
+        rgba(4,5,6,.56) !important;
+    }
+    /* Top card correction: collapsed by default, click-to-expand compact choices only. */
+    .liquid-nav {
+      width: min(620px, calc(100vw - 132px)) !important;
+      grid-template-columns: minmax(260px, 1fr) auto !important;
+      cursor: pointer !important;
+      overflow: visible !important;
+    }
+
+    .liquid-nav .nav-brand {
+      pointer-events: none !important;
+    }
+
+    .nav-status {
+      position: relative !important;
+      padding-right: 32px !important;
+      min-width: 154px !important;
+      text-align: left !important;
+    }
+
+    .nav-status::after {
+      content: "";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      border-right: 1px solid rgba(238,242,244,.58);
+      border-bottom: 1px solid rgba(238,242,244,.58);
+      transform: translateY(-64%) rotate(45deg);
+      transition: transform .24s cubic-bezier(.32,.72,0,1), opacity .24s cubic-bezier(.32,.72,0,1);
+      opacity: .76;
+    }
+
+    .liquid-nav.is-expanded .nav-status::after {
+      transform: translateY(-30%) rotate(225deg);
+    }
+
+    .nav-links {
+      position: absolute !important;
+      z-index: 20 !important;
+      left: 50% !important;
+      top: calc(100% + 10px) !important;
+      width: max-content !important;
+      max-width: min(540px, calc(100vw - 180px)) !important;
+      display: inline-flex !important;
+      justify-content: center !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: translate3d(-50%, -8px, 0) scale(.985) !important;
+      transform-origin: 50% 0 !important;
+      border-color: rgba(255,255,255,.07) !important;
+      border-top-color: rgba(255,255,255,.19) !important;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.082), rgba(255,255,255,.02)),
+        rgba(7,8,9,.52) !important;
+      box-shadow:
+        0 24px 70px rgba(0,0,0,.52),
+        inset 0 1px 0 rgba(255,255,255,.13),
+        inset 0 -1px 0 rgba(0,0,0,.6) !important;
+      backdrop-filter: blur(28px) saturate(1.02) brightness(1.03) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(1.02) brightness(1.03) !important;
+      transition: opacity .24s cubic-bezier(.16,1,.3,1), transform .24s cubic-bezier(.16,1,.3,1) !important;
+    }
+
+    .liquid-nav.is-expanded .nav-links {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: translate3d(-50%, 0, 0) scale(1) !important;
+    }
+
+    .nav-links button {
+      height: 32px !important;
+      padding: 0 13px !important;
+      white-space: nowrap !important;
+    }
+
+    .nav-reveal-panel {
+      display: none !important;
+    }
+    /* Visible continental breathing: sparse/dense land twinkle, not ocean glow. */
+    .continent-breath-layer {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      top: 73.5%;
+      width: min(94vw, 1320px, 142vh);
+      height: min(94vw, 1320px, 142vh);
+      transform: translate(-50%, -50%) scale(1.035);
+      border-radius: 50%;
+      pointer-events: none;
+      overflow: hidden;
+      mix-blend-mode: screen;
+      opacity: .9;
+    }
+
+    .continent-breath-region {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(248,250,246,.72) 0 .72px, transparent 1.55px) 0 0 / 10px 10px,
+        radial-gradient(circle, rgba(225,230,226,.38) 0 .58px, transparent 1.4px) 5px 7px / 17px 17px;
+      filter: blur(.05px) drop-shadow(0 0 4px rgba(238,242,238,.18));
+      mask-image: radial-gradient(ellipse at center, white 0 48%, rgba(255,255,255,.72) 62%, transparent 78%);
+      -webkit-mask-image: radial-gradient(ellipse at center, white 0 48%, rgba(255,255,255,.72) 62%, transparent 78%);
+      animation: continentBreath 4.8s cubic-bezier(.32,.72,0,1) infinite alternate;
+      will-change: opacity, transform, background-position;
+    }
+
+    .continent-breath-region::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(ellipse at 50% 50%, rgba(255,255,255,.2), transparent 62%);
+      opacity: .35;
+    }
+
+    .continent-breath-region.region-a {
+      left: 22%;
+      top: 17%;
+      width: 34%;
+      height: 15%;
+      transform: rotate(4deg);
+      animation-delay: -.8s;
+    }
+
+    .continent-breath-region.region-b {
+      left: 39%;
+      top: 18%;
+      width: 35%;
+      height: 16%;
+      transform: rotate(-2deg);
+      animation-duration: 5.6s;
+      animation-delay: -1.9s;
+    }
+
+    .continent-breath-region.region-c {
+      left: 56%;
+      top: 27%;
+      width: 18%;
+      height: 22%;
+      transform: rotate(18deg);
+      animation-duration: 4.4s;
+      animation-delay: -2.8s;
+    }
+
+    .continent-breath-region.region-d {
+      left: 30%;
+      top: 32%;
+      width: 33%;
+      height: 11%;
+      transform: rotate(1deg);
+      opacity: .66;
+      animation-duration: 6.2s;
+      animation-delay: -3.6s;
+    }
+
+    @keyframes continentBreath {
+      0% {
+        opacity: .2;
+        transform: translate3d(-1px, 2px, 0) scale(.985) rotate(var(--r, 0deg));
+        background-position: 0 0, 5px 7px;
+      }
+      44% { opacity: .72; }
+      100% {
+        opacity: .95;
+        transform: translate3d(2px, -1px, 0) scale(1.018) rotate(var(--r, 0deg));
+        background-position: 12px -7px, -4px 13px;
+      }
+    }
+
+    .region-a { --r: 4deg; }
+    .region-b { --r: -2deg; }
+    .region-c { --r: 18deg; }
+    .region-d { --r: 1deg; }
+
+
+    .city-glass-menu {
+      max-height: min(360px, calc(100dvh - 180px));
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,.24) transparent;
+    }
+
+    .city-glass-menu[hidden] {
+      display: none !important;
+    }
+
+    .city-glass-search-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: block;
+      padding: 2px 2px 7px;
+      background: rgba(8,10,13,.94);
+    }
+
+    .city-glass-search {
+      width: 100%;
+      height: 40px !important;
+      padding: 0 11px;
+      border: 1px solid rgba(255,255,255,.12) !important;
+      border-radius: 11px !important;
+      color: rgba(247,250,255,.94);
+      background: rgba(2,4,7,.72) !important;
+      font: inherit;
+    }
+
+    .city-glass-search::placeholder {
+      color: rgba(232,238,246,.42);
+    }
+
+    .city-glass-options {
+      display: grid;
+      gap: 4px;
+    }
+
+    .city-glass-empty {
+      min-height: 44px;
+      display: grid;
+      place-items: center;
+      color: rgba(235,241,248,.54);
+      font-size: 13px;
+    }
+
+    .city-glass-trigger:disabled {
+      cursor: wait;
+      opacity: .58;
+    }
+
+    .city-glass-trigger:focus-visible,
+    .city-glass-search:focus-visible,
+    .agent-dock.coordinate-console input:focus-visible,
+    .agent-dock.coordinate-console textarea:focus-visible,
+    .agent-dock.coordinate-console button:focus-visible {
+      outline: 2px solid rgba(225,238,248,.82);
+      outline-offset: 2px;
+    }
+
+    .coordinate-console[aria-busy="true"] input,
+    .coordinate-console[aria-busy="true"] textarea,
+    .coordinate-console[aria-busy="true"] button {
+      cursor: wait;
+    }
+
+    @media (max-width: 760px) {
+      .agent-dock.coordinate-console,
+      html[data-variant="texture"] .agent-dock.coordinate-console,
+      html[data-variant="radar"] .agent-dock.coordinate-console,
+      html[data-variant="silent"] .agent-dock.coordinate-console {
+        width: min(370px, calc(100vw - 20px)) !important;
+        min-height: 128px !important;
+        bottom: max(12px, env(safe-area-inset-bottom)) !important;
+        grid-template-columns: 112px minmax(0, 1fr) 54px !important;
+        grid-template-rows: 54px 45px !important;
+        gap: 9px !important;
+        padding: 10px !important;
+        border-radius: 22px !important;
+      }
+
+      .agent-dock.coordinate-console .city-glass-picker {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        min-width: 0 !important;
+      }
+
+      .agent-dock.coordinate-console #address {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        width: auto !important;
+        min-width: 0 !important;
+      }
+
+      .agent-dock.coordinate-console #vision {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        width: auto !important;
+        min-width: 0 !important;
+        height: 45px !important;
+        min-height: 45px !important;
+        max-height: 45px !important;
+      }
+
+      .agent-dock.coordinate-console #submitBtn {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        width: 54px !important;
+        min-width: 54px !important;
+        height: 54px !important;
+        padding: 0 !important;
+      }
+
+      .agent-dock.coordinate-console .status-line {
+        left: 10px !important;
+        right: 10px !important;
+        top: -28px !important;
+        bottom: auto !important;
+        width: auto !important;
+        text-align: center !important;
+      }
+
+      .city-glass-menu {
+        left: 0 !important;
+        right: auto !important;
+        width: min(300px, calc(100vw - 40px));
+        max-height: min(320px, calc(100dvh - 210px));
+      }
+    }
+
+    @media (max-width: 430px) {
+      .agent-dock.coordinate-console,
+      html[data-variant="texture"] .agent-dock.coordinate-console,
+      html[data-variant="radar"] .agent-dock.coordinate-console,
+      html[data-variant="silent"] .agent-dock.coordinate-console {
+        grid-template-columns: 100px minmax(0, 1fr) 54px !important;
+      }
+    }
+
+    html[data-embed="hero"] header.liquid-nav,
+    html[data-embed="hero"] .liquid-nav,
+    html[data-embed="hero"] .nav-reveal-panel,
+    html[data-embed="hero"] #navRevealPanel,
+    html[data-embed="hero"] .coordinate-console,
+    html[data-embed="hero"] .agent-dock.coordinate-console,
+    html[data-embed="hero"] #reportForm,
+    html[data-embed="hero"] #formStatus,
+    html[data-embed="hero"] #toast,
+    html[data-embed="hero"] .toast {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    html[data-embed="hero"] .globe-card::before {
+      height: min(22vh, 180px);
+      background: linear-gradient(180deg, rgba(0,0,0,.46), rgba(0,0,0,0));
+    }
+
+    html[data-embed="hero"] #earthCanvas,
+    html[data-embed="hero"] #globeFxCanvas,
+    html[data-embed="hero"] .orbital-frame {
+      top: 58%;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .continent-breath-region {
+        animation: none !important;
+        opacity: .42 !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="hero-shell" id="heroPage">
+    <article class="globe-card" aria-label="DDS coordinate globe">
+      <canvas id="starfieldCanvas" aria-hidden="true"></canvas>
+      <canvas id="earthCanvas" aria-label="点击地球触发扩散动效" role="button"></canvas>
+      <canvas id="globeFxCanvas" aria-hidden="true"></canvas>
+      <div class="continent-breath-layer" aria-hidden="true">
+        <span class="continent-breath-region region-a"></span>
+        <span class="continent-breath-region region-b"></span>
+        <span class="continent-breath-region region-c"></span>
+        <span class="continent-breath-region region-d"></span>
+      </div>
+      <div class="orbital-frame" aria-hidden="true"><span class="orbit orbit-a"></span><span class="orbit orbit-b"></span><span class="orbit orbit-c"></span></div>
+      <header class="liquid-nav" aria-label="DDS 主导航">
+        <button class="nav-brand" type="button" data-nav-mode="coordinate" aria-label="Digital Decision System 首页">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-copy">
+            <strong>Digital Decision System</strong>
+            <small>地产决策平台</small>
+          </span>
+        </button>
+        <nav class="nav-links" aria-label="功能导航">
+          <button type="button" data-nav-mode="coordinate" aria-current="page">坐标分析</button>
+          <button type="button" data-nav-mode="evidence">证据链</button>
+          <button type="button" data-nav-mode="cases">案例库</button>
+          <button type="button" data-nav-mode="learning">学习闭环</button>
+        </nav>
+        <span class="nav-status">Architecture Director</span>
+      </header>
+      <section class="nav-reveal-panel" id="navRevealPanel" aria-live="polite" aria-label="当前模式详情">
+        <div class="nav-reveal-kicker" id="navRevealKicker">坐标分析</div>
+        <strong id="navRevealTitle">从坐标启动决策</strong>
+        <p id="navRevealCopy">输入地址或坐标，DDS 会把地块、证据、案例和风险收束到同一个判断入口。</p>
+      </section>
+      <div class="sparkle-horizon" aria-hidden="true"><div class="sparkle-field"></div></div>
+
+      <form class="coordinate-console agent-dock" id="reportForm" autocomplete="off" aria-label="DDS Agent 输入区域">
+      <label class="sr-only" for="city">城市</label>
+      <select id="city" hidden aria-hidden="true" tabindex="-1" autocomplete="address-level2">
+        <option>济南</option>
+        <option>三亚</option>
+        <option>杭州</option>
+        <option>上海</option>
+        <option>青岛</option>
+      </select>
+      <label class="sr-only" for="address">地址或坐标</label>
+      <input id="address" maxlength="200" placeholder="坐标 / 地址 / 地块名" autocomplete="street-address" required>
+      <button id="submitBtn" type="submit" aria-label="进入研判并生成报告"><span>开始分析</span></button>
+      <label class="sr-only" for="vision">自由提示词</label>
+      <textarea id="vision" maxlength="500" placeholder="可选提示词：产品假设、风险关注、目标客群" autocomplete="off"></textarea>
+      <select id="persona" hidden>
+        <option value="developer">开发商</option>
+        <option value="designer">设计师</option>
+        <option value="buyer">购房者</option>
+      </select>
+      <input id="radius" type="hidden" value="5">
+      <input id="expectedPrice" type="hidden">
+      <button id="loadDemoBtn" type="button" hidden>demo</button>
+      <div class="status-line" id="formStatus" aria-live="polite"></div>
+          </form>
+    </article>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <script type="module">
+    import createGlobe from "./cobe.esm.js";
+
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var variant = params.get("variant") || "texture";
+      var embedMode = params.get("embed") || "";
+      var configs = {
+        texture: {
+          bgTop: "#010206",
+          bgMid: "#050b12",
+          bgBottom: "#010204",
+          starCount: 320,
+          particleCount: 14200,
+          speed: .000032,
+          radius: .565,
+          initialYaw: -2.83,
+          initialPitch: .73,
+          twinkle: .52,
+          halo: "rgba(244,239,221,.18)",
+          particle: [188, 204, 208],
+          land: [238, 232, 211],
+          coast: [255, 248, 221],
+          ocean: [86, 106, 116],
+          hot: [226, 196, 122],
+          clusterCount: 12,
+          ringMode: "none",
+          textureMode: true,
+          landThreshold: .43,
+          coastWidth: .15
+        },
+        orbit: {
+          bgTop: "#02040a",
+          bgMid: "#07111d",
+          bgBottom: "#020306",
+          starCount: 260,
+          particleCount: 3600,
+          speed: .000045,
+          radius: .305,
+          twinkle: .82,
+          halo: "rgba(140,199,255,.22)",
+          particle: [210, 231, 255],
+          hot: [216, 192, 131],
+          clusterCount: 9,
+          ringMode: "soft"
+        },
+        radar: {
+          bgTop: "#010605",
+          bgMid: "#061615",
+          bgBottom: "#020304",
+          starCount: 210,
+          particleCount: 2500,
+          speed: .00006,
+          radius: .292,
+          twinkle: .68,
+          halo: "rgba(142,225,189,.22)",
+          particle: [220, 252, 242],
+          hot: [142, 225, 189],
+          clusterCount: 7,
+          ringMode: "sweep"
+        },
+        silent: {
+          bgTop: "#010102",
+          bgMid: "#040405",
+          bgBottom: "#010101",
+          starCount: 118,
+          particleCount: 4700,
+          speed: .000028,
+          radius: .275,
+          twinkle: .46,
+          halo: "rgba(216,192,131,.16)",
+          particle: [244, 239, 221],
+          hot: [226, 196, 122],
+          clusterCount: 5,
+          ringMode: "none"
+        }
+      };
+      var cfg = configs[variant] || configs.texture;
+      cfg.textureMode = true;
+      cfg.initialYaw = cfg.initialYaw == null ? -2.83 : cfg.initialYaw;
+      cfg.initialPitch = cfg.initialPitch == null ? .73 : cfg.initialPitch;
+      cfg.speed = -Math.abs(cfg.speed || .000032);
+      cfg.land = cfg.land || cfg.particle || [238, 232, 211];
+      cfg.coast = cfg.coast || cfg.hot || [255, 248, 221];
+      cfg.ocean = cfg.ocean || [62, 78, 88];
+      document.documentElement.dataset.variant = configs[variant] ? variant : "texture";
+      if (embedMode) document.documentElement.dataset.embed = embedMode;
+      window.__ddsHeroDemo = { variant: document.documentElement.dataset.variant, embed: embedMode || "full", textureSource: "earth_real_50m.png raster globe", startMeridian: "Central Asia / 75E", startTarget: "Central Asia first, then East Asia", rotation: "slow eastward negative-phi drift", renderStyle: "raster-texture-globe", layout: "top-nav-bottom-agent-dock-globe", magicRings: "native-canvas-click-burst", particleLife: "raster-map-plus-active-twinkle-fx", titleMotion: "slow-fade-up", conditionInput: "bottom-centered-liquid-glass-agent-dock" };
+
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var starCanvas = document.getElementById("starfieldCanvas");
+      var earthCanvas = document.getElementById("earthCanvas");
+      var globeFxCanvas = document.getElementById("globeFxCanvas");
+      var starCtx = starCanvas.getContext("2d");
+      var globeFxCtx = globeFxCanvas.getContext("2d");
+      var earthCtx = null;
+      var cobeGlobe = null;
+      var cobeSize = 0;
+      var cobeActive = false;
+      var earthSize = { w: 0, h: 0 };
+      var useCobeGlobe = false;
+      var COBE_START_PHI = -Math.PI;
+      var COBE_ROTATION_SPEED = -0.00068;
+      var cobePhi = COBE_START_PHI;
+      var globeBursts = [];
+      var globeFxSeeds = [];
+      var continentBreathSeeds = [];
+      var globeBeaconPoints = [
+        { location: [39.90, 116.40], phase: .1, weight: 1.0 },
+        { location: [31.23, 121.47], phase: 1.4, weight: .94 },
+        { location: [22.54, 114.06], phase: 2.5, weight: .82 },
+        { location: [35.68, 139.69], phase: .8, weight: .86 },
+        { location: [37.56, 126.98], phase: 3.3, weight: .75 },
+        { location: [25.03, 121.56], phase: 4.2, weight: .78 },
+        { location: [1.35, 103.82], phase: 1.9, weight: .82 },
+        { location: [13.75, 100.50], phase: 2.8, weight: .66 },
+        { location: [28.61, 77.20], phase: 3.7, weight: .74 },
+        { location: [19.07, 72.88], phase: .5, weight: .62 },
+        { location: [25.20, 55.27], phase: 2.2, weight: .68 },
+        { location: [41.01, 28.97], phase: 4.6, weight: .58 },
+        { location: [55.75, 37.62], phase: 5.1, weight: .52 },
+        { location: [48.85, 2.35], phase: 1.2, weight: .5 },
+        { location: [51.50, -0.12], phase: 2.9, weight: .48 },
+        { location: [40.71, -74.0], phase: 3.9, weight: .46 },
+        { location: [37.77, -122.42], phase: .7, weight: .44 },
+        { location: [-33.86, 151.21], phase: 5.4, weight: .62 },
+        { location: [-6.20, 106.82], phase: 3.1, weight: .7 },
+        { location: [14.60, 120.98], phase: 4.8, weight: .68 }
+      ];
+      var stars = [];
+      var particles = [];
+      var mapParticles = [];
+      var clusters = [];
+      var size = { w: 0, h: 0 };
+      var earthTexture = { ready: false, land: [], coast: [], rings: [] };
+      var worldMap = { ready: false, w: 0, h: 0, data: null, canvas: document.createElement("canvas"), ctx: null, key: "" };
+      var globeBuffer = { canvas: document.createElement("canvas"), ctx: null };
+
+      function rand(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v));
+      }
+
+      function rgb(list, alpha) {
+        return "rgba(" + list[0] + "," + list[1] + "," + list[2] + "," + alpha + ")";
+      }
+
+      function fitCanvas(canvas) {
+        var rect = canvas.getBoundingClientRect();
+        var w = Math.max(1, Math.floor(rect.width));
+        var h = Math.max(1, Math.floor(rect.height));
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        var ctx = canvas.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return { w: w, h: h };
+      }
+
+      function fitFxCanvas() {
+        var rect = globeFxCanvas.getBoundingClientRect();
+        var w = Math.max(1, Math.floor(rect.width));
+        var h = Math.max(1, Math.floor(rect.height));
+        globeFxCanvas.width = Math.floor(w * dpr);
+        globeFxCanvas.height = Math.floor(h * dpr);
+        globeFxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return { w: w, h: h };
+      }
+
+      function resize() {
+        size = fitCanvas(starCanvas);
+        earthSize = fitCanvas(earthCanvas);
+        fitFxCanvas();
+        buildStars();
+        buildGlobeFxSeeds();
+        setupCobeGlobe();
+        if (!cobeActive) {
+          if (worldMap.ready) buildMapParticles();
+          buildEarth();
+        }
+      }
+
+      function buildStars() {
+        stars = [];
+        var count = reduceMotion ? Math.floor(cfg.starCount * .55) : cfg.starCount;
+        for (var i = 0; i < count; i += 1) {
+          stars.push({
+            x: Math.random(),
+            y: Math.random(),
+            z: Math.random(),
+            r: rand(.35, 1.8),
+            phase: rand(0, Math.PI * 2),
+            speed: rand(.0004, .0012)
+          });
+        }
+      }
+
+      function setupCobeGlobe() {
+        var rect = earthCanvas.getBoundingClientRect();
+        var side = Math.max(1, Math.floor(Math.min(rect.width, rect.height)));
+        if (!side) return;
+        if (!useCobeGlobe) {
+          if (cobeGlobe) cobeGlobe.destroy();
+          cobeGlobe = null;
+          cobeActive = false;
+          window.__ddsHeroDemo.cobeReady = false;
+          window.__ddsHeroDemo.renderStyle = "raster-texture-globe";
+          return;
+        }
+        if (cobeGlobe && cobeSize === side) return;
+        if (cobeGlobe) cobeGlobe.destroy();
+        cobeSize = side;
+        cobePhi = COBE_START_PHI;
+        try {
+          cobeGlobe = createGlobe(earthCanvas, {
+            devicePixelRatio: 2,
+            width: side * 2,
+            height: side * 2,
+            phi: cobePhi,
+            theta: 0.25,
+            dark: 1,
+            scale: 1.18,
+            diffuse: 1.52,
+            mapSamples: window.innerWidth < 760 ? 52000 : 118000,
+            mapBrightness: 5.72,
+            baseColor: [0.20, 0.23, 0.26],
+            markerColor: [0.93, 0.91, 0.84],
+            glowColor: [0.58, 0.64, 0.68],
+            opacity: 1,
+            offset: [0, 0],
+            markerElevation: 0.012,
+            markers: buildCobeMarkers(0)
+          });
+          cobeActive = true;
+          window.__ddsHeroDemo.cobeReady = true;
+          window.__ddsHeroDemo.cobeSize = side;
+          window.__ddsHeroDemo.mapSamples = window.innerWidth < 760 ? 52000 : 118000;
+          window.__ddsHeroDemo.globeFxReady = true;
+          window.__ddsHeroDemo.cobeMarkerCount = globeBeaconPoints.length;
+          window.__setCobePhi = function (value) {
+            var next = Number(value);
+            cobePhi = Number.isFinite(next) ? next : COBE_START_PHI;
+            window.__ddsHeroDemo.cobePhi = cobePhi;
+          };
+          window.__ddsHeroDemo.cobePhi = cobePhi;
+        } catch (err) {
+          cobeActive = false;
+          window.__ddsHeroDemo.cobeReady = false;
+          window.__ddsHeroDemo.cobeError = err && err.message ? err.message : "COBE unavailable";
+          if (!earthCtx) earthCtx = earthCanvas.getContext("2d");
+        }
+      }
+
+      function spherePointFromLatLon(lat, lon) {
+        var phi = (90 - lat) * Math.PI / 180;
+        var theta = (lon + 180) * Math.PI / 180;
+        return {
+          x: -Math.sin(phi) * Math.cos(theta),
+          y: Math.cos(phi),
+          z: Math.sin(phi) * Math.sin(theta)
+        };
+      }
+
+      function wrapLon(lon) {
+        return ((lon + 540) % 360) - 180;
+      }
+
+      function hash2(a, b) {
+        var n = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453;
+        return n - Math.floor(n);
+      }
+
+      function blob(lat, lon, clat, clon, latRadius, lonRadius, weight) {
+        var x = wrapLon(lon - clon) / lonRadius;
+        var y = (lat - clat) / latRadius;
+        return weight * Math.exp(-(x * x + y * y));
+      }
+
+      function landScore(lat, lon) {
+        var s = 0;
+        s += blob(lat, lon, 52, -107, 24, 42, .78);
+        s += blob(lat, lon, 34, -98, 18, 32, .55);
+        s += blob(lat, lon, 62, -42, 14, 26, .58);
+        s += blob(lat, lon, -14, -61, 34, 15, .88);
+        s += blob(lat, lon, -36, -66, 20, 11, .44);
+        s += blob(lat, lon, 50, 28, 20, 43, .57);
+        s += blob(lat, lon, 48, 84, 27, 62, .82);
+        s += blob(lat, lon, 30, 108, 17, 38, .52);
+        s += blob(lat, lon, 20, 77, 15, 15, .42);
+        s += blob(lat, lon, 9, 105, 12, 22, .34);
+        s += blob(lat, lon, 8, 22, 37, 24, .82);
+        s += blob(lat, lon, -24, 25, 20, 18, .42);
+        s += blob(lat, lon, -25, 134, 13, 24, .72);
+        s += blob(lat, lon, -77, 0, 8, 180, .98);
+        s -= blob(lat, lon, 28, -82, 10, 12, .20);
+        s -= blob(lat, lon, 40, -72, 7, 10, .16);
+        s -= blob(lat, lon, 38, 18, 6, 18, .16);
+        s -= blob(lat, lon, 8, 76, 7, 9, .18);
+        var wave = .07 * Math.sin((lon * 2.7 + lat * 4.4) * Math.PI / 180) + .045 * Math.sin((lon * 6.1 - lat * 2.8) * Math.PI / 180);
+        var grit = (hash2(Math.floor((lat + 90) * 2.6), Math.floor((lon + 180) * 2.6)) - .5) * .13;
+        return s + wave + grit;
+      }
+
+      function loadWorldMapTexture() {
+        var img = new Image();
+        img.onload = function () {
+          worldMap.canvas.width = img.naturalWidth || img.width;
+          worldMap.canvas.height = img.naturalHeight || img.height;
+          worldMap.ctx = worldMap.canvas.getContext("2d", { willReadFrequently: true });
+          worldMap.ctx.drawImage(img, 0, 0);
+          var pixels = worldMap.ctx.getImageData(0, 0, worldMap.canvas.width, worldMap.canvas.height);
+          worldMap.w = pixels.width;
+          worldMap.h = pixels.height;
+          worldMap.data = pixels.data;
+          worldMap.ready = true;
+          window.__ddsHeroDemo.worldMap = "earth_real_50m.png";
+          window.__ddsHeroDemo.worldMapReady = true;
+          if (!cobeActive) {
+            buildMapParticles();
+            buildEarth();
+          }
+        };
+        img.onerror = function () {
+          window.__ddsHeroDemo.worldMapReady = false;
+        };
+        img.src = "earth_real_50m.png";
+      }
+
+      function loadEarthTexture() {
+        fetch("earth_texture_50m.json", { cache: "force-cache" })
+          .then(function (response) {
+            if (!response.ok) throw new Error("texture data unavailable");
+            return response.json();
+          })
+          .then(function (data) {
+            earthTexture.ready = true;
+            earthTexture.land = Array.isArray(data.land) ? data.land : [];
+            earthTexture.coast = Array.isArray(data.coast) ? data.coast : [];
+            earthTexture.rings = Array.isArray(data.rings) ? data.rings : [];
+            window.__ddsHeroDemo.textureReady = true;
+            window.__ddsHeroDemo.landPoints = earthTexture.land.length;
+            window.__ddsHeroDemo.coastPoints = earthTexture.coast.length;
+            window.__ddsHeroDemo.rings = earthTexture.rings.length;
+            window.__ddsHeroDemo.ringPoints = earthTexture.rings.reduce(function (sum, ring) { return sum + Math.floor(ring.length / 2); }, 0);
+            buildEarth();
+          })
+          .catch(function () {
+            window.__ddsHeroDemo.textureReady = false;
+          });
+      }
+
+      function buildClusters() {
+        var seeds = [
+          [36.67, 117.02],
+          [31.23, 121.47],
+          [30.27, 120.15],
+          [18.25, 109.51],
+          [36.07, 120.38],
+          [22.54, 114.06],
+          [35.68, 139.69],
+          [1.35, 103.82],
+          [25.03, 121.56],
+          [37.56, 126.98],
+          [48.85, 2.35],
+          [40.71, -74.0]
+        ];
+        clusters = seeds.slice(0, cfg.clusterCount).map(function (item) {
+          var v = spherePointFromLatLon(item[0], item[1]);
+          v.phase = rand(0, Math.PI * 2);
+          return v;
+        });
+      }
+
+      function hotStrength(p) {
+        var best = 0;
+        clusters.forEach(function (c) {
+          var dot = p.x * c.x + p.y * c.y + p.z * c.z;
+          best = Math.max(best, dot);
+        });
+        return clamp((best - .982) / .018, 0, 1);
+      }
+
+      function buildMapParticles() {
+        mapParticles = [];
+        if (!worldMap.ready || !worldMap.data) return;
+        var target = window.innerWidth < 700 ? 26000 : 52000;
+        var golden = Math.PI * (3 - Math.sqrt(5));
+        for (var i = 0; i < target; i += 1) {
+          var y = 1 - (i / Math.max(1, target - 1)) * 2;
+          var rr = Math.sqrt(Math.max(0, 1 - y * y));
+          var theta = golden * i;
+          var point = { x: Math.cos(theta) * rr, y: y, z: Math.sin(theta) * rr };
+          var ll = lonLatFromPoint(point);
+          var color = sampleWorldMap(ll.lon, ll.lat);
+          var brightness = (color[0] + color[1] + color[2]) / 3;
+          if (brightness < 46) continue;
+          var grain = hash2(i, Math.floor(brightness * 10));
+          var coast = brightness < 142 ? .92 : .12 + grain * .16;
+          var p = {
+            x: point.x,
+            y: point.y,
+            z: point.z,
+            lat: ll.lat,
+            lon: ll.lon,
+            land: true,
+            coast: coast,
+            relief: clamp((brightness - 46) / 209, 0, 1),
+            phase: grain * Math.PI * 2,
+            size: .22 + grain * (variant === "silent" ? .42 : .58)
+          };
+          p.hot = hotStrength(p) * (variant === "radar" ? 1.02 : .82);
+          if (grain > .994) p.hot = Math.max(p.hot, .28 + hash2(i, 77) * .5);
+          mapParticles.push(p);
+        }
+        window.__ddsHeroDemo.mapSamples = mapParticles.length;
+        if (!cobeActive) window.__ddsHeroDemo.renderStyle = "raster-sampled-cobe-dots";
+      }
+
+      function buildEarth() {
+        buildClusters();
+        particles = [];
+
+        if (cfg.textureMode && worldMap.ready && mapParticles.length) {
+          var sampleLimit = window.innerWidth < 700 ? 22000 : 36000;
+          var sampleStep = Math.max(1, Math.ceil(mapParticles.length / sampleLimit));
+          for (var mi = 0; mi < mapParticles.length; mi += sampleStep) {
+            particles.push(mapParticles[mi]);
+          }
+          return;
+        }
+
+        if (cfg.textureMode && earthTexture.ready && earthTexture.land.length) {
+          var landLimit = window.innerWidth < 700 ? 12000 : 23000;
+          var coastLimit = window.innerWidth < 700 ? 4200 : 8200;
+          var landStep = Math.max(1, Math.ceil(earthTexture.land.length / landLimit));
+          var coastStep = Math.max(1, Math.ceil(earthTexture.coast.length / coastLimit));
+          for (var li = 0; li < earthTexture.land.length; li += landStep) {
+            var lp = earthTexture.land[li];
+            var lpLon = Array.isArray(lp) ? lp[0] : lp.lon;
+            var lpLat = Array.isArray(lp) ? lp[1] : lp.lat;
+            var lpRelief = Array.isArray(lp) ? lp[2] : lp.r;
+            var lv = spherePointFromLatLon(lpLat, lpLon);
+            var landParticle = {
+              x: lv.x,
+              y: lv.y,
+              z: lv.z,
+              lat: lpLat,
+              lon: lpLon,
+              land: true,
+              coast: .05,
+              relief: lpRelief == null ? hash2(li, Math.floor(lpLat * 13 + lpLon * 17)) : lpRelief,
+              phase: hash2(li, Math.floor(lpLat * 31)) * Math.PI * 2,
+              size: .24 + hash2(li, Math.floor(lpLon * 17)) * .42
+            };
+            landParticle.hot = hotStrength(landParticle) * .82;
+            particles.push(landParticle);
+          }
+          for (var ci = 0; ci < earthTexture.coast.length; ci += coastStep) {
+            var cp = earthTexture.coast[ci];
+            var cpLon = Array.isArray(cp) ? cp[0] : cp.lon;
+            var cpLat = Array.isArray(cp) ? cp[1] : cp.lat;
+            var cv = spherePointFromLatLon(cpLat, cpLon);
+            particles.push({
+              x: cv.x,
+              y: cv.y,
+              z: cv.z,
+              lat: cpLat,
+              lon: cpLon,
+              land: true,
+              coast: 1,
+              relief: .9,
+              phase: hash2(ci, Math.floor(cpLat * 19)) * Math.PI * 2,
+              size: .32 + hash2(ci, Math.floor(cpLon * 23)) * .42,
+              hot: hotStrength(cv) * .45
+            });
+          }
+          return;
+        }
+
+        var count = reduceMotion ? Math.floor(cfg.particleCount * .45) : cfg.particleCount;
+        var golden = Math.PI * (3 - Math.sqrt(5));
+        for (var i = 0; i < count; i += 1) {
+          var y = 1 - (i / Math.max(1, count - 1)) * 2;
+          var radius = Math.sqrt(1 - y * y);
+          var theta = golden * i;
+          var lat = Math.asin(y) * 180 / Math.PI;
+          var lon = wrapLon(theta * 180 / Math.PI);
+          var score = landScore(lat, lon);
+          var threshold = cfg.landThreshold || .56;
+          var coast = 1 - clamp(Math.abs(score - threshold) / (cfg.coastWidth || .1), 0, 1);
+          var land = score > threshold;
+          if (!land && coast < .08) continue;
+          var p = {
+            x: Math.cos(theta) * radius,
+            y: y,
+            z: Math.sin(theta) * radius,
+            lat: lat,
+            lon: lon,
+            landScore: score,
+            land: land,
+            coast: coast,
+            relief: hash2(i, Math.floor(score * 1000)),
+            phase: hash2(i, 11) * Math.PI * 2,
+            size: land ? .54 : .36
+          };
+          p.hot = hotStrength(p) * (land ? 1 : .12);
+          particles.push(p);
+        }
+      }
+
+      function buildGlobeFxSeeds() {
+        globeFxSeeds = [];
+        var target = window.innerWidth < 760 ? 700 : 7200;
+        var candidates = target * 8;
+        var golden = Math.PI * (3 - Math.sqrt(5));
+        for (var i = 0; i < candidates && globeFxSeeds.length < target; i += 1) {
+          var y = 1 - (i / Math.max(1, candidates - 1)) * 2;
+          var rr = Math.sqrt(Math.max(0, 1 - y * y));
+          var theta = golden * i;
+          var point = { x: Math.cos(theta) * rr, y: y, z: Math.sin(theta) * rr };
+          var ll = lonLatFromPoint(point);
+          var score = landScore(ll.lat, ll.lon);
+          var brightness = 120;
+          var mapLand = false;
+          if (worldMap.ready && worldMap.data) {
+            var color = sampleWorldMap(ll.lon, ll.lat);
+            brightness = (color[0] + color[1] + color[2]) / 3;
+            mapLand = brightness > 46;
+          }
+          var likelyLand = mapLand || score > .43;
+          var coastBias = clamp((score - .34) / .36, 0, 1);
+          var keep = hash2(i, 211);
+          var density = .42 + coastBias * .6 + clamp((brightness - 48) / 190, 0, 1) * .34;
+          if (!likelyLand || keep > density) continue;
+          var region = Math.floor((ll.lon + 180) / 18) + Math.floor((ll.lat + 90) / 14) * 21;
+          var relief = clamp((brightness - 48) / 192, 0, 1);
+          globeFxSeeds.push({
+            x: point.x,
+            y: point.y,
+            z: point.z,
+            lat: ll.lat,
+            lon: ll.lon,
+            region: region,
+            density: density,
+            relief: relief,
+            phase: hash2(i, region + 41) * Math.PI * 2,
+            regionPhase: hash2(region, 17) * Math.PI * 2,
+            size: .14 + hash2(i, 53) * (.42 + relief * .38),
+            energy: .22 + hash2(i, 67) * .82 + relief * .42,
+            warmth: hash2(i, 89)
+          });
+        }
+        buildContinentBreathSeeds();
+        window.__ddsHeroDemo.globeFxLandSeeds = globeFxSeeds.length;
+        window.__ddsHeroDemo.continentBreathSeeds = continentBreathSeeds.length;
+        window.__ddsHeroDemo.globeFxSeedMode = worldMap.ready ? "world-map-land-breath" : "landscore-breath";
+      }
+
+      function buildContinentBreathSeeds() {
+        continentBreathSeeds = [];
+        var blobs = [
+          { x: -.36, y: -.58, rx: .22, ry: .13, weight: .82 },
+          { x: -.08, y: -.56, rx: .32, ry: .14, weight: 1.0 },
+          { x: .20, y: -.52, rx: .25, ry: .13, weight: .92 },
+          { x: .38, y: -.42, rx: .15, ry: .2, weight: .78 },
+          { x: -.47, y: -.42, rx: .14, ry: .13, weight: .62 },
+          { x: .02, y: -.36, rx: .28, ry: .1, weight: .58 }
+        ];
+        var target = window.innerWidth < 760 ? 420 : 2600;
+        for (var i = 0; i < target; i += 1) {
+          var b = blobs[Math.floor(hash2(i, 301) * blobs.length) % blobs.length];
+          var a = hash2(i, 307) * Math.PI * 2;
+          var d = Math.sqrt(hash2(i, 311));
+          var x = b.x + Math.cos(a) * b.rx * d * (0.72 + hash2(i, 313) * .42);
+          var y = b.y + Math.sin(a) * b.ry * d * (0.68 + hash2(i, 317) * .5);
+          if (x * x + y * y > .92) continue;
+          continentBreathSeeds.push({
+            x: x,
+            y: y,
+            region: Math.floor((x + .7) * 8) + Math.floor((y + .48) * 10) * 11,
+            phase: hash2(i, 331) * Math.PI * 2,
+            regionPhase: hash2(Math.floor((x + 1) * 18), Math.floor((y + 1) * 18)) * Math.PI * 2,
+            size: .22 + hash2(i, 337) * .72,
+            energy: .32 + hash2(i, 347) * .86,
+            weight: b.weight,
+            warm: hash2(i, 353) > .86
+          });
+        }
+      }
+
+      function buildCobeMarkers(t) {
+        var cityMarkers = globeBeaconPoints.map(function (p, index) {
+          var pulse = reduceMotion ? .42 : .5 + .5 * Math.sin(t * .0021 + p.phase + index * .37);
+          var flare = Math.pow(pulse, 4.2) * p.weight;
+          return {
+            location: p.location,
+            size: .0045 + flare * .014,
+            color: [0.84 + flare * .1, 0.86 + flare * .08, 0.84 + flare * .06]
+          };
+        });
+        if (reduceMotion) return cityMarkers.slice(0, 10);
+        if (!globeFxSeeds.length) buildGlobeFxSeeds();
+        var breathMarkers = [];
+        var maxBreath = window.innerWidth < 760 ? 60 : 460;
+        var step = Math.max(1, Math.floor(globeFxSeeds.length / maxBreath));
+        for (var i = 0; i < globeFxSeeds.length; i += step) {
+          var p = globeFxSeeds[i];
+          if (p.lat == null || p.lon == null) continue;
+          var regionBreath = .5 + .5 * Math.sin(t * .00105 + p.regionPhase);
+          var localPulse = .5 + .5 * Math.sin(t * (.0024 + p.energy * .0015) + p.phase);
+          var visibility = Math.pow(regionBreath, 1.8) * (.45 + localPulse * .55) * (.55 + p.density * .45);
+          if (visibility < .12 && hash2(i, Math.floor(t * .02)) > .18) continue;
+          var warm = p.warmth > .82;
+          breathMarkers.push({
+            location: [p.lat, p.lon],
+            size: .0042 + visibility * (.015 + p.relief * .006),
+            color: warm ? [1, 0.92, 0.68] : [0.96, 1, 0.96]
+          });
+        }
+        window.__ddsHeroDemo.cobeBreathMarkers = breathMarkers.length;
+        return cityMarkers.concat(breathMarkers);
+      }
+
+      function triggerGlobeBurst(clientX, clientY) {
+        var rect = earthCanvas.getBoundingClientRect();
+        var x = clientX - rect.left;
+        var y = clientY - rect.top;
+        var cx = rect.width * .5;
+        var cy = rect.height * .5;
+        var r = Math.min(rect.width, rect.height) * .49;
+        var dx = x - cx;
+        var dy = y - cy;
+        if (dx * dx + dy * dy > r * r * 1.08) return false;
+        globeBursts.push({ x: x, y: y, start: performance.now(), phase: rand(0, Math.PI * 2) });
+        if (globeBursts.length > 5) globeBursts.shift();
+        window.__ddsHeroDemo.lastGlobeBurst = Date.now();
+        return true;
+      }
+
+      function projectGlobeFxSeed(p) {
+        var phi = cobeActive ? cobePhi : ((cfg.initialYaw || 0));
+        var tilt = cobeActive ? 0.25 : (cfg.initialPitch || 0);
+        var cy = Math.cos(phi);
+        var sy = Math.sin(phi);
+        var x = cy * p.x + sy * p.z;
+        var z = -sy * p.x + cy * p.z;
+        var y = p.y;
+        var ct = Math.cos(tilt);
+        var st = Math.sin(tilt);
+        return {
+          x: x,
+          y: ct * y - st * z,
+          z: st * y + ct * z
+        };
+      }
+      function drawGlobeFx(t) {
+        var rect = globeFxCanvas.getBoundingClientRect();
+        var w = Math.max(1, rect.width);
+        var h = Math.max(1, rect.height);
+        var cx = w * .5;
+        var cy = h * .5;
+        var r = Math.min(w, h) * .47;
+        globeFxCtx.clearRect(0, 0, w, h);
+
+        globeFxCtx.save();
+        globeFxCtx.beginPath();
+        globeFxCtx.arc(cx, cy, r * 1.02, 0, Math.PI * 2);
+        globeFxCtx.clip();
+        globeFxCtx.globalCompositeOperation = "lighter";
+
+        var rim = globeFxCtx.createRadialGradient(cx, cy, r * .62, cx, cy, r * 1.03);
+        rim.addColorStop(0, "rgba(255,255,255,0)");
+        rim.addColorStop(.68, "rgba(123,184,255,.018)");
+        rim.addColorStop(.9, "rgba(128,196,255,.13)");
+        rim.addColorStop(1, "rgba(220,242,255,.24)");
+        globeFxCtx.fillStyle = rim;
+        globeFxCtx.fillRect(0, 0, w, h);
+
+        var glass = globeFxCtx.createRadialGradient(cx - r * .32, cy - r * .34, 0, cx - r * .32, cy - r * .34, r * .92);
+        glass.addColorStop(0, "rgba(255,255,255,.085)");
+        glass.addColorStop(.22, "rgba(225,239,255,.04)");
+        glass.addColorStop(.62, "rgba(140,194,255,.012)");
+        glass.addColorStop(1, "rgba(255,255,255,0)");
+        globeFxCtx.fillStyle = glass;
+        globeFxCtx.fillRect(0, 0, w, h);
+
+        if (!reduceMotion) {
+          var sweep = .5 + .5 * Math.sin(t * .00046);
+          var gx = cx - r * .98 + sweep * r * 1.76;
+          var lens = globeFxCtx.createLinearGradient(gx - r * .18, cy - r * .96, gx + r * .28, cy + r * .74);
+          lens.addColorStop(0, "rgba(255,255,255,0)");
+          lens.addColorStop(.38, "rgba(238,246,255,.018)");
+          lens.addColorStop(.49, "rgba(255,252,229,.11)");
+          lens.addColorStop(.6, "rgba(180,220,255,.025)");
+          lens.addColorStop(1, "rgba(255,255,255,0)");
+          globeFxCtx.fillStyle = lens;
+          globeFxCtx.fillRect(0, 0, w, h);
+        }
+
+        if (!reduceMotion) {
+          if (!globeFxSeeds.length) buildGlobeFxSeeds();
+          var visibleBreath = 0;
+          globeFxSeeds.forEach(function (p, index) {
+            var rp = projectGlobeFxSeed(p);
+            if (rp.z < -0.18) return;
+            var px = cx + rp.x * r * .98;
+            var py = cy + rp.y * r * .92;
+            var edge = Math.sqrt(rp.x * rp.x + rp.y * rp.y);
+            if (edge > 1.02) return;
+            var depth = clamp((rp.z + .18) / 1.18, 0, 1);
+            var regionBreath = .5 + .5 * Math.sin(t * .00105 + p.regionPhase);
+            var localPulse = .5 + .5 * Math.sin(t * (.0024 + p.energy * .0015) + p.phase);
+            var densityGate = hash2(index, Math.floor(t * .02) + p.region) < (.36 + regionBreath * .48 + p.density * .22);
+            var edgeFade = 1 - clamp(edge - .72, 0, .3) * 1.55;
+            var breatheAlpha = (.045 + p.energy * .13 + p.relief * .1) * (.36 + regionBreath * 1.08) * (.34 + localPulse * .72);
+            var flicker = densityGate && hash2(index, Math.floor(t * .078)) > (.932 - p.density * .045) ? .15 + p.energy * .16 : 0;
+            var alpha = (breatheAlpha + flicker) * edgeFade * (.42 + depth * .82);
+            if (alpha < .012) return;
+            visibleBreath += 1;
+            var dot = p.size * (.82 + regionBreath * .58 + localPulse * .48 + flicker * 2.1) * (.76 + depth * .5);
+            var warm = p.warmth > .82;
+            globeFxCtx.fillStyle = warm ? "rgba(236,230,208," + alpha.toFixed(3) + ")" : "rgba(232,236,234," + alpha.toFixed(3) + ")";
+            globeFxCtx.beginPath();
+            globeFxCtx.arc(px, py, dot, 0, Math.PI * 2);
+            globeFxCtx.fill();
+            if ((regionBreath > .82 || flicker > 0) && index % 5 === 0) {
+              globeFxCtx.fillStyle = warm ? "rgba(238,226,188," + (alpha * .34).toFixed(3) + ")" : "rgba(238,242,240," + (alpha * .3).toFixed(3) + ")";
+              globeFxCtx.beginPath();
+              globeFxCtx.arc(px, py, dot * (1.9 + regionBreath * 1.2), 0, Math.PI * 2);
+              globeFxCtx.fill();
+            }
+          });
+          if (continentBreathSeeds.length) {
+            continentBreathSeeds.forEach(function (p, index) {
+              var regionBreath = .5 + .5 * Math.sin(t * .00118 + p.regionPhase);
+              var localPulse = .5 + .5 * Math.sin(t * (.0028 + p.energy * .0018) + p.phase);
+              var gate = hash2(index, Math.floor(t * .025) + p.region) < (.34 + regionBreath * .48);
+              if (!gate && regionBreath < .62) return;
+              var px = cx + p.x * r * .98;
+              var py = cy + p.y * r * .92;
+              var alpha = (.055 + p.energy * .15) * p.weight * (.34 + regionBreath * 1.38) * (.4 + localPulse * .78);
+              if (gate) alpha += .12 + p.energy * .1;
+              alpha = clamp(alpha, 0, .58);
+              var dot = p.size * (1.05 + regionBreath * .88 + localPulse * .5 + (gate ? .68 : 0));
+              globeFxCtx.fillStyle = p.warm ? "rgba(238,226,194," + alpha.toFixed(3) + ")" : "rgba(235,240,238," + alpha.toFixed(3) + ")";
+              globeFxCtx.beginPath();
+              globeFxCtx.arc(px, py, dot, 0, Math.PI * 2);
+              globeFxCtx.fill();
+              if (regionBreath > .84 && index % 7 === 0) {
+                globeFxCtx.fillStyle = "rgba(246,248,244," + (alpha * .22).toFixed(3) + ")";
+                globeFxCtx.beginPath();
+                globeFxCtx.arc(px, py, dot * 2.4, 0, Math.PI * 2);
+                globeFxCtx.fill();
+              }
+            });
+          }
+          window.__ddsHeroDemo.globeFxVisibleBreath = visibleBreath;
+        }
+
+        globeFxCtx.restore();
+
+        globeBursts = globeBursts.filter(function (burst) {
+          var age = (t - burst.start) / 1000;
+          return age < 1.55;
+        });
+
+        globeFxCtx.save();
+        globeFxCtx.globalCompositeOperation = "lighter";
+        globeBursts.forEach(function (burst) {
+          var age = (t - burst.start) / 1000;
+          for (var i = 0; i < 6; i += 1) {
+            var p = (age - i * .095) / 1.12;
+            if (p <= 0 || p >= 1) continue;
+            var ease = 1 - Math.pow(1 - p, 2.2);
+            var rr = r * (.045 + ease * .98);
+            var alpha = Math.pow(1 - p, 1.75) * (.34 - i * .026);
+            globeFxCtx.lineWidth = Math.max(.65, 2.2 - p * 1.2);
+            globeFxCtx.strokeStyle = "rgba(210,232,255," + alpha.toFixed(3) + ")";
+            globeFxCtx.shadowColor = "rgba(114,181,255," + (alpha * .72).toFixed(3) + ")";
+            globeFxCtx.shadowBlur = 18 * (1 - p);
+            globeFxCtx.beginPath();
+            globeFxCtx.arc(burst.x, burst.y, rr, 0, Math.PI * 2);
+            globeFxCtx.stroke();
+          }
+          var flash = Math.max(0, 1 - age / .38);
+          if (flash > 0) {
+            var glint = globeFxCtx.createRadialGradient(burst.x, burst.y, 0, burst.x, burst.y, r * .22);
+            glint.addColorStop(0, "rgba(255,255,245," + (.24 * flash).toFixed(3) + ")");
+            glint.addColorStop(.38, "rgba(142,198,255," + (.11 * flash).toFixed(3) + ")");
+            glint.addColorStop(1, "rgba(142,198,255,0)");
+            globeFxCtx.fillStyle = glint;
+            globeFxCtx.beginPath();
+            globeFxCtx.arc(burst.x, burst.y, r * .22, 0, Math.PI * 2);
+            globeFxCtx.fill();
+          }
+        });
+        globeFxCtx.restore();
+      }
+
+      function drawStars(t) {
+        var w = size.w;
+        var h = size.h;
+        starCtx.clearRect(0, 0, w, h);
+        var g = starCtx.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, cfg.bgTop);
+        g.addColorStop(.46, cfg.bgMid);
+        g.addColorStop(1, cfg.bgBottom);
+        starCtx.fillStyle = g;
+        starCtx.fillRect(0, 0, w, h);
+
+        if (variant === "texture") {
+          var bloom = starCtx.createRadialGradient(w * .5, h * .42, 20, w * .5, h * .42, Math.min(w, h) * .54);
+          bloom.addColorStop(0, "rgba(244,239,221,.12)");
+          bloom.addColorStop(.48, "rgba(120,150,170,.045)");
+          bloom.addColorStop(1, "rgba(0,0,0,0)");
+          starCtx.fillStyle = bloom;
+          starCtx.fillRect(0, 0, w, h);
+        } else if (variant === "orbit") {
+          var bloom = starCtx.createRadialGradient(w * .5, h * .42, 20, w * .5, h * .42, Math.min(w, h) * .52);
+          bloom.addColorStop(0, "rgba(120,176,255,.14)");
+          bloom.addColorStop(.52, "rgba(216,192,131,.055)");
+          bloom.addColorStop(1, "rgba(0,0,0,0)");
+          starCtx.fillStyle = bloom;
+          starCtx.fillRect(0, 0, w, h);
+        } else if (variant === "radar") {
+          var aurora = starCtx.createRadialGradient(w * .52, h * .43, 30, w * .52, h * .43, Math.min(w, h) * .6);
+          aurora.addColorStop(0, "rgba(142,225,189,.13)");
+          aurora.addColorStop(.45, "rgba(80,170,148,.055)");
+          aurora.addColorStop(1, "rgba(0,0,0,0)");
+          starCtx.fillStyle = aurora;
+          starCtx.fillRect(0, 0, w, h);
+        }
+
+        stars.forEach(function (s) {
+          var drift = reduceMotion ? 0 : t * s.speed * (1 + s.z);
+          var x = ((s.x * w) + drift * 22) % w;
+          var y = (s.y * h + Math.sin(drift + s.phase) * 7) % h;
+          var pulse = reduceMotion ? .7 : .5 + .5 * Math.sin(t * .001 + s.phase);
+          var alpha = (.18 + s.z * .62) * (.55 + pulse * cfg.twinkle);
+          starCtx.fillStyle = "rgba(255,255,255," + alpha.toFixed(3) + ")";
+          starCtx.beginPath();
+          starCtx.arc(x, y, s.r * (1 + s.z * .55), 0, Math.PI * 2);
+          starCtx.fill();
+        });
+      }
+
+      function rotatePoint(p, t) {
+        var speed = reduceMotion ? cfg.speed * .08 : cfg.speed;
+        var phi = (cfg.initialYaw || 0) + t * speed;
+        var theta = cfg.initialPitch || 0;
+        var cy = Math.cos(phi);
+        var sy = Math.sin(phi);
+        var cx = Math.cos(theta);
+        var sx = Math.sin(theta);
+        return {
+          x: cy * p.x + sy * p.z,
+          y: sy * sx * p.x + cx * p.y - cy * sx * p.z,
+          z: -sy * cx * p.x + sx * p.y + cy * cx * p.z
+        };
+      }
+
+      function drawRing(cx, cy, r, t) {
+        earthCtx.save();
+        earthCtx.translate(cx, cy);
+        earthCtx.strokeStyle = variant === "radar" ? "rgba(142,225,189,.26)" : "rgba(255,255,255,.13)";
+        earthCtx.lineWidth = 1;
+        earthCtx.beginPath();
+        earthCtx.ellipse(0, 0, r * 1.08, r * .34, -.18, 0, Math.PI * 2);
+        earthCtx.stroke();
+
+        if (cfg.ringMode === "sweep") {
+          var a = reduceMotion ? .7 : (t * .0013) % (Math.PI * 2);
+          earthCtx.strokeStyle = "rgba(142,225,189,.72)";
+          earthCtx.lineWidth = 1.5;
+          earthCtx.beginPath();
+          earthCtx.ellipse(0, 0, r * .86, r * .86, 0, a, a + .9);
+          earthCtx.stroke();
+
+          earthCtx.strokeStyle = "rgba(216,192,131,.46)";
+          earthCtx.beginPath();
+          earthCtx.ellipse(0, 0, r * 1.14, r * .36, .62, a, a + .58);
+          earthCtx.stroke();
+        }
+
+        earthCtx.restore();
+      }
+
+
+      function inverseRotatePoint(p, t) {
+        var speed = reduceMotion ? cfg.speed * .08 : cfg.speed;
+        var phi = (cfg.initialYaw || 0) + t * speed;
+        var theta = cfg.initialPitch || 0;
+        var cy = Math.cos(phi);
+        var sy = Math.sin(phi);
+        var cx = Math.cos(theta);
+        var sx = Math.sin(theta);
+        return {
+          x: cy * p.x + sy * sx * p.y - sy * cx * p.z,
+          y: cx * p.y + sx * p.z,
+          z: sy * p.x - cy * sx * p.y + cy * cx * p.z
+        };
+      }
+
+      function lonLatFromPoint(p) {
+        var lat = Math.asin(clamp(p.y, -1, 1)) * 180 / Math.PI;
+        var lon = Math.atan2(-p.z, p.x) * 180 / Math.PI;
+        return { lon: lon, lat: lat };
+      }
+
+      function sampleWorldMap(lon, lat) {
+        if (!worldMap.ready || !worldMap.data) return [20, 24, 26, 255];
+        var u = ((lon + 180) / 360) % 1;
+        if (u < 0) u += 1;
+        var v = clamp((90 - lat) / 180, 0, 1);
+        var x = Math.min(worldMap.w - 1, Math.max(0, Math.floor(u * worldMap.w)));
+        var y = Math.min(worldMap.h - 1, Math.max(0, Math.floor(v * worldMap.h)));
+        var idx = (y * worldMap.w + x) * 4;
+        return [worldMap.data[idx], worldMap.data[idx + 1], worldMap.data[idx + 2], 255];
+      }
+
+      function drawRasterGlobe(cx, cy, r, t) {
+        if (!worldMap.ready) return;
+        var n = Math.floor(Math.min(window.innerWidth < 700 ? 380 : 560, Math.max(360, r * 2)));
+        var speed = reduceMotion ? cfg.speed * .08 : cfg.speed;
+        var ay = (cfg.initialYaw || 0) + t * speed;
+        var key = n + ":" + Math.round(ay * 420) + ":" + variant;
+        if (worldMap.key !== key) {
+          worldMap.key = key;
+          globeBuffer.canvas.width = n;
+          globeBuffer.canvas.height = n;
+          globeBuffer.ctx = globeBuffer.ctx || globeBuffer.canvas.getContext("2d", { willReadFrequently: true });
+          var image = globeBuffer.ctx.createImageData(n, n);
+          var data = image.data;
+          var light = { x: -.36, y: -.28, z: .89 };
+          for (var py = 0; py < n; py += 1) {
+            var sy = (py / (n - 1)) * 2 - 1;
+            for (var px = 0; px < n; px += 1) {
+              var sx = (px / (n - 1)) * 2 - 1;
+              var d = sx * sx + sy * sy;
+              var out = (py * n + px) * 4;
+              if (d > 1) {
+                data[out + 3] = 0;
+                continue;
+              }
+              var sz = Math.sqrt(1 - d);
+              var base = inverseRotatePoint({ x: sx, y: sy, z: sz }, t);
+              var ll = lonLatFromPoint(base);
+              var c = sampleWorldMap(ll.lon, ll.lat);
+              var ndotl = clamp(sx * light.x + sy * light.y + sz * light.z, 0, 1);
+              var limb = Math.pow(clamp(sz, 0, 1), .62);
+              var shade = .24 + ndotl * .72;
+              shade *= .56 + limb * .44;
+              data[out] = Math.floor(c[0] * shade);
+              data[out + 1] = Math.floor(c[1] * shade);
+              data[out + 2] = Math.floor(c[2] * shade);
+              data[out + 3] = 255;
+            }
+          }
+          globeBuffer.ctx.putImageData(image, 0, 0);
+        }
+        earthCtx.save();
+        earthCtx.beginPath();
+        earthCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        earthCtx.clip();
+        earthCtx.drawImage(globeBuffer.canvas, cx - r, cy - r, r * 2, r * 2);
+        earthCtx.restore();
+      }
+
+      function drawCoastlineRings(cx, cy, r, t) {
+        if (!cfg.textureMode || !earthTexture.rings.length) return;
+        var stride = window.innerWidth < 700 ? 4 : (variant === "texture" ? 1 : 2);
+        earthCtx.save();
+        earthCtx.beginPath();
+        earthCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        earthCtx.clip();
+        earthCtx.globalCompositeOperation = "lighter";
+        earthCtx.lineWidth = variant === "texture" ? .42 : .36;
+        earthCtx.strokeStyle = rgb(cfg.coast, variant === "texture" ? .24 : .18);
+        earthCtx.beginPath();
+        earthTexture.rings.forEach(function (ring) {
+          var drawing = false;
+          var lastX = 0;
+          var lastY = 0;
+          for (var i = 0; i < ring.length; i += 2 * stride) {
+            var lon = ring[i];
+            var lat = ring[i + 1];
+            if (lat == null) continue;
+            var basePoint = spherePointFromLatLon(lat, lon);
+            var rp = rotatePoint(basePoint, t);
+            var visible = rp.z > -0.18;
+            var x = cx + rp.x * r;
+            var y = cy + rp.y * r;
+            var tooLong = drawing && Math.hypot(x - lastX, y - lastY) > r * .34;
+            if (!visible || tooLong) {
+              drawing = false;
+              continue;
+            }
+            if (!drawing) {
+              earthCtx.moveTo(x, y);
+              drawing = true;
+            } else {
+              earthCtx.lineTo(x, y);
+            }
+            lastX = x;
+            lastY = y;
+          }
+        });
+        earthCtx.stroke();
+        earthCtx.restore();
+      }
+
+      function drawEarth(t) {
+        if (!earthCtx) earthCtx = earthCanvas.getContext("2d");
+        if (!earthCtx) return;
+        var w = earthSize.w || earthCanvas.getBoundingClientRect().width || size.w;
+        var h = earthSize.h || earthCanvas.getBoundingClientRect().height || size.h;
+        earthCtx.clearRect(0, 0, w, h);
+        var cx = w * .5;
+        var webWide = window.innerWidth >= 760;
+        var cy = h * .5;
+        var r = webWide ? Math.min(w, h) * .485 : Math.min(w, h) * .47;
+        var breathe = variant === "silent" && !reduceMotion ? 1 + Math.sin(t * .0008) * .008 : 1;
+        r *= breathe;
+
+        var halo = earthCtx.createRadialGradient(cx, cy, r * .1, cx, cy, r * 1.48);
+        halo.addColorStop(0, "rgba(255,255,255,.05)");
+        halo.addColorStop(.48, cfg.halo);
+        halo.addColorStop(1, "rgba(0,0,0,0)");
+        earthCtx.fillStyle = halo;
+        earthCtx.beginPath();
+        earthCtx.arc(cx, cy, r * 1.42, 0, Math.PI * 2);
+        earthCtx.fill();
+
+        earthCtx.save();
+        earthCtx.beginPath();
+        earthCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        earthCtx.clip();
+        var base = earthCtx.createRadialGradient(cx - r * .34, cy - r * .28, r * .08, cx, cy, r * 1.12);
+        if (cfg.textureMode) {
+          base.addColorStop(0, "rgba(255,255,255,.08)");
+          base.addColorStop(.38, "rgba(54,68,76,.16)");
+          base.addColorStop(.72, "rgba(8,13,20,.62)");
+          base.addColorStop(1, "rgba(0,0,0,.92)");
+        } else {
+          base.addColorStop(0, "rgba(255,255,255,.04)");
+          base.addColorStop(.62, "rgba(0,0,0,.05)");
+          base.addColorStop(1, "rgba(0,0,0,.48)");
+        }
+        earthCtx.fillStyle = base;
+        earthCtx.fillRect(cx - r, cy - r, r * 2, r * 2);
+        earthCtx.restore();
+
+        if (cfg.ringMode !== "none") drawRing(cx, cy, r, t);
+        if (cfg.textureMode && worldMap.ready) drawRasterGlobe(cx, cy, r, t);
+        // Keep the globe as one continuous textured volume, then add coastline and city samples.
+        drawCoastlineRings(cx, cy, r, t);
+
+        earthCtx.globalCompositeOperation = "lighter";
+        particles.forEach(function (p) {
+          var rp = rotatePoint(p, t);
+          var visible = rp.z > -0.34;
+          if (!visible) return;
+          var depth = clamp((rp.z + .34) / 1.34, 0, 1);
+          var limb = clamp((1 - Math.sqrt(rp.x * rp.x + rp.y * rp.y)) * 2.4, 0, 1);
+          var px = cx + rp.x * r;
+          var py = cy + rp.y * r;
+          var tw = reduceMotion ? .55 : .5 + .5 * Math.sin(t * .004 + p.phase);
+          var hot = p.hot * (.56 + tw * .8);
+          var alpha;
+          var color;
+          var sizePoint;
+          if (cfg.textureMode) {
+            var coastGlow = p.coast * (.18 + depth * .36);
+            var landGlow = p.land ? (.11 + depth * .34 + p.relief * .08) : (.025 + depth * .08);
+            alpha = (landGlow + coastGlow) * (.56 + limb * .44) + hot * .16;
+            color = p.coast > .36 ? cfg.coast : (p.land ? cfg.land : cfg.ocean);
+            sizePoint = p.size * (.56 + depth * .86 + p.coast * .62 + hot * .35);
+          } else {
+            alpha = (.1 + depth * .52) + hot * .56;
+            color = hot > .18 ? cfg.hot : cfg.particle;
+            sizePoint = p.size * (.72 + depth * .9 + hot * 1.4);
+          }
+          earthCtx.fillStyle = rgb(color, clamp(alpha, .018, 1));
+          earthCtx.beginPath();
+          earthCtx.arc(px, py, sizePoint, 0, Math.PI * 2);
+          earthCtx.fill();
+
+          if (hot > .42) {
+            earthCtx.fillStyle = rgb(cfg.hot, clamp(hot * (cfg.textureMode ? .16 : .26), 0, cfg.textureMode ? .38 : .6));
+            earthCtx.beginPath();
+            earthCtx.arc(px, py, sizePoint * (cfg.textureMode ? (1.55 + tw * .9) : (3.0 + tw * 2.1)), 0, Math.PI * 2);
+            earthCtx.fill();
+          }
+        });
+        earthCtx.globalCompositeOperation = "source-over";
+
+        if (cfg.textureMode) {
+          earthCtx.save();
+          earthCtx.beginPath();
+          earthCtx.arc(cx, cy, r, 0, Math.PI * 2);
+          earthCtx.clip();
+          var shade = earthCtx.createRadialGradient(cx - r * .28, cy - r * .3, r * .16, cx + r * .22, cy + r * .1, r * 1.12);
+          shade.addColorStop(0, "rgba(255,255,255,.065)");
+          shade.addColorStop(.42, "rgba(0,0,0,0)");
+          shade.addColorStop(.78, "rgba(0,0,0,.28)");
+          shade.addColorStop(1, "rgba(0,0,0,.76)");
+          earthCtx.fillStyle = shade;
+          earthCtx.fillRect(cx - r, cy - r, r * 2, r * 2);
+          earthCtx.restore();
+        }
+
+        earthCtx.strokeStyle = cfg.textureMode ? "rgba(255,255,255,.2)" : (variant === "silent" ? "rgba(216,192,131,.08)" : "rgba(255,255,255,.1)");
+        earthCtx.lineWidth = cfg.textureMode ? 1.4 : 1;
+        earthCtx.beginPath();
+        earthCtx.arc(cx, cy, r + .5, 0, Math.PI * 2);
+        earthCtx.stroke();
+      }
+
+      function setupHeroTitleReveal() {
+        var title = document.querySelector(".master-title");
+        if (!title) return;
+        title.setAttribute("aria-label", title.textContent.trim());
+        window.__ddsHeroDemo.titleMotionReady = true;
+      }
+
+      function setupCityGlassPicker() {
+        if (!city || city.dataset.glassReady === "1") return;
+        city.dataset.glassReady = "1";
+        var picker = document.createElement("div");
+        picker.className = "city-glass-picker";
+        picker.innerHTML = '<button class="city-glass-trigger" type="button" aria-haspopup="dialog" aria-expanded="false"></button><div class="city-glass-menu" role="dialog" aria-label="选择城市" hidden><label class="city-glass-search-wrap"><span class="sr-only">搜索城市</span><input class="city-glass-search" type="search" placeholder="搜索城市" autocomplete="off"></label><div class="city-glass-options" role="listbox" aria-label="城市列表"></div></div>';
+        city.insertAdjacentElement("afterend", picker);
+        var trigger = picker.querySelector(".city-glass-trigger");
+        var menu = picker.querySelector(".city-glass-menu");
+        var search = picker.querySelector(".city-glass-search");
+        var optionsRoot = picker.querySelector(".city-glass-options");
+
+        function renderOptions() {
+          trigger.textContent = city.value || "选择城市";
+          trigger.setAttribute("aria-label", "选择城市，当前" + (city.value || "未选择"));
+          optionsRoot.innerHTML = "";
+          var query = (search.value || "").trim().toLowerCase();
+          var matches = Array.prototype.slice.call(city.options).filter(function (option) {
+            return !query || option.textContent.toLowerCase().indexOf(query) !== -1;
+          });
+          matches.slice(0, 120).forEach(function (option) {
+            var item = document.createElement("button");
+            item.type = "button";
+            item.className = "city-glass-option";
+            item.setAttribute("role", "option");
+            item.setAttribute("aria-selected", option.value === city.value ? "true" : "false");
+            item.textContent = option.textContent;
+            item.addEventListener("click", function () {
+              city.value = option.value;
+              search.value = "";
+              city.dispatchEvent(new Event("change", { bubbles: true }));
+              picker.classList.remove("open");
+              menu.hidden = true;
+              trigger.setAttribute("aria-expanded", "false");
+              showToast("已切换城市：" + option.textContent);
+            });
+            optionsRoot.appendChild(item);
+          });
+          if (!matches.length || matches.length > 120) {
+            var note = document.createElement("div");
+            note.className = "city-glass-empty";
+            note.textContent = matches.length ? "请输入关键词缩小范围" : "未找到城市";
+            optionsRoot.appendChild(note);
+          }
+        }
+
+        trigger.addEventListener("click", function () {
+          var open = !picker.classList.contains("open");
+          menu.hidden = !open;
+          picker.classList.toggle("open", open);
+          trigger.setAttribute("aria-expanded", open ? "true" : "false");
+          if (open) {
+            search.value = "";
+            renderOptions();
+            window.setTimeout(function () { search.focus(); }, 0);
+          }
+        });
+        document.addEventListener("pointerdown", function (event) {
+          if (!picker.contains(event.target)) {
+            picker.classList.remove("open");
+            menu.hidden = true;
+            trigger.setAttribute("aria-expanded", "false");
+          }
+        });
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            picker.classList.remove("open");
+            menu.hidden = true;
+            trigger.setAttribute("aria-expanded", "false");
+          }
+        });
+        search.addEventListener("input", renderOptions);
+        city.addEventListener("change", renderOptions);
+        renderOptions();
+        window.__ddsHeroDemo.cityPicker = "custom-liquid-glass-listbox";
+      }
+
+      function setupNavInteraction() {
+        var nav = document.querySelector(".liquid-nav");
+        var navItems = Array.prototype.slice.call(nav.querySelectorAll(".nav-links [data-nav-mode]"));
+        if (!nav || !navItems.length) return;
+        var modeCopy = {
+          coordinate: {
+            status: "Architecture Director",
+            address: "坐标 / 地址 / 地块名",
+            vision: "可选提示词：产品假设、风险关注、目标客群",
+            toast: "坐标分析：从地块位置开始生成 DDS 判断。"
+          },
+          evidence: {
+            status: "Evidence Chain",
+            address: "输入地块，系统会追踪证据链",
+            vision: "可选：重点核查价格、竞品、交通、教育或风险来源",
+            toast: "证据链模式：每个结论都会回到来源和置信边界。"
+          },
+          cases: {
+            status: "Case Library",
+            address: "输入地块，匹配案例库方向",
+            vision: "可选：豪宅、低密、会所、立面、户型、总图等案例偏好",
+            toast: "案例库模式：会优先召回视觉角色与对标项目。"
+          },
+          learning: {
+            status: "Learning Loop",
+            address: "输入地块，记录反馈并优化排序",
+            vision: "可选：说明采纳/否决的案例、段落或风险关注",
+            toast: "学习闭环模式：反馈会影响后续案例召回，不改写事实层。"
+          }
+        };
+        function updateNavReveal(mode, copy, silent) {
+          var panel = document.getElementById("navRevealPanel");
+          if (!panel) return;
+          var kicker = document.getElementById("navRevealKicker");
+          var title = document.getElementById("navRevealTitle");
+          var body = document.getElementById("navRevealCopy");
+          var detail = {
+            coordinate: ["坐标分析", "从坐标启动决策", "输入地址或坐标，DDS 会把地块、证据、案例和风险收束到同一个判断入口。"],
+            evidence: ["证据链", "结论回到来源", "打开后优先呈现来源、置信边界和需要复核的关键证据，避免只给摘要。"],
+            cases: ["案例库", "用案例校准想象", "围绕地块定位、产品假设和空间角色，召回可对标的建筑与社区经验。"],
+            learning: ["学习闭环", "把反馈变成下一轮排序", "记录采纳和否决，让后续分析更贴近你的投资、设计和风控偏好。"]
+          }[mode] || [copy.status, copy.status, copy.toast];
+          if (kicker) kicker.textContent = detail[0];
+          if (title) title.textContent = detail[1];
+          if (body) body.textContent = detail[2];
+          if (silent) nav.classList.remove("is-expanded");
+          panel.classList.remove("is-open");
+          window.__ddsHeroDemo.navReveal = "compact-mode-card";
+        }
+        function activate(mode, silent) {
+          var copy = modeCopy[mode] || modeCopy.coordinate;
+          navItems.forEach(function (item) {
+            var active = item.dataset.navMode === mode;
+            item.classList.toggle("is-active", active);
+            if (active) item.setAttribute("aria-current", "page");
+            else item.removeAttribute("aria-current");
+          });
+          var statusNode = nav.querySelector(".nav-status");
+          if (statusNode) statusNode.textContent = copy.status;
+          if (address) address.placeholder = copy.address;
+          if (vision) vision.placeholder = copy.vision;
+          updateNavReveal(mode, copy, silent);
+          nav.classList.remove("is-live");
+          void nav.offsetWidth;
+          nav.classList.add("is-live");
+          syncNavIndicator();
+          window.__ddsHeroDemo.activeNavMode = mode;
+          if (!silent) {
+            triggerGlobeBurst(window.innerWidth * .5, window.innerHeight * .48);
+            window.setTimeout(function () { nav.classList.remove("is-expanded"); }, 180);
+          }
+        }
+        navItems.forEach(function (item) {
+          item.addEventListener("click", function (event) {
+            event.stopPropagation();
+            activate(item.dataset.navMode || "coordinate", false);
+          });
+        });
+        nav.addEventListener("click", function () {
+          nav.classList.toggle("is-expanded");
+          window.__ddsHeroDemo.navExpanded = nav.classList.contains("is-expanded");
+        });
+        document.addEventListener("pointerdown", function (event) {
+          if (!nav.contains(event.target)) nav.classList.remove("is-expanded");
+        });
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") nav.classList.remove("is-expanded");
+        });
+        activate("coordinate", true);
+        if (params.get("openMenu") === "1") {
+          window.setTimeout(function () { nav.classList.add("is-expanded"); }, 260);
+        }
+        var previewMode = params.get("openNav");
+        if (previewMode && modeCopy[previewMode]) {
+          window.setTimeout(function () { activate(previewMode, false); }, 220);
+        }
+        window.addEventListener("resize", syncNavIndicator);
+        window.__ddsHeroDemo.navInteraction = "compact-card-click-expand-collapse";
+      }
+      function syncNavIndicator() {
+        var navLinks = document.querySelector(".nav-links");
+        if (!navLinks) return;
+        var active = navLinks.querySelector("button[aria-current='page']") || navLinks.querySelector("button.is-active");
+        if (!active) return;
+        var parentRect = navLinks.getBoundingClientRect();
+        var rect = active.getBoundingClientRect();
+        navLinks.style.setProperty("--active-x", Math.max(4, rect.left - parentRect.left).toFixed(1) + "px");
+        navLinks.style.setProperty("--active-w", rect.width.toFixed(1) + "px");
+      }
+
+      function setupGlassDockInteraction() {
+        var dock = document.querySelector(".coordinate-console");
+        var launcher = document.getElementById("submitBtn");
+        if (!dock || !launcher) return;
+        function updatePointer(event) {
+          var rect = dock.getBoundingClientRect();
+          var x = clamp((event.clientX - rect.left) / Math.max(1, rect.width), 0, 1);
+          var y = clamp((event.clientY - rect.top) / Math.max(1, rect.height), 0, 1);
+          dock.style.setProperty("--mx", (x * 100).toFixed(1) + "%");
+          dock.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+        }
+        dock.addEventListener("pointermove", updatePointer);
+        dock.addEventListener("pointerleave", function () {
+          dock.style.setProperty("--mx", "50%");
+          dock.style.setProperty("--my", "18%");
+        });
+        launcher.addEventListener("pointerdown", function () {
+          launcher.classList.remove("is-pressing");
+          void launcher.offsetWidth;
+          launcher.classList.add("is-pressing");
+        });
+        launcher.addEventListener("animationend", function (event) {
+          if (event.animationName === "agentPressPulse") launcher.classList.remove("is-pressing");
+        });
+        window.__ddsHeroDemo.dockInteraction = "bottom-centered-liquid-glass-agent-input";
+      }
+      function frame(t) {
+        t = t || 0;
+        drawStars(t);
+        if (cobeActive && cobeGlobe && typeof cobeGlobe.update === "function") {
+          var shimmer = reduceMotion ? 5.52 : 5.46 + Math.sin(t * .00072) * .26 + Math.sin(t * .0074) * .2;
+          cobeGlobe.update({ phi: cobePhi, theta: 0.25, mapBrightness: shimmer, markers: buildCobeMarkers(t) });
+          window.__ddsHeroDemo.cobePhi = cobePhi;
+          if (!reduceMotion) cobePhi += COBE_ROTATION_SPEED;
+        } else {
+          drawEarth(t);
+        }
+        drawGlobeFx(t);
+        window.requestAnimationFrame(frame);
+      }
+
+      function onGlobePointerDown(event) {
+        triggerGlobeBurst(event.clientX, event.clientY);
+      }
+
+      earthCanvas.addEventListener("pointerdown", onGlobePointerDown);
+
+      window.addEventListener("resize", resize);
+      setupHeroTitleReveal();
+      setupGlassDockInteraction();
+      resize();
+      loadWorldMapTexture();
+      loadEarthTexture();
+      window.requestAnimationFrame(frame);
+
+      var form = document.getElementById("reportForm");
+      var city = document.getElementById("city");
+      var address = document.getElementById("address");
+      var vision = document.getElementById("vision");
+      var persona = document.getElementById("persona");
+      var radius = document.getElementById("radius");
+      var expectedPrice = document.getElementById("expectedPrice");
+      var submit = document.getElementById("submitBtn");
+      var status = document.getElementById("formStatus");
+      var toast = document.getElementById("toast");
+      var toastTimer = null;
+      var progressTimer = null;
+      var REPORT_TIMEOUT_MS = 240000;
+      var REPORT_STAGES = [
+        "正在定位地块与检索城市数据",
+        "正在计算竞品、价格带与配套条件",
+        "正在组织客群、产品与风险判断",
+        "正在生成完整交互报告"
+      ];
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(function () {
+          toast.classList.remove("show");
+        }, 2400);
+      }
+
+      function applyCityOptions(cities) {
+        var current = city.value;
+        var seen = Object.create(null);
+        var normalized = (cities || []).map(function (name) { return String(name || "").trim(); }).filter(function (name) {
+          if (!name || seen[name]) return false;
+          seen[name] = true;
+          return true;
+        }).sort(function (a, b) { return a.localeCompare(b, "zh-CN"); });
+        if (!normalized.length) return;
+        city.innerHTML = "";
+        normalized.forEach(function (name) {
+          var option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          city.appendChild(option);
+        });
+        city.value = normalized.indexOf(current) !== -1 ? current : (normalized.indexOf("济南") !== -1 ? "济南" : normalized[0]);
+        city.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      function loadCityOptions() {
+        fetch("/api/cities", { headers: { "Accept": "application/json" } })
+          .then(function (response) {
+            if (!response.ok) throw new Error("城市列表加载失败");
+            return response.json();
+          })
+          .then(function (data) {
+            if (data.status !== "ok" || !Array.isArray(data.cities)) throw new Error("城市列表不可用");
+            applyCityOptions(data.cities);
+            window.__ddsHeroDemo.citySource = "api-cities";
+          })
+          .catch(function () {
+            window.__ddsHeroDemo.citySource = "inline-fallback";
+            showToast("城市列表暂时未更新，已使用常用城市");
+          });
+      }
+
+      function stopProgress() {
+        if (progressTimer) window.clearInterval(progressTimer);
+        progressTimer = null;
+      }
+
+      function startProgress() {
+        stopProgress();
+        var stage = 0;
+        setMode("running", REPORT_STAGES[stage]);
+        progressTimer = window.setInterval(function () {
+          stage = Math.min(stage + 1, REPORT_STAGES.length - 1);
+          status.textContent = REPORT_STAGES[stage];
+        }, 9000);
+      }
+
+      function setMode(mode, text) {
+        var busy = mode === "running";
+        form.classList.remove("running", "done", "error");
+        if (mode) form.classList.add(mode);
+        form.setAttribute("aria-busy", busy ? "true" : "false");
+        status.textContent = text || "";
+        [city, address, vision].forEach(function (field) { field.disabled = busy; });
+        var cityTrigger = form.querySelector(".city-glass-trigger");
+        if (cityTrigger) cityTrigger.disabled = busy;
+        submit.disabled = busy;
+        submit.querySelector("span").textContent = busy ? "生成中" : (mode === "done" ? "正在打开" : "开始分析");
+      }
+
+      function buildPayload() {
+        var price = expectedPrice.value.trim();
+        return {
+          city: city.value,
+          address: address.value.trim(),
+          radius_km: Number(radius.value || 5),
+          expected_price: price ? Number(price) : null,
+          vision: vision.value.trim() || null,
+          persona: persona.value || "developer",
+          analysis_mode: window.__ddsHeroDemo.activeNavMode || "coordinate",
+          entry_source: "earth-hero",
+          price_band: .15,
+          year: 2026
+        };
+      }
+
+      function fillDemo() {
+        city.value = "济南";
+        address.value = "36.6653,117.0249";
+        vision.value = "低密改善，关注竞品、客群与风险边界";
+        city.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      document.getElementById("loadDemoBtn").addEventListener("click", fillDemo);
+      setupCityGlassPicker();
+      setupNavInteraction();
+      loadCityOptions();
+      window.__ddsHeroDemo.reportFlow = "api-report-direct-navigation";
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var payload = buildPayload();
+        if (!payload.address) {
+          address.placeholder = "请输入地址或坐标";
+          setMode("error", "请先输入地址、地块名或经纬度坐标");
+          showToast("缺少地块位置，暂时无法生成报告");
+          address.focus({ preventScroll: true });
+          window.setTimeout(function () { form.classList.remove("error"); }, 360);
+          return;
+        }
+
+        startProgress();
+        try {
+          sessionStorage.setItem("ddsHeroDemo:lastPayload", JSON.stringify(payload));
+        } catch (e) {}
+
+        var controller = window.AbortController ? new AbortController() : null;
+        var timer = controller ? window.setTimeout(function () { controller.abort(); }, REPORT_TIMEOUT_MS) : null;
+
+        fetch("/api/report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(payload),
+          signal: controller ? controller.signal : undefined
+        })
+          .then(function (response) {
+            return response.json().then(function (data) {
+              if (!response.ok || data.status === "error") {
+                throw new Error(data.message || "报告生成失败，请稍后重试");
+              }
+              return data;
+            });
+          })
+          .then(function (data) {
+            var report = data.report_json || {};
+            var reportUrl = data.report_url || (report.export && report.export.interactive_html_url);
+            if (typeof reportUrl !== "string" || reportUrl.indexOf("/reports/interactive/") !== 0) {
+              throw new Error("报告已生成，但返回地址无效");
+            }
+            try {
+              sessionStorage.setItem("ddsHeroDemo:lastReport", JSON.stringify(report));
+            } catch (e) {}
+            stopProgress();
+            setMode("done", "报告已生成，正在打开");
+            showToast(data.warning || "完整研判报告已生成");
+            window.__ddsHeroDemo.lastReportUrl = reportUrl;
+            window.setTimeout(function () {
+              window.location.assign(reportUrl);
+            }, 260);
+          })
+          .catch(function (err) {
+            stopProgress();
+            var message = err && err.name === "AbortError"
+              ? "报告生成超过 240 秒，请检查输入后重试"
+              : (err.message || "报告生成失败，请稍后重试");
+            setMode("error", message);
+            showToast(message);
+            address.focus({ preventScroll: true });
+          })
+          .finally(function () {
+            if (timer) window.clearTimeout(timer);
+          });
+      });
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+

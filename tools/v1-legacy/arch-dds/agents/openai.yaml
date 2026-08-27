@@ -1,0 +1,4 @@
+interface:
+  display_name: "ArchDDS"
+  short_description: "DDS+ArchLib地产前期策略HTML报告生成流程"
+  default_prompt: "Use $arch-dds to create a sourced HTML preliminary strategy report for a real-estate project."

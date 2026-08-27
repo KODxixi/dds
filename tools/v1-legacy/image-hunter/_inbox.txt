@@ -1,0 +1,7 @@
+# ── 小红书 / 微信公众号 链接收件箱 ──────────────────────────
+# 看到好项目，把链接粘到下面（每行一个），每天自动批处理并归档，
+# 处理完移入 _inbox_done.txt。支持 xiaohongshu.com / xhslink.com / mp.weixin.qq.com
+# 也可随时手动跑: run_daily.bat  或  python daily_hunt.py
+# 示例（删掉#即可生效）:
+# https://www.xiaohongshu.com/explore/xxxxxxxx
+# https://mp.weixin.qq.com/s/xxxxxxxx

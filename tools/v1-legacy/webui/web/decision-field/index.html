@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#101412">
+    <meta name="color-scheme" content="dark">
+    <title>DDS Decision Field</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2393503f' d='M32 4 60 32 32 60 4 32Z'/%3E%3Cpath fill='%230b0f0e' d='M32 18 46 32 32 46 18 32Z'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="/dds/vendor/cesium/Widgets/widgets.css">
+    <link rel="stylesheet" href="/dds/assets/styles/app-v2.css?v=20260714-2">
+    <script>
+      window.CESIUM_BASE_URL = "/dds/vendor/cesium/";
+    </script>
+    <script src="/dds/vendor/cesium/Cesium.js"></script>
+  </head>
+  <body class="decision-field-page">
+    <div id="decisionFieldRoot" class="decision-field" data-surface="hero" data-state="locating">
+      <header class="field-topbar" aria-label="项目与场景状态">
+        <a class="field-brand" href="/dds/" aria-label="返回 DDS 决策场首页">
+          <span class="field-brand__mark" aria-hidden="true"></span>
+          <span>DDS</span>
+          <span class="field-brand__mode">Decision Field</span>
+        </a>
+
+        <div class="project-identity" aria-live="polite">
+          <span class="project-identity__label">当前项目</span>
+          <strong id="projectName">尚未锁定地块</strong>
+        </div>
+
+        <div class="field-statuses">
+          <span id="dataStatus" class="status-signal" data-tone="neutral">
+            <span class="status-signal__dot" aria-hidden="true"></span>
+            <span>连接数据源</span>
+          </span>
+          <span id="sceneMode" class="scene-mode">场景准备中</span>
+        </div>
+
+        <nav class="topbar-actions" aria-label="场景工具" data-role="nav" data-height-px="40" data-single-line="true">
+          <button class="icon-button" type="button" data-action="toggle-layers" aria-label="图层" aria-expanded="false" aria-controls="layerMenu" title="图层">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3-9 5 9 5 9-5-9-5Z"></path><path d="m3 12 9 5 9-5"></path><path d="m3 16 9 5 9-5"></path></svg>
+          </button>
+          <button class="icon-button" type="button" data-action="return-site" aria-label="返回地块" title="返回地块">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+          </button>
+          <button class="icon-button" type="button" data-action="toggle-quality" aria-label="场景质量" aria-expanded="false" aria-controls="qualityMenu" title="场景质量">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9"></path><path d="M10 19V5"></path><path d="M16 19v-7"></path><path d="M22 19V3"></path></svg>
+          </button>
+          <button class="icon-button" type="button" data-action="toggle-drawer" aria-label="任务明细" aria-expanded="false" aria-controls="taskDrawer" title="任务明细">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h10"></path></svg>
+          </button>
+        </nav>
+      </header>
+
+      <main id="sceneFrame" class="scene-frame" aria-label="地块三维场景">
+        <div id="cesiumContainer" class="scene-canvas" aria-label="Cesium 三维地图"></div>
+        <canvas id="fallbackCanvas" class="fallback-map" aria-label="二维地图概览" hidden></canvas>
+        <div class="scene-vignette" aria-hidden="true"></div>
+        <div class="scene-readout" aria-live="polite">
+          <span id="coordinateReadout">N/A</span>
+          <span id="qualityReadout">BALANCED</span>
+        </div>
+
+        <div id="layerMenu" class="scene-menu" hidden>
+          <div class="scene-menu__heading">证据图层</div>
+          <label><input type="checkbox" data-layer="parcel" checked> 地块与半径</label>
+          <label><input type="checkbox" data-layer="competitors" checked> 竞品</label>
+          <label><input type="checkbox" data-layer="resources" checked> 城市资源</label>
+          <label><input type="checkbox" data-layer="risks" checked> 风险与缺口</label>
+        </div>
+
+        <div id="qualityMenu" class="scene-menu scene-menu--quality" hidden>
+          <div class="scene-menu__heading">渲染质量</div>
+          <button type="button" data-quality="high">高质量 <span>独显 / 大屏</span></button>
+          <button type="button" data-quality="balanced" aria-current="true">平衡 <span>默认</span></button>
+          <button type="button" data-quality="low">低负载 <span>移动端 / 集显</span></button>
+        </div>
+      </main>
+
+      <aside id="taskDrawer" class="task-drawer" aria-label="项目任务明细" aria-hidden="true">
+        <header class="task-drawer__header">
+          <div>
+            <span class="eyebrow">PROJECT SESSION</span>
+            <h2>研判进程</h2>
+          </div>
+          <button class="icon-button" type="button" data-action="close-drawer" aria-label="关闭任务明细" title="关闭">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12"></path><path d="M18 6 6 18"></path></svg>
+          </button>
+        </header>
+        <div id="taskSummary" class="task-summary">
+          <p>地块确认后，位置解析、证据检索、联席判断与报告组装会在这里留下真实状态。</p>
+        </div>
+        <div class="drawer-scene-tools" aria-label="收起的场景工具">
+          <button type="button" class="text-button" data-action="toggle-layers">图层</button>
+          <button type="button" class="text-button" data-action="return-site">返回地块</button>
+          <button type="button" class="text-button" data-action="toggle-quality">场景质量</button>
+        </div>
+        <ol id="taskStages" class="task-stages" aria-label="分析阶段"></ol>
+        <section class="recent-projects" aria-labelledby="recentProjectsTitle">
+          <h3 id="recentProjectsTitle">最近项目</h3>
+          <div id="recentProjects" class="recent-projects__list"></div>
+        </section>
+      </aside>
+
+      <div id="interactionStack" class="interaction-stack">
+        <section id="agentCue" class="agent-cue" aria-live="polite">
+          <span class="agent-cue__label">Agent</span>
+          <p id="agentCueText">输入地址、坐标，或直接在场景中选点。</p>
+        </section>
+
+        <section id="contextPanel" class="context-panel" aria-live="polite" hidden></section>
+
+        <section id="decisionBar" class="decision-bar" aria-labelledby="decisionTitle" hidden>
+          <div class="decision-bar__verdict">
+            <span id="decisionTitle" class="eyebrow">联席判断</span>
+            <strong id="decisionVerdict">等待结论</strong>
+          </div>
+          <div class="decision-bar__metric">
+            <span>置信度</span>
+            <strong id="decisionConfidence">N/A</strong>
+          </div>
+          <div class="decision-bar__metric">
+            <span>待补证据</span>
+            <strong id="decisionGaps">0</strong>
+          </div>
+          <div class="decision-bar__actions">
+            <button type="button" class="text-button" data-action="continue-questions">继续追问</button>
+            <button type="button" class="primary-button" data-action="open-report">打开报告</button>
+          </div>
+        </section>
+
+        <form id="locationDock" class="location-dock" novalidate>
+          <div class="dock-context">
+            <span id="dockMode" class="dock-context__mode">定位</span>
+            <span id="dockHint" class="dock-context__hint">地址 / lng,lat / 命令</span>
+          </div>
+          <label class="visually-hidden" for="commandInput">输入地址、坐标、回答或场景命令</label>
+          <div class="dock-input-wrap">
+            <svg class="dock-input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input id="commandInput" name="command" type="text" inputmode="search" autocomplete="off" maxlength="500" placeholder="输入地址、坐标或命令" aria-controls="contextPanel" aria-autocomplete="list">
+            <button id="dockSecondary" class="dock-secondary" type="button" data-action="secondary" hidden>跳过</button>
+            <button id="dockSubmit" class="dock-submit" type="submit" aria-label="发送">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div id="liveRegion" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+    </div>
+
+    <noscript>需要启用 JavaScript 才能使用 DDS Decision Field。</noscript>
+    <script type="module" src="/dds/assets/js/main.js?v=20260714-2"></script>
+  </body>
+</html>

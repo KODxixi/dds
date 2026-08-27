@@ -1,0 +1,7 @@
+# 仅构建并推送候选镜像；本文件不启动任何运行服务。
+services:
+  dds-image:
+    image: "${DDS_BUILD_IMAGE_REPOSITORY:?set the build repository}:${DDS_BUILD_IMAGE_TAG:?set a unique build id}"
+    build:
+      context: ../../..
+      dockerfile: cloud/volcengine/service/Dockerfile

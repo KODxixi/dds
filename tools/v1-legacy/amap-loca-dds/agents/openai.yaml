@@ -1,0 +1,4 @@
+interface:
+  display_name: "DDS 高德 Loca 场景"
+  short_description: "把 DDS 地产数据编译为高德 Loca 3D 决策图层"
+  default_prompt: "Use $amap-loca-dds to turn this DDS report into a verified AMap Loca 3D scene."
