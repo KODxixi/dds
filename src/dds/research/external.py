@@ -56,6 +56,27 @@ class ResearchResult:
     candidates: tuple[ResearchCandidate, ...] = ()
 
 
+@dataclass(frozen=True, slots=True)
+class SourceSpec:
+    """Self-describing metadata agents use to decide whether to use a source."""
+
+    source_id: str
+    kind: str
+    label: str
+    capabilities: tuple[str, ...] = ()
+    geography_scope: str = ""
+    access_level: str = "read_only"
+    rights_status: str = "internal_analysis"
+    default_enabled: bool = True
+    requires_config: tuple[str, ...] = ()
+
+    def to_dict(self) -> dict[str, Any]:
+        data = asdict(self)
+        data["capabilities"] = list(self.capabilities)
+        data["requires_config"] = list(self.requires_config)
+        return data
+
+
 class ResearchSource(Protocol):
     source_id: str
 
@@ -85,6 +106,16 @@ class TavilyResearchSource:
 
     source_id = "tavily-web"
     endpoint = "https://api.tavily.com/search"
+    spec = SourceSpec(
+        source_id="tavily-web",
+        kind="web_search_api",
+        label="Tavily 网络搜索",
+        capabilities=("web",),
+        geography_scope="全球（中文优先）",
+        access_level="read_only",
+        rights_status="public_web",
+        requires_config=("TAVILY_API_KEY",),
+    )
 
     def __init__(
         self,
@@ -152,6 +183,15 @@ class CuratedListingDatabaseSource:
     """Read-only external database source backed by the V2 curated listings."""
 
     source_id = "curated-listing-database"
+    spec = SourceSpec(
+        source_id="curated-listing-database",
+        kind="external_database",
+        label="新房挂牌库",
+        capabilities=("listings",),
+        geography_scope="配置城市",
+        access_level="read_only",
+        rights_status="licensed_internal_analysis",
+    )
 
     def __init__(self, settings: Any | None = None) -> None:
         from dds.config import Settings
@@ -200,10 +240,6 @@ class CuratedListingDatabaseSource:
 def sources_from_environment() -> tuple[ResearchSource, ...]:
     """Return every supported source, including unavailable ones for UI visibility."""
 
-    from .volcengine import VolcengineDataSearchSource
+    from .registry import build_source_registry
 
-    return (
-        CuratedListingDatabaseSource(),
-        VolcengineDataSearchSource(),
-        TavilyResearchSource(),
-    )
+    return build_source_registry().all()

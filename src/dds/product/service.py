@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 import tempfile
 from threading import RLock
-from typing import Any, Iterable
+from typing import Any
 from uuid import uuid4
 
 from dds.analysis_profile import resolve_intervention_profile
@@ -19,7 +19,7 @@ from dds.agents.base import AgentTask
 from dds.agents.requirement import RequirementAgent
 from dds.agents.research_planner import ResearchPlannerAgent
 from dds.data.workbook_integrity import WorkbookIntegrityScanner
-from dds.research import ResearchQuery, ResearchSource, SourceUnavailableError
+from dds.research import ResearchQuery, SourceRegistry, SourceUnavailableError
 from dds.research.qualification import qualify_candidates
 
 
@@ -116,9 +116,9 @@ class ResearchJobService:
 
     _lock = RLock()
 
-    def __init__(self, settings: ProductSettings, sources: Iterable[ResearchSource]) -> None:
+    def __init__(self, settings: ProductSettings, registry: SourceRegistry) -> None:
         self.settings = settings
-        self.sources = tuple(sources)
+        self.registry = registry
 
     def _job_path(self, job_id: str) -> Path:
         if not job_id or any(token in job_id for token in ("/", "\\", "..")):
@@ -369,7 +369,7 @@ class ResearchJobService:
                 )
                 if item
             )
-            for source in self.sources:
+            for source in self.registry.enabled():
                 availability = source.availability()
                 if not availability.get("available"):
                     self._log(job, "source_unavailable", f"数据源不可用：{source.source_id}", availability)
@@ -472,7 +472,7 @@ class ResearchJobService:
         }
 
     def source_status(self) -> list[dict[str, object]]:
-        return [source.availability() for source in self.sources]
+        return self.registry.status()
 
     def _log(
         self,

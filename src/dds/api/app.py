@@ -17,7 +17,7 @@ from dds.product import (
     ProductSettings,
     ResearchJobService,
 )
-from dds.research import ResearchSource, sources_from_environment
+from dds.research import ResearchSource, SourceRegistry, build_source_registry
 from dds.services.scenario_service import ScenarioService
 
 
@@ -73,10 +73,13 @@ def create_app(
     """
 
     app = FastAPI(title="DDS Research Control Center", version="2.1.0")
-    service = ResearchJobService(
-        settings or _default_settings(),
-        research_sources if research_sources is not None else sources_from_environment(),
-    )
+    if research_sources is None:
+        registry = build_source_registry()
+    else:
+        registry = SourceRegistry()
+        for source in research_sources:
+            registry.register(source)
+    service = ResearchJobService(settings or _default_settings(), registry)
     app.state.research_jobs = service
 
     @app.get("/", response_class=HTMLResponse)

@@ -15,6 +15,7 @@ from .external import (
     ResearchCandidate,
     ResearchQuery,
     ResearchResult,
+    SourceSpec,
     SourceUnavailableError,
 )
 
@@ -180,6 +181,16 @@ class VolcengineDataSearchSource:
     """City-level industry candidates from Volcengine public structured data."""
 
     source_id = "volcengine-data-search"
+    spec = SourceSpec(
+        source_id="volcengine-data-search",
+        kind="structured_public_data_api",
+        label="火山引擎产业链数据",
+        capabilities=("web",),
+        geography_scope="全国城市",
+        access_level="read_only",
+        rights_status="provider_terms_internal_analysis",
+        requires_config=("VOLCENGINE_ACCESS_KEY", "VOLCENGINE_SECRET_KEY"),
+    )
 
     def __init__(self, client: VolcengineGatewayClient | None = None) -> None:
         self.client = client or VolcengineGatewayClient()

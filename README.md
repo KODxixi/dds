@@ -108,11 +108,16 @@ uv run uvicorn dds.api.app:app --host 127.0.0.1 --port 8765
 
 浏览器打开 `http://127.0.0.1:8765/`，可以创建研究任务、上传项目资料、查看数据源状态、运行日志和带来源哈希的候选证据。未配置的数据源会明确显示为不可用，不会生成假数据。
 
-当前主动研究源：
+当前主动研究源（统一经 `SourceRegistry` 注册，默认全接入）：
 
 - `curated-listing-database`：只读访问 V2 curated 楼盘数据，执行参数化城市竞品查询。
+- `local-land`：只读查询 V2 curated 官方基准地价库。
+- `local-macro`：只读查询 V2 curated 官方宏观统计指标。
+- `local-transactions`：只读查询 V2 curated 成交备案库，与挂牌观察严格隔离。
 - `volcengine-data-search`：通过用户环境中的 `VOLCENGINE_ACCESS_KEY` / `VOLCENGINE_SECRET_KEY` 只读查询火山公开结构化数据；DDS 仅保留隐私白名单字段。
 - `tavily-web`：通过 `TAVILY_API_KEY` 调用 Tavily Search API。
+
+可用 `DDS_DISABLED_SOURCES`（逗号分隔的 `source_id`）显式关闭某个源，默认全部启用。
 
 任务和上传资料默认写入 `data/projects/research-control-center/`；可用 `DDS_PRODUCT_ROOT` 指向其他 V2 管理目录。
 
