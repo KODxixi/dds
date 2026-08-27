@@ -1,0 +1,2497 @@
+{
+  "version": "2.0",
+  "description": "DDS 楼盘完整维度 canonical schema v2.0（additive 超集，零 breakage；对标 CRIC 极客问道 162 字段 + 地产经纪人审查补遗；23 大类 242 维）",
+  "legacy_headers": [
+    "楼盘ID",
+    "楼盘名称",
+    "城市名称",
+    "城市ID",
+    "区域名称",
+    "区域ID",
+    "子区域名称",
+    "子区域ID",
+    "地址",
+    "环线位置",
+    "最新价格",
+    "参考价格",
+    "房贷计算信息",
+    "面积范围",
+    "占地面积",
+    "建筑面积",
+    "房间面积信息",
+    "户型文本描述",
+    "全部户型",
+    "开盘日期",
+    "开盘日期备注",
+    "开盘时间",
+    "交房时间",
+    "发证时间",
+    "建筑类型",
+    "建筑类型",
+    "产权年限",
+    "容积率",
+    "绿化率",
+    "规划户数",
+    "装修情况",
+    "工程进度",
+    "物业类型",
+    "物业公司",
+    "物业管理费",
+    "物业特色",
+    "车位数",
+    "车位比",
+    "销售状态",
+    "销售标题",
+    "租售标题",
+    "预售证号",
+    "绑定楼栋",
+    "开发商",
+    "开发商品牌",
+    "投资商",
+    "供电",
+    "供水",
+    "百度地图纬度",
+    "百度地图经度",
+    "400电话",
+    "所有标签列表",
+    "标签列表",
+    "默认图片",
+    "规交信息",
+    "售楼处地址"
+  ],
+  "full_headers": [
+    "楼盘ID",
+    "楼盘名称",
+    "城市名称",
+    "城市ID",
+    "区域名称",
+    "区域ID",
+    "子区域名称",
+    "子区域ID",
+    "地址",
+    "环线位置",
+    "最新价格",
+    "参考价格",
+    "房贷计算信息",
+    "面积范围",
+    "占地面积",
+    "建筑面积",
+    "房间面积信息",
+    "户型文本描述",
+    "全部户型",
+    "开盘日期",
+    "开盘日期备注",
+    "开盘时间",
+    "交房时间",
+    "发证时间",
+    "建筑类型",
+    "建筑类型",
+    "产权年限",
+    "容积率",
+    "绿化率",
+    "规划户数",
+    "装修情况",
+    "工程进度",
+    "物业类型",
+    "物业公司",
+    "物业管理费",
+    "物业特色",
+    "车位数",
+    "车位比",
+    "销售状态",
+    "销售标题",
+    "租售标题",
+    "预售证号",
+    "绑定楼栋",
+    "开发商",
+    "开发商品牌",
+    "投资商",
+    "供电",
+    "供水",
+    "百度地图纬度",
+    "百度地图经度",
+    "400电话",
+    "所有标签列表",
+    "标签列表",
+    "默认图片",
+    "规交信息",
+    "售楼处地址",
+    "小区拼音名称",
+    "检索名称集合",
+    "城市拼音简称",
+    "城市拼音全称",
+    "区县拼音名称",
+    "商圈拼音名称",
+    "用地条件和用地类型",
+    "周边配套",
+    "房价市场状况",
+    "周边均价",
+    "在售数量",
+    "在租数量",
+    "拿地价",
+    "土建成本",
+    "立面造价",
+    "投资回报比",
+    "溢价率及价值挖掘",
+    "租售比",
+    "房地产类型",
+    "商品类型",
+    "物业类型集合",
+    "小区面积",
+    "是否四代住宅",
+    "规划排布逻辑",
+    "主力成交户型",
+    "各户型文本描述",
+    "各户型对应得房率",
+    "车位管理费",
+    "统一供暖",
+    "供水供电",
+    "用水类型",
+    "竣工时间",
+    "建筑设计方",
+    "景观设计方",
+    "销售话术",
+    "去化周期",
+    "客群画像",
+    "综合评分",
+    "模块评分列表",
+    "模块评分项",
+    "优点",
+    "缺点",
+    "业内评价",
+    "设计风格",
+    "风格材料",
+    "示范区配置",
+    "公区会所配置",
+    "全局创新点",
+    "所在地段未来宏观定位",
+    "最近地铁站",
+    "地铁站距离_m",
+    "地铁线路",
+    "最近学校名称",
+    "学校距离_m",
+    "学校类型",
+    "最近医院名称",
+    "医院距离_m",
+    "最近商业体名称",
+    "商业体距离_m",
+    "到市中心通勤_分钟",
+    "到CBD通勤_分钟",
+    "500m内公交站数",
+    "1km内POI总数",
+    "配套丰富度评分",
+    "开发商信用评级",
+    "开发商交付率_pct",
+    "开发商延期交付率_pct",
+    "开发商违约次数",
+    "开发商投诉次数",
+    "开发商累计项目数",
+    "开发商累计开发面积_万㎡",
+    "开发商行业排名",
+    "投资商信用评级",
+    "物业公司评级",
+    "物业公司管理项目数",
+    "建筑设计方名称",
+    "设计方资质等级",
+    "施工总承包方",
+    "施工方资质等级",
+    "监理单位",
+    "监理方资质等级",
+    "交付信用综合评分",
+    "物业费收缴率_pct",
+    "物业投诉次数",
+    "业主满意度评分",
+    "物业服务年限",
+    "产品力综合评分",
+    "地段价值评分",
+    "生活配套评分",
+    "价格体系评分",
+    "价值潜力评分",
+    "是否低密住宅",
+    "景观等级",
+    "立面材质等级",
+    "公区品质等级",
+    "智能家居等级",
+    "能效等级",
+    "绿色建筑等级",
+    "装配率_pct",
+    "是否学区房",
+    "对应学区",
+    "对应小学名称",
+    "对应小学排名",
+    "对应初中名称",
+    "对应初中排名",
+    "学区划片范围",
+    "入学政策限制",
+    "学区变动风险",
+    "景观资源",
+    "户型明细表_JSON",
+    "主力户型面积_㎡",
+    "主力户型室数",
+    "主力户型卫数",
+    "主力户型朝向",
+    "主力户型面宽_m",
+    "主力户型进深_m",
+    "得房率_pct",
+    "精装品牌",
+    "精装标准_元每㎡",
+    "交付标准",
+    "层高_m",
+    "实景图URL",
+    "效果图URL",
+    "项目视频URL",
+    "VR看房URL",
+    "样板间图URL",
+    "沙盘图URL",
+    "户型图URL",
+    "航拍图URL",
+    "区位图URL",
+    "配套图URL",
+    "交通图URL",
+    "多媒体素材总数",
+    "区域成交均价_元每㎡",
+    "近30天成交套数",
+    "近90天成交套数",
+    "去化率_pct",
+    "库存去化周期_月",
+    "6个月价格趋势_pct",
+    "12个月价格趋势_pct",
+    "周边二手均价_元每㎡",
+    "租金回报率_pct",
+    "市场热度指数",
+    "供需比",
+    "成交数据来源",
+    "可比实例_成交日期",
+    "可比实例_成交均价",
+    "可比实例_挂牌价",
+    "可比实例_挂牌天数",
+    "可比实例_挂牌成交比",
+    "首次挂牌日期",
+    "当前挂牌天数",
+    "价格调整次数",
+    "最近调价幅度_pct",
+    "历史挂牌价记录_JSON",
+    "区域挂牌成交比_pct",
+    "板块挂牌成交比_pct",
+    "同类型挂牌成交比_pct",
+    "板块待过户套数",
+    "板块待过户均价_元每㎡",
+    "待过户去化周期_月",
+    "在售套数",
+    "近12月月均成交套数",
+    "吸纳率_月",
+    "市场周期判定",
+    "周带看次数",
+    "周咨询次数",
+    "带看环比变化_pct",
+    "区域平均租金_元每月每套",
+    "区域平均租金_元每㎡每月",
+    "空置率_pct",
+    "租金同比涨幅_pct",
+    "租金售价比",
+    "GRM_年",
+    "cap_rate_pct",
+    "租金数据来源",
+    "当前LPR_5年期_pct",
+    "首套利率_pct",
+    "二套利率_pct",
+    "首套首付比例_pct",
+    "二套首付比例_pct",
+    "限购政策摘要",
+    "政策更新日期",
+    "二手房挂牌均价_元每㎡",
+    "二手房成交均价_元每㎡",
+    "二手房挂牌天数",
+    "二手房挂牌成交比_pct",
+    "二手房价趋势_6月_pct",
+    "二手房数据来源",
+    "区域常住人口_万",
+    "人口净流入_万每年",
+    "人口年龄中位数",
+    "区域GDP_亿元",
+    "第三产业占比_pct",
+    "区域主导产业",
+    "就业人口_万",
+    "人均可支配收入_万元"
+  ],
+  "new_columns": [
+    "小区拼音名称",
+    "检索名称集合",
+    "城市拼音简称",
+    "城市拼音全称",
+    "区县拼音名称",
+    "商圈拼音名称",
+    "用地条件和用地类型",
+    "周边配套",
+    "房价市场状况",
+    "周边均价",
+    "在售数量",
+    "在租数量",
+    "拿地价",
+    "土建成本",
+    "立面造价",
+    "投资回报比",
+    "溢价率及价值挖掘",
+    "租售比",
+    "房地产类型",
+    "商品类型",
+    "物业类型集合",
+    "小区面积",
+    "是否四代住宅",
+    "规划排布逻辑",
+    "主力成交户型",
+    "各户型文本描述",
+    "各户型对应得房率",
+    "车位管理费",
+    "统一供暖",
+    "供水供电",
+    "用水类型",
+    "竣工时间",
+    "建筑设计方",
+    "景观设计方",
+    "销售话术",
+    "去化周期",
+    "客群画像",
+    "综合评分",
+    "模块评分列表",
+    "模块评分项",
+    "优点",
+    "缺点",
+    "业内评价",
+    "设计风格",
+    "风格材料",
+    "示范区配置",
+    "公区会所配置",
+    "全局创新点",
+    "所在地段未来宏观定位",
+    "最近地铁站",
+    "地铁站距离_m",
+    "地铁线路",
+    "最近学校名称",
+    "学校距离_m",
+    "学校类型",
+    "最近医院名称",
+    "医院距离_m",
+    "最近商业体名称",
+    "商业体距离_m",
+    "到市中心通勤_分钟",
+    "到CBD通勤_分钟",
+    "500m内公交站数",
+    "1km内POI总数",
+    "配套丰富度评分",
+    "开发商信用评级",
+    "开发商交付率_pct",
+    "开发商延期交付率_pct",
+    "开发商违约次数",
+    "开发商投诉次数",
+    "开发商累计项目数",
+    "开发商累计开发面积_万㎡",
+    "开发商行业排名",
+    "投资商信用评级",
+    "物业公司评级",
+    "物业公司管理项目数",
+    "建筑设计方名称",
+    "设计方资质等级",
+    "施工总承包方",
+    "施工方资质等级",
+    "监理单位",
+    "监理方资质等级",
+    "交付信用综合评分",
+    "物业费收缴率_pct",
+    "物业投诉次数",
+    "业主满意度评分",
+    "物业服务年限",
+    "产品力综合评分",
+    "地段价值评分",
+    "生活配套评分",
+    "价格体系评分",
+    "价值潜力评分",
+    "是否低密住宅",
+    "景观等级",
+    "立面材质等级",
+    "公区品质等级",
+    "智能家居等级",
+    "能效等级",
+    "绿色建筑等级",
+    "装配率_pct",
+    "是否学区房",
+    "对应学区",
+    "对应小学名称",
+    "对应小学排名",
+    "对应初中名称",
+    "对应初中排名",
+    "学区划片范围",
+    "入学政策限制",
+    "学区变动风险",
+    "景观资源",
+    "户型明细表_JSON",
+    "主力户型面积_㎡",
+    "主力户型室数",
+    "主力户型卫数",
+    "主力户型朝向",
+    "主力户型面宽_m",
+    "主力户型进深_m",
+    "得房率_pct",
+    "精装品牌",
+    "精装标准_元每㎡",
+    "交付标准",
+    "层高_m",
+    "实景图URL",
+    "效果图URL",
+    "项目视频URL",
+    "VR看房URL",
+    "样板间图URL",
+    "沙盘图URL",
+    "户型图URL",
+    "航拍图URL",
+    "区位图URL",
+    "配套图URL",
+    "交通图URL",
+    "多媒体素材总数",
+    "区域成交均价_元每㎡",
+    "近30天成交套数",
+    "近90天成交套数",
+    "去化率_pct",
+    "库存去化周期_月",
+    "6个月价格趋势_pct",
+    "12个月价格趋势_pct",
+    "周边二手均价_元每㎡",
+    "租金回报率_pct",
+    "市场热度指数",
+    "供需比",
+    "成交数据来源",
+    "可比实例_成交日期",
+    "可比实例_成交均价",
+    "可比实例_挂牌价",
+    "可比实例_挂牌天数",
+    "可比实例_挂牌成交比",
+    "首次挂牌日期",
+    "当前挂牌天数",
+    "价格调整次数",
+    "最近调价幅度_pct",
+    "历史挂牌价记录_JSON",
+    "区域挂牌成交比_pct",
+    "板块挂牌成交比_pct",
+    "同类型挂牌成交比_pct",
+    "板块待过户套数",
+    "板块待过户均价_元每㎡",
+    "待过户去化周期_月",
+    "在售套数",
+    "近12月月均成交套数",
+    "吸纳率_月",
+    "市场周期判定",
+    "周带看次数",
+    "周咨询次数",
+    "带看环比变化_pct",
+    "区域平均租金_元每月每套",
+    "区域平均租金_元每㎡每月",
+    "空置率_pct",
+    "租金同比涨幅_pct",
+    "租金售价比",
+    "GRM_年",
+    "cap_rate_pct",
+    "租金数据来源",
+    "当前LPR_5年期_pct",
+    "首套利率_pct",
+    "二套利率_pct",
+    "首套首付比例_pct",
+    "二套首付比例_pct",
+    "限购政策摘要",
+    "政策更新日期",
+    "二手房挂牌均价_元每㎡",
+    "二手房成交均价_元每㎡",
+    "二手房挂牌天数",
+    "二手房挂牌成交比_pct",
+    "二手房价趋势_6月_pct",
+    "二手房数据来源",
+    "区域常住人口_万",
+    "人口净流入_万每年",
+    "人口年龄中位数",
+    "区域GDP_亿元",
+    "第三产业占比_pct",
+    "区域主导产业",
+    "就业人口_万",
+    "人均可支配收入_万元"
+  ],
+  "n_legacy": 56,
+  "n_full": 253,
+  "n_taxonomy": 247,
+  "fields": [
+    {
+      "category": "一·标识与编号",
+      "key": "id",
+      "chinese": "小区编号",
+      "source": "采",
+      "physical_column": "楼盘ID",
+      "is_new_column": false
+    },
+    {
+      "category": "一·标识与编号",
+      "key": "name",
+      "chinese": "小区名称",
+      "source": "采",
+      "physical_column": "楼盘名称",
+      "is_new_column": false
+    },
+    {
+      "category": "一·标识与编号",
+      "key": "list_name",
+      "chinese": "小区拼音名称",
+      "source": "采",
+      "physical_column": "小区拼音名称",
+      "is_new_column": true
+    },
+    {
+      "category": "一·标识与编号",
+      "key": "extend_search_name_list",
+      "chinese": "检索名称集合",
+      "source": "采",
+      "physical_column": "检索名称集合",
+      "is_new_column": true
+    },
+    {
+      "category": "一·标识与编号",
+      "key": "tags",
+      "chinese": "小区标签",
+      "source": "采",
+      "physical_column": "标签列表",
+      "is_new_column": false
+    },
+    {
+      "category": "一·标识与编号",
+      "key": "default_photo",
+      "chinese": "小区默认图片",
+      "source": "采",
+      "physical_column": "默认图片",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "city_id",
+      "chinese": "城市ID",
+      "source": "采",
+      "physical_column": "城市ID",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "city_name",
+      "chinese": "城市名称",
+      "source": "采",
+      "physical_column": "城市名称",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "city_list_name",
+      "chinese": "城市拼音简称",
+      "source": "采",
+      "physical_column": "城市拼音简称",
+      "is_new_column": true
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "long_city_list_name",
+      "chinese": "城市拼音全称",
+      "source": "采",
+      "physical_column": "城市拼音全称",
+      "is_new_column": true
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "area_id",
+      "chinese": "区县ID",
+      "source": "采",
+      "physical_column": "区域ID",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "area_name",
+      "chinese": "区县名称",
+      "source": "采",
+      "physical_column": "区域名称",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "district_list_name",
+      "chinese": "区县拼音名称",
+      "source": "采",
+      "physical_column": "区县拼音名称",
+      "is_new_column": true
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "trading_area_id",
+      "chinese": "商圈ID",
+      "source": "采",
+      "physical_column": "子区域ID",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "trading_area_name",
+      "chinese": "商圈名称",
+      "source": "采",
+      "physical_column": "子区域名称",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "shangquan_list_name",
+      "chinese": "商圈拼音名称",
+      "source": "采",
+      "physical_column": "商圈拼音名称",
+      "is_new_column": true
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "address",
+      "chinese": "小区地址",
+      "source": "采",
+      "physical_column": "地址",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "ring_location",
+      "chinese": "环线位置",
+      "source": "采",
+      "physical_column": "环线位置",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "blng",
+      "chinese": "百度经度",
+      "source": "采",
+      "physical_column": "百度地图经度",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "blat",
+      "chinese": "百度纬度",
+      "source": "采",
+      "physical_column": "百度地图纬度",
+      "is_new_column": false
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "land_use_type",
+      "chinese": "用地条件和用地类型",
+      "source": "采",
+      "physical_column": "用地条件和用地类型",
+      "is_new_column": true
+    },
+    {
+      "category": "二·地理与区位",
+      "key": "surroundings",
+      "chinese": "周边配套",
+      "source": "采",
+      "physical_column": "周边配套",
+      "is_new_column": true
+    },
+    {
+      "category": "三·价格与金融",
+      "key": "price_info_price",
+      "chinese": "房价/最新价格",
+      "source": "采",
+      "physical_column": "最新价格",
+      "is_new_column": false
+    },
+    {
+      "category": "三·价格与金融",
+      "key": "price_ref",
+      "chinese": "参考价格",
+      "source": "采",
+      "physical_column": "参考价格",
+      "is_new_column": false
+    },
+    {
+      "category": "三·价格与金融",
+      "key": "price_info_market_sentiment",
+      "chinese": "房价市场状况",
+      "source": "采",
+      "physical_column": "房价市场状况",
+      "is_new_column": true
+    },
+    {
+      "category": "三·价格与金融",
+      "key": "area_avg_nearby_price",
+      "chinese": "周边均价",
+      "source": "采",
+      "physical_column": "周边均价",
+      "is_new_column": true
+    },
+    {
+      "category": "三·价格与金融",
+      "key": "mortgage_info",
+      "chinese": "房贷计算信息",
+      "source": "算",
+      "physical_column": "房贷计算信息",
+      "is_new_column": false
+    },
+    {
+      "category": "三·价格与金融",
+      "key": "prop_info_sale_num",
+      "chinese": "在售数量",
+      "source": "采",
+      "physical_column": "在售数量",
+      "is_new_column": true
+    },
+    {
+      "category": "三·价格与金融",
+      "key": "prop_info_rent_num",
+      "chinese": "在租数量",
+      "source": "采",
+      "physical_column": "在租数量",
+      "is_new_column": true
+    },
+    {
+      "category": "四·成本与投资",
+      "key": "land_cost",
+      "chinese": "拿地价",
+      "source": "内",
+      "physical_column": "拿地价",
+      "is_new_column": true
+    },
+    {
+      "category": "四·成本与投资",
+      "key": "civil_cost",
+      "chinese": "土建成本",
+      "source": "内",
+      "physical_column": "土建成本",
+      "is_new_column": true
+    },
+    {
+      "category": "四·成本与投资",
+      "key": "facade_cost",
+      "chinese": "立面造价",
+      "source": "内",
+      "physical_column": "立面造价",
+      "is_new_column": true
+    },
+    {
+      "category": "四·成本与投资",
+      "key": "roi",
+      "chinese": "投资回报比",
+      "source": "算",
+      "physical_column": "投资回报比",
+      "is_new_column": true
+    },
+    {
+      "category": "四·成本与投资",
+      "key": "premium_value",
+      "chinese": "溢价率及价值挖掘",
+      "source": "算",
+      "physical_column": "溢价率及价值挖掘",
+      "is_new_column": true
+    },
+    {
+      "category": "四·成本与投资",
+      "key": "rent_sale_ratio",
+      "chinese": "租售比",
+      "source": "算",
+      "physical_column": "租售比",
+      "is_new_column": true
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "estate_type",
+      "chinese": "房地产类型",
+      "source": "采",
+      "physical_column": "房地产类型",
+      "is_new_column": true
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "build_type_str",
+      "chinese": "建筑类型",
+      "source": "采",
+      "physical_column": "建筑类型",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "ship_type_str",
+      "chinese": "商品类型",
+      "source": "采",
+      "physical_column": "商品类型",
+      "is_new_column": true
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "extend_type",
+      "chinese": "物业类型",
+      "source": "采",
+      "physical_column": "物业类型",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "property_types",
+      "chinese": "物业类型集合",
+      "source": "采",
+      "physical_column": "物业类型集合",
+      "is_new_column": true
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "years_of_property_rights",
+      "chinese": "产权年限",
+      "source": "采",
+      "physical_column": "产权年限",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "plot_ratio",
+      "chinese": "容积率",
+      "source": "采",
+      "physical_column": "容积率",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "extend_landscaping_atio",
+      "chinese": "绿化率",
+      "source": "采",
+      "physical_column": "绿化率",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "land_area",
+      "chinese": "占地面积",
+      "source": "采",
+      "physical_column": "占地面积",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "build_area",
+      "chinese": "建筑面积",
+      "source": "采",
+      "physical_column": "建筑面积",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "extend_total_area",
+      "chinese": "小区面积",
+      "source": "采",
+      "physical_column": "小区面积",
+      "is_new_column": true
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "area_range",
+      "chinese": "面积范围",
+      "source": "采",
+      "physical_column": "面积范围",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "extend_total_house_hold_num",
+      "chinese": "总户数/规划户数",
+      "source": "采",
+      "physical_column": "规划户数",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "is_4th_gen",
+      "chinese": "是否四代住宅",
+      "source": "采",
+      "physical_column": "是否四代住宅",
+      "is_new_column": true
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "decoration",
+      "chinese": "装修情况",
+      "source": "采",
+      "physical_column": "装修情况",
+      "is_new_column": false
+    },
+    {
+      "category": "五·产品与规划",
+      "key": "layout_logic",
+      "chinese": "规划排布逻辑",
+      "source": "VLM",
+      "physical_column": "规划排布逻辑",
+      "is_new_column": true
+    },
+    {
+      "category": "六·户型",
+      "key": "units_all",
+      "chinese": "全部户型",
+      "source": "采",
+      "physical_column": "全部户型",
+      "is_new_column": false
+    },
+    {
+      "category": "六·户型",
+      "key": "units_main",
+      "chinese": "主力成交户型",
+      "source": "采",
+      "physical_column": "主力成交户型",
+      "is_new_column": true
+    },
+    {
+      "category": "六·户型",
+      "key": "unit_desc",
+      "chinese": "各户型文本描述",
+      "source": "采",
+      "physical_column": "各户型文本描述",
+      "is_new_column": true
+    },
+    {
+      "category": "六·户型",
+      "key": "unit_efficiency",
+      "chinese": "各户型对应得房率",
+      "source": "采",
+      "physical_column": "各户型对应得房率",
+      "is_new_column": true
+    },
+    {
+      "category": "六·户型",
+      "key": "room_area_info",
+      "chinese": "房间面积信息",
+      "source": "采",
+      "physical_column": "房间面积信息",
+      "is_new_column": false
+    },
+    {
+      "category": "七·车位与市政",
+      "key": "parking_space",
+      "chinese": "停车位",
+      "source": "采",
+      "physical_column": "车位数",
+      "is_new_column": false
+    },
+    {
+      "category": "七·车位与市政",
+      "key": "parking_rate",
+      "chinese": "车位比",
+      "source": "采",
+      "physical_column": "车位比",
+      "is_new_column": false
+    },
+    {
+      "category": "七·车位与市政",
+      "key": "parking_space_management_fee",
+      "chinese": "车位管理费",
+      "source": "采",
+      "physical_column": "车位管理费",
+      "is_new_column": true
+    },
+    {
+      "category": "七·车位与市政",
+      "key": "unified_heating",
+      "chinese": "统一供暖",
+      "source": "采",
+      "physical_column": "统一供暖",
+      "is_new_column": true
+    },
+    {
+      "category": "七·车位与市政",
+      "key": "hydropower",
+      "chinese": "供水供电",
+      "source": "采",
+      "physical_column": "供水供电",
+      "is_new_column": true
+    },
+    {
+      "category": "七·车位与市政",
+      "key": "extend_water_power_supply",
+      "chinese": "用水类型",
+      "source": "采",
+      "physical_column": "用水类型",
+      "is_new_column": true
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "completion_time",
+      "chinese": "竣工时间",
+      "source": "采",
+      "physical_column": "竣工时间",
+      "is_new_column": true
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "open_date",
+      "chinese": "开盘日期",
+      "source": "采",
+      "physical_column": "开盘日期",
+      "is_new_column": false
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "open_date_note",
+      "chinese": "开盘日期备注",
+      "source": "采",
+      "physical_column": "开盘日期备注",
+      "is_new_column": false
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "open_time",
+      "chinese": "开盘时间",
+      "source": "采",
+      "physical_column": "开盘时间",
+      "is_new_column": false
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "handover_date",
+      "chinese": "交房时间",
+      "source": "采",
+      "physical_column": "交房时间",
+      "is_new_column": false
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "cert_date",
+      "chinese": "发证时间",
+      "source": "采",
+      "physical_column": "发证时间",
+      "is_new_column": false
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "presale_cert",
+      "chinese": "预售证号",
+      "source": "采",
+      "physical_column": "预售证号",
+      "is_new_column": false
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "progress",
+      "chinese": "工程进度",
+      "source": "采",
+      "physical_column": "工程进度",
+      "is_new_column": false
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "bound_buildings",
+      "chinese": "绑定楼栋",
+      "source": "采",
+      "physical_column": "绑定楼栋",
+      "is_new_column": false
+    },
+    {
+      "category": "八·时间与进度",
+      "key": "planning_delivery_info",
+      "chinese": "规交信息",
+      "source": "采",
+      "physical_column": "规交信息",
+      "is_new_column": false
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "developers",
+      "chinese": "开发商",
+      "source": "采",
+      "physical_column": "开发商",
+      "is_new_column": false
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "investor",
+      "chinese": "投资商",
+      "source": "采",
+      "physical_column": "投资商",
+      "is_new_column": false
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "extend_property_company",
+      "chinese": "物业公司",
+      "source": "采",
+      "physical_column": "物业公司",
+      "is_new_column": false
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "extend_property_money",
+      "chinese": "物业费",
+      "source": "采",
+      "physical_column": "物业管理费",
+      "is_new_column": false
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "extend_property_features",
+      "chinese": "物业特色",
+      "source": "采",
+      "physical_column": "物业特色",
+      "is_new_column": false
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "arch_firm",
+      "chinese": "建筑设计方",
+      "source": "采",
+      "physical_column": "建筑设计方",
+      "is_new_column": true
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "landscape_firm",
+      "chinese": "景观设计方",
+      "source": "采",
+      "physical_column": "景观设计方",
+      "is_new_column": true
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "sales_office_addr",
+      "chinese": "售楼处地址",
+      "source": "采",
+      "physical_column": "售楼处地址",
+      "is_new_column": false
+    },
+    {
+      "category": "九·主体与运营",
+      "key": "phone_400",
+      "chinese": "400电话",
+      "source": "采",
+      "physical_column": "400电话",
+      "is_new_column": false
+    },
+    {
+      "category": "十·销售与市场",
+      "key": "sale_status",
+      "chinese": "销售状态",
+      "source": "采",
+      "physical_column": "销售状态",
+      "is_new_column": false
+    },
+    {
+      "category": "十·销售与市场",
+      "key": "sale_title",
+      "chinese": "销售标题",
+      "source": "采",
+      "physical_column": "销售标题",
+      "is_new_column": false
+    },
+    {
+      "category": "十·销售与市场",
+      "key": "rent_sale_title",
+      "chinese": "租售标题",
+      "source": "采",
+      "physical_column": "租售标题",
+      "is_new_column": false
+    },
+    {
+      "category": "十·销售与市场",
+      "key": "sales_script",
+      "chinese": "销售话术",
+      "source": "算",
+      "physical_column": "销售话术",
+      "is_new_column": true
+    },
+    {
+      "category": "十·销售与市场",
+      "key": "sell_through",
+      "chinese": "去化周期",
+      "source": "算",
+      "physical_column": "去化周期",
+      "is_new_column": true
+    },
+    {
+      "category": "十·销售与市场",
+      "key": "customer_profile",
+      "chinese": "客群画像",
+      "source": "算",
+      "physical_column": "客群画像",
+      "is_new_column": true
+    },
+    {
+      "category": "十一·评价与评分",
+      "key": "grade_score",
+      "chinese": "综合评分",
+      "source": "采",
+      "physical_column": "综合评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十一·评价与评分",
+      "key": "grade_list",
+      "chinese": "模块评分列表",
+      "source": "采",
+      "physical_column": "模块评分列表",
+      "is_new_column": true
+    },
+    {
+      "category": "十一·评价与评分",
+      "key": "grade_items",
+      "chinese": "模块评分项",
+      "source": "采",
+      "physical_column": "模块评分项",
+      "is_new_column": true
+    },
+    {
+      "category": "十一·评价与评分",
+      "key": "extend_merits",
+      "chinese": "优点",
+      "source": "采",
+      "physical_column": "优点",
+      "is_new_column": true
+    },
+    {
+      "category": "十一·评价与评分",
+      "key": "extend_demerits",
+      "chinese": "缺点",
+      "source": "采",
+      "physical_column": "缺点",
+      "is_new_column": true
+    },
+    {
+      "category": "十一·评价与评分",
+      "key": "industry_review",
+      "chinese": "业内评价",
+      "source": "内",
+      "physical_column": "业内评价",
+      "is_new_column": true
+    },
+    {
+      "category": "十二·设计与体验",
+      "key": "design_style",
+      "chinese": "设计风格",
+      "source": "VLM",
+      "physical_column": "设计风格",
+      "is_new_column": true
+    },
+    {
+      "category": "十二·设计与体验",
+      "key": "style_material",
+      "chinese": "风格材料",
+      "source": "VLM",
+      "physical_column": "风格材料",
+      "is_new_column": true
+    },
+    {
+      "category": "十二·设计与体验",
+      "key": "demo_area_config",
+      "chinese": "示范区配置",
+      "source": "VLM",
+      "physical_column": "示范区配置",
+      "is_new_column": true
+    },
+    {
+      "category": "十二·设计与体验",
+      "key": "clubhouse_config",
+      "chinese": "公区会所配置",
+      "source": "VLM",
+      "physical_column": "公区会所配置",
+      "is_new_column": true
+    },
+    {
+      "category": "十二·设计与体验",
+      "key": "global_innovation",
+      "chinese": "全局创新点",
+      "source": "算",
+      "physical_column": "全局创新点",
+      "is_new_column": true
+    },
+    {
+      "category": "十三·战略与定位",
+      "key": "macro_position",
+      "chinese": "所在地段未来宏观定位",
+      "source": "算",
+      "physical_column": "所在地段未来宏观定位",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_subway_station",
+      "chinese": "最近地铁站",
+      "source": "算",
+      "physical_column": "最近地铁站",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_subway_distance",
+      "chinese": "地铁站距离_m",
+      "source": "算",
+      "physical_column": "地铁站距离_m",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_subway_lines",
+      "chinese": "地铁线路",
+      "source": "算",
+      "physical_column": "地铁线路",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_school_name",
+      "chinese": "最近学校名称",
+      "source": "算",
+      "physical_column": "最近学校名称",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_school_distance",
+      "chinese": "学校距离_m",
+      "source": "算",
+      "physical_column": "学校距离_m",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_school_type",
+      "chinese": "学校类型",
+      "source": "算",
+      "physical_column": "学校类型",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_hospital_name",
+      "chinese": "最近医院名称",
+      "source": "算",
+      "physical_column": "最近医院名称",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_hospital_distance",
+      "chinese": "医院距离_m",
+      "source": "算",
+      "physical_column": "医院距离_m",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_mall_name",
+      "chinese": "最近商业体名称",
+      "source": "算",
+      "physical_column": "最近商业体名称",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "nearest_mall_distance",
+      "chinese": "商业体距离_m",
+      "source": "算",
+      "physical_column": "商业体距离_m",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "commute_time_center",
+      "chinese": "到市中心通勤_分钟",
+      "source": "算",
+      "physical_column": "到市中心通勤_分钟",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "commute_time_cbd",
+      "chinese": "到CBD通勤_分钟",
+      "source": "算",
+      "physical_column": "到CBD通勤_分钟",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "bus_stops_500m",
+      "chinese": "500m内公交站数",
+      "source": "算",
+      "physical_column": "500m内公交站数",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "poi_count_1km",
+      "chinese": "1km内POI总数",
+      "source": "算",
+      "physical_column": "1km内POI总数",
+      "is_new_column": true
+    },
+    {
+      "category": "十四·交通与配套",
+      "key": "poi_richness_score",
+      "chinese": "配套丰富度评分",
+      "source": "算",
+      "physical_column": "配套丰富度评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "developer_credit_rating",
+      "chinese": "开发商信用评级",
+      "source": "内",
+      "physical_column": "开发商信用评级",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "developer_delivery_rate",
+      "chinese": "开发商交付率_pct",
+      "source": "内",
+      "physical_column": "开发商交付率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "developer_delay_rate",
+      "chinese": "开发商延期交付率_pct",
+      "source": "内",
+      "physical_column": "开发商延期交付率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "developer_default_count",
+      "chinese": "开发商违约次数",
+      "source": "内",
+      "physical_column": "开发商违约次数",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "developer_complaint_count",
+      "chinese": "开发商投诉次数",
+      "source": "内",
+      "physical_column": "开发商投诉次数",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "developer_project_count",
+      "chinese": "开发商累计项目数",
+      "source": "内",
+      "physical_column": "开发商累计项目数",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "developer_total_area",
+      "chinese": "开发商累计开发面积_万㎡",
+      "source": "内",
+      "physical_column": "开发商累计开发面积_万㎡",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "developer_rating_benchmark",
+      "chinese": "开发商行业排名",
+      "source": "内",
+      "physical_column": "开发商行业排名",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "investor_credit_rating",
+      "chinese": "投资商信用评级",
+      "source": "内",
+      "physical_column": "投资商信用评级",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "property_company_rating",
+      "chinese": "物业公司评级",
+      "source": "内",
+      "physical_column": "物业公司评级",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "property_company_project_count",
+      "chinese": "物业公司管理项目数",
+      "source": "内",
+      "physical_column": "物业公司管理项目数",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "arch_firm_name",
+      "chinese": "建筑设计方名称",
+      "source": "采",
+      "physical_column": "建筑设计方名称",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "arch_firm_qualification",
+      "chinese": "设计方资质等级",
+      "source": "采",
+      "physical_column": "设计方资质等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "construction_firm",
+      "chinese": "施工总承包方",
+      "source": "采",
+      "physical_column": "施工总承包方",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "construction_firm_qualification",
+      "chinese": "施工方资质等级",
+      "source": "采",
+      "physical_column": "施工方资质等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "supervisor_firm",
+      "chinese": "监理单位",
+      "source": "采",
+      "physical_column": "监理单位",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "supervisor_firm_qualification",
+      "chinese": "监理方资质等级",
+      "source": "采",
+      "physical_column": "监理方资质等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "delivery_credit_score",
+      "chinese": "交付信用综合评分",
+      "source": "算",
+      "physical_column": "交付信用综合评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "property_fee_collection_rate",
+      "chinese": "物业费收缴率_pct",
+      "source": "内",
+      "physical_column": "物业费收缴率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "property_complaint_count",
+      "chinese": "物业投诉次数",
+      "source": "内",
+      "physical_column": "物业投诉次数",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "owner_satisfaction_score",
+      "chinese": "业主满意度评分",
+      "source": "内",
+      "physical_column": "业主满意度评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十五·品牌与信用",
+      "key": "property_service_years",
+      "chinese": "物业服务年限",
+      "source": "内",
+      "physical_column": "物业服务年限",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "product_score",
+      "chinese": "产品力综合评分",
+      "source": "算",
+      "physical_column": "产品力综合评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "location_value_score",
+      "chinese": "地段价值评分",
+      "source": "算",
+      "physical_column": "地段价值评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "life_support_score",
+      "chinese": "生活配套评分",
+      "source": "算",
+      "physical_column": "生活配套评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "price_system_score",
+      "chinese": "价格体系评分",
+      "source": "算",
+      "physical_column": "价格体系评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "value_potential_score",
+      "chinese": "价值潜力评分",
+      "source": "算",
+      "physical_column": "价值潜力评分",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "is_low_density",
+      "chinese": "是否低密住宅",
+      "source": "算",
+      "physical_column": "是否低密住宅",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "landscaping_grade",
+      "chinese": "景观等级",
+      "source": "VLM",
+      "physical_column": "景观等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "facade_material_grade",
+      "chinese": "立面材质等级",
+      "source": "VLM",
+      "physical_column": "立面材质等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "public_area_grade",
+      "chinese": "公区品质等级",
+      "source": "VLM",
+      "physical_column": "公区品质等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "smart_home_level",
+      "chinese": "智能家居等级",
+      "source": "采",
+      "physical_column": "智能家居等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "energy_efficiency_grade",
+      "chinese": "能效等级",
+      "source": "采",
+      "physical_column": "能效等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "green_building_grade",
+      "chinese": "绿色建筑等级",
+      "source": "采",
+      "physical_column": "绿色建筑等级",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "assembly_rate",
+      "chinese": "装配率_pct",
+      "source": "采",
+      "physical_column": "装配率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "is_school_district",
+      "chinese": "是否学区房",
+      "source": "算",
+      "physical_column": "是否学区房",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "school_district_name",
+      "chinese": "对应学区",
+      "source": "算",
+      "physical_column": "对应学区",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "primary_school_name",
+      "chinese": "对应小学名称",
+      "source": "采",
+      "physical_column": "对应小学名称",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "primary_school_rank",
+      "chinese": "对应小学排名",
+      "source": "采",
+      "physical_column": "对应小学排名",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "middle_school_name",
+      "chinese": "对应初中名称",
+      "source": "采",
+      "physical_column": "对应初中名称",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "middle_school_rank",
+      "chinese": "对应初中排名",
+      "source": "采",
+      "physical_column": "对应初中排名",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "school_district_range",
+      "chinese": "学区划片范围",
+      "source": "采",
+      "physical_column": "学区划片范围",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "school_enrollment_policy",
+      "chinese": "入学政策限制",
+      "source": "采",
+      "physical_column": "入学政策限制",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "school_district_risk",
+      "chinese": "学区变动风险",
+      "source": "采",
+      "physical_column": "学区变动风险",
+      "is_new_column": true
+    },
+    {
+      "category": "十六·产品力与稀缺",
+      "key": "scenic_view",
+      "chinese": "景观资源",
+      "source": "采",
+      "physical_column": "景观资源",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "unit_type_detail",
+      "chinese": "户型明细表_JSON",
+      "source": "采",
+      "physical_column": "户型明细表_JSON",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "main_unit_area",
+      "chinese": "主力户型面积_㎡",
+      "source": "采",
+      "physical_column": "主力户型面积_㎡",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "main_unit_rooms",
+      "chinese": "主力户型室数",
+      "source": "采",
+      "physical_column": "主力户型室数",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "main_unit_bathrooms",
+      "chinese": "主力户型卫数",
+      "source": "采",
+      "physical_column": "主力户型卫数",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "main_unit_orientation",
+      "chinese": "主力户型朝向",
+      "source": "采",
+      "physical_column": "主力户型朝向",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "main_unit_face_width",
+      "chinese": "主力户型面宽_m",
+      "source": "采",
+      "physical_column": "主力户型面宽_m",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "main_unit_depth",
+      "chinese": "主力户型进深_m",
+      "source": "采",
+      "physical_column": "主力户型进深_m",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "efficiency_rate",
+      "chinese": "得房率_pct",
+      "source": "采",
+      "physical_column": "得房率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "decoration_brand",
+      "chinese": "精装品牌",
+      "source": "采",
+      "physical_column": "精装品牌",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "decoration_standard",
+      "chinese": "精装标准_元每㎡",
+      "source": "采",
+      "physical_column": "精装标准_元每㎡",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "delivery_standard",
+      "chinese": "交付标准",
+      "source": "采",
+      "physical_column": "交付标准",
+      "is_new_column": true
+    },
+    {
+      "category": "十七·户型明细",
+      "key": "floor_height",
+      "chinese": "层高_m",
+      "source": "采",
+      "physical_column": "层高_m",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "real_photo_url",
+      "chinese": "实景图URL",
+      "source": "采",
+      "physical_column": "实景图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "rendering_url",
+      "chinese": "效果图URL",
+      "source": "采",
+      "physical_column": "效果图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "video_url",
+      "chinese": "项目视频URL",
+      "source": "采",
+      "physical_column": "项目视频URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "vr_url",
+      "chinese": "VR看房URL",
+      "source": "采",
+      "physical_column": "VR看房URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "sample_room_url",
+      "chinese": "样板间图URL",
+      "source": "采",
+      "physical_column": "样板间图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "sand_table_url",
+      "chinese": "沙盘图URL",
+      "source": "采",
+      "physical_column": "沙盘图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "floor_plan_url",
+      "chinese": "户型图URL",
+      "source": "采",
+      "physical_column": "户型图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "aerial_photo_url",
+      "chinese": "航拍图URL",
+      "source": "采",
+      "physical_column": "航拍图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "location_map_url",
+      "chinese": "区位图URL",
+      "source": "采",
+      "physical_column": "区位图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "supporting_map_url",
+      "chinese": "配套图URL",
+      "source": "采",
+      "physical_column": "配套图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "traffic_map_url",
+      "chinese": "交通图URL",
+      "source": "采",
+      "physical_column": "交通图URL",
+      "is_new_column": true
+    },
+    {
+      "category": "十八·多媒体资料",
+      "key": "media_count",
+      "chinese": "多媒体素材总数",
+      "source": "算",
+      "physical_column": "多媒体素材总数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "avg_transaction_price",
+      "chinese": "区域成交均价_元每㎡",
+      "source": "内",
+      "physical_column": "区域成交均价_元每㎡",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "transaction_count_30d",
+      "chinese": "近30天成交套数",
+      "source": "内",
+      "physical_column": "近30天成交套数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "transaction_count_90d",
+      "chinese": "近90天成交套数",
+      "source": "内",
+      "physical_column": "近90天成交套数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "absorption_rate",
+      "chinese": "去化率_pct",
+      "source": "算",
+      "physical_column": "去化率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "inventory_months",
+      "chinese": "库存去化周期_月",
+      "source": "算",
+      "physical_column": "库存去化周期_月",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "price_trend_6m",
+      "chinese": "6个月价格趋势_pct",
+      "source": "算",
+      "physical_column": "6个月价格趋势_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "price_trend_12m",
+      "chinese": "12个月价格趋势_pct",
+      "source": "算",
+      "physical_column": "12个月价格趋势_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "resale_price_avg",
+      "chinese": "周边二手均价_元每㎡",
+      "source": "算",
+      "physical_column": "周边二手均价_元每㎡",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "rental_yield",
+      "chinese": "租金回报率_pct",
+      "source": "算",
+      "physical_column": "租金回报率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "market_heat_index",
+      "chinese": "市场热度指数",
+      "source": "算",
+      "physical_column": "市场热度指数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "supply_demand_ratio",
+      "chinese": "供需比",
+      "source": "算",
+      "physical_column": "供需比",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "transaction_data_source",
+      "chinese": "成交数据来源",
+      "source": "内",
+      "physical_column": "成交数据来源",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "comparable_sale_date",
+      "chinese": "可比实例_成交日期",
+      "source": "内",
+      "physical_column": "可比实例_成交日期",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "comparable_sale_price",
+      "chinese": "可比实例_成交均价",
+      "source": "内",
+      "physical_column": "可比实例_成交均价",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "comparable_list_price",
+      "chinese": "可比实例_挂牌价",
+      "source": "内",
+      "physical_column": "可比实例_挂牌价",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "comparable_dom",
+      "chinese": "可比实例_挂牌天数",
+      "source": "内",
+      "physical_column": "可比实例_挂牌天数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "comparable_sp_lp_ratio",
+      "chinese": "可比实例_挂牌成交比",
+      "source": "算",
+      "physical_column": "可比实例_挂牌成交比",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "first_list_date",
+      "chinese": "首次挂牌日期",
+      "source": "内",
+      "physical_column": "首次挂牌日期",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "current_dom",
+      "chinese": "当前挂牌天数",
+      "source": "算",
+      "physical_column": "当前挂牌天数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "price_adjustment_count",
+      "chinese": "价格调整次数",
+      "source": "内",
+      "physical_column": "价格调整次数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "last_price_adjustment_pct",
+      "chinese": "最近调价幅度_pct",
+      "source": "内",
+      "physical_column": "最近调价幅度_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "price_history_json",
+      "chinese": "历史挂牌价记录_JSON",
+      "source": "内",
+      "physical_column": "历史挂牌价记录_JSON",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "region_sp_lp_ratio",
+      "chinese": "区域挂牌成交比_pct",
+      "source": "算",
+      "physical_column": "区域挂牌成交比_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "subarea_sp_lp_ratio",
+      "chinese": "板块挂牌成交比_pct",
+      "source": "算",
+      "physical_column": "板块挂牌成交比_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "type_sp_lp_ratio",
+      "chinese": "同类型挂牌成交比_pct",
+      "source": "算",
+      "physical_column": "同类型挂牌成交比_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "pending_count",
+      "chinese": "板块待过户套数",
+      "source": "内",
+      "physical_column": "板块待过户套数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "pending_avg_price",
+      "chinese": "板块待过户均价_元每㎡",
+      "source": "内",
+      "physical_column": "板块待过户均价_元每㎡",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "pending_months",
+      "chinese": "待过户去化周期_月",
+      "source": "算",
+      "physical_column": "待过户去化周期_月",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "active_listings_count",
+      "chinese": "在售套数",
+      "source": "内",
+      "physical_column": "在售套数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "monthly_avg_sales_12m",
+      "chinese": "近12月月均成交套数",
+      "source": "算",
+      "physical_column": "近12月月均成交套数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "absorption_months",
+      "chinese": "吸纳率_月",
+      "source": "算",
+      "physical_column": "吸纳率_月",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "market_cycle",
+      "chinese": "市场周期判定",
+      "source": "算",
+      "physical_column": "市场周期判定",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "weekly_showing_count",
+      "chinese": "周带看次数",
+      "source": "采",
+      "physical_column": "周带看次数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "weekly_inquiry_count",
+      "chinese": "周咨询次数",
+      "source": "采",
+      "physical_column": "周咨询次数",
+      "is_new_column": true
+    },
+    {
+      "category": "十九·成交与市场",
+      "key": "showing_mom_change",
+      "chinese": "带看环比变化_pct",
+      "source": "算",
+      "physical_column": "带看环比变化_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十·租赁市场",
+      "key": "avg_rent_monthly",
+      "chinese": "区域平均租金_元每月每套",
+      "source": "采",
+      "physical_column": "区域平均租金_元每月每套",
+      "is_new_column": true
+    },
+    {
+      "category": "二十·租赁市场",
+      "key": "avg_rent_per_sqm",
+      "chinese": "区域平均租金_元每㎡每月",
+      "source": "采",
+      "physical_column": "区域平均租金_元每㎡每月",
+      "is_new_column": true
+    },
+    {
+      "category": "二十·租赁市场",
+      "key": "vacancy_rate",
+      "chinese": "空置率_pct",
+      "source": "采",
+      "physical_column": "空置率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十·租赁市场",
+      "key": "rent_yoy_growth",
+      "chinese": "租金同比涨幅_pct",
+      "source": "算",
+      "physical_column": "租金同比涨幅_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十·租赁市场",
+      "key": "rent_sale_ratio_v2",
+      "chinese": "租金售价比",
+      "source": "算",
+      "physical_column": "租金售价比",
+      "is_new_column": true
+    },
+    {
+      "category": "二十·租赁市场",
+      "key": "grm_years",
+      "chinese": "GRM_年",
+      "source": "算",
+      "physical_column": "GRM_年",
+      "is_new_column": true
+    },
+    {
+      "category": "二十·租赁市场",
+      "key": "cap_rate_pct",
+      "chinese": "cap_rate_pct",
+      "source": "算",
+      "physical_column": "cap_rate_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十·租赁市场",
+      "key": "rental_data_source",
+      "chinese": "租金数据来源",
+      "source": "采",
+      "physical_column": "租金数据来源",
+      "is_new_column": true
+    },
+    {
+      "category": "二十一·政策与金融",
+      "key": "lpr_5y",
+      "chinese": "当前LPR_5年期_pct",
+      "source": "采",
+      "physical_column": "当前LPR_5年期_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十一·政策与金融",
+      "key": "first_home_rate",
+      "chinese": "首套利率_pct",
+      "source": "采",
+      "physical_column": "首套利率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十一·政策与金融",
+      "key": "second_home_rate",
+      "chinese": "二套利率_pct",
+      "source": "采",
+      "physical_column": "二套利率_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十一·政策与金融",
+      "key": "first_home_down_pct",
+      "chinese": "首套首付比例_pct",
+      "source": "采",
+      "physical_column": "首套首付比例_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十一·政策与金融",
+      "key": "second_home_down_pct",
+      "chinese": "二套首付比例_pct",
+      "source": "采",
+      "physical_column": "二套首付比例_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十一·政策与金融",
+      "key": "purchase_restriction",
+      "chinese": "限购政策摘要",
+      "source": "采",
+      "physical_column": "限购政策摘要",
+      "is_new_column": true
+    },
+    {
+      "category": "二十一·政策与金融",
+      "key": "policy_update_date",
+      "chinese": "政策更新日期",
+      "source": "采",
+      "physical_column": "政策更新日期",
+      "is_new_column": true
+    },
+    {
+      "category": "二十二·二手房市场",
+      "key": "resale_listing_price",
+      "chinese": "二手房挂牌均价_元每㎡",
+      "source": "采",
+      "physical_column": "二手房挂牌均价_元每㎡",
+      "is_new_column": true
+    },
+    {
+      "category": "二十二·二手房市场",
+      "key": "resale_transaction_price",
+      "chinese": "二手房成交均价_元每㎡",
+      "source": "采",
+      "physical_column": "二手房成交均价_元每㎡",
+      "is_new_column": true
+    },
+    {
+      "category": "二十二·二手房市场",
+      "key": "resale_dom",
+      "chinese": "二手房挂牌天数",
+      "source": "采",
+      "physical_column": "二手房挂牌天数",
+      "is_new_column": true
+    },
+    {
+      "category": "二十二·二手房市场",
+      "key": "resale_sp_lp_ratio",
+      "chinese": "二手房挂牌成交比_pct",
+      "source": "算",
+      "physical_column": "二手房挂牌成交比_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十二·二手房市场",
+      "key": "resale_price_trend_6m",
+      "chinese": "二手房价趋势_6月_pct",
+      "source": "算",
+      "physical_column": "二手房价趋势_6月_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十二·二手房市场",
+      "key": "resale_data_source",
+      "chinese": "二手房数据来源",
+      "source": "采",
+      "physical_column": "二手房数据来源",
+      "is_new_column": true
+    },
+    {
+      "category": "二十三·人口与产业",
+      "key": "district_population",
+      "chinese": "区域常住人口_万",
+      "source": "采",
+      "physical_column": "区域常住人口_万",
+      "is_new_column": true
+    },
+    {
+      "category": "二十三·人口与产业",
+      "key": "population_net_inflow",
+      "chinese": "人口净流入_万每年",
+      "source": "采",
+      "physical_column": "人口净流入_万每年",
+      "is_new_column": true
+    },
+    {
+      "category": "二十三·人口与产业",
+      "key": "population_median_age",
+      "chinese": "人口年龄中位数",
+      "source": "采",
+      "physical_column": "人口年龄中位数",
+      "is_new_column": true
+    },
+    {
+      "category": "二十三·人口与产业",
+      "key": "district_gdp",
+      "chinese": "区域GDP_亿元",
+      "source": "采",
+      "physical_column": "区域GDP_亿元",
+      "is_new_column": true
+    },
+    {
+      "category": "二十三·人口与产业",
+      "key": "tertiary_industry_pct",
+      "chinese": "第三产业占比_pct",
+      "source": "采",
+      "physical_column": "第三产业占比_pct",
+      "is_new_column": true
+    },
+    {
+      "category": "二十三·人口与产业",
+      "key": "dominant_industry",
+      "chinese": "区域主导产业",
+      "source": "采",
+      "physical_column": "区域主导产业",
+      "is_new_column": true
+    },
+    {
+      "category": "二十三·人口与产业",
+      "key": "employment_population",
+      "chinese": "就业人口_万",
+      "source": "采",
+      "physical_column": "就业人口_万",
+      "is_new_column": true
+    },
+    {
+      "category": "二十三·人口与产业",
+      "key": "disposable_income",
+      "chinese": "人均可支配收入_万元",
+      "source": "采",
+      "physical_column": "人均可支配收入_万元",
+      "is_new_column": true
+    }
+  ]
+}

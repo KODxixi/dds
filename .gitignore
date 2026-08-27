@@ -26,3 +26,20 @@ reports/
 work/
 delivery/
 
+# V1 只读迁移源（按迁移记录决定留 V1 不迁，禁止误提交）
+Vault/
+
+# CI-Buddy 后端完整归档（外部应用数据，镜像自 %APPDATA%\cibuddy）
+cibuddy-archive/
+CI-Buddy/
+.cibuddy/
+
+# 一次性/临时工作区
+tmp/
+temp_taskbook_media/
+qa_artifacts/
+gary_card_qa/
+
+# 质量/测试/治理资产（QA 参考、压测夹具、治理阈值）
+data/qa/
+

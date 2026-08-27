@@ -1,0 +1,17 @@
+{
+  "bands": {
+    "三亚": 0.33,
+    "杭州": 0.3,
+    "上海": 0.17,
+    "青岛": 0.37,
+    "济南": 0.2
+  },
+  "meta": {
+    "generated_at": "2026-06-24T22:47:23",
+    "method": "leave-one-out spatial CV",
+    "radius_km": 3.0,
+    "coverage_target": 0.8,
+    "ground_truth": "local listing price (挂牌/参考价)",
+    "source": "scripts/backtest_price.py"
+  }
+}

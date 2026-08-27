@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "schema_version": 1.0,
+    "title": "楼盘数据维度字典 (DDS Listing Dimensions SSOT)",
+    "updated": "2026-06-24",
+    "purpose": "楼盘/小区数据维度的单一真值源(SSOT);前端报告分区渲染、后端分析消费、采集与计算字段命名,均以此为准。",
+    "naming_rule": "采集层沿用真实 API 字段名;内部/计算字段补规范 key。",
+    "source_legend": {
+      "采": "外部采集(安居客/房天下等真实 API 字段)",
+      "内": "内部台账(成本/拿地价/业内评价等非公开)",
+      "VLM": "案例库逐图打标产出(ArchLib 视觉模型)",
+      "算": "DDS 计算输出"
+    }
+  },
+  "categories": [
+    {
+      "id": "identity", "cn": "标识与编号",
+      "fields": [
+        {"cn": "小区编号", "key": "id", "src": "采"},
+        {"cn": "小区名称", "key": "name", "src": "采"},
+        {"cn": "小区拼音名称", "key": "list_name", "src": "采"},
+        {"cn": "检索名称集合", "key": "extend_search_name_list", "src": "采"},
+        {"cn": "小区标签", "key": "tags", "src": "采"},
+        {"cn": "小区默认图片", "key": "default_photo", "src": "采"}
+      ]
+    },
+    {
+      "id": "geo", "cn": "地理与区位",
+      "fields": [
+        {"cn": "城市ID", "key": "city_id", "src": "采"},
+        {"cn": "城市名称", "key": "city_name", "src": "采"},
+        {"cn": "城市拼音简称", "key": "city_list_name", "src": "采"},
+        {"cn": "城市拼音全称", "key": "long_city_list_name", "src": "采"},
+        {"cn": "区县ID", "key": "area_id", "src": "采"},
+        {"cn": "区县名称", "key": "area_name", "src": "采"},
+        {"cn": "区县拼音名称", "key": "district_list_name", "src": "采"},
+        {"cn": "商圈ID", "key": "trading_area_id", "src": "采"},
+        {"cn": "商圈名称", "key": "trading_area_name", "src": "采"},
+        {"cn": "商圈拼音名称", "key": "shangquan_list_name", "src": "采"},
+        {"cn": "小区地址", "key": "address", "src": "采"},
+        {"cn": "环线位置", "key": "ring_location", "src": "采"},
+        {"cn": "百度经度", "key": "blng", "src": "采"},
+        {"cn": "百度纬度", "key": "blat", "src": "采"},
+        {"cn": "用地条件和用地类型", "key": "land_use_type", "src": "采"},
+        {"cn": "周边配套", "key": "surroundings", "src": "采"}
+      ]
+    },
+    {
+      "id": "price", "cn": "价格与金融",
+      "fields": [
+        {"cn": "房价/最新价格", "key": "price_info_price", "src": "采"},
+        {"cn": "参考价格", "key": "price_ref", "src": "采"},
+        {"cn": "房价市场状况", "key": "price_info_market_sentiment", "src": "采"},
+        {"cn": "周边均价", "key": "area_avg_nearby_price", "src": "采"},
+        {"cn": "房贷计算信息", "key": "mortgage_info", "src": "算"},
+        {"cn": "在售数量", "key": "prop_info_sale_num", "src": "采"},
+        {"cn": "在租数量", "key": "prop_info_rent_num", "src": "采"}
+      ]
+    },
+    {
+      "id": "cost_invest", "cn": "成本与投资", "note": "内部 / DDS",
+      "fields": [
+        {"cn": "拿地价", "key": "land_cost", "src": "内"},
+        {"cn": "土建成本", "key": "civil_cost", "src": "内"},
+        {"cn": "立面造价", "key": "facade_cost", "src": "内"},
+        {"cn": "投资回报比", "key": "roi", "src": "算"},
+        {"cn": "溢价率及价值挖掘", "key": "premium_value", "src": "算"},
+        {"cn": "租售比", "key": "rent_sale_ratio", "src": "算"}
+      ]
+    },
+    {
+      "id": "product_plan", "cn": "产品与规划",
+      "fields": [
+        {"cn": "房地产类型", "key": "estate_type", "src": "采"},
+        {"cn": "建筑类型", "key": "build_type_str", "src": "采"},
+        {"cn": "商品类型", "key": "ship_type_str", "src": "采"},
+        {"cn": "物业类型", "key": "extend_type", "src": "采"},
+        {"cn": "物业类型集合", "key": "property_types", "src": "采"},
+        {"cn": "产权年限", "key": "years_of_property_rights", "src": "采"},
+        {"cn": "容积率", "key": "plot_ratio", "src": "采"},
+        {"cn": "绿化率", "key": "extend_landscaping_atio", "src": "采"},
+        {"cn": "占地面积", "key": "land_area", "src": "采"},
+        {"cn": "建筑面积", "key": "build_area", "src": "采"},
+        {"cn": "小区面积", "key": "extend_total_area", "src": "采"},
+        {"cn": "面积范围", "key": "area_range", "src": "采"},
+        {"cn": "总户数/规划户数", "key": "extend_total_house_hold_num", "src": "采"},
+        {"cn": "是否四代住宅", "key": "is_4th_gen", "src": "采"},
+        {"cn": "装修情况", "key": "decoration", "src": "采"},
+        {"cn": "规划排布逻辑", "key": "layout_logic", "src": "VLM"}
+      ]
+    },
+    {
+      "id": "units", "cn": "户型",
+      "fields": [
+        {"cn": "全部户型", "key": "units_all", "src": "采"},
+        {"cn": "主力成交户型", "key": "units_main", "src": "采"},
+        {"cn": "各户型文本描述", "key": "unit_desc", "src": "采"},
+        {"cn": "各户型对应得房率", "key": "unit_efficiency", "src": "采"},
+        {"cn": "房间面积信息", "key": "room_area_info", "src": "采"}
+      ]
+    },
+    {
+      "id": "parking_utility", "cn": "车位与市政配套",
+      "fields": [
+        {"cn": "停车位", "key": "parking_space", "src": "采"},
+        {"cn": "车位比", "key": "parking_rate", "src": "采"},
+        {"cn": "车位管理费", "key": "parking_space_management_fee", "src": "采"},
+        {"cn": "统一供暖", "key": "unified_heating", "src": "采"},
+        {"cn": "供水供电", "key": "hydropower", "src": "采"},
+        {"cn": "用水类型", "key": "extend_water_power_supply", "src": "采"}
+      ]
+    },
+    {
+      "id": "timeline", "cn": "时间与工程进度",
+      "fields": [
+        {"cn": "竣工时间", "key": "completion_time", "src": "采"},
+        {"cn": "开盘日期", "key": "open_date", "src": "采"},
+        {"cn": "开盘日期备注", "key": "open_date_note", "src": "采"},
+        {"cn": "开盘时间", "key": "open_time", "src": "采"},
+        {"cn": "交房时间", "key": "handover_date", "src": "采"},
+        {"cn": "发证时间", "key": "cert_date", "src": "采"},
+        {"cn": "预售证号", "key": "presale_cert", "src": "采"},
+        {"cn": "工程进度", "key": "progress", "src": "采"},
+        {"cn": "绑定楼栋", "key": "bound_buildings", "src": "采"},
+        {"cn": "规交信息", "key": "planning_delivery_info", "src": "采"}
+      ]
+    },
+    {
+      "id": "actors_ops", "cn": "主体与运营",
+      "fields": [
+        {"cn": "开发商", "key": "developers", "src": "采"},
+        {"cn": "投资商", "key": "investor", "src": "采"},
+        {"cn": "物业公司", "key": "extend_property_company", "src": "采"},
+        {"cn": "物业费", "key": "extend_property_money", "src": "采"},
+        {"cn": "物业特色", "key": "extend_property_features", "src": "采"},
+        {"cn": "建筑设计方", "key": "arch_firm", "src": "采"},
+        {"cn": "景观设计方", "key": "landscape_firm", "src": "采"},
+        {"cn": "售楼处地址", "key": "sales_office_addr", "src": "采"},
+        {"cn": "400电话", "key": "phone_400", "src": "采"}
+      ]
+    },
+    {
+      "id": "sales_market", "cn": "销售与市场",
+      "fields": [
+        {"cn": "销售状态", "key": "sale_status", "src": "采"},
+        {"cn": "销售标题", "key": "sale_title", "src": "采"},
+        {"cn": "租售标题", "key": "rent_sale_title", "src": "采"},
+        {"cn": "销售话术", "key": "sales_script", "src": "算"},
+        {"cn": "去化周期", "key": "sell_through", "src": "算"},
+        {"cn": "客群画像", "key": "customer_profile", "src": "算"}
+      ]
+    },
+    {
+      "id": "review_score", "cn": "评价与评分",
+      "fields": [
+        {"cn": "综合评分", "key": "grade_score", "src": "采"},
+        {"cn": "模块评分列表", "key": "grade_list", "src": "采"},
+        {"cn": "模块评分项", "key": "grade_items", "src": "采"},
+        {"cn": "优点", "key": "extend_merits", "src": "采"},
+        {"cn": "缺点", "key": "extend_demerits", "src": "采"},
+        {"cn": "业内评价", "key": "industry_review", "src": "内"}
+      ]
+    },
+    {
+      "id": "design_experience", "cn": "设计与体验", "note": "ArchLib 案例库联动",
+      "fields": [
+        {"cn": "设计风格", "key": "design_style", "src": "VLM"},
+        {"cn": "风格材料", "key": "style_material", "src": "VLM"},
+        {"cn": "示范区配置", "key": "demo_area_config", "src": "VLM"},
+        {"cn": "公区会所配置", "key": "clubhouse_config", "src": "VLM"},
+        {"cn": "全局创新点", "key": "global_innovation", "src": "算"}
+      ]
+    },
+    {
+      "id": "strategy_position", "cn": "战略与定位", "note": "DDS",
+      "fields": [
+        {"cn": "所在地段未来宏观定位", "key": "macro_position", "src": "算"}
+      ]
+    }
+  ]
+}
